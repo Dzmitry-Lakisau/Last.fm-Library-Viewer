@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/dividerline"
+    android:id="@+id/list_item"
+    app:popupTheme="@style/AppTheme.PopupOverlay"
+    >
+
+    <!--
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/albumart"
+        android:background="@android:color/transparent"
+        android:visibility="visible"
+        />
+    -->
+
+    <TextView
+        android:includeFontPadding="false"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/rank"
+        android:layout_alignRight="@id/albumart"
+        android:layout_alignLeft="@id/albumart"
+        android:gravity="right"
+        android:background="@android:color/transparent"
+        android:layout_alignParentTop="true"
+        />
+
+    <TextView
+        android:includeFontPadding="false"
+        android:id="@+id/upper_field"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/albumart"
+        android:layout_toRightOf="@+id/albumart"
+        android:background="@android:color/transparent"
+        android:layout_marginRight="@dimen/text_margin"
+        />
+
+    <TextView
+        android:includeFontPadding="false"
+        android:id="@+id/middle_field"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:layout_below="@+id/upper_field"
+        android:layout_alignLeft="@+id/upper_field"
+        android:layout_marginRight="@dimen/text_margin"
+        />
+
+    <TextView
+
+        android:includeFontPadding="false"
+        android:id="@+id/bottom_field"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:layout_below="@+id/middle_field"
+        android:layout_alignLeft="@+id/middle_field"
+        android:layout_marginRight="@dimen/text_margin"
+        />
+
+    <ImageView
+        android:layout_width="@android:dimen/notification_large_icon_width"
+        android:layout_height="@android:dimen/notification_large_icon_height"
+        android:background="@android:color/transparent"
+        android:id="@+id/albumart"
+        android:layout_below="@id/rank"
+
+        android:layout_marginLeft="@dimen/text_margin"
+        android:layout_marginRight="@dimen/text_margin"
+        android:layout_marginBottom="@dimen/text_margin"
+        android:layout_marginEnd="@dimen/text_margin" />
+</RelativeLayout>

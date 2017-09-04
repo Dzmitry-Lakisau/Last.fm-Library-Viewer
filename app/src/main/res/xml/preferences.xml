@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ListPreference
+        android:entries="@array/entries"
+        android:entryValues="@array/entry_values"
+        android:key="resolution"
+        android:summary="Resolution of albumarts, photos of artists"
+        android:title="Quality of images">
+
+    </ListPreference>
+
+        <EditTextPreference
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:key="limit"
+            android:summary="Amount of scrobbles to process at once"
+            android:title="Limit">
+
+        </EditTextPreference>
+
+
+</PreferenceScreen>

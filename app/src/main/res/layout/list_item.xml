@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dividerline"
+    android:id="@+id/list_item"
+    app:popupTheme="@style/AppTheme.PopupOverlay"
+    >
+
+    <TextView
+        android:includeFontPadding="false"
+        android:id="@+id/track"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/albumart"
+        android:background="@android:color/transparent"
+        android:layout_marginRight="@dimen/text_margin"
+        />
+
+    <TextView
+        android:includeFontPadding="false"
+        android:id="@+id/artist"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:layout_below="@+id/track"
+        android:layout_alignLeft="@+id/track"
+        />
+
+    <TextView
+        android:includeFontPadding="false"
+        android:id="@+id/album"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:layout_below="@+id/artist"
+        android:layout_alignLeft="@+id/track"
+        />
+
+    <TextView
+        android:includeFontPadding="false"
+        android:id="@+id/timestamp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:layout_below="@+id/album"
+        android:layout_alignLeft="@+id/track"
+        />
+
+    <ImageView
+        android:layout_width="@android:dimen/notification_large_icon_width"
+        android:layout_height="@android:dimen/notification_large_icon_height"
+        android:background="@android:color/transparent"
+        android:id="@+id/albumart"
+        android:layout_margin="@dimen/text_margin"
+        />
+</RelativeLayout>

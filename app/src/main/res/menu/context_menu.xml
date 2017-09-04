@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <item android:title="Scrobbles of this artist"
+        android:id="@+id/scrobbles_of_artist"
+        android:itemBackground="@android:color/transparent"
+        />
+    <item android:title="Scrobbles of this track"
+        android:id="@+id/scrobbles_of_track" />
+    <item android:title="Scrobbles of this album"
+        android:id="@+id/scrobbles_of_album" />
+</menu>

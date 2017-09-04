@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@android:color/transparent"
+    tools:context="by.d1makrat.last.fm_library_viewer.MainActivity" >
+
+    <item
+        android:id="@+id/about"
+        app:showAsAction="ifRoom"
+        android:title="@string/about"
+        android:icon="@drawable/ic_info_outline_black_24dp"
+        />
+
+</menu>

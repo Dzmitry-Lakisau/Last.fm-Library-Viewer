@@ -1,0 +1,47 @@
+apply plugin: 'com.android.application'
+
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "26.0.1"
+
+    dexOptions {
+
+        preDexLibraries = false
+        javaMaxHeapSize "4g" // 2g should be also OK
+    }
+
+    defaultConfig {
+        applicationId "by.d1makrat.library_fm"
+        minSdkVersion 15
+        targetSdkVersion 23
+    }
+
+    buildTypes {
+        debug{
+            buildConfigField("String", "API_KEY", API_KEY)
+            buildConfigField("String", "SECRET", SECRET)
+            minifyEnabled false
+        }
+
+        release {
+            buildConfigField("String", "API_KEY", API_KEY)
+            buildConfigField("String", "SECRET", SECRET)
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+
+    dependencies {
+        compile 'com.android.support:appcompat-v7:25.3.1'
+    }
+}
+dependencies {
+    compile files('src/main/libs/commons-codec-1.8.jar')
+    compile 'com.android.support:design:25.3.1'
+    compile 'com.code-troopers.betterpickers:library:3.1.0'
+    compile 'com.google.firebase:firebase-ads:10.2.0'
+    compile 'com.google.firebase:firebase-crash:10.2.0'
+}
+
+apply plugin: 'com.google.gms.google-services'

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@android:color/transparent"
+    >
+
+
+        <item
+            android:id="@+id/scrobbles"
+            android:icon="@drawable/ic_queue_music_black_24dp"
+            android:title="@string/scrobbles"
+            />
+
+    <group android:id="@+id/group_tops">
+    <item
+            android:id="@+id/top_tracks"
+            android:icon="@drawable/ic_music_note_black_24dp"
+            android:title="Top Tracks" />
+        <item
+            android:id="@+id/top_artists"
+            android:icon="@drawable/ic_person"
+            android:title="Top Artists" />
+        <item
+            android:id="@+id/top_albums"
+            android:icon="@drawable/ic_album_black_24dp"
+            android:title="Top Albums" />
+    </group>
+
+    <group android:id="@+id/group_manual_scrobble">
+        <item
+            android:id="@+id/search"
+            android:icon="@drawable/ic_search_black_24dp"
+            android:title="Search Artist" />
+        <item
+            android:id="@+id/manual_scrobble"
+            android:icon="@drawable/ic_create_black_24dp"
+            android:title="Manual Scrobble" />
+    </group>
+
+            <item
+                android:id="@+id/settings"
+                android:icon="@drawable/ic_settings"
+                android:title="Settings" />
+
+    <group android:id="@+id/group_logout">
+        <item
+            android:id="@+id/logout"
+            android:icon="@drawable/logout"
+            android:title="Logout" />
+
+    </group>
+
+
+</menu>

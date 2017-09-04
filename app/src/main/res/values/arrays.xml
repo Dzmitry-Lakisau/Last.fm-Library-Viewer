@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="Exception_names">
+        <item>API error occurred</item>
+        <item>Error occurred during saving operation</item>
+        <item>Unknown error occurred</item>
+        <item>File not found</item>
+        <item>SSL error occurred</item>
+        <item>Wrong URL</item>
+        <item>Server did not response</item>
+        <item>Server is unreachable</item>
+        <item>Error of parsing occurred</item>
+    </string-array>
+    <string-array name="entries">
+        <item>Low (64x64 pixels)</item>
+        <item>Medium (174x174 pixels)</item>
+        <item>High (300x300 pixels)</item>
+    </string-array>
+    <string-array name="entry_values">
+        <item>medium</item>
+        <item>large</item>
+        <item>extralarge</item>
+    </string-array>
+</resources>
