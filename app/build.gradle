@@ -1,9 +1,9 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'com.google.firebase.firebase-perf'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "26.0.1"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
 
     dexOptions {
 
@@ -18,7 +18,7 @@ android {
     }
 
     buildTypes {
-        debug{
+        debug {
             buildConfigField("String", "API_KEY", API_KEY)
             buildConfigField("String", "SECRET", SECRET)
             minifyEnabled false
@@ -33,15 +33,16 @@ android {
     }
 
     dependencies {
-        compile 'com.android.support:appcompat-v7:25.3.1'
+        compile 'com.android.support:appcompat-v7:26.1.0'
     }
 }
 dependencies {
     compile files('src/main/libs/commons-codec-1.8.jar')
-    compile 'com.android.support:design:25.3.1'
+    compile 'com.android.support:design:26.1.0'
     compile 'com.code-troopers.betterpickers:library:3.1.0'
-    compile 'com.google.firebase:firebase-ads:10.2.0'
-    compile 'com.google.firebase:firebase-crash:10.2.0'
+    compile 'com.google.firebase:firebase-ads:11.4.0'
+    compile 'com.google.firebase:firebase-crash:11.4.0'
+    compile 'com.google.firebase:firebase-perf:11.4.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

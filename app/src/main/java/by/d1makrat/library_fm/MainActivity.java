@@ -400,8 +400,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (exception == 0){
                     playcount = result;
                     View nav_view = findViewById(R.id.nav_header);
-                    TextView user_registered = (TextView) nav_view.findViewById(R.id.user_registered);
-                    user_registered.setText(String.format("%s scrobbles since %s", playcount, registered));
+                    if (nav_view != null) {
+                        TextView user_registered = (TextView) nav_view.findViewById(R.id.user_registered);
+                        user_registered.setText(String.format("%s scrobbles since %s", playcount, registered));
+                    }
             }
             else if (exception == 1)
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
