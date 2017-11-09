@@ -1,18 +1,12 @@
 package by.d1makrat.library_fm;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,7 +17,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,11 +26,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.ads.MobileAds;
-import com.google.firebase.crash.FirebaseCrash;
+
 import org.xmlpull.v1.XmlPullParserException;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
@@ -46,7 +38,6 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.List;
 import javax.net.ssl.SSLException;
-import static android.os.Environment.*;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -72,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         sessionKey = sharedPreferences.getString("sessionKey", null);
         registered = sharedPreferences.getString("registered", null);
         playcount = sharedPreferences.getString("playcount", null);
-        cachepath = getDiskCacheDir(getApplicationContext());
+        cachepath = new AppSettings(getApplicationContext()).getCacheDir();// getDiskCacheDir(getApplicationContext());
         CreateNavigationDrawer();
         Bundle bundle = new Bundle();
         bundle.putString("sessionKey", sessionKey);
@@ -102,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onStart() {
         super.onStart();
 
-        if (isNetworkAvailable()) {
+        if (NetworkStatusChecker.isNetworkAvailable(getApplicationContext())) {
             GetPlaycountTask task = new GetPlaycountTask();
             task.execute();
         }
@@ -119,12 +110,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-        resolution = sharedPreferences.getString("resolution", "medium");
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+//        resolution = sharedPreferences.getString("resolution", "medium");
+//    }
 
     @Override
     public void onBackPressed() {
@@ -133,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             drawer.closeDrawer(GravityCompat.START);
         }
         else {
-            if (isNetworkAvailable()) {
+            if (NetworkStatusChecker.isNetworkAvailable(getApplicationContext())) {
                 GetPlaycountTask task = new GetPlaycountTask();
                 task.execute();
             }
@@ -169,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         bundle.putString("cachepath", cachepath);
         bundle.putString("resolution", resolution);
 
-        if (isNetworkAvailable()) {
+        if (NetworkStatusChecker.isNetworkAvailable(getApplicationContext())) {
             GetPlaycountTask task = new GetPlaycountTask();
             task.execute();
         }
@@ -255,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             catch (Exception e)
             {
-                FirebaseCrash.report(e);//nullexception возникает при нажатии на logout
+                //FirebaseCrash.report(e);//nullexception возникает при нажатии на logout
                 e.printStackTrace();
             }
 //        }
@@ -265,12 +256,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                toast.show();
 //        }
         return true;
-    }
-
-    public boolean isNetworkAvailable() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isConnected();
     }
 
     private void CreateNavigationDrawer(){
@@ -318,19 +303,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private String getDiskCacheDir(Context context) {
-        try {
-            final String cachePath =
-                    Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) || !isExternalStorageRemovable() ? context.getExternalCacheDir().getPath() : context.getCacheDir().getPath();
-            return new File(cachePath + File.separator + "Images").getPath();
-        }
-        catch (Exception e){
-            FirebaseCrash.report(e);
-            e.printStackTrace();
-            Toast.makeText(context, "Unable to get path of cache folder", Toast.LENGTH_LONG).show();
-            return null;
-        }
-    }
+//    private String getDiskCacheDir(Context context) {
+//        try {
+//            final String cachePath =
+//                    Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) || !isExternalStorageRemovable() ? context.getExternalCacheDir().getPath() : context.getCacheDir().getPath();
+//            return new File(cachePath + File.separator + "Images").getPath();
+//        }
+//        catch (Exception e){
+//            //FirebaseCrash.report(e);
+//            e.printStackTrace();
+//            Toast.makeText(context, "Unable to get path of cache folder", Toast.LENGTH_LONG).show();
+//            return null;
+//        }
+//    }
 
 
     class GetPlaycountTask extends AsyncTask<Void, Void, String> {
@@ -350,7 +335,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 else info = rawxml.parseSingleText("playcount");
             }
             catch (XmlPullParserException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 9;
             }
@@ -363,32 +348,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 exception = 7;
             }
             catch (MalformedURLException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 6;
             }
             catch (SSLException e) {
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 5;
             }
             catch (FileNotFoundException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 4;
             }
             catch (RuntimeException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 3;
             }
             catch (IOException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 2;
             }
             catch (APIException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 message = e.getMessage();
                 exception = 1;
             }
@@ -408,7 +393,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             else if (exception == 1)
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
             else {
-                String[] exception_message = getResources().getStringArray(R.array.Exception_names);
+                String[] exception_message = getResources().getStringArray(R.array.Exception_messages);
                 Toast.makeText(getApplicationContext(), exception_message[exception - 1], Toast.LENGTH_SHORT).show();
             }
         }

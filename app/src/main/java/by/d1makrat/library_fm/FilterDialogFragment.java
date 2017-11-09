@@ -34,13 +34,11 @@ public class FilterDialogFragment extends android.support.v4.app.DialogFragment 
         super.onCreate(savedInstanceState);
         android.support.v4.app.Fragment fragment = getTargetFragment();
         try {
-            // Instantiate the NoticeDialogListener so we can send events to the host
             mListener = (DialogListener) fragment;
         }
         catch (ClassCastException e) {
-            FirebaseCrash.report(e);
-            // The viewpager doesn't implement the interface, throw exception
-            throw new ClassCastException(fragment.toString() + " must implement NoticeDialogListener");
+            //FirebaseCrash.report(e);
+            throw new ClassCastException(fragment.toString() + " must implement DialogListener");
         }
         String temp = getArguments().getString("from");
         if (temp!=null){

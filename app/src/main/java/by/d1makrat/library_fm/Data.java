@@ -477,10 +477,10 @@ public class Data {
             out.close();
         }
         catch (MalformedURLException e) {
-            FirebaseCrash.report(e);
+            //FirebaseCrash.report(e);
         }
         catch (IOException e){
-            FirebaseCrash.report(e);
+            //FirebaseCrash.report(e);
         }
         finally {
             try {
@@ -488,7 +488,7 @@ public class Data {
                     out.close();
                 }
             } catch (IOException e) {
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
             }
         }
         return filename;

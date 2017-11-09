@@ -10,9 +10,6 @@ import java.net.UnknownHostException;
 import java.util.TreeMap;
 import java.util.Calendar;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -29,7 +26,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.codetroopers.betterpickers.radialtimepicker.RadialTimePickerDialogFragment;
-import com.google.firebase.crash.FirebaseCrash;
 
 import org.xmlpull.v1.XmlPullParserException;
 import javax.net.ssl.SSLException;
@@ -94,7 +90,7 @@ public class ManualScrobbleFragment extends Fragment implements CalendarDatePick
 
 			switch (v.getId()) {
 				case R.id.button_scrobble:
-					if (isNetworkAvailable()) {
+					if (NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())) {
 //					((Button) getView().findViewById(R.id.button_scrobble)).setEnabled(false);
 					spinner.setVisibility(View.VISIBLE);
 					String track = ((TextView) getView().findViewById(R.id.track)).getText().toString();
@@ -206,12 +202,6 @@ public class ManualScrobbleFragment extends Fragment implements CalendarDatePick
 		}
 	}
 
-	public boolean isNetworkAvailable() {
-		ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-		return networkInfo != null && networkInfo.isConnected();
-	}
-
 //	public class DatePickerFragment extends DialogFragment implements OnDateSetListener {
 //
 //		@Override
@@ -274,7 +264,7 @@ public class ManualScrobbleFragment extends Fragment implements CalendarDatePick
 					else res = "Accepted";
 			}
 			catch (XmlPullParserException e){
-				FirebaseCrash.report(e);
+				//FirebaseCrash.report(e);
 				e.printStackTrace();
 				exception = 9;
 			}
@@ -287,32 +277,32 @@ public class ManualScrobbleFragment extends Fragment implements CalendarDatePick
 				exception = 7;
 			}
 			catch (MalformedURLException e){
-				FirebaseCrash.report(e);
+				//FirebaseCrash.report(e);
 				e.printStackTrace();
 				exception = 6;
 			}
 			catch (SSLException e) {
-				FirebaseCrash.report(e);
+				//FirebaseCrash.report(e);
 				e.printStackTrace();
 				exception = 5;
 			}
 			catch (FileNotFoundException e){
-				FirebaseCrash.report(e);
+				//FirebaseCrash.report(e);
 				e.printStackTrace();
 				exception = 4;
 			}
 			catch (RuntimeException e){
-				FirebaseCrash.report(e);
+				//FirebaseCrash.report(e);
 				e.printStackTrace();
 				exception = 3;
 			}
 			catch (IOException e){
-				FirebaseCrash.report(e);
+				//FirebaseCrash.report(e);
 				e.printStackTrace();
 				exception = 2;
 			}
 			catch (APIException e){
-				FirebaseCrash.report(e);
+				//FirebaseCrash.report(e);
 				message = e.getMessage();
 				exception = 1;
 			}
@@ -326,7 +316,7 @@ public class ManualScrobbleFragment extends Fragment implements CalendarDatePick
 //				((Button) getView().findViewById(R.id.button_scrobble)).setEnabled(true);
 			}
 			catch (Exception e){
-				FirebaseCrash.report(e);
+				//FirebaseCrash.report(e);
 			}
 			if (exception == 0){
 				Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
@@ -334,7 +324,7 @@ public class ManualScrobbleFragment extends Fragment implements CalendarDatePick
 			else if (exception == 1)
 				Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
 			else {
-				String[] exception_message = getResources().getStringArray(R.array.Exception_names);
+				String[] exception_message = getResources().getStringArray(R.array.Exception_messages);
 				Toast.makeText(getContext(), exception_message[exception - 1], Toast.LENGTH_SHORT).show();
 			}
 		}

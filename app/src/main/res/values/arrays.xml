@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="Exception_names">
+    <string-array name="Exception_messages">
         <item>API error occurred</item>
         <item>Error occurred during saving operation</item>
         <item>Unknown error occurred</item>

@@ -1,20 +1,13 @@
 package by.d1makrat.library_fm;
 
-import android.app.Dialog;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.firebase.crash.FirebaseCrash;
+
 import org.xmlpull.v1.XmlPullParserException;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -149,7 +142,7 @@ public class StartFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (isNetworkAvailable()) {
+        if (NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())) {
             task = new GetPlaycountTask();
             task.execute();
         }
@@ -166,12 +159,6 @@ public class StartFragment extends Fragment {
 //            task.cancel(true);
 //        }
 //    }
-
-    public boolean isNetworkAvailable() {
-        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isConnected();
-    }
 
     class GetPlaycountTask extends AsyncTask<Void, Void, String> {
         private int exception = 0;
@@ -190,7 +177,7 @@ public class StartFragment extends Fragment {
                 else info = rawxml.parseSingleText("playcount");
             }
             catch (XmlPullParserException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 9;
             }
@@ -203,32 +190,32 @@ public class StartFragment extends Fragment {
                 exception = 7;
             }
             catch (MalformedURLException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 6;
             }
             catch (SSLException e) {
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 5;
             }
             catch (FileNotFoundException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 4;
             }
             catch (RuntimeException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 3;
             }
             catch (IOException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 2;
             }
             catch (APIException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 message = e.getMessage();
                 exception = 1;
             }
@@ -243,7 +230,7 @@ public class StartFragment extends Fragment {
                     textView.setText(String.format("You are logged in as %s.\n%s scrobbles since %s.\nExplore your music!", username, result, registered));
                 }
                 catch (Exception e){
-                    FirebaseCrash.report(e);
+                    //FirebaseCrash.report(e);
                     e.printStackTrace();
 //                    Toast.makeText(getContext(), "Unknown error occurred", Toast.LENGTH_SHORT).show();
                 }
@@ -251,7 +238,7 @@ public class StartFragment extends Fragment {
             else if (exception == 1)
                 Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
             else {
-                String[] exception_message = getResources().getStringArray(R.array.Exception_names);
+                String[] exception_message = getResources().getStringArray(R.array.Exception_messages);
                 Toast.makeText(getContext(), exception_message[exception - 1], Toast.LENGTH_SHORT).show();
             }
         }

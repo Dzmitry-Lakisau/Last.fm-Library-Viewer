@@ -65,12 +65,6 @@ public class TabFragment extends Fragment {
         this.menu = menu;
     }
 
-    public boolean isNetworkAvailable() {
-        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isConnected();
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,7 +93,7 @@ public class TabFragment extends Fragment {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        if (isNetworkAvailable()) {
+        if (NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())) {
             return false;
         }
         else {

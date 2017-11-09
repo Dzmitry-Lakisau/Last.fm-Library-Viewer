@@ -1,12 +1,6 @@
 package by.d1makrat.library_fm;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -14,10 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.ContextThemeWrapper;
-import android.util.Log;
 import android.view.ContextMenu;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,35 +19,29 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
-import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.crash.FirebaseCrash;
-
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
-import java.net.URL;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 import java.util.TreeMap;
-import org.xmlpull.v1.XmlPullParserException;
+
 import javax.net.ssl.SSLException;
 
 public class ScrobblesListFragment extends ListFragment implements OnScrollListener, FilterDialogFragment.DialogListener {
     private final String API_KEY = BuildConfig.API_KEY;
-    private String path_to_blank = null;
+//    private String path_to_blank = null;
     private String resolution;
     private String url = null;
     private String filter_string = null;
@@ -91,12 +76,12 @@ public class ScrobblesListFragment extends ListFragment implements OnScrollListe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        sessionKey = getArguments().getString("sessionKey");
-        username = getArguments().getString("username");
+//        sessionKey = getArguments().getString("sessionKey");
+//        username = getArguments().getString("username");
         cachepath = getArguments().getString("cachepath");
         url = "https://www.last.fm/user/" + username + "/library";
         page = 1;
-        path_to_blank = getActivity().getFilesDir().getPath();
+//        path_to_blank = getActivity().getFilesDir().getPath();
         setHasOptionsMenu(true);
     }
 
@@ -121,7 +106,7 @@ public class ScrobblesListFragment extends ListFragment implements OnScrollListe
                 }
         }
         else {
-            if(!isNetworkAvailable()){
+            if(!NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())){
                 //создаётся и сеть отсуствует
                 rootView.findViewById(R.id.list_head).setVisibility(View.GONE);
                 rootView.findViewById(R.id.empty_list).setVisibility(View.VISIBLE);
@@ -152,8 +137,11 @@ public class ScrobblesListFragment extends ListFragment implements OnScrollListe
     @Override
     public void onStart() {
         super.onStart();
-        limit = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getContext()).getString("limit", null));
-        resolution = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("resolution", null);
+
+        AppSettings appSettings = new AppSettings(getActivity().getApplicationContext());
+        limit = Integer.parseInt(appSettings.getLimit());
+        resolution = appSettings.getResolution();
+
         if (isCreated)
             LoadItems(page, null, null);
     }
@@ -191,7 +179,7 @@ public class ScrobblesListFragment extends ListFragment implements OnScrollListe
     @Override
     public void onScroll(AbsListView l, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         if ((firstVisibleItem + visibleItemCount) == totalItemCount && (totalItemCount > 0) && !isLoading) {
-            if (isNetworkAvailable()) {
+            if (NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())) {
                 page++;
                 LoadItems(page, from, to);
             }
@@ -217,7 +205,7 @@ public class ScrobblesListFragment extends ListFragment implements OnScrollListe
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_refresh:
-                if (isNetworkAvailable()) {
+                if (NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())) {
                     if (!isLoading) {
                         allIsLoaded = false;
                         getView().findViewById(R.id.list_head).setVisibility(View.GONE);
@@ -263,7 +251,7 @@ public class ScrobblesListFragment extends ListFragment implements OnScrollListe
 
     @Override
     public boolean onContextItemSelected(MenuItem item){
-        if (isNetworkAvailable()) {
+        if (NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())) {
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
             switch (item.getItemId()) {
                 case R.id.scrobbles_of_artist:
@@ -336,15 +324,15 @@ public class ScrobblesListFragment extends ListFragment implements OnScrollListe
     }
 
     public void LoadItems(Integer page, String from, String to) {
-        if (isNetworkAvailable()) {
+        if (NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())) {
             if (!allIsLoaded) {
                 isLoading = true;
                 TreeMap<String, String> treeMap = new TreeMap<>();
                 treeMap.put("method", "user.getRecentTracks");
-                treeMap.put("api_key", API_KEY);
-                treeMap.put("sk", sessionKey);
-                treeMap.put("user", username);
-                treeMap.put("limit", String.valueOf(limit));
+//                treeMap.put("api_key", BuildConfig.API_KEY);
+//                treeMap.put("sk", sessionKey);
+//                treeMap.put("user", username);
+//                treeMap.put("limit", String.valueOf(limit));
                 treeMap.put("page", String.valueOf(page));
                 if (from != null) treeMap.put("from", from);
                 if (to != null) treeMap.put("to", to);
@@ -399,13 +387,7 @@ public class ScrobblesListFragment extends ListFragment implements OnScrollListe
         KillTaskIfRunning(task);
     }
 
-    public boolean isNetworkAvailable() {
-        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isConnected();
-    }
-
-    public class GetScrobblesListTask extends AsyncTask<TreeMap<String, String>, Integer, ArrayList<HashMap<String, String>>> {
+    public class GetScrobblesListTask extends AsyncTask<TreeMap<String, String>, Integer, List<HashMap<String, String>>> {
 
         private View list_spinner = getActivity().getLayoutInflater().inflate(R.layout.list_spinner, (ViewGroup) null);
         private int exception = 0;
@@ -413,131 +395,100 @@ public class ScrobblesListFragment extends ListFragment implements OnScrollListe
         private ProgressBar progressBar = (ProgressBar) list_spinner.findViewById(R.id.progressbar);
 
         @Override
-        protected ArrayList<HashMap<String, String>> doInBackground(TreeMap<String, String>... params) {
+        protected List<HashMap<String, String>> doInBackground(TreeMap<String, String>... params) {
 
-            ArrayList<HashMap<String, String>> Tracks = new ArrayList<>();
-            FileOutputStream out = null;
-            Bitmap image;
-            String filename = null;
+            List<HashMap<String, String>> Tracks = new ArrayList<>();
+            List<Scrobble> scrobbles = new ArrayList<>();
 
             try {
-                Data rawxml = new Data(params[0]);
-                if (rawxml.parseAttribute("lfm", "status").equals("failed"))
-                    throw new APIException(rawxml.parseSingleText("error"));
-                //total = Integer.valueOf(rawxml.parseAttribute("artisttracks", "total"));//API always returns 0
-                Tracks = rawxml.getTracks(resolution);
 
-                File folder = new File(cachepath + File.separator + resolution + File.separator + "Albums");
-                if (!folder.exists()) {
-                    folder.mkdirs();
-                }
-                for (int i = 0; i < Tracks.size(); i++) {
+                NetworkRequester networkRequester = new NetworkRequester(params[0], getActivity().getApplicationContext());
+                String response = networkRequester.request("GET");
+
+                ScrobblesParser scrobblesParser = new ScrobblesParser(response);
+
+                if (!scrobblesParser.checkForApiErrors().equals("No error"))
+                    throw new APIException(scrobblesParser.checkForApiErrors());
+                else
+//                    Tracks = scrobblesParser.parseTracks();
+                    scrobbles = scrobblesParser.parseTracks();
+
+                for (int i = 0; i < scrobbles.size(); i++) {
                     if (isCancelled()) return null;
-                    HashMap<String, String> item = Tracks.get(i);
-                    String temp = item.get("image");
-                    if (!temp.equals("")) {
-                        if (item.get("album") != null || !item.get("album").equals("")){
-                            filename = folder.getPath() + File.separator + item.get("artist").replaceAll("[\\\\/:*?\"<>|]", "_") + " - " + item.get("album").replaceAll("[\\\\/:*?\"<>|]", "_") + ".png";
-                        }
-                        else
-                            filename = folder.getPath() + File.separator + item.get("artist").replaceAll("[\\\\/:*?\"<>|]", "_") + ".png";
-                        if (!(new File(filename).exists())) {
-                            try {
-                                URL newurl = new URL(temp);
-                                image = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
-                                out = new FileOutputStream(filename);
-                                image.compress(Bitmap.CompressFormat.PNG, 100, out);
-                                out.flush();
-                                out.close();
-                            }
-                            catch (Exception e){
-                                FirebaseCrash.report(e);
-                                e.printStackTrace();
-                                File file = new File(filename);
-                                boolean deleted = file.delete();
-                            }
-                            finally {
-                                try {
-                                    if (out != null) {
-                                        out.close();
-                                    }
-                                } catch (IOException e) {
-                                    FirebaseCrash.report(e);
-                                    e.printStackTrace();
-                                    exception = 3;
-                                }
-                            }
-                        }
-                    } else {
-                        filename = path_to_blank + File.separator + "blank_albumart.png";
-                    }
-                    item.put("image", filename);
-                    Tracks.set(i, item);
+
+                    Scrobble scrobble = scrobbles.get(i);
+                    ImageDownloaderFromNetwork imageDownloaderFromNetwork = new ImageDownloaderFromNetwork(getActivity().getApplicationContext());
+                    imageDownloaderFromNetwork.download(scrobble);
+
+                    scrobbles.set(i, scrobble);
                     publishProgress(i+1);
                 }
+
+                for (int i = 0; i < scrobbles.size(); i++) {//"name", "artist", "album", "date", "image"
+                    HashMap<String, String> map = new HashMap<String, String>();
+                    map.put("artist", scrobbles.get(i).getArtist().getArtistName());
+                    map.put("name", scrobbles.get(i).getTrackTitle());
+                    map.put("album", scrobbles.get(i).getAlbum().getAlbumTitle());
+                    map.put("date", scrobbles.get(i).getDate().getFormattedDate());
+                    map.put("image", scrobbles.get(i).getImageUriBySize(resolution));
+                    Tracks.add(map);
+                }
             }
-            catch (XmlPullParserException e){
-                FirebaseCrash.report(e);
-                e.printStackTrace();
-                exception = 9;
-            }
+
+
+//            catch (XmlPullParserException e){
+//                //FirebaseCrash.report(e);
+//                e.printStackTrace();
+//                exception = 9;
+//            }
             catch (UnknownHostException e) {
-//                FirebaseCrash.report(e);
+//                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 8;
             }
             catch (SocketTimeoutException e){
-//                FirebaseCrash.report(e);
+//                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 7;
             }
             catch (MalformedURLException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 6;
             }
             catch (SSLException e) {
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 5;
             }
             catch (FileNotFoundException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 4;
             }
             catch (RuntimeException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 3;
             }
             catch (IOException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 2;
             }
             catch (APIException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 message = e.getMessage();
                 exception = 1;
             }
             finally {
                 publishProgress(limit);
-                try {
-                    if (out != null) {
-                        out.close();
-                    }
-                } catch (IOException e) {
-                    FirebaseCrash.report(e);
-                    e.printStackTrace();
-                    exception = 3;
-                }
             }
             return Tracks;
         }
 
         @Override
-        protected void onPostExecute(ArrayList<HashMap<String, String>> result) {
+        protected void onPostExecute(List<HashMap<String, String>> result) {
             lView.removeFooterView(list_spinner);
             isLoading = false;
             wasEmpty = false;
@@ -577,12 +528,12 @@ public class ScrobblesListFragment extends ListFragment implements OnScrollListe
                 empty_list_text = "Error occurred";
                 ((TextView) empty_list.findViewById(R.id.empty_list_text)).setText(empty_list_text);
                 wasEmpty = true;
-                String[] exception_message = getResources().getStringArray(R.array.Exception_names);
+                String[] exception_message = getResources().getStringArray(R.array.Exception_messages);
                 Toast.makeText(getContext(), exception_message[exception - 1], Toast.LENGTH_SHORT).show();
             }
             if (exception > 1 && lView.getCount() > 0) {
                 page--;
-                String[] exception_message = getResources().getStringArray(R.array.Exception_names);
+                String[] exception_message = getResources().getStringArray(R.array.Exception_messages);
                 Toast.makeText(getContext(), exception_message[exception - 1], Toast.LENGTH_SHORT).show();
             }
         }

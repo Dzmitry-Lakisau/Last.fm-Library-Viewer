@@ -4,29 +4,20 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Environment;
-import android.os.Parcelable;
 import android.preference.PreferenceManager;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.firebase.crash.FirebaseCrash;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -62,16 +53,13 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-//        Locale locale = new Locale("en_GB");
-//        Locale.setDefault(locale);
-//        Configuration config = new Configuration();
-//        config.locale = locale;
-//        getApplicationContext().getResources().updateConfiguration(config, null);
-
-
         super.onCreate(savedInstanceState);
-        cachepath = getDiskCacheDir(getApplicationContext());
+
+        AppSettings appSettings = new AppSettings(getApplicationContext());
+//        appSettings.setPathToBlankAlbumart(getFilesDir().getPath() +  File.separator + "blank_albumart.png");
+//        appSettings.setPathToBlankArtist(getFilesDir().getPath() + File.separator + "ic_person.png");
+        appSettings.setCacheDir(getDiskCacheDir(getApplicationContext()));
+
         setContentView(R.layout.sign_in_page);
         spinner = (ProgressBar) findViewById(R.id.progressBar2);
         username_field = (TextView) findViewById(R.id.login);
@@ -82,19 +70,19 @@ public class LoginActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
 
-        if (!sharedPreferences.contains("limit")){
-            SharedPreferences.Editor spEditor = sharedPreferences.edit();
-            spEditor.putString("limit", "10");
-            spEditor.apply();
-        }
+//        if (!sharedPreferences.contains("limit")){
+//            SharedPreferences.Editor spEditor = sharedPreferences.edit();
+//            spEditor.putString("limit", "10");
+//            spEditor.apply();
+//        }
+//
+//        if (!sharedPreferences.contains("resolution")){
+//            SharedPreferences.Editor spEditor = sharedPreferences.edit();
+//            spEditor.putString("resolution", "medium");
+//            spEditor.apply();
+//        }
 
-        if (!sharedPreferences.contains("resolution")){
-            SharedPreferences.Editor spEditor = sharedPreferences.edit();
-            spEditor.putString("resolution", "medium");
-            spEditor.apply();
-        }
-
-        if (sharedPreferences.getString("sessionKey", null) != null &&  sharedPreferences.getString("username", null) != null){
+        if (appSettings.getSessionKey() != null && appSettings.getUsername() != null){
             startActivity(new Intent(this, MainActivity.class));
         }
         else {
@@ -111,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
             inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
             switch (v.getId()) {
                 case R.id.enter_button:
-                    if (isNetworkAvailable()) {
+                    if (NetworkStatusChecker.isNetworkAvailable(getApplicationContext())) {
                         task_get_key = new GetSessionKeyTask();
                         task_get_key.execute(new String[]{username_field.getText().toString(), password_field.getText().toString()});
                     }
@@ -127,17 +115,12 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
-    public boolean isNetworkAvailable() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isConnected();
-    }
-
     private void CreateBlankAlbumart(){
         boolean isSucceeded = false;
         while(!isSucceeded) {
             try {
-                String filename = getFilesDir().getPath() + File.separator + "blank_albumart.png";
+                AppSettings appSettings = new AppSettings(getApplicationContext());
+                String filename = appSettings.getPathToBlankAlbumart();
                 if (!(new File(filename).exists())) {
                     Drawable d = getResources().getDrawable(R.drawable.default_albumart);
                     Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
@@ -149,7 +132,7 @@ public class LoginActivity extends AppCompatActivity {
                 else isSucceeded = true;
             }
             catch (Exception e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 Toast.makeText(this, "Unable to create required bitmap file", Toast.LENGTH_LONG).show();
             }
@@ -160,7 +143,8 @@ public class LoginActivity extends AppCompatActivity {
         boolean isSucceeded = false;
         while(!isSucceeded) {
             try {
-                String filename = getFilesDir().getPath() + File.separator + "ic_person.png";
+                AppSettings appSettings = new AppSettings(getApplicationContext());
+                String filename = appSettings.getPathToBlankArtist();
                 if (!(new File(filename).exists())) {
                     Drawable d = getResources().getDrawable(R.drawable.ic_person);
                     Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
@@ -172,21 +156,21 @@ public class LoginActivity extends AppCompatActivity {
                 else isSucceeded = true;
             }
             catch (Exception e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 Toast.makeText(this, "Unable to create required bitmap file", Toast.LENGTH_LONG).show();
             }
         }
     }
 
-    private String getDiskCacheDir(Context context) {
+    private String getDiskCacheDir(Context context) {//TODO
         try {
             final String cachePath =
                     Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) || !isExternalStorageRemovable() ? context.getExternalCacheDir().getPath() : context.getCacheDir().getPath();
             return new File(cachePath + File.separator + "Images").getPath();
         }
         catch (Exception e){
-            FirebaseCrash.report(e);
+            //FirebaseCrash.report(e);
             e.printStackTrace();
             Toast.makeText(context, "Unable to get path of cache folder", Toast.LENGTH_LONG).show();
             return null;
@@ -211,7 +195,7 @@ public class LoginActivity extends AppCompatActivity {
                 else res = rawxml.parseSingleText("key");
             }
             catch (XmlPullParserException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 9;
             }
@@ -224,32 +208,32 @@ public class LoginActivity extends AppCompatActivity {
                 exception = 7;
             }
             catch (MalformedURLException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 6;
             }
             catch (SSLException e) {
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 5;
             }
             catch (FileNotFoundException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 4;
             }
             catch (RuntimeException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 3;
             }
             catch (IOException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 2;
             }
             catch (APIException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 message = e.getMessage();
                 exception = 1;
             }
@@ -259,13 +243,15 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result){
             if (exception == 0 && result.length() == 32){
-                sessionKey = result;
+//                sessionKey = result;
                 task_info = new GetUserInfoTask();
                 task_info.execute(cachepath);
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
-                SharedPreferences.Editor spEditor = sharedPreferences.edit();
-                spEditor.putString("sessionKey", sessionKey);
-                spEditor.apply();
+                AppSettings appSettings = new AppSettings(getApplicationContext());
+                appSettings.setSessionKey(result);
+//                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+//                SharedPreferences.Editor spEditor = sharedPreferences.edit();
+//                spEditor.putString("sessionKey", sessionKey);
+//                spEditor.apply();
             }
             else {
                 username_field.setVisibility(View.VISIBLE);
@@ -275,7 +261,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (exception == 1)
                     Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                 else {
-                    String[] exception_message = getResources().getStringArray(R.array.Exception_names);
+                    String[] exception_message = getResources().getStringArray(R.array.Exception_messages);
                     Toast.makeText(getApplicationContext(), exception_message[exception - 1], Toast.LENGTH_SHORT).show();
                 }
             }
@@ -308,7 +294,7 @@ public class LoginActivity extends AppCompatActivity {
                 else info = rawxml.getUserInfo(getApplicationContext(), params[0]);
             }
             catch (XmlPullParserException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 9;
             }
@@ -317,7 +303,7 @@ public class LoginActivity extends AppCompatActivity {
                 exception = 8;
             }
             catch (RuntimeException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 3;
             }
@@ -326,27 +312,27 @@ public class LoginActivity extends AppCompatActivity {
                 exception = 7;
             }
             catch (MalformedURLException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 6;
             }
             catch (SSLException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 5;
             }
             catch (FileNotFoundException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 4;
             }
             catch (IOException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 2;
             }
             catch (APIException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 message = e.getMessage();
                 exception = 1;
             }
@@ -360,25 +346,33 @@ public class LoginActivity extends AppCompatActivity {
                     Calendar mydate = Calendar.getInstance();
                     mydate.setTimeInMillis(Long.parseLong(result.get("registered")) * 1000);
                     String registered = mydate.get(Calendar.DAY_OF_MONTH) + " " + mydate.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH) + " " + mydate.get(Calendar.YEAR);
-                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
-                    SharedPreferences.Editor spEditor = sharedPreferences.edit();
-                    spEditor.putString("username", result.get("name"));
-                    spEditor.putString("playcount", result.get("playcount").substring(0, result.get("playcount").indexOf(" ")));
-                    spEditor.putString("registered", registered);
-                    spEditor.apply();
+
+//                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+//                    SharedPreferences.Editor spEditor = sharedPreferences.edit();
+//                    spEditor.putString("username", result.get("name"));
+//                    spEditor.putString("playcount", result.get("playcount").substring(0, result.get("playcount").indexOf(" ")));
+//                    spEditor.putString("registered", registered);
+//                    spEditor.apply();
+
+                    AppSettings appSettings = new AppSettings(getApplicationContext());
+                    appSettings.setUsername(result.get("name"));
+                    appSettings.setpPlaycount(result.get("playcount").substring(0, result.get("playcount").indexOf(" ")));
+                    appSettings.setRegistered(registered);
+
+
                     spinner.setVisibility(View.INVISIBLE);
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     finish();
                 }
                 catch (Exception e){
-                    FirebaseCrash.report(e);
+                    //FirebaseCrash.report(e);
                     e.printStackTrace();
                 }
             }
             else if (exception == 1)
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
             else {
-                String[] exception_message = getResources().getStringArray(R.array.Exception_names);
+                String[] exception_message = getResources().getStringArray(R.array.Exception_messages);
                 Toast.makeText(getApplicationContext(), exception_message[exception - 1], Toast.LENGTH_SHORT).show();
             }
         }

@@ -1,14 +1,9 @@
 package by.d1makrat.library_fm;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -17,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,8 +23,6 @@ import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.firebase.crash.FirebaseCrash;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -117,7 +109,7 @@ public class TopArtistsFragment extends ListFragment implements OnScrollListener
             }
         }
         else {
-            if (!isNetworkAvailable()) {
+            if (!NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())) {
                 empty_list.setVisibility(View.VISIBLE);
                 ((TextView) empty_list.findViewById(R.id.empty_list_text)).setText(R.string.network_is_not_connected);
                 empty_list_text = getText(R.string.network_is_not_connected).toString();
@@ -148,7 +140,7 @@ public class TopArtistsFragment extends ListFragment implements OnScrollListener
     @Override
     public void onScroll(AbsListView l, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         if ((firstVisibleItem + visibleItemCount) == totalItemCount && (totalItemCount > 0) && !isLoading) {
-            if (isNetworkAvailable()) {
+            if (NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())) {
                 page++;
                 LoadItems(page);
             }
@@ -164,7 +156,7 @@ public class TopArtistsFragment extends ListFragment implements OnScrollListener
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_refresh:
-                if (isNetworkAvailable()) {
+                if (NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())) {
                     if (!IsTaskRunning()) {
                         items.clear();
                         adapter.notifyDataSetChanged();
@@ -266,7 +258,7 @@ public class TopArtistsFragment extends ListFragment implements OnScrollListener
     }
 
     public void LoadItems(Integer page) {
-        if (isNetworkAvailable()) {
+        if (NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())) {
             if (!allIsLoaded) {
                 isLoading = true;
                 TreeMap<String, String> treeMap = new TreeMap<>();
@@ -297,12 +289,6 @@ public class TopArtistsFragment extends ListFragment implements OnScrollListener
         super.onStop();
         isCreated = false;
         KillTaskIfRunning(task);
-    }
-
-    public boolean isNetworkAvailable() {
-        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isConnected();
     }
 
     public class GetTopArtistsTask extends AsyncTask<TreeMap<String, String>, Integer, ArrayList<HashMap<String, String>>> {
@@ -346,7 +332,7 @@ public class TopArtistsFragment extends ListFragment implements OnScrollListener
                                 out.close();
                             }
                             catch (Exception e){
-                                FirebaseCrash.report(e);
+                                //FirebaseCrash.report(e);
                                 e.printStackTrace();
                                 File file = new File(filename);
                                 boolean deleted = file.delete();
@@ -357,7 +343,7 @@ public class TopArtistsFragment extends ListFragment implements OnScrollListener
                                         out.close();
                                     }
                                 } catch (IOException e) {
-                                    FirebaseCrash.report(e);
+                                    //FirebaseCrash.report(e);
                                     e.printStackTrace();
                                     exception = 3;
                                 }
@@ -372,7 +358,7 @@ public class TopArtistsFragment extends ListFragment implements OnScrollListener
                 }
             }
             catch (XmlPullParserException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 9;
             }
@@ -385,32 +371,32 @@ public class TopArtistsFragment extends ListFragment implements OnScrollListener
                 exception = 7;
             }
             catch (MalformedURLException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 6;
             }
             catch (SSLException e) {
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 5;
             }
             catch (FileNotFoundException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 4;
             }
             catch (RuntimeException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 3;
             }
             catch (IOException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 2;
             }
             catch (APIException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 message = e.getMessage();
                 exception = 1;
             }
@@ -421,7 +407,7 @@ public class TopArtistsFragment extends ListFragment implements OnScrollListener
                         out.close();
                     }
                 } catch (IOException e) {
-                    FirebaseCrash.report(e);
+                    //FirebaseCrash.report(e);
                     e.printStackTrace();
                     exception = 3;
                 }
@@ -467,12 +453,12 @@ public class TopArtistsFragment extends ListFragment implements OnScrollListener
                 empty_list_text = "Error occurred";
                 ((TextView) empty_list.findViewById(R.id.empty_list_text)).setText(empty_list_text);
                 wasEmpty = true;
-                String[] exception_message = getResources().getStringArray(R.array.Exception_names);
+                String[] exception_message = getResources().getStringArray(R.array.Exception_messages);
                 Toast.makeText(getContext(), exception_message[exception - 1], Toast.LENGTH_SHORT).show();
             }
             if (exception > 1 && lView.getCount() > 0) {
                 page--;
-                String[] exception_message = getResources().getStringArray(R.array.Exception_names);
+                String[] exception_message = getResources().getStringArray(R.array.Exception_messages);
                 Toast.makeText(getContext(), exception_message[exception - 1], Toast.LENGTH_SHORT).show();
             }
         }

@@ -19,7 +19,7 @@
         android:adjustViewBounds="true"
         android:cropToPadding="false"
         android:scaleType="fitCenter"
-        app:srcCompat="@mipmap/ic_launcher_copyright" />
+        app:srcCompat="@mipmap/ic_launcher" />
 
     <TextView
         android:id="@+id/app_label"

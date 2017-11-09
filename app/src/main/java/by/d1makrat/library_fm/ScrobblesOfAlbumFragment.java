@@ -1,8 +1,5 @@
 package by.d1makrat.library_fm;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.graphics.Bitmap;
@@ -29,8 +26,6 @@ import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.firebase.crash.FirebaseCrash;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -85,6 +80,7 @@ public class ScrobblesOfAlbumFragment extends ListFragment implements OnScrollLi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         sessionKey = getArguments().getString("sessionKey");
         username = getArguments().getString("username");
         cachepath = getArguments().getString("cachepath");
@@ -117,7 +113,7 @@ public class ScrobblesOfAlbumFragment extends ListFragment implements OnScrollLi
             }
         }
         else {
-            if(!isNetworkAvailable()){
+            if(!NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())){
                 //создаётся и сеть отсуствует
                 rootView.findViewById(R.id.list_head).setVisibility(View.GONE);
                 rootView.findViewById(R.id.empty_list).setVisibility(View.VISIBLE);
@@ -173,7 +169,7 @@ public class ScrobblesOfAlbumFragment extends ListFragment implements OnScrollLi
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_refresh:
-                if (isNetworkAvailable()) {
+                if (NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())) {
                     if (!isLoading) {
     //                    allIsLoaded = false;
                         getView().findViewById(R.id.list_head).setVisibility(View.GONE);
@@ -221,7 +217,7 @@ public class ScrobblesOfAlbumFragment extends ListFragment implements OnScrollLi
 
     @Override
     public boolean onContextItemSelected(MenuItem item){
-        if (isNetworkAvailable()){
+        if (NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())){
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         switch (item.getItemId()) {
             case R.id.scrobbles_of_artist:
@@ -294,11 +290,11 @@ public class ScrobblesOfAlbumFragment extends ListFragment implements OnScrollLi
     }
 
     public void LoadItems(Integer page, String from, String to) {
-        if (isNetworkAvailable()) {
+        if (NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())) {
             isLoading = true;
             TreeMap<String, String> treeMap = new TreeMap<>();
             treeMap.put("method", "user.getArtistTracks");
-            treeMap.put("api_key", API_KEY);
+            treeMap.put("api_key", BuildConfig.API_KEY);
             treeMap.put("sk", sessionKey);
             treeMap.put("user", username);
             treeMap.put("artist", artist);
@@ -353,12 +349,6 @@ public class ScrobblesOfAlbumFragment extends ListFragment implements OnScrollLi
         isCreated = false;
         KillTaskIfRunning(task);
 //        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(null);
-    }
-
-    public boolean isNetworkAvailable() {
-        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isConnected();
     }
 
     public class GetScrobblesOfAlbumTask extends AsyncTask<TreeMap<String, String>, Integer, ArrayList<HashMap<String, String>>> {
@@ -431,7 +421,7 @@ public class ScrobblesOfAlbumFragment extends ListFragment implements OnScrollLi
                                 out.close();
                             }
                             catch (Exception e) {
-                                FirebaseCrash.report(e);
+                                //FirebaseCrash.report(e);
                                 e.printStackTrace();
                                 File file = new File(filename);
                                 boolean deleted = file.delete();
@@ -442,7 +432,7 @@ public class ScrobblesOfAlbumFragment extends ListFragment implements OnScrollLi
                                         out.close();
                                     }
                                 } catch (IOException e) {
-                                    FirebaseCrash.report(e);
+                                    //FirebaseCrash.report(e);
                                     e.printStackTrace();
                                     exception = 3;
                                 }
@@ -456,7 +446,7 @@ public class ScrobblesOfAlbumFragment extends ListFragment implements OnScrollLi
                 }
             }
             catch (XmlPullParserException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 9;
             }
@@ -469,12 +459,12 @@ public class ScrobblesOfAlbumFragment extends ListFragment implements OnScrollLi
                 exception = 7;
             }
             catch (MalformedURLException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 6;
             }
             catch (SSLException e) {
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 5;
             }
@@ -483,17 +473,17 @@ public class ScrobblesOfAlbumFragment extends ListFragment implements OnScrollLi
                 exception = 4;
             }
             catch (RuntimeException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 3;
             }
             catch (IOException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 2;
             }
             catch (APIException e){
-                FirebaseCrash.report(e);
+                //FirebaseCrash.report(e);
                 message = e.getMessage();
                 exception = 1;
             }
@@ -504,7 +494,7 @@ public class ScrobblesOfAlbumFragment extends ListFragment implements OnScrollLi
                         out.close();
                     }
                 } catch (IOException e) {
-                    FirebaseCrash.report(e);
+                    //FirebaseCrash.report(e);
                     e.printStackTrace();
                     exception = 3;
                 }
@@ -550,12 +540,12 @@ public class ScrobblesOfAlbumFragment extends ListFragment implements OnScrollLi
                 empty_list_text = "Error occurred";
                 ((TextView) empty_list.findViewById(R.id.empty_list_text)).setText(empty_list_text);
                 wasEmpty = true;
-                String[] exception_message = getResources().getStringArray(R.array.Exception_names);
+                String[] exception_message = getResources().getStringArray(R.array.Exception_messages);
                 Toast.makeText(getContext(), exception_message[exception - 1], Toast.LENGTH_SHORT).show();
             }
             if (exception > 1 && lView.getCount() > 0) {
                 page--;
-                String[] exception_message = getResources().getStringArray(R.array.Exception_names);
+                String[] exception_message = getResources().getStringArray(R.array.Exception_messages);
                 Toast.makeText(getContext(), exception_message[exception - 1], Toast.LENGTH_SHORT).show();
             }
         }

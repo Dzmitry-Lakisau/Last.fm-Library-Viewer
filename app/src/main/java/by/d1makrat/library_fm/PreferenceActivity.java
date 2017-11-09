@@ -10,7 +10,7 @@ import android.preference.*;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
+//TODO write own preference window and Appsettings.getLimit to return int
 public class PreferenceActivity extends android.preference.PreferenceActivity {
 
     @Override
