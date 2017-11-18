@@ -39,13 +39,6 @@ public class AboutDialogFragment extends android.support.v4.app.DialogFragment {
         final TextView textView = (TextView) view.findViewById(R.id.about_text_title);
         textView.setText("About " + getString(R.string.app_name));
 
-        TextView title =  new TextView(getActivity().getApplicationContext());
-        title.setText("About " + getString(R.string.app_name));
-        title.setIncludeFontPadding(true);
-        title.setGravity(Gravity.CENTER);
-        title.setTextSize(20);
-        title.setTextColor(Color.BLACK);
-
         return adb.create();
     }
 

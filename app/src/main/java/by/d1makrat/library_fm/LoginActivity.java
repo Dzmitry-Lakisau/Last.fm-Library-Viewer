@@ -286,6 +286,8 @@ public class LoginActivity extends AppCompatActivity {
             HashMap<String, String> info = null;
 
             try {
+                AppSettings appSettings = new AppSettings(getApplicationContext());
+                String sessionKey = appSettings.getSessionKey();
                 URL url = new URL("https://ws.audioscrobbler.com/2.0/?api_key=" + API_KEY + "&method=user.getInfo&sk=" + sessionKey);
                 Data rawxml = new Data(url);
                 if (rawxml.parseAttribute("lfm", "status").equals("failed")) {
