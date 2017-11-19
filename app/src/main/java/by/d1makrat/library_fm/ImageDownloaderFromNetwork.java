@@ -13,7 +13,7 @@ public class ImageDownloaderFromNetwork {
 
     private Context mContext;
     private String mPathToCache;
-    private String mResolution;
+    private ResolutionOfImage mResolutionOfImage;
 
     public ImageDownloaderFromNetwork(Context pContext){
 
@@ -21,7 +21,7 @@ public class ImageDownloaderFromNetwork {
 
         AppSettings appSettings = new AppSettings(mContext);
         mPathToCache = appSettings.getCacheDir();
-        mResolution = appSettings.getResolution();
+        mResolutionOfImage = appSettings.getResolutionOfImage();
     }
 
     public void download(Scrobble scrobble) throws IOException{
@@ -33,7 +33,7 @@ public class ImageDownloaderFromNetwork {
         Bitmap image;
 
         File folder = createFolderForImage();
-        if (!scrobble.getImageUriBySize(mResolution).equals("")) {
+        if (!scrobble.getImageUriBySize(mResolutionOfImage).equals("")) {
 
             if (scrobble.getAlbum().getAlbumTitle() != null || !scrobble.getAlbum().getAlbumTitle().equals(""))
                 filename = folder.getPath() + File.separator + scrobble.getArtist().getArtistName().replaceAll("[\\\\/:*?\"<>|]", "_") + " - " + scrobble.getAlbum().getAlbumTitle().replaceAll("[\\\\/:*?\"<>|]", "_") + ".png";
@@ -42,7 +42,7 @@ public class ImageDownloaderFromNetwork {
 
             if (!(new File(filename).exists())) {
                 try {
-                    java.net.URL newurl = new URL(scrobble.getImageUriBySize(mResolution));
+                    java.net.URL newurl = new URL(scrobble.getImageUriBySize(mResolutionOfImage));
                     image = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
                     out = new FileOutputStream(filename);
                     image.compress(Bitmap.CompressFormat.PNG, 100, out);
@@ -78,13 +78,13 @@ public class ImageDownloaderFromNetwork {
             AppSettings appSettings = new AppSettings(mContext);
             filename = appSettings.getPathToBlankAlbumart();
         }
-        scrobble.setImageUriBySize(mResolution, filename);
+        scrobble.setImageUriBySize(mResolutionOfImage, filename);
 //        return filename;
     }
 
     private File createFolderForImage(){
 
-        File folder = new File(mPathToCache + File.separator + mResolution + File.separator + "Albums");
+        File folder = new File(mPathToCache + File.separator + mResolutionOfImage + File.separator + "Albums");
         if (!folder.exists()) {
             boolean folderCreated = false;
             while (!folderCreated) {

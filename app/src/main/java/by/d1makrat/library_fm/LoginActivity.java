@@ -358,7 +358,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     AppSettings appSettings = new AppSettings(getApplicationContext());
                     appSettings.setUsername(result.get("name"));
-                    appSettings.setpPlaycount(result.get("playcount").substring(0, result.get("playcount").indexOf(" ")));
+                    appSettings.setPlaycount(result.get("playcount").substring(0, result.get("playcount").indexOf(" ")));
                     appSettings.setRegistered(registered);
 
 

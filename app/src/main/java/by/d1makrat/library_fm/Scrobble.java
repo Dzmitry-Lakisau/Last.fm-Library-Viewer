@@ -50,28 +50,12 @@ public class Scrobble{
 //        return mImages;
 //    }
 
-    public String getImageUriBySize(String pSize){
-
-        String result = null;
-
-        switch(pSize){
-            case "small": result = mImages.get(0).getImageURI(); break;
-            case "medium": result = mImages.get(1).getImageURI(); break;
-            case "large": result = mImages.get(2).getImageURI(); break;
-            case "extralarge": result = mImages.get(3).getImageURI(); break;
-        }
-
-        return result;
+    public String getImageUriBySize(ResolutionOfImage pResolutionOfImage){
+        return mImages.get(pResolutionOfImage.ordinal()).getImageURI();
     }
 
-    public void setImageUriBySize(String pSize, String pUri){
-
-        switch(pSize){
-            case "small": mImages.get(0).setImageURI(pUri); break;
-            case "medium": mImages.get(1).setImageURI(pUri); break;
-            case "large": mImages.get(2).setImageURI(pUri); break;
-            case "extralarge": mImages.get(3).setImageURI(pUri); break;
-        }
+    public void setImageUriBySize(ResolutionOfImage pResolutionOfImage, String pUri){
+        mImages.get(pResolutionOfImage.ordinal()).setImageURI(pUri);
     }
 
     public Date getDate(){

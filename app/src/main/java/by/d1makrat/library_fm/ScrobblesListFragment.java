@@ -28,6 +28,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ import javax.net.ssl.SSLException;
 public class ScrobblesListFragment extends ListFragment implements OnScrollListener, FilterDialogFragment.DialogListener {
     private final String API_KEY = BuildConfig.API_KEY;
 //    private String path_to_blank = null;
-    private String resolution;
+    private ResolutionOfImage resolutionOfImage;
     private String url = null;
     private String filter_string = null;
     private String list_head_text = null;
@@ -140,7 +141,7 @@ public class ScrobblesListFragment extends ListFragment implements OnScrollListe
 
         AppSettings appSettings = new AppSettings(getActivity().getApplicationContext());
         limit = Integer.parseInt(appSettings.getLimit());
-        resolution = appSettings.getResolution();
+        resolutionOfImage = appSettings.getResolutionOfImage();
 
         if (isCreated)
             LoadItems(page, null, null);
@@ -262,7 +263,7 @@ public class ScrobblesListFragment extends ListFragment implements OnScrollListe
                     bundle.putString("username", username);
                     bundle.putString("cachepath", cachepath);
                     bundle.putString("artist", artist);
-                    bundle.putString("resolution", resolution);
+                    bundle.putString("resolutionOfImage", resolutionOfImage.name());
                     Fragment fragment = new ScrobblesOfArtistFragment();
                     fragment.setArguments(bundle);
                     fragmentTransaction = getFragmentManager().beginTransaction();
@@ -277,7 +278,7 @@ public class ScrobblesListFragment extends ListFragment implements OnScrollListe
                     bundle.putString("username", username);
                     bundle.putString("cachepath", cachepath);
                     bundle.putString("artist", artist);
-                    bundle.putString("resolution", resolution);
+                    bundle.putString("resolutionOfImage", resolutionOfImage.name());
                     fragment = new ScrobblesOfTrackFragment();
                     String track = ((TextView) info.targetView.findViewById(R.id.track)).getText().toString();
                     bundle.putString("track", track);
@@ -294,7 +295,7 @@ public class ScrobblesListFragment extends ListFragment implements OnScrollListe
                     bundle.putString("username", username);
                     bundle.putString("cachepath", cachepath);
                     bundle.putString("artist", artist);
-                    bundle.putString("resolution", resolution);
+                    bundle.putString("resolutionOfImage", resolutionOfImage.name());
                     fragment = new ScrobblesOfAlbumFragment();
                     String album = ((TextView) info.targetView.findViewById(R.id.album)).getText().toString();
                     bundle.putString("album", album);
@@ -337,7 +338,7 @@ public class ScrobblesListFragment extends ListFragment implements OnScrollListe
                 if (from != null) treeMap.put("from", from);
                 if (to != null) treeMap.put("to", to);
                 task = new GetScrobblesListTask();
-                task.execute(treeMap);
+                task.execute();
             }
         }
         else {
@@ -387,7 +388,7 @@ public class ScrobblesListFragment extends ListFragment implements OnScrollListe
         KillTaskIfRunning(task);
     }
 
-    public class GetScrobblesListTask extends AsyncTask<TreeMap<String, String>, Integer, List<HashMap<String, String>>> {
+    public class GetScrobblesListTask extends AsyncTask<Void, Integer, List<HashMap<String, String>>> {
 
         private View list_spinner = getActivity().getLayoutInflater().inflate(R.layout.list_spinner, (ViewGroup) null);
         private int exception = 0;
@@ -395,15 +396,18 @@ public class ScrobblesListFragment extends ListFragment implements OnScrollListe
         private ProgressBar progressBar = (ProgressBar) list_spinner.findViewById(R.id.progressbar);
 
         @Override
-        protected List<HashMap<String, String>> doInBackground(TreeMap<String, String>... params) {
+        protected List<HashMap<String, String>> doInBackground(Void... params) {
 
             List<HashMap<String, String>> Tracks = new ArrayList<>();
             List<Scrobble> scrobbles = new ArrayList<>();
 
             try {
 
-                NetworkRequester networkRequester = new NetworkRequester(params[0], getActivity().getApplicationContext());
-                String response = networkRequester.request("GET");
+                UrlConstructor urlConctructor = new UrlConstructor(getActivity().getApplicationContext());
+                URL url = urlConctructor.constructRecentScrobblesRequest(page, from, to);
+
+                NetworkRequester networkRequester = new NetworkRequester();
+                String response = networkRequester.request(url, "GET");
 
                 ScrobblesParser scrobblesParser = new ScrobblesParser(response);
 
@@ -424,13 +428,13 @@ public class ScrobblesListFragment extends ListFragment implements OnScrollListe
                     publishProgress(i+1);
                 }
 
-                for (int i = 0; i < scrobbles.size(); i++) {//"name", "artist", "album", "date", "image"
+                for (int i = 0; i < scrobbles.size(); i++) {
                     HashMap<String, String> map = new HashMap<String, String>();
                     map.put("artist", scrobbles.get(i).getArtist().getArtistName());
                     map.put("name", scrobbles.get(i).getTrackTitle());
                     map.put("album", scrobbles.get(i).getAlbum().getAlbumTitle());
                     map.put("date", scrobbles.get(i).getDate().getFormattedDate());
-                    map.put("image", scrobbles.get(i).getImageUriBySize(resolution));
+                    map.put("image", scrobbles.get(i).getImageUriBySize(resolutionOfImage));
                     Tracks.add(map);
                 }
             }

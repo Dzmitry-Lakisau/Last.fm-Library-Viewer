@@ -49,13 +49,13 @@ public class AppSettings {
         spEditor.apply();
     }
 
-    public String getResolution() {
-        return mSharedPreferences.getString("resolution", DEFAULT_RESOLUTION);
+    public ResolutionOfImage getResolutionOfImage() {
+        return ResolutionOfImage.valueOf(mSharedPreferences.getString("resolution", DEFAULT_RESOLUTION));
     }
 
-    public void setResolution(String pResolution) {
+    public void setResolutionOfImage(String pResolution) {
         SharedPreferences.Editor spEditor = mSharedPreferences.edit();
-        spEditor.putString("limit", pResolution);
+        spEditor.putString("resolution", pResolution);
         spEditor.apply();
     }
 
@@ -103,7 +103,7 @@ public class AppSettings {
         return mSharedPreferences.getString("playcount", null);
     }
 
-    public void setpPlaycount(String pPlaycount){
+    public void setPlaycount(String pPlaycount){
         SharedPreferences.Editor spEditor = mSharedPreferences.edit();
         spEditor.putString("playcount", pPlaycount);
         spEditor.apply();
