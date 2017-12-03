@@ -1,4 +1,4 @@
-package by.d1makrat.library_fm;
+package by.d1makrat.library_fm.ui.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +9,8 @@ import android.widget.SeekBar;
 import android.preference.*;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import by.d1makrat.library_fm.R;
 
 //TODO write own preference window and Appsettings.getLimit to return int
 public class PreferenceActivity extends android.preference.PreferenceActivity {

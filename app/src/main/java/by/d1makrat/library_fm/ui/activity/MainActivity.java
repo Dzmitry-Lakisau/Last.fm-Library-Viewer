@@ -1,4 +1,4 @@
-package by.d1makrat.library_fm;
+package by.d1makrat.library_fm.ui.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -38,6 +38,18 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.List;
 import javax.net.ssl.SSLException;
+
+import by.d1makrat.library_fm.APIException;
+import by.d1makrat.library_fm.AppSettings;
+import by.d1makrat.library_fm.BuildConfig;
+import by.d1makrat.library_fm.Data;
+import by.d1makrat.library_fm.NetworkStatusChecker;
+import by.d1makrat.library_fm.R;
+import by.d1makrat.library_fm.ui.fragment.ManualScrobbleFragment;
+import by.d1makrat.library_fm.ui.fragment.ScrobblesListFragment;
+import by.d1makrat.library_fm.ui.fragment.SearchFragment;
+import by.d1makrat.library_fm.ui.fragment.StartFragment;
+import by.d1makrat.library_fm.ui.fragment.TabFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 

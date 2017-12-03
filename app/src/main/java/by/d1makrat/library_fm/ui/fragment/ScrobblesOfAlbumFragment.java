@@ -1,9 +1,11 @@
-package by.d1makrat.library_fm;
+package by.d1makrat.library_fm.ui.fragment;
 
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -12,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,13 +35,22 @@ import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.TreeMap;
 import org.xmlpull.v1.XmlPullParserException;
 import javax.net.ssl.SSLException;
 
-public class TopAlbumsFragment extends ListFragment implements OnScrollListener {
+import by.d1makrat.library_fm.APIException;
+import by.d1makrat.library_fm.BuildConfig;
+import by.d1makrat.library_fm.Data;
+import by.d1makrat.library_fm.NetworkStatusChecker;
+import by.d1makrat.library_fm.R;
+
+public class ScrobblesOfAlbumFragment extends ListFragment implements OnScrollListener, FilterDialogFragment.DialogListener {
     private final String API_KEY = BuildConfig.API_KEY;
     private String path_to_blank = null;
     private String resolution;
@@ -51,14 +63,15 @@ public class TopAlbumsFragment extends ListFragment implements OnScrollListener 
     private String from = null;
     private String to = null;
     private String cachepath = null;
-    private String period = null;
+    private String artist = null;
+    private String album = null;
 
     private boolean isLoading = false;
     private boolean isCreated = true;
     private boolean allIsLoaded = false;
     private boolean wasEmpty = false;
 
-    private GetTopAlbumsTask task;
+    private GetScrobblesOfAlbumTask task;
     private SimpleAdapter adapter;
     private ListView lView;
     private View empty_list;
@@ -67,17 +80,19 @@ public class TopAlbumsFragment extends ListFragment implements OnScrollListener 
     private ArrayList<HashMap<String, String>> items = new ArrayList<>();
 
     private int page;
-    private int limit;//max=200
+    private int limit = 200;//max=200
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         sessionKey = getArguments().getString("sessionKey");
         username = getArguments().getString("username");
         cachepath = getArguments().getString("cachepath");
-        period = getArguments().getString("period");
-        url = "https://www.last.fm/user/" + username + "/library/albums";
+        artist = getArguments().getString("artist");
+        album = getArguments().getString("album");
+        url = "https://www.last.fm/user/" + username + "/library/music/" + artist + "/" + album;
         page = 1;
         path_to_blank = getActivity().getFilesDir().getPath();
         setHasOptionsMenu(true);
@@ -86,13 +101,38 @@ public class TopAlbumsFragment extends ListFragment implements OnScrollListener 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.list, container, false);
+        View rootView = inflater.inflate(R.layout.list_with_head, container, false);
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.top_albums));
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(artist);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(album);
 
-        adapter = new SimpleAdapter(getActivity(), items, R.layout.ranked_list_item, new String[]{"album", "artist", "image", "playcount", "rank"}, new int[]{R.id.upper_field, R.id.middle_field, R.id.albumart, R.id.bottom_field, R.id.rank});
+        if (!isCreated) {
+            if (wasEmpty){
+                //было загружено и пусто
+                rootView.findViewById(R.id.empty_list).setVisibility(View.VISIBLE);
+                ((TextView) rootView.findViewById(R.id.empty_list_text)).setText(empty_list_text);
+            }
+            else {
+                //было загружено и данные не пустые
+                rootView.findViewById(R.id.list_head).setVisibility(View.VISIBLE);
+                ((TextView) rootView.findViewById(R.id.list_head)).setText(list_head_text);
+            }
+        }
+        else {
+            if(!NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())){
+                //создаётся и сеть отсуствует
+                rootView.findViewById(R.id.list_head).setVisibility(View.GONE);
+                rootView.findViewById(R.id.empty_list).setVisibility(View.VISIBLE);
+                ((TextView) rootView.findViewById(R.id.empty_list).findViewById(R.id.empty_list_text)).setText(R.string.network_is_not_connected);
+                empty_list_text = getText(R.string.network_is_not_connected).toString();
+                wasEmpty = true;
+            }
+        }
+
+        adapter = new SimpleAdapter(getActivity(), items, R.layout.list_item, new String[]{"name", "artist", "album", "date", "image"}, new int[]{R.id.track, R.id.artist, R.id.album, R.id.timestamp, R.id.albumart});
         lView = (ListView) rootView.findViewById(android.R.id.list);
         empty_list = rootView.findViewById(R.id.empty_list);
+        list_head = rootView.findViewById(R.id.list_head);
 
         View list_spinner = getActivity().getLayoutInflater().inflate(R.layout.list_spinner, (ViewGroup) null);
         lView.addFooterView(list_spinner);
@@ -102,31 +142,15 @@ public class TopAlbumsFragment extends ListFragment implements OnScrollListener 
         lView.setOnScrollListener(this);
         registerForContextMenu(lView);
 
-        if (!isCreated) {
-            if (wasEmpty) {
-                rootView.findViewById(R.id.empty_list).setVisibility(View.VISIBLE);
-                ((TextView) rootView.findViewById(R.id.empty_list_text)).setText(empty_list_text);
-            }
-        }
-        else {
-            if (!NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())) {
-                empty_list.setVisibility(View.VISIBLE);
-                ((TextView) empty_list.findViewById(R.id.empty_list_text)).setText(R.string.network_is_not_connected);
-                empty_list_text = getText(R.string.network_is_not_connected).toString();
-                wasEmpty = true;
-            }
-        }
-
         return rootView;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        limit = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getContext()).getString("limit", null));
         resolution = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("resolution", null);
         if (isCreated)
-            LoadItems(page);
+            LoadItems(page, null, null);
     }
 
     @Override
@@ -138,17 +162,13 @@ public class TopAlbumsFragment extends ListFragment implements OnScrollListener 
 
     @Override
     public void onScroll(AbsListView l, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if ((firstVisibleItem + visibleItemCount) == totalItemCount && (totalItemCount > 0) && !isLoading) {
-            if (NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())) {
-                page++;
-                LoadItems(page);
-            }
-            else {
-                Toast toast;
-                toast = Toast.makeText(getContext(), R.string.network_is_not_connected, Toast.LENGTH_SHORT);
-                toast.show();
-            }
-        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.menu_scrobbles, menu);
+        this.menu = menu;
     }
 
     @Override
@@ -156,11 +176,15 @@ public class TopAlbumsFragment extends ListFragment implements OnScrollListener 
         switch (item.getItemId()){
             case R.id.action_refresh:
                 if (NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())) {
-                    if (!IsTaskRunning()) {
+                    if (!isLoading) {
+    //                    allIsLoaded = false;
+                        getView().findViewById(R.id.list_head).setVisibility(View.GONE);
+    //                    menu.getItem(0).setEnabled(false);
+                        KillTaskIfRunning(task);
                         items.clear();
                         adapter.notifyDataSetChanged();
                         page = 1;
-                        LoadItems(page);
+                        LoadItems(page, from, to);
                     }
                 }
                 else {
@@ -169,32 +193,41 @@ public class TopAlbumsFragment extends ListFragment implements OnScrollListener 
                     toast.show();
                 }
                 return true;
+            case R.id.action_filter:
+                if (!isLoading) {
+                    FilterDialogFragment dialogFragment = new FilterDialogFragment();
+                    Bundle args = new Bundle();
+                    args.putString("from", from);
+                    args.putString("to", to);
+                    dialogFragment.setArguments(args);
+                    dialogFragment.setTargetFragment(this, 0);
+                    dialogFragment.show(getFragmentManager(), "DialogFragment");
+                }
+                return true;
+            case R.id.open_in_browser:
+                Uri address = Uri.parse(url);
+                Intent intent = new Intent(Intent.ACTION_VIEW, address);
+                startActivity(intent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    public boolean IsTaskRunning(){
-        if (task != null && task.getStatus() != AsyncTask.Status.FINISHED){
-            return true;
-        }
-        return false;
-    }
-
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo){
-        super.onCreateContextMenu(menu, v ,menuInfo);
+        super.onCreateContextMenu(menu, v , menuInfo);
         getActivity().getMenuInflater().inflate(R.menu.context_menu, menu);
-        menu.getItem(1).setVisible(false);
-//        menu.getItem(2).setVisible(false);
+        menu.getItem(2).setVisible(false);
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item){
+        if (NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())){
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         switch (item.getItemId()) {
             case R.id.scrobbles_of_artist:
-                String artist = ((TextView) info.targetView.findViewById(R.id.middle_field)).getText().toString();
+                String artist = ((TextView) info.targetView.findViewById(R.id.artist)).getText().toString();
                 Bundle bundle = new Bundle();
                 FragmentTransaction fragmentTransaction;
                 bundle.putString("sessionKey", sessionKey);
@@ -204,13 +237,13 @@ public class TopAlbumsFragment extends ListFragment implements OnScrollListener 
                 bundle.putString("resolution", resolution);
                 Fragment fragment = new ScrobblesOfArtistFragment();
                 fragment.setArguments(bundle);
-                fragmentTransaction = getParentFragment().getFragmentManager().beginTransaction();
+                fragmentTransaction = getFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.content_main, fragment, "ScrobblesOfArtistFragment");
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
                 return true;
             case R.id.scrobbles_of_track:
-                artist = ((TextView) info.targetView.findViewById(R.id.middle_field)).getText().toString();
+                artist = ((TextView) info.targetView.findViewById(R.id.artist)).getText().toString();
                 bundle = new Bundle();
                 bundle.putString("sessionKey", sessionKey);
                 bundle.putString("username", username);
@@ -221,13 +254,13 @@ public class TopAlbumsFragment extends ListFragment implements OnScrollListener 
                 String track = ((TextView) info.targetView.findViewById(R.id.track)).getText().toString();
                 bundle.putString("track", track);
                 fragment.setArguments(bundle);
-                fragmentTransaction = getParentFragment().getFragmentManager().beginTransaction();
+                fragmentTransaction = getFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.content_main, fragment, "ScrobblesOfTrackFragment");
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
                 return true;
             case R.id.scrobbles_of_album:
-                artist = ((TextView) info.targetView.findViewById(R.id.middle_field)).getText().toString();
+                artist = ((TextView) info.targetView.findViewById(R.id.artist)).getText().toString();
                 bundle = new Bundle();
                 bundle.putString("sessionKey", sessionKey);
                 bundle.putString("username", username);
@@ -235,16 +268,23 @@ public class TopAlbumsFragment extends ListFragment implements OnScrollListener 
                 bundle.putString("artist", artist);
                 bundle.putString("resolution", resolution);
                 fragment = new ScrobblesOfAlbumFragment();
-                String album = ((TextView) info.targetView.findViewById(R.id.upper_field)).getText().toString();
+                String album = ((TextView) info.targetView.findViewById(R.id.album)).getText().toString();
                 bundle.putString("album", album);
                 fragment.setArguments(bundle);
-                fragmentTransaction = getParentFragment().getFragmentManager().beginTransaction();
+                fragmentTransaction = getFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.content_main, fragment, "ScrobblesOfAlbumFragment");
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
                 return true;
             default:
                 return super.onContextItemSelected(item);
+        }
+    }
+        else {
+            Toast toast;
+            toast = Toast.makeText(getContext(), R.string.network_is_not_connected, Toast.LENGTH_SHORT);
+            toast.show();
+            return false;
         }
     }
 
@@ -255,24 +295,51 @@ public class TopAlbumsFragment extends ListFragment implements OnScrollListener 
         }
     }
 
-    public void LoadItems(Integer page) {
+    public void LoadItems(Integer page, String from, String to) {
         if (NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())) {
-            if (!allIsLoaded) {
-                isLoading = true;
-                TreeMap<String, String> treeMap = new TreeMap<>();
-                treeMap.put("method", "user.getTopAlbums");
-                treeMap.put("api_key", API_KEY);
-                treeMap.put("sk", sessionKey);
-                treeMap.put("user", username);
-                treeMap.put("limit", String.valueOf(limit));
-                treeMap.put("page", String.valueOf(page));
-                treeMap.put("period", period);
-                task = new GetTopAlbumsTask();
-                task.execute(treeMap);
-            }
+            isLoading = true;
+            TreeMap<String, String> treeMap = new TreeMap<>();
+            treeMap.put("method", "user.getArtistTracks");
+            treeMap.put("api_key", BuildConfig.API_KEY);
+            treeMap.put("sk", sessionKey);
+            treeMap.put("user", username);
+            treeMap.put("artist", artist);
+            treeMap.put("limit", String.valueOf(limit));
+            treeMap.put("page", String.valueOf(page));
+            if (from != null) treeMap.put("startTimestamp", from);
+            if (to != null) treeMap.put("endTimestamp", to);
+            task = new GetScrobblesOfAlbumTask();
+            task.execute(treeMap);
         }
         else {
             empty_list.setVisibility(View.VISIBLE);
+            ((TextView) empty_list.findViewById(R.id.empty_list_text)).setText(R.string.network_is_not_connected);
+            Toast toast;
+            toast = Toast.makeText(getContext(), R.string.network_is_not_connected, Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
+
+    @Override
+    public void onFinishEditDialog(String from, String to){
+        getView().findViewById(R.id.list_head).setVisibility(View.GONE);
+        this.from = from;
+        this.to = to;
+        items.clear();
+        adapter.notifyDataSetChanged();
+        page = 1;
+        filter_string = null;
+        url = "https://www.last.fm/user/" + username + "/library/music/" + artist + "/" + album;
+
+        KillTaskIfRunning(task);
+        LoadItems(page, from, to);
+        if (from != null && to != null) {
+            Date date_from = new Date(Long.valueOf(from) * 1000);
+            String string_from = new SimpleDateFormat("d MMM yyyy", Locale.ENGLISH).format(date_from);
+            Date date_to = new Date(Long.valueOf(to)* 1000);
+            String string_to = new SimpleDateFormat("d MMM yyyy", Locale.ENGLISH).format(date_to);
+            filter_string = string_from + " - " + string_to;
+            url += "?from=" + new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(date_from) + "&to=" + new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(date_to);
         }
     }
 
@@ -287,19 +354,22 @@ public class TopAlbumsFragment extends ListFragment implements OnScrollListener 
         super.onStop();
         isCreated = false;
         KillTaskIfRunning(task);
+//        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(null);
     }
 
-    public class GetTopAlbumsTask extends AsyncTask<TreeMap<String, String>, Integer, ArrayList<HashMap<String, String>>> {
+    public class GetScrobblesOfAlbumTask extends AsyncTask<TreeMap<String, String>, Integer, ArrayList<HashMap<String, String>>> {
 
-        View list_spinner = getActivity().getLayoutInflater().inflate(R.layout.list_spinner, (ViewGroup) null);
+        private View list_spinner = getActivity().getLayoutInflater().inflate(R.layout.list_spinner, (ViewGroup) null);
         private int exception = 0;
         private String message = null;
         private ProgressBar progressBar = (ProgressBar) list_spinner.findViewById(R.id.progressbar);
+        private int pages_count = 0;
 
         @Override
         protected ArrayList<HashMap<String, String>> doInBackground(TreeMap<String, String>... params) {
 
             ArrayList<HashMap<String, String>> Tracks = new ArrayList<>();
+            ArrayList<HashMap<String, String>> AllArtistTracks;
             FileOutputStream out = null;
             Bitmap image;
             String filename = null;
@@ -308,7 +378,30 @@ public class TopAlbumsFragment extends ListFragment implements OnScrollListener 
                 Data rawxml = new Data(params[0]);
                 if (rawxml.parseAttribute("lfm", "status").equals("failed"))
                     throw new APIException(rawxml.parseSingleText("error"));
-                Tracks = rawxml.getTopAlbums(resolution);
+
+                pages_count = rawxml.pageCountOfArtist(params[0]);
+
+                int j=1;
+                float prim = 0;
+                int divider = limit/pages_count;
+                while(j<=pages_count){
+                    if (isCancelled()) return null;
+                    float sec = (j-1)*divider;
+                    params[0].put("page", String.valueOf(j));
+                    rawxml = new Data(params[0]);
+                    AllArtistTracks = rawxml.getTracks(resolution);
+                    for (HashMap<String, String> item: AllArtistTracks
+                         ) {
+                        if (item.get("album").equals(album)){
+                            Tracks.add(item);
+                            prim = prim + (float) 1*divider/AllArtistTracks.size();
+                        }
+                        sec = sec + (float) 1*divider/AllArtistTracks.size();
+                        publishProgress((int) prim, (int) sec);
+                    }
+                    prim = prim + j*divider;
+                    j++;
+                }
 
                 File folder = new File(cachepath + File.separator + resolution + File.separator + "Albums");
                 if (!folder.exists()) {
@@ -320,10 +413,10 @@ public class TopAlbumsFragment extends ListFragment implements OnScrollListener 
                     String temp = item.get("image");
                     if (!temp.equals("")) {
                         if (item.get("album") != null || !item.get("album").equals("")){
-                            filename = folder.getPath() + File.separator + item.get("artist").replaceAll("[\\\\/:*?\"<>|]", "_") + " - " + item.get("album").replaceAll("[\\\\/:*?\"<>|]", "_") + ".png";
+                            filename = folder.getPath() + File.separator + params[0].get("artist").replaceAll("[\\\\/:*?\"<>|]", "_") + " - " + item.get("album").replaceAll("[\\\\/:*?\"<>|]", "_") + ".png";
                         }
                         else
-                            filename = folder.getPath() + File.separator + item.get("artist").replaceAll("[\\\\/:*?\"<>|]", "_") + ".png";
+                            filename = folder.getPath() + File.separator + params[0].get("artist").replaceAll("[\\\\/:*?\"<>|]", "_") + ".png";
                         if (!(new File(filename).exists())) {
                             try {
                                 URL newurl = new URL(temp);
@@ -332,12 +425,14 @@ public class TopAlbumsFragment extends ListFragment implements OnScrollListener 
                                 image.compress(Bitmap.CompressFormat.PNG, 100, out);
                                 out.flush();
                                 out.close();
-                            } catch (Exception e) {
+                            }
+                            catch (Exception e) {
                                 //FirebaseCrash.report(e);
                                 e.printStackTrace();
                                 File file = new File(filename);
                                 boolean deleted = file.delete();
-                            } finally {
+                            }
+                            finally {
                                 try {
                                     if (out != null) {
                                         out.close();
@@ -354,7 +449,6 @@ public class TopAlbumsFragment extends ListFragment implements OnScrollListener 
                     }
                     item.put("image", filename);
                     Tracks.set(i, item);
-                    publishProgress(i + 1);
                 }
             }
             catch (XmlPullParserException e){
@@ -381,7 +475,6 @@ public class TopAlbumsFragment extends ListFragment implements OnScrollListener 
                 exception = 5;
             }
             catch (FileNotFoundException e){
-                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 4;
             }
@@ -401,7 +494,7 @@ public class TopAlbumsFragment extends ListFragment implements OnScrollListener 
                 exception = 1;
             }
             finally {
-                publishProgress(limit);
+                publishProgress(limit, limit);
                 try {
                     if (out != null) {
                         out.close();
@@ -421,17 +514,17 @@ public class TopAlbumsFragment extends ListFragment implements OnScrollListener 
             isLoading = false;
             wasEmpty = false;
             if (exception == 0 && result.size() > 0){
+                list_head.setVisibility(View.VISIBLE);
                 for (int i = 0; i < result.size(); i++) {
                     items.add(result.get(i));
                 }
                 adapter.notifyDataSetChanged();
-            }
-            if (exception == 0 && result.size() == 0 && lView.getCount() > 0) {
-                allIsLoaded = true;
+                list_head_text = "Scrobbles: " + lView.getCount() + ((filter_string == null) ? "" : " within " + filter_string);
+                ((TextView) list_head.findViewById(R.id.list_head)).setText(list_head_text);
             }
             if (exception == 0 && result.size() == 0 && lView.getCount() == 0) {
                 empty_list.setVisibility(View.VISIBLE);
-                empty_list_text = "Nothing found";
+                empty_list_text = "No scrobbles" + ((filter_string == null) ? "" : "\nwithin " + filter_string);
                 ((TextView) empty_list.findViewById(R.id.empty_list_text)).setText(empty_list_text);
                 wasEmpty = true;
             }
@@ -464,7 +557,7 @@ public class TopAlbumsFragment extends ListFragment implements OnScrollListener 
         }
 
         @Override
-        protected void onPreExecute() {
+        protected void onPreExecute(){
             empty_list.setVisibility(View.GONE);
             progressBar.setProgress(0);
             progressBar.setMax(limit);
@@ -472,13 +565,14 @@ public class TopAlbumsFragment extends ListFragment implements OnScrollListener 
         }
 
         @Override
-        protected void onProgressUpdate(Integer... values) {
+        protected void onProgressUpdate(Integer... values){
             super.onProgressUpdate(values);
             progressBar.setProgress((values[0]));
+            progressBar.setSecondaryProgress(values[1]);
         }
 
         @Override
-        protected void onCancelled(ArrayList<HashMap<String, String>> result) {
+        protected void onCancelled() {
             isLoading = false;
             wasEmpty = false;
         }

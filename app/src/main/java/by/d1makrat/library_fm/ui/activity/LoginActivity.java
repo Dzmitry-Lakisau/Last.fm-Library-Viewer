@@ -1,4 +1,4 @@
-package by.d1makrat.library_fm;
+package by.d1makrat.library_fm.ui.activity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -34,6 +34,14 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import javax.net.ssl.SSLException;
+
+import by.d1makrat.library_fm.APIException;
+import by.d1makrat.library_fm.AppSettings;
+import by.d1makrat.library_fm.BuildConfig;
+import by.d1makrat.library_fm.Data;
+import by.d1makrat.library_fm.NetworkStatusChecker;
+import by.d1makrat.library_fm.R;
+
 import static android.os.Environment.*;
 
 public class LoginActivity extends AppCompatActivity {

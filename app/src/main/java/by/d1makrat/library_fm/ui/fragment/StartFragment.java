@@ -1,4 +1,4 @@
-package by.d1makrat.library_fm;
+package by.d1makrat.library_fm.ui.fragment;
 
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -29,6 +29,12 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import javax.net.ssl.SSLException;
+
+import by.d1makrat.library_fm.APIException;
+import by.d1makrat.library_fm.BuildConfig;
+import by.d1makrat.library_fm.Data;
+import by.d1makrat.library_fm.NetworkStatusChecker;
+import by.d1makrat.library_fm.R;
 
 public class StartFragment extends Fragment {
     private final String API_KEY = BuildConfig.API_KEY;

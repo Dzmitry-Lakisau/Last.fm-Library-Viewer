@@ -1,4 +1,4 @@
-package by.d1makrat.library_fm;
+package by.d1makrat.library_fm.ui.fragment;
 
 
 import android.app.Activity;
@@ -29,6 +29,12 @@ import com.codetroopers.betterpickers.radialtimepicker.RadialTimePickerDialogFra
 
 import org.xmlpull.v1.XmlPullParserException;
 import javax.net.ssl.SSLException;
+
+import by.d1makrat.library_fm.APIException;
+import by.d1makrat.library_fm.BuildConfig;
+import by.d1makrat.library_fm.Data;
+import by.d1makrat.library_fm.NetworkStatusChecker;
+import by.d1makrat.library_fm.R;
 
 public class ManualScrobbleFragment extends Fragment implements CalendarDatePickerDialogFragment.OnDateSetListener, RadialTimePickerDialogFragment.OnTimeSetListener{
 

@@ -1,4 +1,4 @@
-package by.d1makrat.library_fm;
+package by.d1makrat.library_fm.ui.fragment;
 
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -44,7 +44,13 @@ import java.util.TreeMap;
 import org.xmlpull.v1.XmlPullParserException;
 import javax.net.ssl.SSLException;
 
-public class ScrobblesOfAlbumFragment extends ListFragment implements OnScrollListener, FilterDialogFragment.DialogListener {
+import by.d1makrat.library_fm.APIException;
+import by.d1makrat.library_fm.BuildConfig;
+import by.d1makrat.library_fm.Data;
+import by.d1makrat.library_fm.NetworkStatusChecker;
+import by.d1makrat.library_fm.R;
+
+public class ScrobblesOfTrackFragment extends ListFragment implements OnScrollListener, FilterDialogFragment.DialogListener {
     private final String API_KEY = BuildConfig.API_KEY;
     private String path_to_blank = null;
     private String resolution;
@@ -58,14 +64,14 @@ public class ScrobblesOfAlbumFragment extends ListFragment implements OnScrollLi
     private String to = null;
     private String cachepath = null;
     private String artist = null;
-    private String album = null;
+    private String track = null;
 
     private boolean isLoading = false;
     private boolean isCreated = true;
     private boolean allIsLoaded = false;
     private boolean wasEmpty = false;
 
-    private GetScrobblesOfAlbumTask task;
+    private GetScrobblesOfTrackTask task;
     private SimpleAdapter adapter;
     private ListView lView;
     private View empty_list;
@@ -80,13 +86,12 @@ public class ScrobblesOfAlbumFragment extends ListFragment implements OnScrollLi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         sessionKey = getArguments().getString("sessionKey");
         username = getArguments().getString("username");
         cachepath = getArguments().getString("cachepath");
         artist = getArguments().getString("artist");
-        album = getArguments().getString("album");
-        url = "https://www.last.fm/user/" + username + "/library/music/" + artist + "/" + album;
+        track = getArguments().getString("track");
+        url = "https://www.last.fm/user/" + username + "/library/music/" + artist + "/_/" + track;
         page = 1;
         path_to_blank = getActivity().getFilesDir().getPath();
         setHasOptionsMenu(true);
@@ -98,7 +103,7 @@ public class ScrobblesOfAlbumFragment extends ListFragment implements OnScrollLi
         View rootView = inflater.inflate(R.layout.list_with_head, container, false);
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(artist);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(album);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(track);
 
         if (!isCreated) {
             if (wasEmpty){
@@ -171,9 +176,7 @@ public class ScrobblesOfAlbumFragment extends ListFragment implements OnScrollLi
             case R.id.action_refresh:
                 if (NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())) {
                     if (!isLoading) {
-    //                    allIsLoaded = false;
                         getView().findViewById(R.id.list_head).setVisibility(View.GONE);
-    //                    menu.getItem(0).setEnabled(false);
                         KillTaskIfRunning(task);
                         items.clear();
                         adapter.notifyDataSetChanged();
@@ -212,7 +215,7 @@ public class ScrobblesOfAlbumFragment extends ListFragment implements OnScrollLi
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo){
         super.onCreateContextMenu(menu, v , menuInfo);
         getActivity().getMenuInflater().inflate(R.menu.context_menu, menu);
-        menu.getItem(2).setVisible(false);
+        menu.getItem(1).setVisible(false);
     }
 
     @Override
@@ -275,11 +278,11 @@ public class ScrobblesOfAlbumFragment extends ListFragment implements OnScrollLi
         }
     }
         else {
-            Toast toast;
-            toast = Toast.makeText(getContext(), R.string.network_is_not_connected, Toast.LENGTH_SHORT);
-            toast.show();
-            return false;
-        }
+        Toast toast;
+        toast = Toast.makeText(getContext(), R.string.network_is_not_connected, Toast.LENGTH_SHORT);
+        toast.show();
+        return false;
+    }
     }
 
     private void KillTaskIfRunning(AsyncTask task) {
@@ -294,7 +297,7 @@ public class ScrobblesOfAlbumFragment extends ListFragment implements OnScrollLi
             isLoading = true;
             TreeMap<String, String> treeMap = new TreeMap<>();
             treeMap.put("method", "user.getArtistTracks");
-            treeMap.put("api_key", BuildConfig.API_KEY);
+            treeMap.put("api_key", API_KEY);
             treeMap.put("sk", sessionKey);
             treeMap.put("user", username);
             treeMap.put("artist", artist);
@@ -302,7 +305,7 @@ public class ScrobblesOfAlbumFragment extends ListFragment implements OnScrollLi
             treeMap.put("page", String.valueOf(page));
             if (from != null) treeMap.put("startTimestamp", from);
             if (to != null) treeMap.put("endTimestamp", to);
-            task = new GetScrobblesOfAlbumTask();
+            task = new GetScrobblesOfTrackTask();
             task.execute(treeMap);
         }
         else {
@@ -323,14 +326,14 @@ public class ScrobblesOfAlbumFragment extends ListFragment implements OnScrollLi
         adapter.notifyDataSetChanged();
         page = 1;
         filter_string = null;
-        url = "https://www.last.fm/user/" + username + "/library/music/" + artist + "/" + album;
+        url = "https://www.last.fm/user/" + username + "/library/music/" + artist + "/_/" + track;
 
         KillTaskIfRunning(task);
         LoadItems(page, from, to);
         if (from != null && to != null) {
             Date date_from = new Date(Long.valueOf(from) * 1000);
             String string_from = new SimpleDateFormat("d MMM yyyy", Locale.ENGLISH).format(date_from);
-            Date date_to = new Date(Long.valueOf(to)* 1000);
+            Date date_to = new Date(Long.valueOf(to) * 1000);
             String string_to = new SimpleDateFormat("d MMM yyyy", Locale.ENGLISH).format(date_to);
             filter_string = string_from + " - " + string_to;
             url += "?from=" + new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(date_from) + "&to=" + new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(date_to);
@@ -351,7 +354,7 @@ public class ScrobblesOfAlbumFragment extends ListFragment implements OnScrollLi
 //        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(null);
     }
 
-    public class GetScrobblesOfAlbumTask extends AsyncTask<TreeMap<String, String>, Integer, ArrayList<HashMap<String, String>>> {
+    public class GetScrobblesOfTrackTask extends AsyncTask<TreeMap<String, String>, Integer, ArrayList<HashMap<String, String>>> {
 
         private View list_spinner = getActivity().getLayoutInflater().inflate(R.layout.list_spinner, (ViewGroup) null);
         private int exception = 0;
@@ -386,7 +389,7 @@ public class ScrobblesOfAlbumFragment extends ListFragment implements OnScrollLi
                     AllArtistTracks = rawxml.getTracks(resolution);
                     for (HashMap<String, String> item: AllArtistTracks
                          ) {
-                        if (item.get("album").equals(album)){
+                        if (item.get("name").equals(track)){
                             Tracks.add(item);
                             prim = prim + (float) 1*divider/AllArtistTracks.size();
                         }
@@ -469,6 +472,7 @@ public class ScrobblesOfAlbumFragment extends ListFragment implements OnScrollLi
                 exception = 5;
             }
             catch (FileNotFoundException e){
+                //FirebaseCrash.report(e);
                 e.printStackTrace();
                 exception = 4;
             }

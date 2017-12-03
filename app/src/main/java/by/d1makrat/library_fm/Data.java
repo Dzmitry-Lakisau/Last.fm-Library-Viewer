@@ -257,10 +257,15 @@ public class Data {
         //URL MUST be encoded. hash is not.
         String sig = GenerateSignature(params);
         String s = "https://ws.audioscrobbler.com/2.0/?";
+        StringBuilder stringBuilder = new StringBuilder(s);
         for (Map.Entry<String, String> e : params.entrySet()) {
-            s += e.getKey() + "=" + URLEncoder.encode(e.getValue()) + "&";
+//            s += e.getKey() + "=" + URLEncoder.encode(e.getValue()) + "&";
+            stringBuilder.append(e.getKey());
+            stringBuilder.append("=");
+            stringBuilder.append(URLEncoder.encode(e.getValue()));
+            stringBuilder.append("&");
         }
-        s = s.substring(0, s.length() - 1);
+        s = stringBuilder.substring(0, s.length() - 1);
         s += "&api_sig=" + sig;
         return new URL(s);
     }
@@ -516,7 +521,7 @@ public class Data {
         return scrobbles;
     }
 
-    int pageCountOfArtist(TreeMap<String, String> params) throws IOException, NullPointerException, MalformedURLException{
+    public int pageCountOfArtist(TreeMap<String, String> params) throws IOException, NullPointerException, MalformedURLException{
         int i = 1;
         while (inputXML.contains("<name>")){
             params.put("page", String.valueOf(i));

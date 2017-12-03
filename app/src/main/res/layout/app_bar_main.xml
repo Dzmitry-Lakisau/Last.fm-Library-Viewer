@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="by.d1makrat.library_fm.MainActivity">
+    tools:context="by.d1makrat.library_fm.ui.activity.MainActivity">
 
     <include layout="@layout/content_main"
         android:background="@android:color/transparent"

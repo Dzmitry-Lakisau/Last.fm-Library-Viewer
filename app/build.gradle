@@ -3,7 +3,7 @@ apply plugin: 'com.google.firebase.firebase-perf'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.2"
+    buildToolsVersion "27.0.1"
 
     dexOptions {
 
@@ -40,9 +40,9 @@ dependencies {
     compile files('src/main/libs/commons-codec-1.8.jar')
     compile 'com.android.support:design:26.1.0'
     compile 'com.code-troopers.betterpickers:library:3.1.0'
-    compile 'com.google.firebase:firebase-ads:11.6.0'
-    compile 'com.google.firebase:firebase-crash:11.6.0'
-    compile 'com.google.firebase:firebase-perf:11.6.0'
+    compile 'com.google.firebase:firebase-ads:11.6.2'
+    compile 'com.google.firebase:firebase-crash:11.6.2'
+    compile 'com.google.firebase:firebase-perf:11.6.2'
 }
 
 apply plugin: 'com.google.gms.google-services'

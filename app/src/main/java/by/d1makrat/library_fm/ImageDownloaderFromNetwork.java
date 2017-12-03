@@ -9,6 +9,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 
+import by.d1makrat.library_fm.model.Scrobble;
+
 public class ImageDownloaderFromNetwork {
 
     private Context mContext;
@@ -21,7 +23,7 @@ public class ImageDownloaderFromNetwork {
 
         AppSettings appSettings = new AppSettings(mContext);
         mPathToCache = appSettings.getCacheDir();
-        mResolutionOfImage = appSettings.getResolutionOfImage();
+//        mResolutionOfImage = appSettings.getResolutionOfImage();
     }
 
     public void download(Scrobble scrobble) throws IOException{
@@ -33,16 +35,16 @@ public class ImageDownloaderFromNetwork {
         Bitmap image;
 
         File folder = createFolderForImage();
-        if (!scrobble.getImageUriBySize(mResolutionOfImage).equals("")) {
+        if (!scrobble.getImageUri().equals("")) {
 
-            if (scrobble.getAlbum().getAlbumTitle() != null || !scrobble.getAlbum().getAlbumTitle().equals(""))
-                filename = folder.getPath() + File.separator + scrobble.getArtist().getArtistName().replaceAll("[\\\\/:*?\"<>|]", "_") + " - " + scrobble.getAlbum().getAlbumTitle().replaceAll("[\\\\/:*?\"<>|]", "_") + ".png";
+            if (scrobble.getAlbum() != null || !scrobble.getAlbum().equals(""))
+                filename = folder.getPath() + File.separator + scrobble.getArtist().replaceAll("[\\\\/:*?\"<>|]", "_") + " - " + scrobble.getAlbum().replaceAll("[\\\\/:*?\"<>|]", "_") + ".png";
             else
-                filename = folder.getPath() + File.separator + scrobble.getArtist().getArtistName().replaceAll("[\\\\/:*?\"<>|]", "_") + ".png";
+                filename = folder.getPath() + File.separator + scrobble.getArtist().replaceAll("[\\\\/:*?\"<>|]", "_") + ".png";
 
             if (!(new File(filename).exists())) {
                 try {
-                    java.net.URL newurl = new URL(scrobble.getImageUriBySize(mResolutionOfImage));
+                    java.net.URL newurl = new URL(scrobble.getImageUri().toString());
                     image = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
                     out = new FileOutputStream(filename);
                     image.compress(Bitmap.CompressFormat.PNG, 100, out);
@@ -74,17 +76,18 @@ public class ImageDownloaderFromNetwork {
                     }
                 }
             }
-        } else {
-            AppSettings appSettings = new AppSettings(mContext);
-            filename = appSettings.getPathToBlankAlbumart();
         }
-        scrobble.setImageUriBySize(mResolutionOfImage, filename);
+//        else {
+//            AppSettings appSettings = new AppSettings(mContext);
+//            filename = appSettings.getPathToBlankAlbumart();
+//        }
+        scrobble.setImageUri(filename);
 //        return filename;
     }
 
     private File createFolderForImage(){
 
-        File folder = new File(mPathToCache + File.separator + mResolutionOfImage + File.separator + "Albums");
+        File folder = new File(mPathToCache + File.separator + "Albums");
         if (!folder.exists()) {
             boolean folderCreated = false;
             while (!folderCreated) {

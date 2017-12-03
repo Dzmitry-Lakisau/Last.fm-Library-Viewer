@@ -1,4 +1,4 @@
-package by.d1makrat.library_fm;
+package by.d1makrat.library_fm.ui.fragment;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -17,6 +17,8 @@ import com.google.firebase.crash.FirebaseCrash;
 
 import java.util.Calendar;
 import java.util.TimeZone;
+
+import by.d1makrat.library_fm.R;
 
 public class AboutDialogFragment extends android.support.v4.app.DialogFragment {
 

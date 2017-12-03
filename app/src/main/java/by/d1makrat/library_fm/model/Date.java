@@ -1,4 +1,4 @@
-package by.d1makrat.library_fm;
+package by.d1makrat.library_fm.model;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -17,15 +17,15 @@ public class Date {
         this.mUnixDate = mUnixDtate;
     }
 
-    public String getFormattedDate() {
-        return mFormattedDate;
-    }
+//    public String getFormattedDate() {
+//        return mFormattedDate;
+//    }
 
-    public void setFormattedDate(String mFormattedDate) {
-        this.mFormattedDate = mFormattedDate;
-    }
+//    public void setFormattedDate(String mFormattedDate) {
+//        this.mFormattedDate = mFormattedDate;
+//    }
 
-    public String convertUnixDate(){
+    public String getDate(){
         java.util.Date date = new java.util.Date (mUnixDate * 1000L);
         SimpleDateFormat sdf = new SimpleDateFormat("d MMM yyyy, HH:mm:ss", Locale.ENGLISH);
         String formattedDate = sdf.format(date);

@@ -31,14 +31,14 @@
 
 
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.activity.MainActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
         >
         </activity>
 
         <activity
-            android:name=".LoginActivity"
+            android:name=".ui.activity.LoginActivity"
             android:noHistory="true"
             android:screenOrientation="portrait"
             >
@@ -48,7 +48,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PreferenceActivity"
+            android:name=".ui.activity.PreferenceActivity"
             android:screenOrientation="portrait"
         />
     </application>

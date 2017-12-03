@@ -11,55 +11,68 @@
     >
 
     <TextView
-        android:includeFontPadding="false"
         android:id="@+id/track"
-        android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:layout_marginEnd="@dimen/text_margin"
+        android:layout_marginRight="@dimen/text_margin"
+        android:layout_toEndOf="@+id/albumart"
         android:layout_toRightOf="@+id/albumart"
         android:background="@android:color/transparent"
-        android:layout_marginRight="@dimen/text_margin"
+        android:includeFontPadding="false"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        tools:text="Track title"
         />
 
     <TextView
-        android:includeFontPadding="false"
         android:id="@+id/artist"
-        android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
+        android:layout_alignLeft="@+id/track"
+        android:layout_alignStart="@+id/track"
         android:layout_below="@+id/track"
-        android:layout_alignLeft="@+id/track"
-        />
+        android:background="@android:color/transparent"
+        android:includeFontPadding="false"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        tools:text="Artist" />
 
     <TextView
-        android:includeFontPadding="false"
         android:id="@+id/album"
-        android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:layout_below="@+id/artist"
         android:layout_alignLeft="@+id/track"
-        />
+        android:layout_alignStart="@+id/track"
+        android:layout_below="@+id/artist"
+        android:background="@android:color/transparent"
+        android:includeFontPadding="false"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        tools:text="Album" />
 
     <TextView
-        android:includeFontPadding="false"
         android:id="@+id/timestamp"
-        android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:layout_below="@+id/album"
         android:layout_alignLeft="@+id/track"
-        />
+        android:layout_alignStart="@+id/track"
+        android:layout_below="@+id/album"
+        android:background="@android:color/transparent"
+        android:includeFontPadding="false"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        tools:text="Date" />
 
     <ImageView
-        android:layout_width="@android:dimen/notification_large_icon_width"
-        android:layout_height="@android:dimen/notification_large_icon_height"
-        android:background="@android:color/transparent"
         android:id="@+id/albumart"
-        android:layout_margin="@dimen/text_margin"
-        />
+        android:layout_width="74dp"
+        android:layout_height="74dp"
+
+        android:layout_alignTop="@+id/track"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="@android:color/transparent"
+
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/default_albumart" />
 </RelativeLayout>

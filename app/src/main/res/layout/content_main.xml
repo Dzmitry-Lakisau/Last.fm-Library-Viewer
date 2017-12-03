@@ -10,7 +10,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="by.d1makrat.library_fm.MainActivity"
+    tools:context="by.d1makrat.library_fm.ui.activity.MainActivity"
     tools:showIn="@layout/app_bar_main"
     android:background="@android:color/transparent">
 

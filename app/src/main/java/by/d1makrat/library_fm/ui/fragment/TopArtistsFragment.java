@@ -1,4 +1,4 @@
-package by.d1makrat.library_fm;
+package by.d1makrat.library_fm.ui.fragment;
 
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -37,6 +37,12 @@ import java.util.HashMap;
 import java.util.TreeMap;
 import org.xmlpull.v1.XmlPullParserException;
 import javax.net.ssl.SSLException;
+
+import by.d1makrat.library_fm.APIException;
+import by.d1makrat.library_fm.BuildConfig;
+import by.d1makrat.library_fm.Data;
+import by.d1makrat.library_fm.NetworkStatusChecker;
+import by.d1makrat.library_fm.R;
 
 public class TopArtistsFragment extends ListFragment implements OnScrollListener {
     private final String API_KEY = BuildConfig.API_KEY;

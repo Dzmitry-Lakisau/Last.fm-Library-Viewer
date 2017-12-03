@@ -4,9 +4,7 @@ public class APIException extends Exception {
 
     private String msg;
 
-    APIException(){}
-
-    APIException(String msg) {
+    public APIException(String msg) {
         super(msg);
         this.msg = msg;
     }
