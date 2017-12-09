@@ -10,7 +10,10 @@ import android.preference.*;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.R;
+
+import static by.d1makrat.library_fm.Constants.SCROBBLES_PER_PAGE_KEY;
 
 //TODO write own preference window and Appsettings.getLimit to return int
 public class PreferenceActivity extends android.preference.PreferenceActivity {
@@ -19,7 +22,7 @@ public class PreferenceActivity extends android.preference.PreferenceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
-        EditTextPreference edit_Pref = (EditTextPreference) getPreferenceScreen().findPreference("limit");
+        EditTextPreference edit_Pref = (EditTextPreference) getPreferenceScreen().findPreference(SCROBBLES_PER_PAGE_KEY);
         edit_Pref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -32,6 +35,7 @@ public class PreferenceActivity extends android.preference.PreferenceActivity {
                             if (v != null) v.setGravity(Gravity.CENTER);
                             toast.show();
                         }
+                        AppContext.getInstance().setLimit(String.valueOf(temp));
                         return true;
                     } else {
                         (Toast.makeText(getApplicationContext(), "Value must be between 1 and 1000 including", Toast.LENGTH_LONG)).show();

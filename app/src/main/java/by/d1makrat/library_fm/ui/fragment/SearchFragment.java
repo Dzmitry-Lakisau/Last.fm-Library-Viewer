@@ -120,7 +120,7 @@ public class SearchFragment extends ListFragment implements OnScrollListener {
             }
         }
         else {
-            if(!NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())){
+            if(!NetworkStatusChecker.isNetworkAvailable()){
                 //создаётся и сеть отсуствует
                 rootView.findViewById(R.id.empty_list).setVisibility(View.VISIBLE);
                 ((TextView) rootView.findViewById(R.id.empty_list).findViewById(R.id.empty_list_text)).setText(R.string.network_is_not_connected);
@@ -186,7 +186,7 @@ public class SearchFragment extends ListFragment implements OnScrollListener {
 //        Log.d("DEBUG", "limit " + String.valueOf(limit));
 //        limit = 10;
 //        if (isCreated)
-//            loadItemsFromWeb(page, search_field.getText().toString());
+//            loadItemsFromWeb(mPage, search_field.getText().toString());
     }
 
     @Override
@@ -214,7 +214,7 @@ public class SearchFragment extends ListFragment implements OnScrollListener {
     @Override
     public void onScroll(AbsListView l, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         if ((firstVisibleItem + visibleItemCount) == totalItemCount && (totalItemCount > 0) && !isLoading) {
-            if (NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())) {
+            if (NetworkStatusChecker.isNetworkAvailable()) {
                 page++;
                 LoadItems(page, search_field.getText().toString());
             }
@@ -238,7 +238,7 @@ public class SearchFragment extends ListFragment implements OnScrollListener {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_refresh:
-                if (NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())) {
+                if (NetworkStatusChecker.isNetworkAvailable()) {
                     if (!isLoading) {
                         allIsLoaded = false;
 //                        getView().findViewById(R.id.list_head).setVisibility(View.GONE);
@@ -284,7 +284,7 @@ public class SearchFragment extends ListFragment implements OnScrollListener {
 
     @Override
     public boolean onContextItemSelected(MenuItem item){
-        if (NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())) {
+        if (NetworkStatusChecker.isNetworkAvailable()) {
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
             switch (item.getItemId()) {
                 case R.id.scrobbles_of_artist:
@@ -357,7 +357,7 @@ public class SearchFragment extends ListFragment implements OnScrollListener {
     }
 
     public void LoadItems(Integer page, String artist) {
-        if (NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())) {
+        if (NetworkStatusChecker.isNetworkAvailable()) {
             if (!allIsLoaded) {
                 isLoading = true;
                 TreeMap<String, String> treeMap = new TreeMap<>();
@@ -365,7 +365,7 @@ public class SearchFragment extends ListFragment implements OnScrollListener {
                 treeMap.put("api_key", API_KEY);
                 treeMap.put("artist", artist);
                 treeMap.put("limit", String.valueOf(limit));
-                treeMap.put("page", String.valueOf(page));
+                treeMap.put("mPage", String.valueOf(page));
                 task = new GetSearchListTask();
                 task.execute(treeMap);
             }
@@ -385,7 +385,7 @@ public class SearchFragment extends ListFragment implements OnScrollListener {
     @Override
     public void onStop(){
         super.onStop();
-        isCreated = false;//TODO isCreated должно быть екгу и афдыу только В onPostExecute
+        isCreated = false;//TODO isCreated должно быть true и false только В onPostExecute
         KillTaskIfRunning(task);
     }
 
@@ -522,7 +522,7 @@ public class SearchFragment extends ListFragment implements OnScrollListener {
 
         @Override
         protected void onPostExecute(ArrayList<HashMap<String, String>> result) {
-//            Log.d("DEBUG", page +" "+ result.size());
+//            Log.d("DEBUG", mPage +" "+ result.size());
             lView.removeFooterView(list_spinner);
             isLoading = false;
             wasEmpty = false;

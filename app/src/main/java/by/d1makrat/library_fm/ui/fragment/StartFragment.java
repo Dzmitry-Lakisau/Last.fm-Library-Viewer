@@ -148,7 +148,7 @@ public class StartFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())) {
+        if (NetworkStatusChecker.isNetworkAvailable()) {
             task = new GetPlaycountTask();
             task.execute();
         }

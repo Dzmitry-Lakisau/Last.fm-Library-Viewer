@@ -115,7 +115,7 @@ public class TopAlbumsFragment extends ListFragment implements OnScrollListener 
             }
         }
         else {
-            if (!NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())) {
+            if (!NetworkStatusChecker.isNetworkAvailable()) {
                 empty_list.setVisibility(View.VISIBLE);
                 ((TextView) empty_list.findViewById(R.id.empty_list_text)).setText(R.string.network_is_not_connected);
                 empty_list_text = getText(R.string.network_is_not_connected).toString();
@@ -145,7 +145,7 @@ public class TopAlbumsFragment extends ListFragment implements OnScrollListener 
     @Override
     public void onScroll(AbsListView l, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         if ((firstVisibleItem + visibleItemCount) == totalItemCount && (totalItemCount > 0) && !isLoading) {
-            if (NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())) {
+            if (NetworkStatusChecker.isNetworkAvailable()) {
                 page++;
                 LoadItems(page);
             }
@@ -161,7 +161,7 @@ public class TopAlbumsFragment extends ListFragment implements OnScrollListener 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_refresh:
-                if (NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())) {
+                if (NetworkStatusChecker.isNetworkAvailable()) {
                     if (!IsTaskRunning()) {
                         items.clear();
                         adapter.notifyDataSetChanged();
@@ -262,7 +262,7 @@ public class TopAlbumsFragment extends ListFragment implements OnScrollListener 
     }
 
     public void LoadItems(Integer page) {
-        if (NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())) {
+        if (NetworkStatusChecker.isNetworkAvailable()) {
             if (!allIsLoaded) {
                 isLoading = true;
                 TreeMap<String, String> treeMap = new TreeMap<>();
@@ -271,7 +271,7 @@ public class TopAlbumsFragment extends ListFragment implements OnScrollListener 
                 treeMap.put("sk", sessionKey);
                 treeMap.put("user", username);
                 treeMap.put("limit", String.valueOf(limit));
-                treeMap.put("page", String.valueOf(page));
+                treeMap.put("mPage", String.valueOf(page));
                 treeMap.put("period", period);
                 task = new GetTopAlbumsTask();
                 task.execute(treeMap);

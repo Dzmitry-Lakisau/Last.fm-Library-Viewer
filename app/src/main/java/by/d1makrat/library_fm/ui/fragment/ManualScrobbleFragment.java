@@ -96,7 +96,7 @@ public class ManualScrobbleFragment extends Fragment implements CalendarDatePick
 
 			switch (v.getId()) {
 				case R.id.button_scrobble:
-					if (NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())) {
+					if (NetworkStatusChecker.isNetworkAvailable()) {
 //					((Button) getView().findViewById(R.id.button_scrobble)).setEnabled(false);
 					spinner.setVisibility(View.VISIBLE);
 					String track = ((TextView) getView().findViewById(R.id.track)).getText().toString();

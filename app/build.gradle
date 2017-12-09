@@ -2,8 +2,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.firebase.firebase-perf'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "27.0.1"
+    compileSdkVersion 27
+    buildToolsVersion "27.0.2"
 
     dexOptions {
 
@@ -14,7 +14,7 @@ android {
     defaultConfig {
         applicationId "by.d1makrat.library_fm"
         minSdkVersion 15
-        targetSdkVersion 23
+        targetSdkVersion 27
     }
 
     buildTypes {
@@ -33,12 +33,12 @@ android {
     }
 
     dependencies {
-        compile 'com.android.support:appcompat-v7:26.1.0'
+        compile 'com.android.support:appcompat-v7:27.0.2'
     }
 }
 dependencies {
     compile files('src/main/libs/commons-codec-1.8.jar')
-    compile 'com.android.support:design:26.1.0'
+    compile 'com.android.support:design:27.0.2'
     compile 'com.code-troopers.betterpickers:library:3.1.0'
     compile 'com.google.firebase:firebase-ads:11.6.2'
     compile 'com.google.firebase:firebase-crash:11.6.2'

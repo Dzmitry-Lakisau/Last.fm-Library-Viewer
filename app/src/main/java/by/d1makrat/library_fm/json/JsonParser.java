@@ -10,24 +10,23 @@ import java.util.List;
 import by.d1makrat.library_fm.model.Date;
 import by.d1makrat.library_fm.model.Scrobble;
 
-public class ScrobblesParser {
-    
-    private String mStringToParse; 
-    
-    public ScrobblesParser(String stringToParse){
-              mStringToParse = stringToParse;
+public class JsonParser {
+
+    private String mStringToParse; //TODO remove constructor and pass string as parameter in methods
+
+    public JsonParser(String stringToParse) {
+        mStringToParse = stringToParse;
     }
 
-    public String checkForApiErrors() throws JSONException{
+    public String checkForApiErrors() throws JSONException {
 
         JSONObject obj = new JSONObject(mStringToParse);
         if (obj.has("error")) {
             return obj.getString("message");
-        }
-        else return "No error";
+        } else return "No error";
     }
 
-    public List<Scrobble> parseTracks() {
+    public List<Scrobble> parseScrobbles() {
 
         List<Scrobble> scrobbles = new ArrayList<Scrobble>();
 
@@ -35,9 +34,14 @@ public class ScrobblesParser {
 
         try {
             JSONObject obj = new JSONObject(mStringToParse);
-            JSONArray tracksJsonArray = obj.getJSONObject("recenttracks").getJSONArray("track");
 
-            for (int i=0; i<tracksJsonArray.length(); i++) {
+            JSONArray tracksJsonArray;
+            if (obj.has("recenttracks"))
+                tracksJsonArray = obj.getJSONObject("recenttracks").getJSONArray("track");
+            else
+                tracksJsonArray = obj.getJSONObject("artisttracks").getJSONArray("track");
+
+            for (int i = 0; i < tracksJsonArray.length(); i++) {
                 JSONObject trackJsonObject = tracksJsonArray.getJSONObject(i);
 
                 if (!trackJsonObject.has("@attr")) {
@@ -69,5 +73,18 @@ public class ScrobblesParser {
         }
 
         return scrobbles;
+    }
+
+    public String parseSessionkey() {
+        String sessionkey = null;
+
+        try {
+            JSONObject obj = new JSONObject(mStringToParse);
+            sessionkey = obj.getJSONObject("session").getString("key");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return sessionkey;
     }
 }

@@ -90,7 +90,7 @@ public class TabFragment extends Fragment {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        if (NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())) {
+        if (NetworkStatusChecker.isNetworkAvailable()) {
             return false;
         }
         else {

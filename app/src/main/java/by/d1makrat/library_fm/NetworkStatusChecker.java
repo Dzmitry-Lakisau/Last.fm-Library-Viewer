@@ -6,8 +6,8 @@ import android.net.NetworkInfo;
 
 public class NetworkStatusChecker{
 
-    public static final boolean isNetworkAvailable(Context pContext) {
-        ConnectivityManager cm = (ConnectivityManager) pContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+    public static final boolean isNetworkAvailable() {
+        ConnectivityManager cm = (ConnectivityManager) AppContext.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = cm.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
     }

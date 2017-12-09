@@ -19,68 +19,53 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
+import by.d1makrat.library_fm.GetScrobblesAsynctaskCallback;
 import by.d1makrat.library_fm.NetworkStatusChecker;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.adapter.ScrobblesListAdapter;
 import by.d1makrat.library_fm.image_loader.Malevich;
-import by.d1makrat.library_fm.UrlConstructor;
 import by.d1makrat.library_fm.model.Scrobble;
-import by.d1makrat.library_fm.ui.GetScrobblesAsynctask;
-import by.d1makrat.library_fm.ui.GetScrobblesAsynctaskCallback;
+import by.d1makrat.library_fm.asynctask.GetScrobblesAsynctask;
 
 import static by.d1makrat.library_fm.Constants.*;
 
-public class ScrobblesListFragment extends ListFragment implements OnScrollListener, FilterDialogFragment.DialogListener, GetScrobblesAsynctaskCallback {
-
-//    private ResolutionOfImage resolutionOfImage;
-    private Uri urlForBrowser = null;
+public class ScrobblesListFragment extends ListFragment implements AbsListView.OnScrollListener, FilterDialogFragment.DialogListener, GetScrobblesAsynctaskCallback {
+    //max limit=1000
+    protected static String urlForBrowser;
     private String filter_string = null;
     private String list_head_text = null;
     private String empty_list_text = null;
-    private String username = null;
-    private String sessionKey = null;
-    private String from = null;
-    private String to = null;
-    private String cachepath = null;
+    protected String mFrom = null;
+    protected String mTo = null;
 
     private boolean isLoading = false;
     private boolean isCreated = true;
     private boolean allIsLoaded = false;
     private boolean wasEmpty = false;
 
-    private GetScrobblesAsynctask mGetScrobblesAsynctask;
+    protected GetScrobblesAsynctask mGetScrobblesAsynctask;
     private ScrobblesListAdapter mScrobblesListAdapter;
     private ListView mListView;
-    private View empty_list;
     private View list_head;
-//    private Menu menu;
-
     private List<Scrobble> mScrobbles = new ArrayList<>();
-    private int page;
-//    private int limit;//max=1000
+    protected int mPage;
     private View mFooterView;
-//    private ProgressBar progressBar;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Malevich.INSTANCE.setConfig(new Malevich.Config(getActivity().getApplicationContext().getCacheDir()));//TODO move into Application class?
-
-        UrlConstructor urlConstructor = new UrlConstructor(getActivity().getApplicationContext());
-        urlForBrowser = urlConstructor.constructRecentScrobblesUrlForBrowser(from, to); //"https://www.last.fm/user/" + username + "/library";
-        page = 1;
+        mPage = 1;
 
         setHasOptionsMenu(true);
     }
@@ -104,7 +89,7 @@ public class ScrobblesListFragment extends ListFragment implements OnScrollListe
                 ((TextView) rootView.findViewById(R.id.list_head)).setText(list_head_text);
             }
         } else {
-            if (!NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())) {
+            if (!NetworkStatusChecker.isNetworkAvailable()) {
                 //создаётся и сеть отсуствует
 
                 //loadItemsFromDatabase
@@ -118,8 +103,7 @@ public class ScrobblesListFragment extends ListFragment implements OnScrollListe
             drawable = getResources().getDrawable(R.drawable.default_albumart, null);
 
         mScrobblesListAdapter = new ScrobblesListAdapter(getActivity().getLayoutInflater(), drawable, mScrobbles);// SimpleAdapter(getActivity(), mScrobbles, R.layout.list_item, new String[]{"name", "artist", "album", "date", "image"}, new int[]{R.id.track, R.id.artist, R.id.album, R.id.timestamp, R.id.albumart});
-        mListView = (ListView) rootView.findViewById(android.R.id.list);
-        empty_list = rootView.findViewById(R.id.empty_list);
+        mListView = rootView.findViewById(android.R.id.list);
         list_head = rootView.findViewById(R.id.list_head);
 
         mFooterView = getActivity().getLayoutInflater().inflate(R.layout.list_spinner, (ViewGroup) null);
@@ -140,12 +124,9 @@ public class ScrobblesListFragment extends ListFragment implements OnScrollListe
     public void onStart() {
         super.onStart();
 
-//        AppSettings appSettings = new AppSettings(getActivity().getApplicationContext());
-//        limit = Integer.parseInt(appSettings.getLimit());
-//        resolutionOfImage = appSettings.getResolutionOfImage();
-
         if (isCreated)
-            loadItemsFromWeb(page, null, null);
+            LoadItems();
+//            loadItemsFromWeb(mPage, null, null);
     }
 
     @Override
@@ -155,12 +136,8 @@ public class ScrobblesListFragment extends ListFragment implements OnScrollListe
     @Override
     public void onScroll(AbsListView l, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         if ((firstVisibleItem + visibleItemCount) == totalItemCount && (totalItemCount > 0) && !isLoading) {
-            if (NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())) {
-                page++;
-                loadItemsFromWeb(page, from, to);
-            } else {
-                //loadItemsFromDatabase
-            }
+            mPage++;
+            LoadItems();
         }
     }
 
@@ -174,15 +151,16 @@ public class ScrobblesListFragment extends ListFragment implements OnScrollListe
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                if (NetworkStatusChecker.isNetworkAvailable(getActivity().getApplicationContext())) {
+                if (NetworkStatusChecker.isNetworkAvailable()) {
                     if (!isLoading) {
                         allIsLoaded = false;
                         getView().findViewById(R.id.list_head).setVisibility(View.GONE);
                         KillTaskIfRunning(mGetScrobblesAsynctask);
                         mScrobbles.clear();
                         mScrobblesListAdapter.notifyDataSetChanged();
-                        page = 1;
-                        loadItemsFromWeb(page, from, to);
+                        mPage = 1;
+                        LoadItems();
+//                        loadItemsFromWeb(mPage, mFrom, mTo);
                     }
                 } else {
                     Toast toast;
@@ -194,16 +172,27 @@ public class ScrobblesListFragment extends ListFragment implements OnScrollListe
                 if (!isLoading) {
                     FilterDialogFragment dialogFragment = new FilterDialogFragment();
                     Bundle args = new Bundle();
-                    args.putString("from", from);
-                    args.putString("to", to);
+                    args.putString("From", mFrom);
+                    args.putString("To", mTo);
                     dialogFragment.setArguments(args);
                     dialogFragment.setTargetFragment(this, 0);
                     dialogFragment.show(getFragmentManager(), "DialogFragment");
                 }
                 return true;
             case R.id.open_in_browser:
-                Intent intent = new Intent(Intent.ACTION_VIEW, urlForBrowser);
+                Intent intent;
+
+                if (mFrom != null && mTo != null) {
+                    Date date_from = new Date(Long.valueOf(mFrom) * 1000);
+                    Date date_to = new Date(Long.valueOf(mTo) * 1000);
+
+                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlForBrowser.concat("?from=" + new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(date_from) + "&to=" + new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(date_to))));
+                }
+                else
+                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlForBrowser));
+
                 startActivity(intent);
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -211,9 +200,9 @@ public class ScrobblesListFragment extends ListFragment implements OnScrollListe
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu pContextMenu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(pContextMenu, v, menuInfo);
-        getActivity().getMenuInflater().inflate(R.menu.context_menu, pContextMenu);
+    public void onCreateContextMenu(ContextMenu contextMenu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(contextMenu, v, menuInfo);
+        getActivity().getMenuInflater().inflate(R.menu.context_menu, contextMenu);
     }
 
     @Override
@@ -274,46 +263,41 @@ public class ScrobblesListFragment extends ListFragment implements OnScrollListe
 
     private void KillTaskIfRunning(AsyncTask task) {
         if (task != null && task.getStatus() != AsyncTask.Status.FINISHED) {
-            page--;
+            mPage--;
             task.cancel(true);
         }
     }
 
-    public void loadItemsFromWeb(Integer page, String from, String to) {
+    public void LoadItems() {
+        isLoading = true;
+        mListView.addFooterView(mFooterView);
+
         if (!allIsLoaded) {
-            isLoading = true;
-
-            URL url = null;
-            try {
-                UrlConstructor urlConstructor = new UrlConstructor(getActivity().getApplicationContext());
-                url = urlConstructor.constructRecentScrobblesApiRequestUrl(page, from, to);
-            } catch (MalformedURLException e) {
-                onException(e);
+            if (NetworkStatusChecker.isNetworkAvailable()) {
+//                mPage++;
+                loadItemsFromWeb();
+            } else {
+                //loadItemsFromDatabase
             }
-
-            mListView.addFooterView(mFooterView);
-
-            mGetScrobblesAsynctask = new GetScrobblesAsynctask(this);
-            mGetScrobblesAsynctask.execute(url);
         }
     }
 
+    public void loadItemsFromWeb(){}
+
     @Override
-    public void onFinishEditDialog(String from, String to) {
+    public void onFinishEditDialog(String pFrom, String pTo) {
         getView().findViewById(R.id.list_head).setVisibility(View.GONE);
         allIsLoaded = false;
-        this.from = from;
-        this.to = to;
+        mFrom = pFrom;
+        mTo = pTo;
         mScrobbles.clear();
         mScrobblesListAdapter.notifyDataSetChanged();
-        page = 1;
+        mPage = 1;
         filter_string = null;
 
-        UrlConstructor urlConstructor = new UrlConstructor(getActivity().getApplicationContext());
-        urlForBrowser = urlConstructor.constructRecentScrobblesUrlForBrowser(from, to);
-
         KillTaskIfRunning(mGetScrobblesAsynctask);
-        loadItemsFromWeb(page, from, to);
+        LoadItems();
+//        loadItemsFromWeb(mPage, pFrom, pTo);
     }
 
     @Override
@@ -325,7 +309,7 @@ public class ScrobblesListFragment extends ListFragment implements OnScrollListe
     @Override
     public void onStop() {
         super.onStop();
-        isCreated = false;//TODO isCreated должно быть екгу и афдыу только В onPostExecute
+        isCreated = false;//TODO isCreated должно быть true и false только В onPostExecute
         KillTaskIfRunning(mGetScrobblesAsynctask);
     }
 
@@ -350,7 +334,7 @@ public class ScrobblesListFragment extends ListFragment implements OnScrollListe
         mListView.removeFooterView(mFooterView);
         Toast.makeText(getContext(), pException.getMessage(), Toast.LENGTH_LONG).show();//TODO get context activity or fragment here?
     }
-}
+ }
 
 //        @Override
 //        protected void onPostExecute(List<Scrobble> result) {
@@ -376,7 +360,7 @@ public class ScrobblesListFragment extends ListFragment implements OnScrollListe
 //                ((TextView) empty_list.findViewById(R.id.empty_list_text)).setText(empty_list_text);
 //            }
 //            if (exception == 1 && mListView.getCount() == 0){
-//                page--;
+//                mPage--;
 //                empty_list.setVisibility(View.VISIBLE);
 //                empty_list_text = "Error occurred";
 //                ((TextView) empty_list.findViewById(R.id.empty_list_text)).setText(empty_list_text);
@@ -384,11 +368,11 @@ public class ScrobblesListFragment extends ListFragment implements OnScrollListe
 //                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
 //            }
 //            if (exception == 1 && mListView.getCount() > 0) {
-//                page--;
+//                mPage--;
 //                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
 //            }
 //            if (exception > 1 && mListView.getCount() == 0){
-//                page--;
+//                mPage--;
 //                empty_list.setVisibility(View.VISIBLE);
 //                empty_list_text = "Error occurred";
 //                ((TextView) empty_list.findViewById(R.id.empty_list_text)).setText(empty_list_text);
@@ -397,7 +381,7 @@ public class ScrobblesListFragment extends ListFragment implements OnScrollListe
 //                Toast.makeText(getContext(), exception_message[exception - 1], Toast.LENGTH_SHORT).show();
 //            }
 //            if (exception > 1 && mListView.getCount() > 0) {
-//                page--;
+//                mPage--;
 //                String[] exception_message = getResources().getStringArray(R.array.Exception_messages);
 //                Toast.makeText(getContext(), exception_message[exception - 1], Toast.LENGTH_SHORT).show();
 //            }

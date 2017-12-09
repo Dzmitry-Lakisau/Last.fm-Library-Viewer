@@ -46,7 +46,7 @@ import by.d1makrat.library_fm.Data;
 import by.d1makrat.library_fm.NetworkStatusChecker;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.ui.fragment.ManualScrobbleFragment;
-import by.d1makrat.library_fm.ui.fragment.ScrobblesListFragment;
+import by.d1makrat.library_fm.ui.fragment.RecentScrobblesFragment;
 import by.d1makrat.library_fm.ui.fragment.SearchFragment;
 import by.d1makrat.library_fm.ui.fragment.StartFragment;
 import by.d1makrat.library_fm.ui.fragment.TabFragment;
@@ -105,9 +105,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onStart() {
         super.onStart();
 
-        if (NetworkStatusChecker.isNetworkAvailable(getApplicationContext())) {
-            GetPlaycountTask task = new GetPlaycountTask();
-            task.execute();
+        if (NetworkStatusChecker.isNetworkAvailable()) {
+//            GetPlaycountTask task = new GetPlaycountTask();
+//            task.execute();
         }
     }
 
@@ -136,9 +136,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             drawer.closeDrawer(GravityCompat.START);
         }
         else {
-            if (NetworkStatusChecker.isNetworkAvailable(getApplicationContext())) {
-                GetPlaycountTask task = new GetPlaycountTask();
-                task.execute();
+            if (NetworkStatusChecker.isNetworkAvailable()) {
+//                GetPlaycountTask task = new GetPlaycountTask();
+//                task.execute();
             }
             switch (fragmentManager.getBackStackEntryCount()) {
                 case 1:
@@ -167,14 +167,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         int id = item.getItemId();
         Bundle bundle = new Bundle();
-        bundle.putString("sessionKey", sessionKey);
-        bundle.putString("username", username);
-        bundle.putString("cachepath", cachepath);
-        bundle.putString("resolution", resolution);
 
-        if (NetworkStatusChecker.isNetworkAvailable(getApplicationContext())) {
-            GetPlaycountTask task = new GetPlaycountTask();
-            task.execute();
+        if (NetworkStatusChecker.isNetworkAvailable()) {
+//            GetPlaycountTask task = new GetPlaycountTask();
+//            task.execute();
         }
         else
         {
@@ -208,9 +204,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         		if (fragment==null) fragment = new ManualScrobbleFragment();
         		break;
         	case (R.id.scrobbles):
-                tag = "ScrobblesListFragment";
+                tag = "RecentScrobblesFragment";
                 fragment = fragmentManager.findFragmentByTag(tag);
-                if (fragment==null) fragment = new ScrobblesListFragment();
+                if (fragment==null) fragment = new RecentScrobblesFragment();
         		break;
         	case (R.id.top_tracks):
                 tag = "TopTracksFragment";

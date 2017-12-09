@@ -504,7 +504,7 @@ public class Data {
         int count;
         int scrobbles = 0;
         while (inputXML.contains("name")){
-            params.put("page", String.valueOf(i));
+            params.put("mPage", String.valueOf(i));
             URL url = GenerateURL(params);
             inputXML = RequestAndResponse(true, url, "POST");
             String str = inputXML;
@@ -524,7 +524,7 @@ public class Data {
     public int pageCountOfArtist(TreeMap<String, String> params) throws IOException, NullPointerException, MalformedURLException{
         int i = 1;
         while (inputXML.contains("<name>")){
-            params.put("page", String.valueOf(i));
+            params.put("mPage", String.valueOf(i));
             URL url = GenerateURL(params);
             inputXML = RequestAndResponse(true, url, "POST");
             i++;

@@ -1,4 +1,4 @@
-package by.d1makrat.library_fm.ui;
+package by.d1makrat.library_fm;
 
 import java.util.List;
 

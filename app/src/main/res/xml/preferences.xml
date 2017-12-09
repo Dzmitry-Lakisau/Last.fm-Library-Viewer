@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ListPreference
-        android:entries="@array/entries"
-        android:entryValues="@array/entry_values"
-        android:key="resolution"
-        android:summary="Resolution of albumarts, photos of artists"
-        android:title="Quality of images">
+    <!--<ListPreference-->
+        <!--android:entries="@array/entries"-->
+        <!--android:entryValues="@array/entry_values"-->
+        <!--android:key="resolution"-->
+        <!--android:summary="Resolution of albumarts, photos of artists"-->
+        <!--android:title="Quality of images">-->
 
-    </ListPreference>
+    <!--</ListPreference>-->
 
         <EditTextPreference
             android:layout_width="match_parent"

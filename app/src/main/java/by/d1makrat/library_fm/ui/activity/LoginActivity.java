@@ -36,14 +36,17 @@ import java.util.Locale;
 import javax.net.ssl.SSLException;
 
 import by.d1makrat.library_fm.APIException;
+import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.AppSettings;
 import by.d1makrat.library_fm.BuildConfig;
 import by.d1makrat.library_fm.Data;
+import by.d1makrat.library_fm.NetworkRequester;
 import by.d1makrat.library_fm.NetworkStatusChecker;
 import by.d1makrat.library_fm.R;
+import by.d1makrat.library_fm.json.JsonParser;
 
 import static android.os.Environment.*;
-
+//TODO Firebase Test Lab
 public class LoginActivity extends AppCompatActivity {
 
     private final String API_KEY = BuildConfig.API_KEY;
@@ -54,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextView username_field = null;
     private TextView password_field = null;
     private String cachepath = null;
-    private String sessionKey = null;
+    private String mUsername;
 
     private ProgressBar spinner = null;
 
@@ -63,34 +66,15 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        AppSettings appSettings = new AppSettings(getApplicationContext());
-//        appSettings.setPathToBlankAlbumart(getFilesDir().getPath() +  File.separator + "blank_albumart.png");
-//        appSettings.setPathToBlankArtist(getFilesDir().getPath() + File.separator + "ic_person.png");
-        appSettings.setCacheDir(getDiskCacheDir(getApplicationContext()));
-
         setContentView(R.layout.sign_in_page);
         spinner = (ProgressBar) findViewById(R.id.progressBar2);
         username_field = (TextView) findViewById(R.id.login);
         password_field = (TextView) findViewById(R.id.password);
 
-        CreateBlankAlbumart();
-        CreatePersonImage();
+//        CreateBlankAlbumart();
+//        CreatePersonImage();
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
-
-//        if (!sharedPreferences.contains("limit")){
-//            SharedPreferences.Editor spEditor = sharedPreferences.edit();
-//            spEditor.putString("limit", "10");
-//            spEditor.apply();
-//        }
-//
-//        if (!sharedPreferences.contains("resolution")){
-//            SharedPreferences.Editor spEditor = sharedPreferences.edit();
-//            spEditor.putString("resolution", "medium");
-//            spEditor.apply();
-//        }
-
-        if (appSettings.getSessionKey() != null && appSettings.getUsername() != null){
+        if (AppContext.getInstance().getSessionKey() != null && AppContext.getInstance().getUsername() != null){
             startActivity(new Intent(this, MainActivity.class));
         }
         else {
@@ -107,9 +91,11 @@ public class LoginActivity extends AppCompatActivity {
             inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
             switch (v.getId()) {
                 case R.id.enter_button:
-                    if (NetworkStatusChecker.isNetworkAvailable(getApplicationContext())) {
+                    if (NetworkStatusChecker.isNetworkAvailable()) {
+                        mUsername = username_field.getText().toString();
+
                         task_get_key = new GetSessionKeyTask();
-                        task_get_key.execute(new String[]{username_field.getText().toString(), password_field.getText().toString()});
+                        task_get_key.execute(new String[]{mUsername, password_field.getText().toString()});
                     }
                     else {Toast toast;
                         toast = Toast.makeText(getApplicationContext(), R.string.network_is_not_connected, Toast.LENGTH_SHORT);
@@ -174,7 +160,8 @@ public class LoginActivity extends AppCompatActivity {
     private String getDiskCacheDir(Context context) {//TODO
         try {
             final String cachePath =
-                    Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) || !isExternalStorageRemovable() ? context.getExternalCacheDir().getPath() : context.getCacheDir().getPath();
+                    Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) || !isExternalStorageRemovable()
+                            ? context.getExternalCacheDir().getPath() : context.getCacheDir().getPath();
             return new File(cachePath + File.separator + "Images").getPath();
         }
         catch (Exception e){
@@ -186,92 +173,51 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     class GetSessionKeyTask extends AsyncTask<String[], Void, String> {
-        private String message = null;
-        private int exception = 0;
+//        private String message = null;
+        private Exception mException = null;
 
         @Override
         protected String doInBackground(String[]... params) {
             URL url = null;
-            String res = null;
+            String sessionKey = null;
             try {
                 String api_sig = new String(Hex.encodeHex(DigestUtils.md5("api_key" + API_KEY + "methodauth.getMobileSessionpassword" + params[0][1] + "username" + params[0][0] + SECRET)));
-                url = new URL("https://ws.audioscrobbler.com/2.0/?method=auth.getMobileSession&api_key=" + API_KEY + "&username=" + params[0][0] + "&password=" + params[0][1] + "&api_sig=" + api_sig);
-                Data rawxml = new Data(url);
-                if (rawxml.parseAttribute("lfm", "status").equals("failed")) {
-                    throw new APIException(rawxml.parseSingleText("error"));
-                }
-                else res = rawxml.parseSingleText("key");
-            }
-            catch (XmlPullParserException e){
-                //FirebaseCrash.report(e);
+                url = new URL("https://ws.audioscrobbler.com/2.0/?method=auth.getMobileSession&api_key=" + API_KEY + "&username=" + params[0][0] + "&password=" + params[0][1] + "&api_sig=" + api_sig + "&format=json");
+
+                NetworkRequester networkRequester = new NetworkRequester();
+                String response = networkRequester.request(url, "POST");
+
+                JsonParser jsonParser = new JsonParser(response);
+
+                String errorOrNot = jsonParser.checkForApiErrors();
+                if (!errorOrNot.equals("No error"))
+                    mException = new APIException(errorOrNot);
+                else
+                    sessionKey = jsonParser.parseSessionkey();
+            } catch (Exception e) {
                 e.printStackTrace();
-                exception = 9;
+                mException = e;
             }
-            catch (UnknownHostException e) {
-                e.printStackTrace();
-                exception = 8;
-            }
-            catch (SocketTimeoutException e){
-                e.printStackTrace();
-                exception = 7;
-            }
-            catch (MalformedURLException e){
-                //FirebaseCrash.report(e);
-                e.printStackTrace();
-                exception = 6;
-            }
-            catch (SSLException e) {
-                //FirebaseCrash.report(e);
-                e.printStackTrace();
-                exception = 5;
-            }
-            catch (FileNotFoundException e){
-                //FirebaseCrash.report(e);
-                e.printStackTrace();
-                exception = 4;
-            }
-            catch (RuntimeException e){
-                //FirebaseCrash.report(e);
-                e.printStackTrace();
-                exception = 3;
-            }
-            catch (IOException e){
-                //FirebaseCrash.report(e);
-                e.printStackTrace();
-                exception = 2;
-            }
-            catch (APIException e){
-                //FirebaseCrash.report(e);
-                message = e.getMessage();
-                exception = 1;
-            }
-            return res;
+
+            return sessionKey;
         }
 
         @Override
         protected void onPostExecute(String result){
-            if (exception == 0 && result.length() == 32){
+            if (mException == null && result.length() == 32){
 //                sessionKey = result;
                 task_info = new GetUserInfoTask();
                 task_info.execute(cachepath);
-                AppSettings appSettings = new AppSettings(getApplicationContext());
-                appSettings.setSessionKey(result);
-//                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
-//                SharedPreferences.Editor spEditor = sharedPreferences.edit();
-//                spEditor.putString("sessionKey", sessionKey);
-//                spEditor.apply();
+
+                AppContext.getInstance().setSessionKey(result);
+                AppContext.getInstance().setUsername(mUsername);
+                AppContext.getInstance().saveSettings();
             }
             else {
                 username_field.setVisibility(View.VISIBLE);
                 password_field.setVisibility(View.VISIBLE);
                 spinner.setVisibility(View.INVISIBLE);
                 ((Button) findViewById(R.id.enter_button)).setVisibility(View.VISIBLE);
-                if (exception == 1)
-                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-                else {
-                    String[] exception_message = getResources().getStringArray(R.array.Exception_messages);
-                    Toast.makeText(getApplicationContext(), exception_message[exception - 1], Toast.LENGTH_SHORT).show();
-                }
             }
         }
 
@@ -294,8 +240,8 @@ public class LoginActivity extends AppCompatActivity {
             HashMap<String, String> info = null;
 
             try {
-                AppSettings appSettings = new AppSettings(getApplicationContext());
-                String sessionKey = appSettings.getSessionKey();
+//                AppSettings appSettings = new AppSettings(getApplicationContext());
+                String sessionKey = AppContext.getInstance().getSessionKey();
                 URL url = new URL("https://ws.audioscrobbler.com/2.0/?api_key=" + API_KEY + "&method=user.getInfo&sk=" + sessionKey);
                 Data rawxml = new Data(url);
                 if (rawxml.parseAttribute("lfm", "status").equals("failed")) {
@@ -386,7 +332,6 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), exception_message[exception - 1], Toast.LENGTH_SHORT).show();
             }
         }
-        //TODO Firebase Test Lab
     }
 }
 

@@ -47,7 +47,7 @@ public class ScrobblesListAdapter extends BaseAdapter {
 
         ViewHolder viewHolder;
 
-        if (convertView == null) {//TODO activity context as parameter everywhere?
+        if (convertView == null) {
 
 //            LayoutInflater mLayoutInflater = ((Activity) mLayoutInflater).getLayoutInflater();// LayoutInflater.from(mLayoutInflater);
             convertView = mLayoutInflater.inflate(R.layout.list_item, viewGroup, false);
