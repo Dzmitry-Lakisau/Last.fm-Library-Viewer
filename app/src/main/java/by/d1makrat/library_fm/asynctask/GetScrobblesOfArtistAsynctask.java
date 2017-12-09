@@ -33,13 +33,13 @@ public class GetScrobblesOfArtistAsynctask extends GetScrobblesAsynctask{
             NetworkRequester networkRequester = new NetworkRequester();
             String response = networkRequester.request(apiRequestUrl, "GET");
 
-            JsonParser jsonParser = new JsonParser(response);
+            JsonParser jsonParser = new JsonParser();
 
-            String errorOrNot = jsonParser.checkForApiErrors();
+            String errorOrNot = jsonParser.checkForApiErrors(response);
             if (!errorOrNot.equals("No error"))
                 mException = new APIException(errorOrNot);
             else
-                scrobbles = jsonParser.parseScrobbles();
+                scrobbles = jsonParser.parseScrobbles(response);
         } catch (Exception e) {
             e.printStackTrace();
             mException = e;

@@ -23,29 +23,51 @@ public class GetScrobblesOfAlbumAsynctask extends GetScrobblesAsynctask {
     @Override
     protected List<Scrobble> doInBackground(String... params) {
 
-        List<Scrobble> scrobbles = new ArrayList<Scrobble>();
+        List<Scrobble> artistScrobbles = new ArrayList<Scrobble>();
+        List<Scrobble> albumScrobbles = new ArrayList<Scrobble>();
+        UrlConstructor urlConstructor = new UrlConstructor();
+        NetworkRequester networkRequester = new NetworkRequester();
         URL apiRequestUrl;
+        String response;
+
+        String artist = params[0];
+        String album = params[1];
+        String from = params[2];
+        String to = params[3];
 
         try {
-            UrlConstructor urlConstructor = new UrlConstructor();
-            apiRequestUrl = urlConstructor.constructScrobblesByArtistApiRequestUrl(params[0], params[1], params[2], params[3]);
 
-            NetworkRequester networkRequester = new NetworkRequester();
-            String response = networkRequester.request(apiRequestUrl, "GET");
 
-            JsonParser jsonParser = new JsonParser(response);
+            int page = 1;
+            do{
+                apiRequestUrl = urlConstructor.constructScrobblesByArtistApiRequestUrl(artist, String.valueOf(page), from, to);
 
-            String errorOrNot = jsonParser.checkForApiErrors();
-            if (!errorOrNot.equals("No error"))
-                mException = new APIException(errorOrNot);
-            else
-                scrobbles = jsonParser.parseScrobbles();
+                response = networkRequester.request(apiRequestUrl, "GET");
+
+                JsonParser jsonParser = new JsonParser();
+                String errorOrNot = jsonParser.checkForApiErrors(response);
+                if (!errorOrNot.equals("No error"))
+                    mException = new APIException(errorOrNot);
+                else
+                    artistScrobbles = jsonParser.parseScrobbles(response);
+
+                for(Scrobble scrobble : artistScrobbles){
+                    if(scrobble.getAlbum().equals(album)){
+                        albumScrobbles.add(scrobble);
+                    }
+                }
+
+                page++;
+            }
+            while(response.contains("name"));
+
+
         } catch (Exception e) {
             e.printStackTrace();
             mException = e;
         }
 
-        return scrobbles;
+        return albumScrobbles;
     }
 
     @Override

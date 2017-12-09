@@ -187,13 +187,13 @@ public class LoginActivity extends AppCompatActivity {
                 NetworkRequester networkRequester = new NetworkRequester();
                 String response = networkRequester.request(url, "POST");
 
-                JsonParser jsonParser = new JsonParser(response);
+                JsonParser jsonParser = new JsonParser();
 
-                String errorOrNot = jsonParser.checkForApiErrors();
+                String errorOrNot = jsonParser.checkForApiErrors(response);
                 if (!errorOrNot.equals("No error"))
                     mException = new APIException(errorOrNot);
                 else
-                    sessionKey = jsonParser.parseSessionkey();
+                    sessionKey = jsonParser.parseSessionkey(response);
             } catch (Exception e) {
                 e.printStackTrace();
                 mException = e;

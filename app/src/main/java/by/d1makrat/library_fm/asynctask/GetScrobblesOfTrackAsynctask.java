@@ -1,7 +1,5 @@
 package by.d1makrat.library_fm.asynctask;
 
-import android.util.Log;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +7,6 @@ import java.util.List;
 import by.d1makrat.library_fm.APIException;
 import by.d1makrat.library_fm.GetScrobblesAsynctaskCallback;
 import by.d1makrat.library_fm.NetworkRequester;
-import by.d1makrat.library_fm.NetworkStatusChecker;
 import by.d1makrat.library_fm.UrlConstructor;
 import by.d1makrat.library_fm.json.JsonParser;
 import by.d1makrat.library_fm.model.Scrobble;
@@ -43,18 +40,16 @@ public class GetScrobblesOfTrackAsynctask extends GetScrobblesAsynctask {
 
             int page = 1;
             do{
-                Log.d("MYTAG", "Parsing artist page " + page);
-
                 apiRequestUrl = urlConstructor.constructScrobblesByArtistApiRequestUrl(artist, String.valueOf(page), from, to);
 
                 response = networkRequester.request(apiRequestUrl, "GET");
 
-                JsonParser jsonParser = new JsonParser(response);
-                String errorOrNot = jsonParser.checkForApiErrors();
+                JsonParser jsonParser = new JsonParser();
+                String errorOrNot = jsonParser.checkForApiErrors(response);
                 if (!errorOrNot.equals("No error"))
                     mException = new APIException(errorOrNot);
                 else
-                    artistScrobbles = jsonParser.parseScrobbles();
+                    artistScrobbles = jsonParser.parseScrobbles(response);
 
                 for(Scrobble scrobble : artistScrobbles){
                     if(scrobble.getTrackTitle().equals(track)){

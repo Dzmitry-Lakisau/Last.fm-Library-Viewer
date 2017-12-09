@@ -12,28 +12,22 @@ import by.d1makrat.library_fm.model.Scrobble;
 
 public class JsonParser {
 
-    private String mStringToParse; //TODO remove constructor and pass string as parameter in methods
+    public String checkForApiErrors(String pStringToParse) throws JSONException {
 
-    public JsonParser(String stringToParse) {
-        mStringToParse = stringToParse;
-    }
-
-    public String checkForApiErrors() throws JSONException {
-
-        JSONObject obj = new JSONObject(mStringToParse);
+        JSONObject obj = new JSONObject(pStringToParse);
         if (obj.has("error")) {
             return obj.getString("message");
         } else return "No error";
     }
 
-    public List<Scrobble> parseScrobbles() {
+    public List<Scrobble> parseScrobbles(String pStringToParse) {
 
         List<Scrobble> scrobbles = new ArrayList<Scrobble>();
 
         JSONObject jsonObject;
 
         try {
-            JSONObject obj = new JSONObject(mStringToParse);
+            JSONObject obj = new JSONObject(pStringToParse);
 
             JSONArray tracksJsonArray;
             if (obj.has("recenttracks"))
@@ -75,11 +69,11 @@ public class JsonParser {
         return scrobbles;
     }
 
-    public String parseSessionkey() {
+    public String parseSessionkey(String pStringToParse) {
         String sessionkey = null;
 
         try {
-            JSONObject obj = new JSONObject(mStringToParse);
+            JSONObject obj = new JSONObject(pStringToParse);
             sessionkey = obj.getJSONObject("session").getString("key");
         } catch (JSONException e) {
             e.printStackTrace();

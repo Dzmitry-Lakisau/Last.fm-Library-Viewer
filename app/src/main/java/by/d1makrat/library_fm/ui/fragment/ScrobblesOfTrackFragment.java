@@ -6,14 +6,15 @@ import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 
 import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.asynctask.GetScrobblesOfTrackAsynctask;
 
 public class ScrobblesOfTrackFragment extends ScrobblesListFragment {
 
-    private static final String ARTIST_KEY = "artist";
-    private static final java.lang.String TRACK_KEY = "track";
+    private static final String ARTIST_BUNDLE_KEY = "artist";
+    private static final java.lang.String TRACK_BUNDLE_KEY = "track";
     private static String artist;
     private static String track;
 
@@ -21,8 +22,8 @@ public class ScrobblesOfTrackFragment extends ScrobblesListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        artist = getArguments().getString(ARTIST_KEY);
-        track = getArguments().getString(TRACK_KEY);
+        artist = getArguments().getString(ARTIST_BUNDLE_KEY);
+        track = getArguments().getString(TRACK_BUNDLE_KEY);
         urlForBrowser = "https://www.last.fm/user/" + AppContext.getInstance().getUsername() + "/library/music/" + artist + "/_/" + track;
     }
 
@@ -50,4 +51,7 @@ public class ScrobblesOfTrackFragment extends ScrobblesListFragment {
         mGetScrobblesAsynctask = new GetScrobblesOfTrackAsynctask(this);
         mGetScrobblesAsynctask.execute(asynctaskArgs);
     }
+
+    @Override
+    public void onScroll(AbsListView l, int firstVisibleItem, int visibleItemCount, int totalItemCount) {}
 }
