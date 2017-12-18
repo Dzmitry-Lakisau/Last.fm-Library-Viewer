@@ -1,4 +1,4 @@
-package by.d1makrat.library_fm.adapter;
+package by.d1makrat.library_fm.adapter.list;
 
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
@@ -11,7 +11,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import by.d1makrat.library_fm.R;
-import by.d1makrat.library_fm.ResolutionOfImage;
 import by.d1makrat.library_fm.image_loader.Malevich;
 import by.d1makrat.library_fm.model.Scrobble;
 
@@ -71,7 +70,7 @@ public class ScrobblesListAdapter extends BaseAdapter {
         viewHolder.track_txt.setText(scrobble.getTrackTitle());
         viewHolder.artist_txt.setText(scrobble.getArtist());
         viewHolder.album_txt.setText(scrobble.getAlbum());
-        viewHolder.timestamp_txt.setText(scrobble.getDate().getDate());
+        viewHolder.timestamp_txt.setText(scrobble.getDate());
 
         String imageUri = scrobble.getImageUri();
         ImageView imageView = viewHolder.albumart_imgView;
@@ -84,18 +83,6 @@ public class ScrobblesListAdapter extends BaseAdapter {
             viewHolder.albumart_imgView.setTag(imageUri);
         }
 
-//        if (imageUri == null)
-//            imageView.setImageResource(R.drawable.default_albumart);
-//        else {
-////            ((ImageView) view.findViewById(R.id.albumart)).setImageURI(Uri.parse(imageUri));
-//            Malevich.INSTANCE.load(imageUri).into(imageView);
-//            Log.d("MYTAG", "setting image for " + scrobble.getArtist()+" - "+ scrobble.getTrackTitle());
-//        }
-
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-//            Log.d("MYTAG", String.valueOf(position) +" | "+ String.valueOf(imageView.getHeight()));
-//            Log.d("MYTAG",String.valueOf(position) +" | "+ String.valueOf(imageView.getWidth()));
-//        }
         return convertView;
     }
 

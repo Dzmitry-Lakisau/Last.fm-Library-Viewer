@@ -1,4 +1,4 @@
-package by.d1makrat.library_fm.adapter;
+package by.d1makrat.library_fm.adapter.list;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import by.d1makrat.library_fm.R;
@@ -57,7 +56,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         viewHolder.track_txt.setText(scrobble.getTrackTitle());
         viewHolder.artist_txt.setText(scrobble.getArtist());
         viewHolder.album_txt.setText(scrobble.getAlbum());
-        viewHolder.timestamp_txt.setText(scrobble.getDate().getDate());
+        viewHolder.timestamp_txt.setText(scrobble.getDate());
 
         String imageUri = scrobble.getImageUri();
         ImageView imageView = viewHolder.albumart_imgView;
