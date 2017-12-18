@@ -1,0 +1,333 @@
+{
+  "topalbums": {
+    "album": [
+      {
+        "name": "Metallica",
+        "playcount": "434",
+        "mbid": "6e729716-c0eb-3f50-a740-96ac173be50d",
+        "url": "https://www.last.fm/music/Metallica/Metallica",
+        "artist": {
+          "name": "Metallica",
+          "mbid": "65f4f0c5-ef9e-490c-aee3-909e7ae6b2ab",
+          "url": "https://www.last.fm/music/Metallica"
+        },
+        "image": [
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/34s/cb0f59d62f256fd58b2163d90f334add.png",
+            "size": "small"
+          },
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/64s/cb0f59d62f256fd58b2163d90f334add.png",
+            "size": "medium"
+          },
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/174s/cb0f59d62f256fd58b2163d90f334add.png",
+            "size": "large"
+          },
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/300x300/cb0f59d62f256fd58b2163d90f334add.png",
+            "size": "extralarge"
+          }
+        ],
+        "@attr": {
+          "rank": "1"
+        }
+      },
+      {
+        "name": "Delta Machine",
+        "playcount": "236",
+        "mbid": "f79cbeda-72f9-46ad-b130-b9bc8d1392f7",
+        "url": "https://www.last.fm/music/Depeche+Mode/Delta+Machine",
+        "artist": {
+          "name": "Depeche Mode",
+          "mbid": "8538e728-ca0b-4321-b7e5-cff6565dd4c0",
+          "url": "https://www.last.fm/music/Depeche+Mode"
+        },
+        "image": [
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/34s/dc9032c6cd4648aea747918eeb2a8b02.png",
+            "size": "small"
+          },
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/64s/dc9032c6cd4648aea747918eeb2a8b02.png",
+            "size": "medium"
+          },
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/174s/dc9032c6cd4648aea747918eeb2a8b02.png",
+            "size": "large"
+          },
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/300x300/dc9032c6cd4648aea747918eeb2a8b02.png",
+            "size": "extralarge"
+          }
+        ],
+        "@attr": {
+          "rank": "2"
+        }
+      },
+      {
+        "name": "The Day Is My Enemy",
+        "playcount": "200",
+        "mbid": "",
+        "url": "https://www.last.fm/music/The+Prodigy/The+Day+Is+My+Enemy",
+        "artist": {
+          "name": "The Prodigy",
+          "mbid": "4a4ee089-93b1-4470-af9a-6ff575d32704",
+          "url": "https://www.last.fm/music/The+Prodigy"
+        },
+        "image": [
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/34s/202bc9dab2be9100f929b60cfe1a86c4.png",
+            "size": "small"
+          },
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/64s/202bc9dab2be9100f929b60cfe1a86c4.png",
+            "size": "medium"
+          },
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/174s/202bc9dab2be9100f929b60cfe1a86c4.png",
+            "size": "large"
+          },
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/300x300/202bc9dab2be9100f929b60cfe1a86c4.png",
+            "size": "extralarge"
+          }
+        ],
+        "@attr": {
+          "rank": "3"
+        }
+      },
+      {
+        "name": "The Golden Sun of the Great East",
+        "playcount": "199",
+        "mbid": "c5698ae7-f643-435a-b4a8-08a8f31a8bf3",
+        "url": "https://www.last.fm/music/Juno+Reactor/The+Golden+Sun+of+the+Great+East",
+        "artist": {
+          "name": "Juno Reactor",
+          "mbid": "16231a34-9ccd-410e-8690-f74e98fe16a4",
+          "url": "https://www.last.fm/music/Juno+Reactor"
+        },
+        "image": [
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/34s/14f9362eb4354f0082906d61949c4b19.png",
+            "size": "small"
+          },
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/64s/14f9362eb4354f0082906d61949c4b19.png",
+            "size": "medium"
+          },
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/174s/14f9362eb4354f0082906d61949c4b19.png",
+            "size": "large"
+          },
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/300x300/14f9362eb4354f0082906d61949c4b19.png",
+            "size": "extralarge"
+          }
+        ],
+        "@attr": {
+          "rank": "4"
+        }
+      },
+      {
+        "name": "In A Dream",
+        "playcount": "196",
+        "mbid": "4db1f4d9-8b3a-469d-8554-d8b7a35ba57d",
+        "url": "https://www.last.fm/music/The+Juan+Maclean/In+A+Dream",
+        "artist": {
+          "name": "The Juan Maclean",
+          "mbid": "f8f1220b-1661-42c3-beea-d59e8e00b993",
+          "url": "https://www.last.fm/music/The+Juan+Maclean"
+        },
+        "image": [
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/34s/e78676bed751f37ec607a82e76fbd802.png",
+            "size": "small"
+          },
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/64s/e78676bed751f37ec607a82e76fbd802.png",
+            "size": "medium"
+          },
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/174s/e78676bed751f37ec607a82e76fbd802.png",
+            "size": "large"
+          },
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/300x300/e78676bed751f37ec607a82e76fbd802.png",
+            "size": "extralarge"
+          }
+        ],
+        "@attr": {
+          "rank": "5"
+        }
+      },
+      {
+        "name": "Sound of a Woman",
+        "playcount": "166",
+        "mbid": "c0b0fc60-4194-4204-b1e8-dd0550c26642",
+        "url": "https://www.last.fm/music/Kiesza/Sound+of+a+Woman",
+        "artist": {
+          "name": "Kiesza",
+          "mbid": "87ff5ccd-64cd-45d6-bba3-ba2647e85d74",
+          "url": "https://www.last.fm/music/Kiesza"
+        },
+        "image": [
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/34s/bc84256f8a5443e0c34f051f3c5f91b3.png",
+            "size": "small"
+          },
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/64s/bc84256f8a5443e0c34f051f3c5f91b3.png",
+            "size": "medium"
+          },
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/174s/bc84256f8a5443e0c34f051f3c5f91b3.png",
+            "size": "large"
+          },
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/300x300/bc84256f8a5443e0c34f051f3c5f91b3.png",
+            "size": "extralarge"
+          }
+        ],
+        "@attr": {
+          "rank": "6"
+        }
+      },
+      {
+        "name": "In Silico",
+        "playcount": "159",
+        "mbid": "5bd2390a-f956-495c-9a29-7a28f2c02e2c",
+        "url": "https://www.last.fm/music/Pendulum/In+Silico",
+        "artist": {
+          "name": "Pendulum",
+          "mbid": "f2fc6ece-5615-4d2c-9cb3-8c5d51a839ea",
+          "url": "https://www.last.fm/music/Pendulum"
+        },
+        "image": [
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/34s/dc428419a3cc43e7a03a03b56aff8cbe.png",
+            "size": "small"
+          },
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/64s/dc428419a3cc43e7a03a03b56aff8cbe.png",
+            "size": "medium"
+          },
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/174s/dc428419a3cc43e7a03a03b56aff8cbe.png",
+            "size": "large"
+          },
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/300x300/dc428419a3cc43e7a03a03b56aff8cbe.png",
+            "size": "extralarge"
+          }
+        ],
+        "@attr": {
+          "rank": "7"
+        }
+      },
+      {
+        "name": "Invaders Must Die",
+        "playcount": "156",
+        "mbid": "ad1581d9-59a7-4936-9a03-d65cb34e6f14",
+        "url": "https://www.last.fm/music/The+Prodigy/Invaders+Must+Die",
+        "artist": {
+          "name": "The Prodigy",
+          "mbid": "4a4ee089-93b1-4470-af9a-6ff575d32704",
+          "url": "https://www.last.fm/music/The+Prodigy"
+        },
+        "image": [
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/34s/781ec2bfcf184077bdcb9318017107fd.png",
+            "size": "small"
+          },
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/64s/781ec2bfcf184077bdcb9318017107fd.png",
+            "size": "medium"
+          },
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/174s/781ec2bfcf184077bdcb9318017107fd.png",
+            "size": "large"
+          },
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/300x300/781ec2bfcf184077bdcb9318017107fd.png",
+            "size": "extralarge"
+          }
+        ],
+        "@attr": {
+          "rank": "8"
+        }
+      },
+      {
+        "name": "Reality Is for Those Who Are Not Strong Enough to Confront Their Dreams",
+        "playcount": "156",
+        "mbid": "3ea27922-db07-4ed7-8455-4708482c62b0",
+        "url": "https://www.last.fm/music/Henry+Saiz/Reality+Is+for+Those+Who+Are+Not+Strong+Enough+to+Confront+Their+Dreams",
+        "artist": {
+          "name": "Henry Saiz",
+          "mbid": "27d813b1-4053-4d3f-9b9c-1f81a0499437",
+          "url": "https://www.last.fm/music/Henry+Saiz"
+        },
+        "image": [
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/34s/3b8c0e042ac145e890c1269eaac10b46.png",
+            "size": "small"
+          },
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/64s/3b8c0e042ac145e890c1269eaac10b46.png",
+            "size": "medium"
+          },
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/174s/3b8c0e042ac145e890c1269eaac10b46.png",
+            "size": "large"
+          },
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/300x300/3b8c0e042ac145e890c1269eaac10b46.png",
+            "size": "extralarge"
+          }
+        ],
+        "@attr": {
+          "rank": "9"
+        }
+      },
+      {
+        "name": "OutRun",
+        "playcount": "145",
+        "mbid": "44217cae-f225-4d3c-919b-cd6d70fe392c",
+        "url": "https://www.last.fm/music/Kavinsky/OutRun",
+        "artist": {
+          "name": "Kavinsky",
+          "mbid": "eb6de5f6-98f8-4b5a-bfdc-f87fa4936baa",
+          "url": "https://www.last.fm/music/Kavinsky"
+        },
+        "image": [
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/34s/01cf135ed4184bd185a4a32d606814b0.png",
+            "size": "small"
+          },
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/64s/01cf135ed4184bd185a4a32d606814b0.png",
+            "size": "medium"
+          },
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/174s/01cf135ed4184bd185a4a32d606814b0.png",
+            "size": "large"
+          },
+          {
+            "#text": "https://lastfm-img2.akamaized.net/i/u/300x300/01cf135ed4184bd185a4a32d606814b0.png",
+            "size": "extralarge"
+          }
+        ],
+        "@attr": {
+          "rank": "10"
+        }
+      }
+    ],
+    "@attr": {
+      "user": "D1MAkrat",
+      "page": "1",
+      "perPage": "10",
+      "totalPages": "1128",
+      "total": "11274"
+    }
+  }
+}
