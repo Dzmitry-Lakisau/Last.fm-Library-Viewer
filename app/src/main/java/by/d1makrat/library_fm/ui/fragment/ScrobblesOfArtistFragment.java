@@ -20,7 +20,7 @@ public class ScrobblesOfArtistFragment extends ScrobblesListFragment {
         super.onCreate(savedInstanceState);
 
         artist = getArguments().getString(ARTIST_KEY);
-        urlForBrowser = "https://www.last.fm/user/" + AppContext.getInstance().getUsername() + "/library/music/" + artist;
+        urlForBrowser = AppContext.getInstance().getUser().getUrl() + "/library/music/" + artist;
     }
 
     @Override

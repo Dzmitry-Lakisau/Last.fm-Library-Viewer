@@ -48,45 +48,7 @@ public class Data {
         inputXML = RequestAndResponse(true, url, "POST");
     }
 
-    public Data(URL s) throws SocketTimeoutException, UnknownHostException, SSLException, IOException{
-        inputXML = RequestAndResponse(true, s, "POST");
-    }
-
-    public ArrayList<HashMap<String, String>> getTracks(String resolution) throws XmlPullParserException, IOException{
-        XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-        factory.setNamespaceAware(true);
-        XmlPullParser xpp = factory.newPullParser();
-        xpp.setInput(new StringReader(inputXML));
-        while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
-            if (xpp.getEventType() == XmlPullParser.START_TAG && xpp.getName().equals("track") && xpp.getAttributeCount()==0) {
-                HashMap<String, String> map = new HashMap<String, String>();
-                while (!(xpp.getEventType() == XmlPullParser.END_TAG && xpp.getName().equals("track"))) {
-                    if (xpp.getEventType() == XmlPullParser.START_TAG && (xpp.getName().equals(tags[0]) || xpp.getName().equals(tags[1]) || xpp.getName().equals(tags[2]))) {
-                        map.put(xpp.getName(), xpp.nextText());
-                    }
-                    if (xpp.getEventType() == XmlPullParser.START_TAG && xpp.getName().equals(tags[3])) {
-                        int rawtime = Integer.parseInt(xpp.getAttributeValue(0));
-                        Date date = new Date(rawtime*1000L);
-                        SimpleDateFormat sdf = new SimpleDateFormat("d MMM yyyy, HH:mm:ss", Locale.ENGLISH);
-                        String formattedDate = sdf.format(date);
-                        map.put(xpp.getName(), formattedDate);
-                    }
-                    if (xpp.getEventType() == XmlPullParser.START_TAG && xpp.getName().equals(tags[4])){
-                        String temp = xpp.getAttributeValue(0);
-                        if (temp.equals(resolution)) {
-                            map.put("image", xpp.nextText());
-                        }
-                    }
-                    xpp.next();
-                }
-                Tracks.add(map);
-            }
-            xpp.next();
-        }
-        return Tracks;
-    }
-
-    public ArrayList<HashMap<String, String>> search(String resolution) throws XmlPullParserException, IOException{
+    public ArrayList<HashMap<String, String>> search(String resolution) throws XmlPullParserException, IOException {
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
         factory.setNamespaceAware(true);
         XmlPullParser xpp = factory.newPullParser();
@@ -98,7 +60,7 @@ public class Data {
                     if (xpp.getEventType() == XmlPullParser.START_TAG && xpp.getName().equals(tags[0])) {
                         map.put(xpp.getName(), xpp.nextText());
                     }
-                    if (xpp.getEventType() == XmlPullParser.START_TAG && xpp.getName().equals(tags[4])){
+                    if (xpp.getEventType() == XmlPullParser.START_TAG && xpp.getName().equals(tags[4])) {
                         String temp = xpp.getAttributeValue(0);
                         if (temp.equals(resolution)) {
                             map.put("image", xpp.nextText());
@@ -112,109 +74,8 @@ public class Data {
         }
         return Tracks;
     }
-    
-    public ArrayList<HashMap<String, String>> getFilteredTracks(Context context, String cachepath, String track) throws XmlPullParserException, IOException {
-        ArrayList<HashMap<String, String>> Tracks = new ArrayList<HashMap<String, String>>();
-        XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-        factory.setNamespaceAware(true);
-        XmlPullParser xpp = factory.newPullParser();
-        xpp.setInput(new StringReader(inputXML));
-        while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
-            if (xpp.getEventType() == XmlPullParser.START_TAG && xpp.getName().equals("track") && xpp.getAttributeCount() == 0) {
-                while (!(xpp.getEventType() == XmlPullParser.END_TAG && xpp.getName().equals("track"))) {
-                    if (xpp.getEventType() == XmlPullParser.START_TAG && xpp.getName().equals(tags[0]) && xpp.nextText().equals(track)) {
-                        HashMap<String, String> map = new HashMap<String, String>();
-                        while (!(xpp.getEventType() == XmlPullParser.END_TAG && xpp.getName().equals("track"))) {
-                            if (xpp.getEventType() == XmlPullParser.START_TAG && xpp.getName().equals(tags[2])) {
-                                map.put(tags[2], xpp.nextText());
-                            }
-                            if (xpp.getEventType() == XmlPullParser.START_TAG && xpp.getName().equals(tags[3])) {
 
-                                int rawtime = Integer.parseInt(xpp.getAttributeValue(0));
-                                Date date = new Date(rawtime * 1000L); // *1000 is to convert seconds to milliseconds
-                                SimpleDateFormat sdf = new SimpleDateFormat("d MMM yyyy, HH:mm:ss", Locale.ENGLISH); // the format of your date
-                                String formattedDate = sdf.format(date);
-
-                                map.put(xpp.getName(), formattedDate);
-//                                map.put(xpp.getName(), xpp.nextText());
-                            }
-                            if (xpp.getEventType() == XmlPullParser.START_TAG && xpp.getName().equals(tags[4])) {
-                                String temp = xpp.getAttributeValue(0);
-                                int selected_size = 0;
-                                if (temp.equals(image_sizes[selected_size])) {
-                                    map.put("image", xpp.nextText());
-                                }
-                            }
-                            xpp.next();
-                        }
-                        Tracks.add(map);
-                    }
-                    xpp.next();
-                }
-//                xpp.next();
-
-            }
-            xpp.next();
-        }
-        return Tracks;
-    }
-
-    public ArrayList<HashMap<String, String>> loadImagesFromLastfm(Context context, String foldername, boolean gotAlbum) {
-        Bitmap image;
-        String filename = null;
-        FileOutputStream out = null;
-        long startnow = 0;
-        long endnow;
-
-        try {
-//            startnow = android.os.SystemClock.uptimeMillis();
-            File folder = new File(foldername);
-            if (!folder.exists()) {
-                folder.mkdirs();
-            }
-            for (int i = 0; i < Tracks.size(); i++) {
-
-                HashMap<String, String> item = Tracks.get(i);
-                String temp = item.get("image");
-                if (!temp.equals("")) {
-                    if (gotAlbum){
-                        filename = folder.getPath() + File.separator + item.get("artist").replaceAll("[\\\\/:*?\"<>|]", "_") + " - " + item.get("album").replaceAll("[\\\\/:*?\"<>|]", "_") + ".png";
-                    }
-                    else 
-                        filename = folder.getPath() + File.separator + item.get("artist").replaceAll("[\\\\/:*?\"<>|]", "_") + ".png";
-                    if (!(new File(filename).exists())) {
-                        URL newurl = new URL(temp);
-                        image = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
-                        out = new FileOutputStream(filename);
-                        image.compress(Bitmap.CompressFormat.PNG, 100, out);
-                        out.flush();
-                        out.close();
-                    }
-                } else {
-                    filename = context.getFilesDir().getPath() + File.separator + "blank_albumart.png";
-                }
-                item.put("image", filename);
-                Tracks.set(i, item);
-            }
-        }
-        catch (MalformedURLException e) {
-            e.printStackTrace();}
-        catch (IOException e){
-            e.printStackTrace();
-        }
-        finally {
-            try {
-                if (out != null) {
-                    out.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return Tracks;
-    }
-
-    public String parseSingleText(String tag) throws XmlPullParserException, IOException{
+    public String parseSingleText(String tag) throws XmlPullParserException, IOException {
         String s = null;
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
         factory.setNamespaceAware(true);
@@ -230,7 +91,7 @@ public class Data {
         return s;
     }
 
-    public String parseAttribute(String tag, String attr) throws XmlPullParserException, IOException{
+    public String parseAttribute(String tag, String attr) throws XmlPullParserException, IOException {
         String res = null;
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
         factory.setNamespaceAware(true);
@@ -279,7 +140,7 @@ public class Data {
         return new String(Hex.encodeHex(DigestUtils.md5(s)));
     }
 
-    private String RequestAndResponse(boolean https, URL url, String method) throws SocketTimeoutException, UnknownHostException, SSLException, IOException{
+    private String RequestAndResponse(boolean https, URL url, String method) throws SocketTimeoutException, UnknownHostException, SSLException, IOException {
         BufferedReader in;
         InputStreamReader isr;
         HttpURLConnection conn = null;
@@ -302,8 +163,7 @@ public class Data {
             isr = new InputStreamReader(conn.getErrorStream());
         } else if (conn.getResponseCode() == 200) {
             isr = new InputStreamReader(conn.getInputStream());
-        }
-        else return null;
+        } else return null;
 
         in = new BufferedReader(isr);
         sb = new StringBuilder();
@@ -315,7 +175,7 @@ public class Data {
         return sb.toString();
     }
 
-    public ArrayList<HashMap<String, String>> getTopTracks(String resolution) throws XmlPullParserException, IOException{
+    public ArrayList<HashMap<String, String>> getTopTracks(String resolution) throws XmlPullParserException, IOException {
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
         factory.setNamespaceAware(true);
         XmlPullParser xpp = factory.newPullParser();
@@ -359,7 +219,7 @@ public class Data {
         return Tracks;
     }
 
-    public ArrayList<HashMap<String, String>> getTopArtists(String resolution) throws XmlPullParserException, IOException{
+    public ArrayList<HashMap<String, String>> getTopArtists(String resolution) throws XmlPullParserException, IOException {
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
         factory.setNamespaceAware(true);
         XmlPullParser xpp = factory.newPullParser();
@@ -394,7 +254,7 @@ public class Data {
         return Tracks;
     }
 
-    public ArrayList<HashMap<String, String>> getTopAlbums(String resolution) throws XmlPullParserException, IOException{
+    public ArrayList<HashMap<String, String>> getTopAlbums(String resolution) throws XmlPullParserException, IOException {
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
         factory.setNamespaceAware(true);
         XmlPullParser xpp = factory.newPullParser();
@@ -437,98 +297,5 @@ public class Data {
             xpp.next();
         }
         return Tracks;
-    }
-
-    public HashMap<String, String> getUserInfo(Context context, String cachepath) throws XmlPullParserException, IOException{
-        HashMap<String, String> map = new HashMap<>();
-        XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-        factory.setNamespaceAware(true);
-        XmlPullParser xpp = factory.newPullParser();
-        xpp.setInput(new StringReader(inputXML));
-        while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
-            if (xpp.getEventType() == XmlPullParser.START_TAG && xpp.getName().equals(tags[0]))
-                map.put(tags[0], xpp.nextText());
-
-            if (xpp.getEventType() == XmlPullParser.START_TAG && xpp.getName().equals("playcount"))
-                map.put("playcount", xpp.nextText() + " scrobbles");
-
-            if (xpp.getEventType() == XmlPullParser.START_TAG && xpp.getName().equals("registered"))
-                map.put("registered", xpp.nextText());
-
-            if (xpp.getEventType() == XmlPullParser.START_TAG && xpp.getName().equals("image"))
-                map.put("image", xpp.nextText());
-
-            xpp.next();
-        }
-        map.put("avatar_path", saveUserAvatar(context, cachepath, map.get("image"), map.get(tags[0])));
-        return map;
-    }
-
-    private String saveUserAvatar(Context context, String cachepath, String link_to_avatar, String username){
-        Bitmap image;
-        String filename = null;
-        FileOutputStream out = null;
-        try {
-            File folder = new File(cachepath + File.separator + "UserAvatars");
-            if (!folder.exists()) {
-                folder.mkdirs();
-            }
-            filename = folder.getPath() + File.separator + username + ".png";
-            URL newurl = new URL(link_to_avatar);
-            image = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
-            out = new FileOutputStream(filename);
-            image.compress(Bitmap.CompressFormat.PNG, 100, out);
-            out.flush();
-            out.close();
-        }
-        catch (MalformedURLException e) {
-            //FirebaseCrash.report(e);
-        }
-        catch (IOException e){
-            //FirebaseCrash.report(e);
-        }
-        finally {
-            try {
-                if (out != null) {
-                    out.close();
-                }
-            } catch (IOException e) {
-                //FirebaseCrash.report(e);
-            }
-        }
-        return filename;
-    }
-
-    public int ScrobbleCountOfArtist(TreeMap<String, String> params) throws IOException, NullPointerException, MalformedURLException{
-        int i = 1;
-        int count;
-        int scrobbles = 0;
-        while (inputXML.contains("name")){
-            params.put("mPage", String.valueOf(i));
-            URL url = GenerateURL(params);
-            inputXML = RequestAndResponse(true, url, "POST");
-            String str = inputXML;
-            String findStr = "<name>";
-            int lastIndex = 0;
-            count = 0;
-            while ((lastIndex = str.indexOf(findStr, lastIndex)) != -1) {
-                count++;
-                lastIndex += findStr.length() - 1;
-            }
-            i++;
-            scrobbles = scrobbles + count;
-        }
-        return scrobbles;
-    }
-
-    public int pageCountOfArtist(TreeMap<String, String> params) throws IOException, NullPointerException, MalformedURLException{
-        int i = 1;
-        while (inputXML.contains("<name>")){
-            params.put("mPage", String.valueOf(i));
-            URL url = GenerateURL(params);
-            inputXML = RequestAndResponse(true, url, "POST");
-            i++;
-        }
-        return i-2;
     }
 }

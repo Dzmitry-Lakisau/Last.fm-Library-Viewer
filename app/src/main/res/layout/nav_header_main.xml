@@ -15,12 +15,14 @@
     android:layout_gravity="top"
     android:background="@android:color/transparent"
     >
-<ImageView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/nav_header_image"
-    android:scaleType="centerCrop"
-    />
+
+    <ImageView
+        android:id="@+id/nav_header_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@null"
+        android:scaleType="centerCrop"
+        />
 
     <TextView
         android:id="@+id/user_registered"

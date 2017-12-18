@@ -273,7 +273,7 @@ public class TopArtistsFragment extends ListFragment implements OnScrollListener
                 treeMap.put("sk", sessionKey);
                 treeMap.put("user", username);
                 treeMap.put("limit", String.valueOf(limit));
-                treeMap.put("mPage", String.valueOf(page));
+                treeMap.put("page", String.valueOf(page));
                 treeMap.put("period", period);
                 task = new GetTopArtistsTask();
                 task.execute(treeMap);

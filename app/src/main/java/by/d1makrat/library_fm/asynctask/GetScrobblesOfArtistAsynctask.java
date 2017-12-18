@@ -14,10 +14,10 @@ import by.d1makrat.library_fm.model.Scrobble;
 public class GetScrobblesOfArtistAsynctask extends GetScrobblesAsynctask{
 
     private Exception mException = null;
-    private GetScrobblesAsynctaskCallback myAsyncTaskCallback;
+    private GetScrobblesAsynctaskCallback mAsynctaskCallback;
 
     public GetScrobblesOfArtistAsynctask(GetScrobblesAsynctaskCallback pAsynctaskCallback) {
-        myAsyncTaskCallback = pAsynctaskCallback;
+        mAsynctaskCallback = pAsynctaskCallback;
     }
 
     @Override
@@ -51,8 +51,8 @@ public class GetScrobblesOfArtistAsynctask extends GetScrobblesAsynctask{
     @Override
     protected void onPostExecute(List<Scrobble> scrobbles) {
         if (mException != null)
-            myAsyncTaskCallback.onException(mException);
+            mAsynctaskCallback.onException(mException);
         else
-            myAsyncTaskCallback.onLoadingScrobblesSuccessful(scrobbles);
+            mAsynctaskCallback.onLoadingScrobblesSuccessful(scrobbles);
     }
 }

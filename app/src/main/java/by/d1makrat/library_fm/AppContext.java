@@ -5,7 +5,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.google.gson.Gson;
+
 import by.d1makrat.library_fm.image_loader.Malevich;
+import by.d1makrat.library_fm.model.User;
 
 import static by.d1makrat.library_fm.Constants.SCROBBLES_PER_PAGE_KEY;
 
@@ -16,7 +19,8 @@ public class AppContext extends Application {
     private static final String DEFAULT_LIMIT = "10";
     private static AppContext mInstance;
     private SharedPreferences mSharedPreferences;
-    private String mUsername;
+
+    private User mUser;
     private String mSessionKey;
     private String mPerPage;
 
@@ -38,11 +42,14 @@ public class AppContext extends Application {
 
         Malevich.INSTANCE.setConfig(new Malevich.Config(this.getCacheDir()));
 
-
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        mUsername = mSharedPreferences.getString(USERNAME_KEY, null);
+//        mUsername = mSharedPreferences.getString(USERNAME_KEY, null);
         mSessionKey = mSharedPreferences.getString(SESSIONKEY_KEY, null);
         mPerPage = mSharedPreferences.getString(SCROBBLES_PER_PAGE_KEY, DEFAULT_LIMIT);
+
+        Gson gson = new Gson();
+        String json = mSharedPreferences.getString("user", null);
+        mUser = gson.fromJson(json, User.class);
     }
 
     @Override
@@ -61,18 +68,22 @@ public class AppContext extends Application {
 
     public void saveSettings(){
         SharedPreferences.Editor editor = mSharedPreferences.edit();
-        editor.putString(USERNAME_KEY, mUsername);
+//        editor.putString(USERNAME_KEY, mUsername);
         editor.putString(SESSIONKEY_KEY, mSessionKey);
         editor.putString(SCROBBLES_PER_PAGE_KEY, mPerPage);
+
+        final Gson gson = new Gson();
+        String serializedObject = gson.toJson(mUser);
+        editor.putString("user", serializedObject);
         editor.apply();
     }
 
-    public String getUsername() {
-        return mUsername;
+    public User getUser() {
+        return mUser;
     }
 
-    public void setUsername(String pUsername) {
-        mUsername = pUsername;
+    public void setUser(User mUser) {
+        this.mUser = mUser;
     }
 
     public String getSessionKey() {

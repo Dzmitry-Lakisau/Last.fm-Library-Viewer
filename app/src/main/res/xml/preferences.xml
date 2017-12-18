@@ -16,10 +16,9 @@
         <EditTextPreference
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:key="limit"
+            android:key="scrobbles_per_page"
             android:summary="Amount of scrobbles to process at once"
-            android:title="Limit">
-
+            android:title="Scrobbles per request">
         </EditTextPreference>
 
 

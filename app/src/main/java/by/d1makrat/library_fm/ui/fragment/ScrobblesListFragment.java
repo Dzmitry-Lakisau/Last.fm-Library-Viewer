@@ -32,8 +32,7 @@ import java.util.Locale;
 import by.d1makrat.library_fm.GetScrobblesAsynctaskCallback;
 import by.d1makrat.library_fm.NetworkStatusChecker;
 import by.d1makrat.library_fm.R;
-import by.d1makrat.library_fm.adapter.ScrobblesListAdapter;
-import by.d1makrat.library_fm.image_loader.Malevich;
+import by.d1makrat.library_fm.adapter.list.ScrobblesListAdapter;
 import by.d1makrat.library_fm.model.Scrobble;
 import by.d1makrat.library_fm.asynctask.GetScrobblesAsynctask;
 
@@ -125,7 +124,7 @@ public class ScrobblesListFragment extends ListFragment implements AbsListView.O
         super.onStart();
 
         if (isCreated)
-            LoadItems();
+            loadItems();
 //            loadItemsFromWeb(mPage, null, null);
     }
 
@@ -137,7 +136,7 @@ public class ScrobblesListFragment extends ListFragment implements AbsListView.O
     public void onScroll(AbsListView l, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         if ((firstVisibleItem + visibleItemCount) == totalItemCount && (totalItemCount > 0) && !isLoading) {
             mPage++;
-            LoadItems();
+            loadItems();
         }
     }
 
@@ -159,7 +158,7 @@ public class ScrobblesListFragment extends ListFragment implements AbsListView.O
                         mScrobbles.clear();
                         mScrobblesListAdapter.notifyDataSetChanged();
                         mPage = 1;
-                        LoadItems();
+                        loadItems();
 //                        loadItemsFromWeb(mPage, mFrom, mTo);
                     }
                 } else {
@@ -268,7 +267,7 @@ public class ScrobblesListFragment extends ListFragment implements AbsListView.O
         }
     }
 
-    public void LoadItems() {
+    public void loadItems() {
         isLoading = true;
         mListView.addFooterView(mFooterView);
 
@@ -296,7 +295,7 @@ public class ScrobblesListFragment extends ListFragment implements AbsListView.O
         filter_string = null;
 
         KillTaskIfRunning(mGetScrobblesAsynctask);
-        LoadItems();
+        loadItems();
 //        loadItemsFromWeb(mPage, pFrom, pTo);
     }
 

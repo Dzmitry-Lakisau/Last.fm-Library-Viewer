@@ -24,7 +24,7 @@ public class ScrobblesOfAlbumFragment extends ScrobblesListFragment {
 
         artist = getArguments().getString(ARTIST_BUNDLE_KEY);
         album = getArguments().getString(ALBUM_BUNDLE_KEY);
-        urlForBrowser = "https://www.last.fm/user/" + AppContext.getInstance().getUsername() + "/library/music/" + artist + "/" + album;
+        urlForBrowser = AppContext.getInstance().getUser().getUrl() + "/library/music/" + artist + "/" + album;
     }
 
     @Override
