@@ -1,12 +1,15 @@
 package by.d1makrat.library_fm.model;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 public class Scrobble{
 
     private String mArtist;
     private String mTrack;
     private String mAlbum;
     private String mImageUri;
-    private Date mDate;
+    private long mUnixDate;
 
     public void setArtist(String pArtist){
         mArtist = pArtist;
@@ -24,10 +27,9 @@ public class Scrobble{
         mImageUri = pImageUri;
     }
 
-    public void setDate(Date mDate) {
-        this.mDate = mDate;
+    public void setDate(long pUnixDate) {
+        mUnixDate = pUnixDate;
     }
-
 
     public String getArtist(){
         return mArtist;
@@ -48,15 +50,10 @@ public class Scrobble{
         return mImageUri;
     }
 
-//    public Uri getImageUriBySize(ResolutionOfImage pResolutionOfImage){
-//        return mImages.get(pResolutionOfImage.ordinal()).getImageURI();
-//    }
-//
-//    public void setImageUriBySize(ResolutionOfImage pResolutionOfImage, String pUri){
-//        mImages.get(pResolutionOfImage.ordinal()).setImageURI(pUri);
-//    }
-
-    public Date getDate(){
-        return mDate;
+    public String getDate(){
+        java.util.Date date = new java.util.Date (mUnixDate * 1000L);
+        SimpleDateFormat sdf = new SimpleDateFormat("d MMM yyyy, HH:mm:ss", Locale.ENGLISH);
+        String formattedDate = sdf.format(date);
+        return formattedDate;
     }
 }
