@@ -2,12 +2,7 @@ package by.d1makrat.library_fm.ui.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.design.widget.NavigationView;
@@ -25,44 +20,29 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.android.gms.ads.MobileAds;
 
-import org.xmlpull.v1.XmlPullParserException;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.lang.reflect.Field;
-import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
-import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.List;
-import javax.net.ssl.SSLException;
 
-import by.d1makrat.library_fm.APIException;
-import by.d1makrat.library_fm.AppSettings;
-import by.d1makrat.library_fm.BuildConfig;
-import by.d1makrat.library_fm.Data;
+import by.d1makrat.library_fm.AppContext;
+import by.d1makrat.library_fm.GetUserInfoAsynctaskCallback;
 import by.d1makrat.library_fm.NetworkStatusChecker;
 import by.d1makrat.library_fm.R;
+import by.d1makrat.library_fm.asynctask.GetUserInfoAsynctask;
+import by.d1makrat.library_fm.image_loader.Malevich;
+import by.d1makrat.library_fm.model.User;
 import by.d1makrat.library_fm.ui.fragment.ManualScrobbleFragment;
 import by.d1makrat.library_fm.ui.fragment.RecentScrobblesFragment;
 import by.d1makrat.library_fm.ui.fragment.SearchFragment;
 import by.d1makrat.library_fm.ui.fragment.StartFragment;
 import by.d1makrat.library_fm.ui.fragment.TabFragment;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, GetUserInfoAsynctaskCallback {
 
-    private final String API_KEY = BuildConfig.API_KEY;
-    private String username = null;
-    private String cachepath = null;
-    private String registered = null;
-    private String playcount = null;
-    private String resolution = null;// = "medium";
-    private String sessionKey = null;
-    private FragmentManager fragmentManager;
-    private boolean isLogout = false;
-
+    private FragmentManager fragmentManager = getSupportFragmentManager();
+    private User mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,21 +50,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         MobileAds.initialize(getApplicationContext(), "ca-app-pub-2835136610089326~9892994294");
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-        username = sharedPreferences.getString("username", null);
-        sessionKey = sharedPreferences.getString("sessionKey", null);
-        registered = sharedPreferences.getString("registered", null);
-        playcount = sharedPreferences.getString("playcount", null);
-        cachepath = new AppSettings(getApplicationContext()).getCacheDir();// getDiskCacheDir(getApplicationContext());
-        CreateNavigationDrawer();
-        Bundle bundle = new Bundle();
-        bundle.putString("sessionKey", sessionKey);
-        bundle.putString("username", username);
-        bundle.putString("cachepath", cachepath);
-        fragmentManager = getSupportFragmentManager();
+        mUser = AppContext.getInstance().getUser();
+
+        createNavigationDrawer();
+
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         StartFragment fragment = new StartFragment();
-        if (fragment.getArguments() == null) fragment.setArguments(bundle);
         fragmentTransaction.replace(R.id.content_main, fragment, "StartFragment");
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
@@ -102,36 +73,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
-        if (NetworkStatusChecker.isNetworkAvailable()) {
-//            GetPlaycountTask task = new GetPlaycountTask();
-//            task.execute();
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (!isLogout) {
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-            SharedPreferences.Editor spEditor = sharedPreferences.edit();
-            spEditor.putString("playcount", playcount);
-            spEditor.apply();
-        }
-    }
-
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-//        resolution = sharedPreferences.getString("resolution", "medium");
-//    }
-
-    @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         }
@@ -155,22 +98,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.clear();
-//        getMenuInflater().inflate(R.menu.main, menu);
+
         return true;
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         getSupportActionBar().setSubtitle(null);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         int id = item.getItemId();
         Bundle bundle = new Bundle();
 
         if (NetworkStatusChecker.isNetworkAvailable()) {
-//            GetPlaycountTask task = new GetPlaycountTask();
-//            task.execute();
+            GetUserInfoAsynctask getUserInfoAsynctask = new GetUserInfoAsynctask(this);
+            getUserInfoAsynctask.execute();
         }
         else
         {
@@ -182,14 +124,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             String tag = null;
         	switch (id){
             case R.id.logout:
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-                SharedPreferences.Editor spEditor = sharedPreferences.edit();
-                spEditor.putString("sessionKey", null);
-                spEditor.putString("username", null);
-                spEditor.putString("registered", null);
-                spEditor.putString("playcount", null);
-                spEditor.apply();
-                isLogout = true;
+                AppContext.getInstance().setUser(null);
+
                 startActivity(new Intent(this, LoginActivity.class));
                 finish();
                 break;
@@ -266,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    private void CreateNavigationDrawer(){
+    private void createNavigationDrawer(){
         setContentView(R.layout.activity_main);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(MainActivity.this);
@@ -298,113 +234,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         };
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        TextView user_registered = (TextView) navigationView.getHeaderView(0).findViewById(R.id.user_registered);
-        user_registered.setText(String.format("%s scrobbles since %s", playcount, registered));
-        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name)).setText(username);
-        File avatar = new File(cachepath + File.separator + "UserAvatars" + File.separator + username + ".png");
-        if (avatar.exists()) {
-            ImageView imageView = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.nav_header_image);
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            Bitmap bm = BitmapFactory.decodeFile(avatar.getPath(), options);
-            imageView.setImageBitmap(bm);
-        }
+
+        setUserInfoInHeader(mUser);
     }
 
-//    private String getDiskCacheDir(Context context) {
-//        try {
-//            final String cachePath =
-//                    Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) || !isExternalStorageRemovable() ? context.getExternalCacheDir().getPath() : context.getCacheDir().getPath();
-//            return new File(cachePath + File.separator + "Images").getPath();
-//        }
-//        catch (Exception e){
-//            //FirebaseCrash.report(e);
-//            e.printStackTrace();
-//            Toast.makeText(context, "Unable to get path of cache folder", Toast.LENGTH_LONG).show();
-//            return null;
-//        }
-//    }
+    private void setUserInfoInHeader(User pUser) {
+        View headerView = ((NavigationView) findViewById(R.id.nav_view)).getHeaderView(0);
 
+        ((TextView) headerView.findViewById(R.id.user_registered)).setText(String.format("%s scrobbles since %s", pUser.getPlaycount(), pUser.getRegistered()));
 
-    class GetPlaycountTask extends AsyncTask<Void, Void, String> {
-        private int exception = 0;
-        private String message = null;
+        ((TextView) headerView.findViewById(R.id.user_name)).setText(pUser.getUsername());
 
-        @Override
-        protected String doInBackground(Void... params) {
-            String info = null;
+        ImageView avatarInHeader = headerView.findViewById(R.id.nav_header_image);
+        Malevich.INSTANCE.load(pUser.getAvatarUri()).into(avatarInHeader);
+    }
 
-            try {
-                URL url = new URL("https://ws.audioscrobbler.com/2.0/?api_key=" + API_KEY + "&method=user.getInfo&sk=" + sessionKey);
-                Data rawxml = new Data(url);
-                if (rawxml.parseAttribute("lfm", "status").equals("failed")) {
-                    throw new APIException(rawxml.parseSingleText("error"));
-                }
-                else info = rawxml.parseSingleText("playcount");
-            }
-            catch (XmlPullParserException e){
-                //FirebaseCrash.report(e);
-                e.printStackTrace();
-                exception = 9;
-            }
-            catch (UnknownHostException e) {
-                e.printStackTrace();
-                exception = 8;
-            }
-            catch (SocketTimeoutException e){
-                e.printStackTrace();
-                exception = 7;
-            }
-            catch (MalformedURLException e){
-                //FirebaseCrash.report(e);
-                e.printStackTrace();
-                exception = 6;
-            }
-            catch (SSLException e) {
-                //FirebaseCrash.report(e);
-                e.printStackTrace();
-                exception = 5;
-            }
-            catch (FileNotFoundException e){
-                //FirebaseCrash.report(e);
-                e.printStackTrace();
-                exception = 4;
-            }
-            catch (RuntimeException e){
-                //FirebaseCrash.report(e);
-                e.printStackTrace();
-                exception = 3;
-            }
-            catch (IOException e){
-                //FirebaseCrash.report(e);
-                e.printStackTrace();
-                exception = 2;
-            }
-            catch (APIException e){
-                //FirebaseCrash.report(e);
-                message = e.getMessage();
-                exception = 1;
-            }
-            return info;
-        }
+    @Override
+    public void onUserInfoReceived(User user) {
+        AppContext.getInstance().setUser(user);
+        setUserInfoInHeader(user);
+    }
 
-        @Override
-        protected void onPostExecute(String result){
-            if (exception == 0){
-                    playcount = result;
-                    View nav_view = findViewById(R.id.nav_header);
-                    if (nav_view != null) {
-                        TextView user_registered = (TextView) nav_view.findViewById(R.id.user_registered);
-                        user_registered.setText(String.format("%s scrobbles since %s", playcount, registered));
-                    }
-            }
-            else if (exception == 1)
-                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-            else {
-                String[] exception_message = getResources().getStringArray(R.array.Exception_messages);
-                Toast.makeText(getApplicationContext(), exception_message[exception - 1], Toast.LENGTH_SHORT).show();
-            }
-        }
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        AppContext.getInstance().saveSettings();
+    }
+
+    @Override
+    public void onException(Exception exception) {
+        Toast.makeText(this, exception.getMessage(), Toast.LENGTH_LONG).show();
     }
 }
 
