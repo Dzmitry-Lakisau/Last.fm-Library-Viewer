@@ -1,9 +1,11 @@
 package by.d1makrat.library_fm.model;
 
+import android.support.annotation.Nullable;
+
 public class RankedItem {
 
     private String primaryField;
-    private String secondaryField;
+    @Nullable private String secondaryField;
     private String rank;
     private String playcount;
     private String imageUri;
@@ -16,6 +18,7 @@ public class RankedItem {
         this.primaryField = primaryField;
     }
 
+    @Nullable
     public String getSecondaryField() {
         return secondaryField;
     }

@@ -37,6 +37,8 @@ public class UrlConstructor {
     private static final String METHOD_GET_USER_INFO = "user.getInfo";
     private static final String PERIOD_KEY = "period";
     private static final String METHOD_GET_USER_TOP_ALBUMS_VALUE = "user.getTopAlbums";
+    private static final String METHOD_GET_USER_TOP_ARTISTS_VALUE = "user.getTopArtists";
+    private static final String METHOD_GET_USER_TOP_TRACKS_VALUE = "user.getTopTracks";
 
     private String mSessionKey, mUsername, mPerPage;
 
@@ -152,10 +154,51 @@ public class UrlConstructor {
         TreeMap<String, String> requestParams = new TreeMap<>();
 
         requestParams.put(APIKEY_KEY, BuildConfig.API_KEY);
-//        requestParams.put(SESSIONKEY_KEY, mSessionKey);
         requestParams.put(USER_KEY, mUsername);
         requestParams.put(SCROBBLES_PER_PAGE_KEY, mPerPage);
         requestParams.put(METHOD_KEY, METHOD_GET_USER_TOP_ALBUMS_VALUE);
+        requestParams.put(PAGE_KEY, pPage);
+        requestParams.put(PERIOD_KEY, pPeriod);
+
+        StringBuilder stringBuilder = new StringBuilder(API_BASE_URL);
+        for (Map.Entry<String, String> e : requestParams.entrySet()) {
+            stringBuilder.append(e.getKey()).append("=").append(URLEncoder.encode(e.getValue())).append("&");
+        }
+
+        stringBuilder.append(FORMAT_KEY);
+
+        return new URL(stringBuilder.toString());
+    }
+
+    public URL constructGetUserTopArtistsApiRequestUrl(@NonNull String pPeriod, @NonNull String pPage) throws MalformedURLException {
+
+        TreeMap<String, String> requestParams = new TreeMap<>();
+
+        requestParams.put(APIKEY_KEY, BuildConfig.API_KEY);
+        requestParams.put(USER_KEY, mUsername);
+        requestParams.put(SCROBBLES_PER_PAGE_KEY, mPerPage);
+        requestParams.put(METHOD_KEY, METHOD_GET_USER_TOP_ARTISTS_VALUE);
+        requestParams.put(PAGE_KEY, pPage);
+        requestParams.put(PERIOD_KEY, pPeriod);
+
+        StringBuilder stringBuilder = new StringBuilder(API_BASE_URL);
+        for (Map.Entry<String, String> e : requestParams.entrySet()) {
+            stringBuilder.append(e.getKey()).append("=").append(URLEncoder.encode(e.getValue())).append("&");
+        }
+
+        stringBuilder.append(FORMAT_KEY);
+
+        return new URL(stringBuilder.toString());
+    }
+
+    public URL constructGetUserTopTracksApiRequestUrl(@NonNull String pPeriod, @NonNull String pPage) throws MalformedURLException {
+
+        TreeMap<String, String> requestParams = new TreeMap<>();
+
+        requestParams.put(APIKEY_KEY, BuildConfig.API_KEY);
+        requestParams.put(USER_KEY, mUsername);
+        requestParams.put(SCROBBLES_PER_PAGE_KEY, mPerPage);
+        requestParams.put(METHOD_KEY, METHOD_GET_USER_TOP_TRACKS_VALUE);
         requestParams.put(PAGE_KEY, pPage);
         requestParams.put(PERIOD_KEY, pPeriod);
 
