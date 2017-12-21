@@ -9,26 +9,24 @@ import by.d1makrat.library_fm.AsynctaskCallback;
 import by.d1makrat.library_fm.NetworkRequester;
 import by.d1makrat.library_fm.UrlConstructor;
 import by.d1makrat.library_fm.json.JsonParser;
-import by.d1makrat.library_fm.model.Scrobble;
+import by.d1makrat.library_fm.model.RankedItem;
 
-public class GetScrobblesOfArtistAsynctask extends GetScrobblesAsynctask{
+public class GetUserTopTracksAsynctask extends GetRankedItemsAsynctask {
 
-    private Exception mException = null;
-    private AsynctaskCallback mAsynctaskCallback;
+    private Exception mException;
+    private AsynctaskCallback asynctaskCallback;
 
-    public GetScrobblesOfArtistAsynctask(AsynctaskCallback pAsynctaskCallback) {
-        mAsynctaskCallback = pAsynctaskCallback;
+    public GetUserTopTracksAsynctask(AsynctaskCallback pAsynctaskCallback) {
+        asynctaskCallback = pAsynctaskCallback;
     }
 
     @Override
-    protected List<Scrobble> doInBackground(String... params) {
-
-        List<Scrobble> scrobbles = new ArrayList<Scrobble>();
-        URL apiRequestUrl;
+    protected List<RankedItem> doInBackground(String... params) {
+        List<RankedItem> scrobbles = new ArrayList<>();
 
         try {
             UrlConstructor urlConstructor = new UrlConstructor();
-            apiRequestUrl = urlConstructor.constructScrobblesByArtistApiRequestUrl(params[0], params[1], params[2], params[3]);
+            URL apiRequestUrl = urlConstructor.constructGetUserTopTracksApiRequestUrl(params[0], params[1]);
 
             NetworkRequester networkRequester = new NetworkRequester();
             String response = networkRequester.request(apiRequestUrl, "GET");
@@ -39,7 +37,7 @@ public class GetScrobblesOfArtistAsynctask extends GetScrobblesAsynctask{
             if (!errorOrNot.equals("No error"))
                 mException = new APIException(errorOrNot);
             else
-                scrobbles = jsonParser.parseScrobbles(response);
+                scrobbles = jsonParser.parseUserTopTracks(response);
         } catch (Exception e) {
             e.printStackTrace();
             mException = e;
@@ -49,10 +47,11 @@ public class GetScrobblesOfArtistAsynctask extends GetScrobblesAsynctask{
     }
 
     @Override
-    protected void onPostExecute(List<Scrobble> scrobbles) {
+    protected void onPostExecute(List<RankedItem> result) {
         if (mException != null)
-            mAsynctaskCallback.onException(mException);
-        else
-            mAsynctaskCallback.onLoadingScrobblesSuccessful(scrobbles);
+            asynctaskCallback.onException(mException);
+        else {
+            asynctaskCallback.onLoadingRankedItemsSuccessful(result);
+        }
     }
 }

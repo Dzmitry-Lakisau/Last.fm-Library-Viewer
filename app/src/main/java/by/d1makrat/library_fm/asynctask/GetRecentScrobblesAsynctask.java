@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import by.d1makrat.library_fm.APIException;
-import by.d1makrat.library_fm.GetScrobblesAsynctaskCallback;
+import by.d1makrat.library_fm.AsynctaskCallback;
 import by.d1makrat.library_fm.NetworkRequester;
 import by.d1makrat.library_fm.UrlConstructor;
 import by.d1makrat.library_fm.json.JsonParser;
@@ -14,9 +14,9 @@ import by.d1makrat.library_fm.model.Scrobble;
 public class GetRecentScrobblesAsynctask extends GetScrobblesAsynctask{
 
     private Exception mException = null;
-    private GetScrobblesAsynctaskCallback mAsynctaskCallback;
+    private AsynctaskCallback mAsynctaskCallback;
 
-    public GetRecentScrobblesAsynctask(GetScrobblesAsynctaskCallback pAsynctaskCallback) {
+    public GetRecentScrobblesAsynctask(AsynctaskCallback pAsynctaskCallback) {
         mAsynctaskCallback = pAsynctaskCallback;
     }
 

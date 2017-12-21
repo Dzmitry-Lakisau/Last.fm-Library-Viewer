@@ -34,7 +34,7 @@
 
     <TextView
         android:includeFontPadding="false"
-        android:id="@+id/upper_field"
+        android:id="@+id/primaryField_textView"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -46,26 +46,26 @@
 
     <TextView
         android:includeFontPadding="false"
-        android:id="@+id/middle_field"
+        android:id="@+id/secondaryField_textView"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        android:layout_below="@+id/upper_field"
-        android:layout_alignLeft="@+id/upper_field"
+        android:layout_below="@+id/primaryField_textView"
+        android:layout_alignLeft="@+id/primaryField_textView"
         android:layout_marginRight="@dimen/text_margin"
         />
 
     <TextView
 
         android:includeFontPadding="false"
-        android:id="@+id/bottom_field"
+        android:id="@+id/playcount_textView"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        android:layout_below="@+id/middle_field"
-        android:layout_alignLeft="@+id/middle_field"
+        android:layout_below="@+id/secondaryField_textView"
+        android:layout_alignLeft="@+id/secondaryField_textView"
         android:layout_marginRight="@dimen/text_margin"
         />
 

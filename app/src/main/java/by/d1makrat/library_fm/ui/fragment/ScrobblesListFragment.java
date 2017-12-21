@@ -1,7 +1,5 @@
 package by.d1makrat.library_fm.ui.fragment;
 
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
@@ -19,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,16 +28,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import by.d1makrat.library_fm.GetScrobblesAsynctaskCallback;
+import by.d1makrat.library_fm.AsynctaskCallback;
 import by.d1makrat.library_fm.NetworkStatusChecker;
 import by.d1makrat.library_fm.R;
-import by.d1makrat.library_fm.adapter.list.ScrobblesListAdapter;
+import by.d1makrat.library_fm.model.RankedItem;
 import by.d1makrat.library_fm.model.Scrobble;
-import by.d1makrat.library_fm.asynctask.GetScrobblesAsynctask;
 
 import static by.d1makrat.library_fm.Constants.*;
 
-public class ScrobblesListFragment extends ListFragment implements AbsListView.OnScrollListener, FilterDialogFragment.DialogListener, GetScrobblesAsynctaskCallback {
+public abstract class ScrobblesListFragment extends ListFragment implements AbsListView.OnScrollListener, FilterDialogFragment.DialogListener, AsynctaskCallback {
     //max limit=1000
     protected static String urlForBrowser;
     private String filter_string = null;
@@ -52,11 +50,12 @@ public class ScrobblesListFragment extends ListFragment implements AbsListView.O
     private boolean allIsLoaded = false;
     private boolean wasEmpty = false;
 
-    protected GetScrobblesAsynctask mGetScrobblesAsynctask;
-    private ScrobblesListAdapter mScrobblesListAdapter;
+    protected AsyncTask mGetItemsAsynctask;
+    protected BaseAdapter mListAdapter;
     private ListView mListView;
     private View list_head;
-    private List<Scrobble> mScrobbles = new ArrayList<>();
+    protected List<Scrobble> mScrobbles = new ArrayList<>();
+    protected List<RankedItem> mRankedItems = new ArrayList<>();
     protected int mPage;
     private View mFooterView;
 
@@ -64,10 +63,23 @@ public class ScrobblesListFragment extends ListFragment implements AbsListView.O
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setHasOptionsMenu(true);
+
         mPage = 1;
 
-        setHasOptionsMenu(true);
+        mListAdapter = createAdapter();
     }
+
+//    private BaseAdapter createAdapter(){
+//
+//        Drawable drawable;
+//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+//            drawable = getResources().getDrawable(R.drawable.default_albumart);
+//        } else
+//            drawable = getResources().getDrawable(R.drawable.default_albumart, null);
+//
+//        return mListAdapter = new ScrobblesListAdapter(getActivity().getLayoutInflater(), drawable, mScrobbles);
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -84,7 +96,7 @@ public class ScrobblesListFragment extends ListFragment implements AbsListView.O
                 ((TextView) rootView.findViewById(R.id.empty_list_text)).setText(empty_list_text);
             } else {
                 //было загружено и данные не пустые
-                rootView.findViewById(R.id.list_head).setVisibility(View.VISIBLE);
+//                rootView.findViewById(R.id.list_head).setVisibility(View.VISIBLE);
                 ((TextView) rootView.findViewById(R.id.list_head)).setText(list_head_text);
             }
         } else {
@@ -95,19 +107,12 @@ public class ScrobblesListFragment extends ListFragment implements AbsListView.O
             }
         }
 
-        Drawable drawable;
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            drawable = getResources().getDrawable(R.drawable.default_albumart);
-        } else
-            drawable = getResources().getDrawable(R.drawable.default_albumart, null);
-
-        mScrobblesListAdapter = new ScrobblesListAdapter(getActivity().getLayoutInflater(), drawable, mScrobbles);// SimpleAdapter(getActivity(), mScrobbles, R.layout.list_item, new String[]{"name", "artist", "album", "date", "image"}, new int[]{R.id.track, R.id.artist, R.id.album, R.id.timestamp, R.id.albumart});
         mListView = rootView.findViewById(android.R.id.list);
         list_head = rootView.findViewById(R.id.list_head);
 
         mFooterView = getActivity().getLayoutInflater().inflate(R.layout.list_spinner, (ViewGroup) null);
         mListView.addFooterView(mFooterView);
-        mListView.setAdapter(mScrobblesListAdapter);
+        mListView.setAdapter(mListAdapter);
         mListView.removeFooterView(mFooterView);
 
 //        progressBar = mFooterView.findViewById(R.id.progressbar);
@@ -154,9 +159,9 @@ public class ScrobblesListFragment extends ListFragment implements AbsListView.O
                     if (!isLoading) {
                         allIsLoaded = false;
                         getView().findViewById(R.id.list_head).setVisibility(View.GONE);
-                        KillTaskIfRunning(mGetScrobblesAsynctask);
+                        KillTaskIfRunning(mGetItemsAsynctask);
                         mScrobbles.clear();
-                        mScrobblesListAdapter.notifyDataSetChanged();
+                        mListAdapter.notifyDataSetChanged();
                         mPage = 1;
                         loadItems();
 //                        loadItemsFromWeb(mPage, mFrom, mTo);
@@ -281,6 +286,8 @@ public class ScrobblesListFragment extends ListFragment implements AbsListView.O
         }
     }
 
+    protected abstract BaseAdapter createAdapter();
+
     public void loadItemsFromWeb(){}
 
     @Override
@@ -290,11 +297,11 @@ public class ScrobblesListFragment extends ListFragment implements AbsListView.O
         mFrom = pFrom;
         mTo = pTo;
         mScrobbles.clear();
-        mScrobblesListAdapter.notifyDataSetChanged();
+        mListAdapter.notifyDataSetChanged();
         mPage = 1;
         filter_string = null;
 
-        KillTaskIfRunning(mGetScrobblesAsynctask);
+        KillTaskIfRunning(mGetItemsAsynctask);
         loadItems();
 //        loadItemsFromWeb(mPage, pFrom, pTo);
     }
@@ -309,7 +316,7 @@ public class ScrobblesListFragment extends ListFragment implements AbsListView.O
     public void onStop() {
         super.onStop();
         isCreated = false;//TODO isCreated должно быть true и false только В onPostExecute
-        KillTaskIfRunning(mGetScrobblesAsynctask);
+        KillTaskIfRunning(mGetItemsAsynctask);
     }
 
     @Override
@@ -317,12 +324,12 @@ public class ScrobblesListFragment extends ListFragment implements AbsListView.O
         mListView.removeFooterView(mFooterView);
         isLoading = false;
         wasEmpty = false;
-//        if (exception == 0 && scrobbles.size() > 0){
+
         if (scrobbles.size() > 0) {
             list_head.setVisibility(View.VISIBLE);
             // result.get(i));
             mScrobbles.addAll(scrobbles);
-            mScrobblesListAdapter.notifyDataSetChanged();
+            mListAdapter.notifyDataSetChanged();
             list_head_text = "Scrobbles: " + mListView.getCount() + ((filter_string == null) ? "" : " within " + filter_string);
             ((TextView) list_head.findViewById(R.id.list_head)).setText(list_head_text);
         }
@@ -333,7 +340,23 @@ public class ScrobblesListFragment extends ListFragment implements AbsListView.O
         mListView.removeFooterView(mFooterView);
         Toast.makeText(getContext(), pException.getMessage(), Toast.LENGTH_LONG).show();//TODO get context activity or fragment here?
     }
- }
+
+    @Override
+    public void onLoadingRankedItemsSuccessful(List<RankedItem> rankedItems) {
+        mListView.removeFooterView(mFooterView);
+        isLoading = false;
+        wasEmpty = false;
+
+        if (rankedItems.size() > 0) {
+//            list_head.setVisibility(View.VISIBLE);
+            // result.get(i));
+            mRankedItems.addAll(rankedItems);
+            mListAdapter.notifyDataSetChanged();
+//            list_head_text = "Scrobbles: " + mListView.getCount() + ((filter_string == null) ? "" : " within " + filter_string);
+//            ((TextView) list_head.findViewById(R.id.list_head)).setText(list_head_text);
+        }
+    }
+}
 
 //        @Override
 //        protected void onPostExecute(List<Scrobble> result) {
@@ -345,7 +368,7 @@ public class ScrobblesListFragment extends ListFragment implements AbsListView.O
 //                for (int i = 0; i < result.size(); i++) {
 //                    mScrobbles.add(result.get(i));// result.get(i));
 //                }
-//                mScrobblesListAdapter.notifyDataSetChanged();
+//                mListAdapter.notifyDataSetChanged();
 //                list_head_text = "Scrobbles: " + mListView.getCount() + ((filter_string == null) ? "" : " within " + filter_string);
 //                ((TextView) list_head.findViewById(R.id.list_head)).setText(list_head_text);
 //            }

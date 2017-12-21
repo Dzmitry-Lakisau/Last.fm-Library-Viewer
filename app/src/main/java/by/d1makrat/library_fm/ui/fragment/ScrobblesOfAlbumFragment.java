@@ -1,5 +1,7 @@
 package by.d1makrat.library_fm.ui.fragment;
 
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
@@ -7,8 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.BaseAdapter;
 
 import by.d1makrat.library_fm.AppContext;
+import by.d1makrat.library_fm.R;
+import by.d1makrat.library_fm.adapter.list.ScrobblesListAdapter;
 import by.d1makrat.library_fm.asynctask.GetScrobblesOfAlbumAsynctask;
 
 public class ScrobblesOfAlbumFragment extends ScrobblesListFragment {
@@ -25,6 +30,18 @@ public class ScrobblesOfAlbumFragment extends ScrobblesListFragment {
         artist = getArguments().getString(ARTIST_BUNDLE_KEY);
         album = getArguments().getString(ALBUM_BUNDLE_KEY);
         urlForBrowser = AppContext.getInstance().getUser().getUrl() + "/library/music/" + artist + "/" + album;
+    }
+
+    @Override
+    protected BaseAdapter createAdapter(){
+
+        Drawable drawable;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            drawable = getResources().getDrawable(R.drawable.default_albumart);
+        } else
+            drawable = getResources().getDrawable(R.drawable.default_albumart, null);
+
+        return new ScrobblesListAdapter(getActivity().getLayoutInflater(), drawable, mScrobbles);
     }
 
     @Override
@@ -48,8 +65,8 @@ public class ScrobblesOfAlbumFragment extends ScrobblesListFragment {
     @Override
     public void loadItemsFromWeb() {
         String[] asynctaskArgs = {artist, album, mFrom, mTo};
-        mGetScrobblesAsynctask = new GetScrobblesOfAlbumAsynctask(this);
-        mGetScrobblesAsynctask.execute(asynctaskArgs);
+        mGetItemsAsynctask = new GetScrobblesOfAlbumAsynctask(this);
+        mGetItemsAsynctask.execute(asynctaskArgs);
     }
 
     @Override

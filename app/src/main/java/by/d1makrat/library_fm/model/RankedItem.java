@@ -2,7 +2,7 @@ package by.d1makrat.library_fm.model;
 
 import android.support.annotation.Nullable;
 
-public class RankedItem {
+public class RankedItem extends Scrobble{
 
     private String primaryField;
     @Nullable private String secondaryField;

@@ -5,30 +5,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 import by.d1makrat.library_fm.APIException;
-import by.d1makrat.library_fm.GetScrobblesAsynctaskCallback;
+import by.d1makrat.library_fm.AsynctaskCallback;
 import by.d1makrat.library_fm.NetworkRequester;
 import by.d1makrat.library_fm.UrlConstructor;
 import by.d1makrat.library_fm.json.JsonParser;
-import by.d1makrat.library_fm.model.Scrobble;
-import by.d1makrat.library_fm.ui.fragment.TopAlbumsFragment;
+import by.d1makrat.library_fm.model.RankedItem;
 
-public class GetUserTopAlbumsAsynctask extends GetScrobblesAsynctask {
+public class GetUserTopAlbumsAsynctask extends GetRankedItemsAsynctask {
 
     private Exception mException;
-    private GetScrobblesAsynctaskCallback asynctaskCallback;
+    private AsynctaskCallback asynctaskCallback;
 
-    public GetUserTopAlbumsAsynctask(GetScrobblesAsynctaskCallback pAsynctaskCallback) {
+    public GetUserTopAlbumsAsynctask(AsynctaskCallback pAsynctaskCallback) {
         asynctaskCallback = pAsynctaskCallback;
     }
 
     @Override
-    protected List<Scrobble> doInBackground(String... params) {
-        List<Scrobble> scrobbles = new ArrayList<Scrobble>();
-        URL apiRequestUrl;
+    protected List<RankedItem> doInBackground(String... params) {
+        List<RankedItem> scrobbles = new ArrayList<>();
 
         try {
             UrlConstructor urlConstructor = new UrlConstructor();
-            apiRequestUrl = urlConstructor.constructGetUserTopAlbumsApiRequestUrl(params[0], params[1]);
+            URL apiRequestUrl = urlConstructor.constructGetUserTopAlbumsApiRequestUrl(params[0], params[1]);
 
             NetworkRequester networkRequester = new NetworkRequester();
             String response = networkRequester.request(apiRequestUrl, "GET");
@@ -39,7 +37,7 @@ public class GetUserTopAlbumsAsynctask extends GetScrobblesAsynctask {
             if (!errorOrNot.equals("No error"))
                 mException = new APIException(errorOrNot);
             else
-                scrobbles = jsonParser.parseScrobbles(response);
+                scrobbles = jsonParser.parseUserTopAlbums(response);
         } catch (Exception e) {
             e.printStackTrace();
             mException = e;
@@ -49,10 +47,11 @@ public class GetUserTopAlbumsAsynctask extends GetScrobblesAsynctask {
     }
 
     @Override
-    protected void onPostExecute(List<Scrobble> scrobbles) {
+    protected void onPostExecute(List<RankedItem> result) {
         if (mException != null)
             asynctaskCallback.onException(mException);
-        else
-            asynctaskCallback.onLoadingScrobblesSuccessful(scrobbles);
+        else {
+            asynctaskCallback.onLoadingRankedItemsSuccessful(result);
+        }
     }
 }

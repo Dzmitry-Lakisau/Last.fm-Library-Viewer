@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import by.d1makrat.library_fm.APIException;
-import by.d1makrat.library_fm.GetScrobblesAsynctaskCallback;
+import by.d1makrat.library_fm.AsynctaskCallback;
 import by.d1makrat.library_fm.NetworkRequester;
 import by.d1makrat.library_fm.UrlConstructor;
 import by.d1makrat.library_fm.json.JsonParser;
@@ -13,10 +13,10 @@ import by.d1makrat.library_fm.model.Scrobble;
 
 public class GetScrobblesOfAlbumAsynctask extends GetScrobblesAsynctask {
 
-    private final GetScrobblesAsynctaskCallback mAsynctaskCallback;
+    private final AsynctaskCallback mAsynctaskCallback;
     private Exception mException;
 
-    public GetScrobblesOfAlbumAsynctask(GetScrobblesAsynctaskCallback pAsynctaskCallback) {
+    public GetScrobblesOfAlbumAsynctask(AsynctaskCallback pAsynctaskCallback) {
         mAsynctaskCallback = pAsynctaskCallback;
     }
 
@@ -25,9 +25,6 @@ public class GetScrobblesOfAlbumAsynctask extends GetScrobblesAsynctask {
 
         List<Scrobble> artistScrobbles = new ArrayList<Scrobble>();
         List<Scrobble> albumScrobbles = new ArrayList<Scrobble>();
-        UrlConstructor urlConstructor = new UrlConstructor();
-        NetworkRequester networkRequester = new NetworkRequester();
-        URL apiRequestUrl;
         String response;
 
         String artist = params[0];
@@ -36,12 +33,12 @@ public class GetScrobblesOfAlbumAsynctask extends GetScrobblesAsynctask {
         String to = params[3];
 
         try {
-
-
             int page = 1;
             do{
-                apiRequestUrl = urlConstructor.constructScrobblesByArtistApiRequestUrl(artist, String.valueOf(page), from, to);
+                UrlConstructor urlConstructor = new UrlConstructor();
+                URL apiRequestUrl = urlConstructor.constructScrobblesByArtistApiRequestUrl(artist, String.valueOf(page), from, to);
 
+                NetworkRequester networkRequester = new NetworkRequester();
                 response = networkRequester.request(apiRequestUrl, "GET");
 
                 JsonParser jsonParser = new JsonParser();
@@ -60,7 +57,6 @@ public class GetScrobblesOfAlbumAsynctask extends GetScrobblesAsynctask {
                 page++;
             }
             while(response.contains("name"));
-
 
         } catch (Exception e) {
             e.printStackTrace();
