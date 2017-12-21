@@ -35,7 +35,7 @@ import by.d1makrat.library_fm.image_loader.Malevich;
 import by.d1makrat.library_fm.model.User;
 import by.d1makrat.library_fm.ui.fragment.ManualScrobbleFragment;
 import by.d1makrat.library_fm.ui.fragment.RecentScrobblesFragment;
-import by.d1makrat.library_fm.ui.fragment.SearchFragment;
+import by.d1makrat.library_fm.ui.fragment.SearchArtistFragment;
 import by.d1makrat.library_fm.ui.fragment.StartFragment;
 import by.d1makrat.library_fm.ui.fragment.TabFragment;
 
@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case (R.id.search):
                 tag = "SearchFragment";
                 fragment = fragmentManager.findFragmentByTag(tag);
-                if (fragment==null) fragment = new SearchFragment();
+                if (fragment==null) fragment = new SearchArtistFragment();
                 break;
         	case (R.id.manual_scrobble):
                 tag = "ManualScrobbleFragment";
