@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import by.d1makrat.library_fm.model.Artist;
 import by.d1makrat.library_fm.model.RankedItem;
 import by.d1makrat.library_fm.model.Scrobble;
 import by.d1makrat.library_fm.model.User;
@@ -140,21 +141,21 @@ public class JsonParser {
             JSONArray artistsJsonArray = (new JSONObject(pStringToParse)).getJSONObject("topartists").getJSONArray("artist");
 
             for (int i = 0; i < artistsJsonArray.length(); i++) {
-                JSONObject albumJsonObject = artistsJsonArray.getJSONObject(i);
+                JSONObject artistsJsonObject = artistsJsonArray.getJSONObject(i);
 
-                RankedItem album = new RankedItem();
+                RankedItem artist = new RankedItem();
 
-                album.setPrimaryField(albumJsonObject.getString("name"));
+                artist.setPrimaryField(artistsJsonObject.getString("name"));
 
-                album.setPlaycount(albumJsonObject.getString("playcount"));
+                artist.setPlaycount(artistsJsonObject.getString("playcount"));
 
-                JSONArray jsonArray = albumJsonObject.getJSONArray("image");
+                JSONArray jsonArray = artistsJsonObject.getJSONArray("image");
                 String imageUri = jsonArray.getJSONObject(3).getString("#text");
-                album.setImageUri(imageUri.equals("") ? null : imageUri);
+                artist.setImageUri(imageUri.equals("") ? null : imageUri);
 
-                album.setRank(albumJsonObject.getJSONObject("@attr").getString("rank"));
+                artist.setRank(artistsJsonObject.getJSONObject("@attr").getString("rank"));
 
-                topArtists.add(album);
+                topArtists.add(artist);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -170,27 +171,57 @@ public class JsonParser {
             JSONArray tracksJsonArray = (new JSONObject(pStringToParse)).getJSONObject("toptracks").getJSONArray("track");
 
             for (int i = 0; i < tracksJsonArray.length(); i++) {
-                JSONObject albumJsonObject = tracksJsonArray.getJSONObject(i);
+                JSONObject trackJsonObject = tracksJsonArray.getJSONObject(i);
 
-                RankedItem album = new RankedItem();
+                RankedItem track = new RankedItem();
 
-                album.setPrimaryField(albumJsonObject.getString("name"));
+                track.setPrimaryField(trackJsonObject.getString("name"));
 
-                album.setPlaycount(albumJsonObject.getString("playcount"));
+                track.setPlaycount(trackJsonObject.getString("playcount"));
 
-                album.setSecondaryField(albumJsonObject.getJSONObject("artist").getString("name"));
+                track.setSecondaryField(trackJsonObject.getJSONObject("artist").getString("name"));
 
-                JSONArray jsonArray = albumJsonObject.getJSONArray("image");
+                JSONArray jsonArray = trackJsonObject.getJSONArray("image");
                 String imageUri = jsonArray.getJSONObject(3).getString("#text");
-                album.setImageUri(imageUri.equals("") ? null : imageUri);
+                track.setImageUri(imageUri.equals("") ? null : imageUri);
 
-                album.setRank(albumJsonObject.getJSONObject("@attr").getString("rank"));
+                track.setRank(trackJsonObject.getJSONObject("@attr").getString("rank"));
 
-                topTracks.add(album);
+                topTracks.add(track);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return topTracks;
+    }
+
+    public List<Artist> parseSearchArtistResults(String pStringToParse){
+        List<Artist> artists = new ArrayList<>();
+
+        try{
+            JSONArray artistsJsonArray = (new JSONObject(pStringToParse)).getJSONObject("results").getJSONObject("artistmatches").getJSONArray("artist");
+
+            for (int i = 0; i < artistsJsonArray.length(); i++) {
+                JSONObject artistJsonObject = artistsJsonArray.getJSONObject(i);
+
+                Artist artist = new Artist();
+
+                artist.setName(artistJsonObject.getString("name"));
+
+                artist.setListenersCount(artistJsonObject.getString("listeners"));
+
+                artist.setUrl(artistJsonObject.getString("url"));
+
+                JSONArray jsonArray = artistJsonObject.getJSONArray("image");
+                String imageUri = jsonArray.getJSONObject(4).getString("#text");
+                artist.setImageUri(imageUri.equals("") ? null : imageUri);
+
+                artists.add(artist);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return artists;
     }
 }

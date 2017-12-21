@@ -39,6 +39,7 @@ public class UrlConstructor {
     private static final String METHOD_GET_USER_TOP_ALBUMS_VALUE = "user.getTopAlbums";
     private static final String METHOD_GET_USER_TOP_ARTISTS_VALUE = "user.getTopArtists";
     private static final String METHOD_GET_USER_TOP_TRACKS_VALUE = "user.getTopTracks";
+    private static final String METHOD_SEARCH_ARTISTS_VALUE = "artist.search";
 
     private String mSessionKey, mUsername, mPerPage;
 
@@ -201,6 +202,26 @@ public class UrlConstructor {
         requestParams.put(METHOD_KEY, METHOD_GET_USER_TOP_TRACKS_VALUE);
         requestParams.put(PAGE_KEY, pPage);
         requestParams.put(PERIOD_KEY, pPeriod);
+
+        StringBuilder stringBuilder = new StringBuilder(API_BASE_URL);
+        for (Map.Entry<String, String> e : requestParams.entrySet()) {
+            stringBuilder.append(e.getKey()).append("=").append(URLEncoder.encode(e.getValue())).append("&");
+        }
+
+        stringBuilder.append(FORMAT_KEY);
+
+        return new URL(stringBuilder.toString());
+    }
+
+    public URL constructSearchArtistsApiRequestUrl(@NonNull String pArtistQuery, @NonNull String pPage) throws MalformedURLException {
+
+        TreeMap<String, String> requestParams = new TreeMap<>();
+
+        requestParams.put(APIKEY_KEY, BuildConfig.API_KEY);
+        requestParams.put(ARTIST_KEY, pArtistQuery);
+        requestParams.put(SCROBBLES_PER_PAGE_KEY, mPerPage);
+        requestParams.put(METHOD_KEY, METHOD_SEARCH_ARTISTS_VALUE);
+        requestParams.put(PAGE_KEY, pPage);
 
         StringBuilder stringBuilder = new StringBuilder(API_BASE_URL);
         for (Map.Entry<String, String> e : requestParams.entrySet()) {
