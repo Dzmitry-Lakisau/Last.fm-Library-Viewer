@@ -40,6 +40,12 @@ public class UrlConstructor {
     private static final String METHOD_GET_USER_TOP_ARTISTS_VALUE = "user.getTopArtists";
     private static final String METHOD_GET_USER_TOP_TRACKS_VALUE = "user.getTopTracks";
     private static final String METHOD_SEARCH_ARTISTS_VALUE = "artist.search";
+    private static final String TRACK_KEY = "track";
+    private static final String ALBUM_KEY = "album";
+    private static final String TRACK_NUMBER_KEY = "trackNumber";
+    private static final String TRACK_DURATION = "duration";
+    private static final String TIMESTAMP_KEY = "timestamp";
+    private static final String METHOD_SCROBBLE_TRACK_VALUE = "track.scrobble";
 
     private String mSessionKey, mUsername, mPerPage;
 
@@ -228,6 +234,32 @@ public class UrlConstructor {
             stringBuilder.append(e.getKey()).append("=").append(URLEncoder.encode(e.getValue())).append("&");
         }
 
+        stringBuilder.append(FORMAT_KEY);
+
+        return new URL(stringBuilder.toString());
+    }
+
+    public URL constructSendScrobbleApiRequestUrl(@NonNull String pTrack, @NonNull String pArtist, String pAlbum, String pTrackNumber,
+                                                  @NonNull String pTrackDuration, @NonNull String pTimestamp) throws MalformedURLException {
+        TreeMap<String, String> requestParams = new TreeMap<>();
+
+        requestParams.put(APIKEY_KEY, BuildConfig.API_KEY);
+        requestParams.put(SESSIONKEY_KEY, mSessionKey);
+        requestParams.put(ARTIST_KEY, pArtist);
+        requestParams.put(TRACK_KEY, pTrack);
+        requestParams.put(ALBUM_KEY, pAlbum);
+        requestParams.put(TRACK_NUMBER_KEY, pTrackNumber);
+        requestParams.put(TRACK_DURATION, pTrackDuration);
+        requestParams.put(TIMESTAMP_KEY, pTimestamp);
+        requestParams.put(METHOD_KEY, METHOD_SCROBBLE_TRACK_VALUE);
+
+        String apiSignature = generateApiSignature(requestParams);
+        StringBuilder stringBuilder = new StringBuilder(API_BASE_URL);
+        for (Map.Entry<String, String> e : requestParams.entrySet()) {
+            stringBuilder.append(e.getKey()).append("=").append(URLEncoder.encode(e.getValue())).append("&");
+        }
+
+        stringBuilder.append(API_SIGNATURE_KEY).append(apiSignature).append("&");
         stringBuilder.append(FORMAT_KEY);
 
         return new URL(stringBuilder.toString());

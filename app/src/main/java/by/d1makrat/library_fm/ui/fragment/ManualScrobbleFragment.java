@@ -2,18 +2,14 @@ package by.d1makrat.library_fm.ui.fragment;
 
 
 import android.app.Activity;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
-import java.util.TreeMap;
+
 import java.util.Calendar;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,29 +23,30 @@ import android.widget.Toast;
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.codetroopers.betterpickers.radialtimepicker.RadialTimePickerDialogFragment;
 
-import org.xmlpull.v1.XmlPullParserException;
-import javax.net.ssl.SSLException;
-
-import by.d1makrat.library_fm.APIException;
 import by.d1makrat.library_fm.BuildConfig;
-import by.d1makrat.library_fm.Data;
 import by.d1makrat.library_fm.NetworkStatusChecker;
 import by.d1makrat.library_fm.R;
+import by.d1makrat.library_fm.SendScrobbleAsynctaskCallback;
+import by.d1makrat.library_fm.asynctask.SendScrobbleTask;
 
-public class ManualScrobbleFragment extends Fragment implements CalendarDatePickerDialogFragment.OnDateSetListener, RadialTimePickerDialogFragment.OnTimeSetListener{
+public class ManualScrobbleFragment extends Fragment implements CalendarDatePickerDialogFragment.OnDateSetListener, RadialTimePickerDialogFragment.OnTimeSetListener, SendScrobbleAsynctaskCallback {
 
 	private final String API_KEY = BuildConfig.API_KEY;
 	private String sessionKey;
 	private String username;
-	private ScrobbleTask task;
+	private SendScrobbleTask task;
 	private int mYear, mMonth, mDay, mHour, mMinute;
 	private Calendar cal;
 	private ProgressBar spinner;
 	public TextView track, artist, album, trackduration, tracknumber;
+	private SendScrobbleAsynctaskCallback mCallback;
 
 	@Override
 	public void onCreate(Bundle savedInstance){
 		super.onCreate(savedInstance);
+
+		mCallback = this;
+
 		sessionKey = getArguments().getString("sessionKey");
 		username = getArguments().getString("username");
 		cal = Calendar.getInstance();
@@ -114,20 +111,14 @@ public class ManualScrobbleFragment extends Fragment implements CalendarDatePick
 							spinner.setVisibility(View.INVISIBLE);
 							Toast toast = Toast.makeText(v.getContext(), "Fill fields \"Track title\", \"Artist\", \"Duration\"", Toast.LENGTH_SHORT);
 							toast.show();
-						} else {
-							TreeMap<String, String> treeMap = new TreeMap<>();
-							treeMap.put("track", track);
-							treeMap.put("artist", artist);
-							treeMap.put("album", album);
-							treeMap.put("trackNumber", tracknumber);
-							treeMap.put("duration", duration);
-							treeMap.put("timestamp", timestamp.toString());
-							treeMap.put("method", "track.scrobble");
-							treeMap.put("api_key", API_KEY);
-							treeMap.put("sk", sessionKey);
-							treeMap.put("user", username);
-							task = new ScrobbleTask();
-							task.execute(treeMap);
+						} else if (TextUtils.isDigitsOnly(tracknumber) && TextUtils.isDigitsOnly(duration)){
+						try {
+							String[] asynctaskArgs = new String[]{track, artist, album, String.valueOf(tracknumber), String.valueOf(duration), String.valueOf(timestamp)};
+							task = new SendScrobbleTask(mCallback);
+							task.execute(asynctaskArgs);
+						} catch (NumberFormatException exception){
+							onException(exception);
+						}
 						}
                     }
                     else {
@@ -208,6 +199,18 @@ public class ManualScrobbleFragment extends Fragment implements CalendarDatePick
 		}
 	}
 
+	@Override
+	public void onException(Exception pException) {
+		spinner.setVisibility(View.INVISIBLE);
+		Toast.makeText(getContext(), pException.getMessage(), Toast.LENGTH_LONG).show();
+	}
+
+	@Override
+	public void onSendScrobbleResult(String result) {
+		spinner.setVisibility(View.INVISIBLE);
+		Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+	}
+
 //	public class DatePickerFragment extends DialogFragment implements OnDateSetListener {
 //
 //		@Override
@@ -250,93 +253,4 @@ public class ManualScrobbleFragment extends Fragment implements CalendarDatePick
 //		}
 //	}
 
-	class ScrobbleTask extends AsyncTask<TreeMap<String, String>, Void, String> {
-
-		private int exception = 0;
-		private String message = null;
-
-		@Override
-		protected String doInBackground(TreeMap<String, String>... params) {
-
-			String res = null;
-
-			try {
-				Data rawxml = new Data(params[0]);
-				if (rawxml.parseAttribute("lfm", "status").equals("failed")) {
-					throw new APIException(rawxml.parseSingleText("error"));
-				}
-				else if (rawxml.parseAttribute("scrobbles", "accepted").equals("0"))
-						throw new APIException(rawxml.parseAttribute("ignoredMessage", "code"));
-					else res = "Accepted";
-			}
-			catch (XmlPullParserException e){
-				//FirebaseCrash.report(e);
-				e.printStackTrace();
-				exception = 9;
-			}
-			catch (UnknownHostException e) {
-				e.printStackTrace();
-				exception = 8;
-			}
-			catch (SocketTimeoutException e){
-				e.printStackTrace();
-				exception = 7;
-			}
-			catch (MalformedURLException e){
-				//FirebaseCrash.report(e);
-				e.printStackTrace();
-				exception = 6;
-			}
-			catch (SSLException e) {
-				//FirebaseCrash.report(e);
-				e.printStackTrace();
-				exception = 5;
-			}
-			catch (FileNotFoundException e){
-				//FirebaseCrash.report(e);
-				e.printStackTrace();
-				exception = 4;
-			}
-			catch (RuntimeException e){
-				//FirebaseCrash.report(e);
-				e.printStackTrace();
-				exception = 3;
-			}
-			catch (IOException e){
-				//FirebaseCrash.report(e);
-				e.printStackTrace();
-				exception = 2;
-			}
-			catch (APIException e){
-				//FirebaseCrash.report(e);
-				message = e.getMessage();
-				exception = 1;
-			}
-			return res;
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			spinner.setVisibility(View.INVISIBLE);
-			try {
-//				((Button) getView().findViewById(R.id.button_scrobble)).setEnabled(true);
-			}
-			catch (Exception e){
-				//FirebaseCrash.report(e);
-			}
-			if (exception == 0){
-				Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
-			}
-			else if (exception == 1)
-				Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-			else {
-				String[] exception_message = getResources().getStringArray(R.array.Exception_messages);
-				Toast.makeText(getContext(), exception_message[exception - 1], Toast.LENGTH_SHORT).show();
-			}
-		}
-
-		@Override
-		protected void onCancelled() {
-		}
-	}
 }

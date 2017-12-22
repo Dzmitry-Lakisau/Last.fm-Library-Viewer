@@ -224,4 +224,21 @@ public class JsonParser {
 
         return artists;
     }
+
+    public String parseSendScrobbleResult(String pStringToParse){
+
+        String message = null;
+        try {
+            JSONObject messageJsonObject = (new JSONObject(pStringToParse)).getJSONObject("scrobbles").getJSONObject("scrobble").getJSONObject("ignoredMessage");
+            message = messageJsonObject.getString("#text");
+            if (!message.equals("")){
+                message = "Accepted";
+            }
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        return message;
+    }
 }
