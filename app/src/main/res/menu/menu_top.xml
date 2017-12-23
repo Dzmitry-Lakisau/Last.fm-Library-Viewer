@@ -14,8 +14,4 @@
         android:id="@+id/open_in_browser"
         app:showAsAction="ifRoom"
         />
-
-
-
-
 </menu>

@@ -30,7 +30,7 @@
     <string name="artist_hint">Artist</string>
     <string name="album_hint">Album title</string>
     <string name="track_number_hint">Number</string>
-    <string name="duration_hint">Duration</string>
+    <string name="duration_hint">Duration in seconds</string>
     <string name="action_filter">Filter</string>
     <string name="action_refresh">Refresh</string>
     <string name="open_in_browser">Open web page</string>
@@ -45,4 +45,5 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="track_scrobble_ignored_message">Scrobble was ignored. Probably because of timestamp was too old or new</string>
 </resources>

@@ -19,6 +19,9 @@ import java.util.TimeZone;
 
 import by.d1makrat.library_fm.R;
 
+import static by.d1makrat.library_fm.Constants.FILTER_DIALOG_FROM_BUNDLE_KEY;
+import static by.d1makrat.library_fm.Constants.FILTER_DIALOG_TO_BUNDLE_KEY;
+
 public class FilterDialogFragment extends android.support.v4.app.DialogFragment {
 
     private View view;
@@ -42,13 +45,13 @@ public class FilterDialogFragment extends android.support.v4.app.DialogFragment 
             //FirebaseCrash.report(e);
             throw new ClassCastException(fragment.toString() + " must implement DialogListener");
         }
-        String temp = getArguments().getString("from");
+        String temp = getArguments().getString(FILTER_DIALOG_FROM_BUNDLE_KEY);
         if (temp!=null){
             from = Long.valueOf(temp);
             calendar_from = Calendar.getInstance(TimeZone.getDefault());
             calendar_from.setTimeInMillis(from*1000);
         }
-        temp = getArguments().getString("to");
+        temp = getArguments().getString(FILTER_DIALOG_TO_BUNDLE_KEY);
         if (temp!=null){
             to = Long.valueOf(temp);
             calendar_to = Calendar.getInstance(TimeZone.getDefault());

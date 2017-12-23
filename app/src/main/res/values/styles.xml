@@ -81,7 +81,7 @@
         <item name="android:itemBackground">@color/dark_red</item>
     </style>
 
-    <style name="MyCustomBetterPickersDialogs" parent="BetterPickersDialogFragment">
+    <style name="CustomBetterPickersDialogs" parent="BetterPickersDialogFragment">
         <item name="bpPreHeaderBackgroundColor">@color/bpTransparent</item>
         <item name="bpHeaderBackgroundColor">@color/dark_red</item>
         <item name="bpHeaderSelectedTextColor">@color/black</item>

@@ -7,6 +7,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import by.d1makrat.library_fm.AppContext;
+import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.model.Artist;
 import by.d1makrat.library_fm.model.RankedItem;
 import by.d1makrat.library_fm.model.Scrobble;
@@ -230,10 +232,12 @@ public class JsonParser {
         String message = null;
         try {
             JSONObject messageJsonObject = (new JSONObject(pStringToParse)).getJSONObject("scrobbles").getJSONObject("scrobble").getJSONObject("ignoredMessage");
-            message = messageJsonObject.getString("#text");
-            if (!message.equals("")){
+            message = messageJsonObject.getString("code");
+            if (message.equals("0")){
                 message = "Accepted";
             }
+            else
+                message = AppContext.getInstance().getResources().getString(R.string.track_scrobble_ignored_message);
         }
         catch (JSONException e){
             e.printStackTrace();

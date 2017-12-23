@@ -176,8 +176,8 @@ public abstract class ScrobblesListFragment extends ListFragment implements AbsL
                 if (!isLoading) {
                     FilterDialogFragment dialogFragment = new FilterDialogFragment();
                     Bundle args = new Bundle();
-                    args.putString("From", mFrom);
-                    args.putString("To", mTo);
+                    args.putString(FILTER_DIALOG_FROM_BUNDLE_KEY, mFrom);
+                    args.putString(FILTER_DIALOG_TO_BUNDLE_KEY, mTo);
                     dialogFragment.setArguments(args);
                     dialogFragment.setTargetFragment(this, 0);
                     dialogFragment.show(getFragmentManager(), "DialogFragment");

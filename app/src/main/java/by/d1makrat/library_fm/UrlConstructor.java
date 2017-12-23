@@ -43,7 +43,7 @@ public class UrlConstructor {
     private static final String TRACK_KEY = "track";
     private static final String ALBUM_KEY = "album";
     private static final String TRACK_NUMBER_KEY = "trackNumber";
-    private static final String TRACK_DURATION = "duration";
+    private static final String TRACK_DURATION_KEY = "duration";
     private static final String TIMESTAMP_KEY = "timestamp";
     private static final String METHOD_SCROBBLE_TRACK_VALUE = "track.scrobble";
 
@@ -249,7 +249,7 @@ public class UrlConstructor {
         requestParams.put(TRACK_KEY, pTrack);
         requestParams.put(ALBUM_KEY, pAlbum);
         requestParams.put(TRACK_NUMBER_KEY, pTrackNumber);
-        requestParams.put(TRACK_DURATION, pTrackDuration);
+        requestParams.put(TRACK_DURATION_KEY, pTrackDuration);
         requestParams.put(TIMESTAMP_KEY, pTimestamp);
         requestParams.put(METHOD_KEY, METHOD_SCROBBLE_TRACK_VALUE);
 

@@ -3,9 +3,9 @@ package by.d1makrat.library_fm.ui.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -24,7 +24,6 @@ import android.widget.Toast;
 import com.google.android.gms.ads.MobileAds;
 
 import java.lang.reflect.Field;
-import java.util.List;
 
 import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.GetUserInfoAsynctaskCallback;
@@ -52,24 +51,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mUser = AppContext.getInstance().getUser();
 
-        createNavigationDrawer();
+        createView();
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         StartFragment fragment = new StartFragment();
         fragmentTransaction.replace(R.id.content_main, fragment, "StartFragment");
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-
-        try {
-            ViewConfiguration config = ViewConfiguration.get(this);
-            Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
-            if(menuKeyField != null) {
-                menuKeyField.setAccessible(true);
-                menuKeyField.setBoolean(config, false);
-            }
-        } catch (Exception ex) {
-            // Ignore
-        }
     }
 
     @Override
@@ -79,10 +67,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             drawer.closeDrawer(GravityCompat.START);
         }
         else {
-            if (NetworkStatusChecker.isNetworkAvailable()) {
-//                GetPlaycountTask task = new GetPlaycountTask();
-//                task.execute();
-            }
             switch (fragmentManager.getBackStackEntryCount()) {
                 case 1:
                     finish();
@@ -202,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    private void createNavigationDrawer(){
+    private void createView(){
         setContentView(R.layout.activity_main);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(MainActivity.this);
@@ -212,30 +196,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(MainActivity.this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-                if (!drawer.isDrawerOpen(GravityCompat.START) && !(slideOffset == 0)){
-                    List fragments = getSupportFragmentManager().getFragments();
-                    if (fragments != null) {
-                        Fragment fragment = (Fragment) fragments.get(fragments.size() - 1);
-//                        Fragment currentFragment = fragmentManager.findFragmentById(R.id.content_main);
-                        if (fragment != null && fragment.getTag().equals("ManualScrobbleFragment")) {
-                            ManualScrobbleFragment f = (ManualScrobbleFragment) fragment;
-                            f.track.clearFocus();
-                            f.artist.clearFocus();
-                            f.album.clearFocus();
-                            f.tracknumber.clearFocus();
-                            f.trackduration.clearFocus();
-                        }
-                    }
                     InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
                     inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-                }
             }
         };
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         setUserInfoInHeader(mUser);
+
+        try {
+            ViewConfiguration config = ViewConfiguration.get(this);
+            Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
+            if(menuKeyField != null) {
+                menuKeyField.setAccessible(true);
+                menuKeyField.setBoolean(config, false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void setUserInfoInHeader(User pUser) {
