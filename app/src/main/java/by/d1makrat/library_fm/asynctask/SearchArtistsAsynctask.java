@@ -7,13 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import by.d1makrat.library_fm.APIException;
-import by.d1makrat.library_fm.AsynctaskCallback;
-import by.d1makrat.library_fm.NetworkRequester;
+import by.d1makrat.library_fm.HttpsClient;
 import by.d1makrat.library_fm.SearchArtistsAsynctaskCallback;
 import by.d1makrat.library_fm.UrlConstructor;
 import by.d1makrat.library_fm.json.JsonParser;
 import by.d1makrat.library_fm.model.Artist;
-import by.d1makrat.library_fm.model.RankedItem;
 
 public class SearchArtistsAsynctask extends AsyncTask<String, Void, List<Artist>> {
 
@@ -32,8 +30,8 @@ public class SearchArtistsAsynctask extends AsyncTask<String, Void, List<Artist>
             UrlConstructor urlConstructor = new UrlConstructor();
             URL apiRequestUrl = urlConstructor.constructSearchArtistsApiRequestUrl(params[0], params[1]);
 
-            NetworkRequester networkRequester = new NetworkRequester();
-            String response = networkRequester.request(apiRequestUrl, "GET");
+            HttpsClient httpsClient = new HttpsClient();
+            String response = httpsClient.request(apiRequestUrl, "GET");
 
             JsonParser jsonParser = new JsonParser();
 

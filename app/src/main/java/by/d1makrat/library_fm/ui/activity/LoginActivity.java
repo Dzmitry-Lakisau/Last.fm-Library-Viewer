@@ -13,7 +13,7 @@ import android.widget.Toast;
 import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.GetSessionKeyAsynctaskCallback;
 import by.d1makrat.library_fm.GetUserInfoAsynctaskCallback;
-import by.d1makrat.library_fm.NetworkStatusChecker;
+import by.d1makrat.library_fm.HttpsClient;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.asynctask.GetSessionKeyAsynctask;
 import by.d1makrat.library_fm.asynctask.GetUserInfoAsynctask;
@@ -48,7 +48,7 @@ public class LoginActivity extends AppCompatActivity implements GetSessionKeyAsy
                 public void onClick(View view) {
                     InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
                     inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-                    if (NetworkStatusChecker.isNetworkAvailable()) {
+                    if (HttpsClient.isNetworkAvailable()) {
                         mUsername = username_field.getText().toString();
                         String password = password_field.getText().toString();
 

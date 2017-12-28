@@ -32,7 +32,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import by.d1makrat.library_fm.NetworkStatusChecker;
+import by.d1makrat.library_fm.HttpsClient;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.SearchArtistsAsynctaskCallback;
 import by.d1makrat.library_fm.adapter.list.SearchArtistsAdapter;
@@ -102,7 +102,7 @@ public class SearchArtistFragment extends ListFragment implements OnScrollListen
 //                ((TextView) rootView.findViewById(R.id.list_head)).setText(list_head_text);
             }
         } else {
-            if (!NetworkStatusChecker.isNetworkAvailable()) {
+            if (!HttpsClient.isNetworkAvailable()) {
                 //создаётся и сеть отсуствует
                 rootView.findViewById(R.id.empty_list).setVisibility(View.VISIBLE);
                 ((TextView) rootView.findViewById(R.id.empty_list).findViewById(R.id.empty_list_text)).setText(R.string.network_is_not_connected);
@@ -181,7 +181,7 @@ public class SearchArtistFragment extends ListFragment implements OnScrollListen
     @Override
     public void onScroll(AbsListView l, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         if ((firstVisibleItem + visibleItemCount) == totalItemCount && (totalItemCount > 0) && !isLoading) {
-            if (NetworkStatusChecker.isNetworkAvailable()) {
+            if (HttpsClient.isNetworkAvailable()) {
                 mPage++;
                 LoadItems(mPage, search_field.getText().toString());
             } else {
@@ -221,7 +221,7 @@ public class SearchArtistFragment extends ListFragment implements OnScrollListen
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        if (NetworkStatusChecker.isNetworkAvailable()) {
+        if (HttpsClient.isNetworkAvailable()) {
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
             switch (item.getItemId()) {
                 case R.id.scrobbles_of_artist:
@@ -271,7 +271,7 @@ public class SearchArtistFragment extends ListFragment implements OnScrollListen
     }
 
     public void LoadItems(Integer page, String artist) {
-        if (NetworkStatusChecker.isNetworkAvailable()) {
+        if (HttpsClient.isNetworkAvailable()) {
             if (!allIsLoaded) {
                 isLoading = true;
 

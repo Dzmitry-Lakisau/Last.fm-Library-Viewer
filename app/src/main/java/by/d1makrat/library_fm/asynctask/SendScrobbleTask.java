@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 import java.net.URL;
 
 import by.d1makrat.library_fm.APIException;
-import by.d1makrat.library_fm.NetworkRequester;
+import by.d1makrat.library_fm.HttpsClient;
 import by.d1makrat.library_fm.SendScrobbleAsynctaskCallback;
 import by.d1makrat.library_fm.UrlConstructor;
 import by.d1makrat.library_fm.json.JsonParser;
@@ -28,8 +28,8 @@ public class SendScrobbleTask extends AsyncTask<String, Void, String> {
             UrlConstructor urlConstructor = new UrlConstructor();
             URL apiRequestUrl = urlConstructor.constructSendScrobbleApiRequestUrl(params[0], params[1], params[2], params[3], params[4], params[5]);
 
-            NetworkRequester networkRequester = new NetworkRequester();
-            String response = networkRequester.request(apiRequestUrl, "POST");
+            HttpsClient httpsClient = new HttpsClient();
+            String response = httpsClient.request(apiRequestUrl, "POST");
 
             JsonParser jsonParser = new JsonParser();
 

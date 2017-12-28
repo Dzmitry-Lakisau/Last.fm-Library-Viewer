@@ -6,7 +6,7 @@ import java.util.List;
 
 import by.d1makrat.library_fm.APIException;
 import by.d1makrat.library_fm.AsynctaskCallback;
-import by.d1makrat.library_fm.NetworkRequester;
+import by.d1makrat.library_fm.HttpsClient;
 import by.d1makrat.library_fm.UrlConstructor;
 import by.d1makrat.library_fm.json.JsonParser;
 import by.d1makrat.library_fm.model.Scrobble;
@@ -38,8 +38,8 @@ public class GetScrobblesOfTrackAsynctask extends GetScrobblesAsynctask {
                 UrlConstructor urlConstructor = new UrlConstructor();
                 URL apiRequestUrl = urlConstructor.constructScrobblesByArtistApiRequestUrl(artist, String.valueOf(page), from, to);
 
-                NetworkRequester networkRequester = new NetworkRequester();
-                response = networkRequester.request(apiRequestUrl, "GET");
+                HttpsClient httpsClient = new HttpsClient();
+                response = httpsClient.request(apiRequestUrl, "GET");
 
                 JsonParser jsonParser = new JsonParser();
                 String errorOrNot = jsonParser.checkForApiErrors(response);

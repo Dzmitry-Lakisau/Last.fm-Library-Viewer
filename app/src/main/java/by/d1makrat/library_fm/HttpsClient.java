@@ -1,5 +1,9 @@
 package by.d1makrat.library_fm;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,7 +15,7 @@ import java.net.UnknownHostException;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLException;
 
-public class NetworkRequester {
+public class HttpsClient {
 
     public String request(URL pUrl, String pMethod) throws SocketTimeoutException, UnknownHostException, SSLException, IOException {
 
@@ -46,5 +50,11 @@ public class NetworkRequester {
         httpsURLConnection.disconnect();
 
         return stringBuilder.toString();
+    }
+
+    public static boolean isNetworkAvailable() {
+        ConnectivityManager cm = (ConnectivityManager) AppContext.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
     }
 }
