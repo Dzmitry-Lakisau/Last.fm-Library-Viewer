@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import by.d1makrat.library_fm.APIException;
+import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.AsynctaskCallback;
-import by.d1makrat.library_fm.NetworkRequester;
+import by.d1makrat.library_fm.HttpsClient;
 import by.d1makrat.library_fm.UrlConstructor;
+import by.d1makrat.library_fm.database.DatabaseWorker;
 import by.d1makrat.library_fm.json.JsonParser;
 import by.d1makrat.library_fm.model.Scrobble;
 
@@ -24,25 +26,37 @@ public class GetRecentScrobblesAsynctask extends GetScrobblesAsynctask{
     protected List<Scrobble> doInBackground(String... params) {
 
         List<Scrobble> scrobbles = new ArrayList<Scrobble>();
-        URL apiRequestUrl;
+        DatabaseWorker databaseWorker = new DatabaseWorker(AppContext.getInstance().getApplicationContext());
 
         try {
-            UrlConstructor urlConstructor = new UrlConstructor();
-            apiRequestUrl = urlConstructor.constructRecentScrobblesApiRequestUrl(params[0], params[1], params[2]);
+            databaseWorker.open();
 
-            NetworkRequester networkRequester = new NetworkRequester();
-            String response = networkRequester.request(apiRequestUrl, "GET");
+            if (HttpsClient.isNetworkAvailable()) {
+                UrlConstructor urlConstructor = new UrlConstructor();
+                URL apiRequestUrl = urlConstructor.constructRecentScrobblesApiRequestUrl(params[0], params[1], params[2]);
 
-            JsonParser jsonParser = new JsonParser();
+                HttpsClient httpsClient = new HttpsClient();
+                String response = httpsClient.request(apiRequestUrl, "GET");
 
-            String errorOrNot = jsonParser.checkForApiErrors(response);
-            if (!errorOrNot.equals("No error"))
-                mException = new APIException(errorOrNot);
-            else
-                scrobbles = jsonParser.parseScrobbles(response);
+                JsonParser jsonParser = new JsonParser();
+
+                String errorOrNot = jsonParser.checkForApiErrors(response);
+                if (!errorOrNot.equals("No error"))
+                    mException = new APIException(errorOrNot);
+                else
+                    scrobbles = jsonParser.parseScrobbles(response);
+
+                databaseWorker.bulkInsertScrobbles(scrobbles);
+            }
+            else {
+                scrobbles = databaseWorker.getScrobbles(params[0], params[1], params[2]);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             mException = e;
+        } finally {
+            databaseWorker.close();
         }
 
         return scrobbles;
