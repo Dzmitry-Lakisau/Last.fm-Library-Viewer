@@ -130,7 +130,7 @@ public class BaseDiskCache implements DiskCache {
         } catch (IllegalArgumentException ignored) {
         }
 
-//        return Math.max(Math.min(size, MAX_DISK_CACHE_SIZE), MIN_DISK_CACHE_SIZE);
-        return 40772;
+        return Math.max(Math.min(size, MAX_DISK_CACHE_SIZE), MIN_DISK_CACHE_SIZE);
+//        return 40772;
     }
 }

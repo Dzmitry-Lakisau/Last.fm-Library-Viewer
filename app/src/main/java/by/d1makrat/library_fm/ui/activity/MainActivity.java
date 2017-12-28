@@ -27,7 +27,7 @@ import java.lang.reflect.Field;
 
 import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.GetUserInfoAsynctaskCallback;
-import by.d1makrat.library_fm.NetworkStatusChecker;
+import by.d1makrat.library_fm.HttpsClient;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.asynctask.GetUserInfoAsynctask;
 import by.d1makrat.library_fm.image_loader.Malevich;
@@ -36,9 +36,15 @@ import by.d1makrat.library_fm.ui.fragment.ManualScrobbleFragment;
 import by.d1makrat.library_fm.ui.fragment.RecentScrobblesFragment;
 import by.d1makrat.library_fm.ui.fragment.SearchArtistFragment;
 import by.d1makrat.library_fm.ui.fragment.StartFragment;
-import by.d1makrat.library_fm.ui.fragment.TabFragment;
+import by.d1makrat.library_fm.ui.fragment.TabTopAlbumsFragment;
+import by.d1makrat.library_fm.ui.fragment.TabTopArtistsFragment;
+import by.d1makrat.library_fm.ui.fragment.TabTopTracksFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, GetUserInfoAsynctaskCallback {
+
+    public static final String TAB_TOP_ALBUMS_FRAGMENT_TAG = "TabTopAlbumsFragment";
+    public static final String TAB_TOP_TRACKS_FRAGMENT_TAG = "TabTopTracksFragment";
+    public static final String TAB_TOP_ARTISTS_FRAGMENT_TAG = "TabTopArtistsFragment";
 
     private FragmentManager fragmentManager = getSupportFragmentManager();
     private User mUser;
@@ -94,16 +100,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
         Bundle bundle = new Bundle();
 
-        if (NetworkStatusChecker.isNetworkAvailable()) {
+        if (HttpsClient.isNetworkAvailable()) {
             GetUserInfoAsynctask getUserInfoAsynctask = new GetUserInfoAsynctask(this);
             getUserInfoAsynctask.execute();
         }
-        else
-        {
-            Toast toast;
-            toast = Toast.makeText(getApplicationContext(), R.string.network_is_not_connected, Toast.LENGTH_SHORT);
-            toast.show();
-        }
+
             Fragment fragment = null;
             String tag = null;
         	switch (id){
@@ -129,22 +130,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (fragment==null) fragment = new RecentScrobblesFragment();
         		break;
         	case (R.id.top_tracks):
-                tag = "TopTracksFragment";
-                bundle.putString("tabfragment_type", "tracks");
+                tag = TAB_TOP_TRACKS_FRAGMENT_TAG;
                 fragment = fragmentManager.findFragmentByTag(tag);
-                if (fragment==null) fragment = new TabFragment();
+                if (fragment==null) fragment = new TabTopTracksFragment();
         		break;
         	case (R.id.top_artists):
-                tag = "TopArtistsFragment";
-                bundle.putString("tabfragment_type", "artists");
+                tag = TAB_TOP_ARTISTS_FRAGMENT_TAG;
                 fragment = fragmentManager.findFragmentByTag(tag);
-                if (fragment==null) fragment = new TabFragment();
+                if (fragment==null) fragment = new TabTopArtistsFragment();
                 break;
             case (R.id.top_albums):
-                tag = "TopAlbumsFragment";
-                bundle.putString("tabfragment_type", "albums");
+                tag = TAB_TOP_ALBUMS_FRAGMENT_TAG;
                 fragment = fragmentManager.findFragmentByTag(tag);
-                if (fragment==null) fragment = new TabFragment();
+                if (fragment==null) fragment = new TabTopAlbumsFragment();
                 break;
             case (R.id.settings):
                 Intent intent = new Intent(this, PreferenceActivity.class);

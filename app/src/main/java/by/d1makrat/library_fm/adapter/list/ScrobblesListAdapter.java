@@ -70,7 +70,7 @@ public class ScrobblesListAdapter extends BaseAdapter {
         viewHolder.track_txt.setText(scrobble.getTrackTitle());
         viewHolder.artist_txt.setText(scrobble.getArtist());
         viewHolder.album_txt.setText(scrobble.getAlbum());
-        viewHolder.timestamp_txt.setText(scrobble.getDate());
+        viewHolder.timestamp_txt.setText(scrobble.getFormattedDate());
 
         String imageUri = scrobble.getImageUri();
         ImageView imageView = viewHolder.albumart_imgView;

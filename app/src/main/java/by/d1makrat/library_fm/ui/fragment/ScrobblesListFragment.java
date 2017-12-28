@@ -28,8 +28,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.AsynctaskCallback;
-import by.d1makrat.library_fm.NetworkStatusChecker;
+import by.d1makrat.library_fm.HttpsClient;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.model.RankedItem;
 import by.d1makrat.library_fm.model.Scrobble;
@@ -47,7 +48,7 @@ public abstract class ScrobblesListFragment extends ListFragment implements AbsL
 
     private boolean isLoading = false;
     private boolean isCreated = true;
-    private boolean allIsLoaded = false;
+    protected boolean allIsLoaded = false;
     private boolean wasEmpty = false;
 
     protected AsyncTask mGetItemsAsynctask;
@@ -56,7 +57,7 @@ public abstract class ScrobblesListFragment extends ListFragment implements AbsL
     private View list_head;
     protected List<Scrobble> mScrobbles = new ArrayList<>();
     protected List<RankedItem> mRankedItems = new ArrayList<>();
-    protected int mPage;
+    protected int mPage = 1;
     private View mFooterView;
 
     @Override
@@ -65,7 +66,7 @@ public abstract class ScrobblesListFragment extends ListFragment implements AbsL
 
         setHasOptionsMenu(true);
 
-        mPage = 1;
+//        mPage = 1;
 
         mListAdapter = createAdapter();
     }
@@ -100,7 +101,7 @@ public abstract class ScrobblesListFragment extends ListFragment implements AbsL
                 ((TextView) rootView.findViewById(R.id.list_head)).setText(list_head_text);
             }
         } else {
-            if (!NetworkStatusChecker.isNetworkAvailable()) {
+            if (!HttpsClient.isNetworkAvailable()) {
                 //создаётся и сеть отсуствует
 
                 //loadItemsFromDatabase
@@ -139,9 +140,11 @@ public abstract class ScrobblesListFragment extends ListFragment implements AbsL
 
     @Override
     public void onScroll(AbsListView l, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if ((firstVisibleItem + visibleItemCount) == totalItemCount && (totalItemCount > 0) && !isLoading) {
-            mPage++;
-            loadItems();
+        if (!allIsLoaded && !isLoading){
+            if ((firstVisibleItem + visibleItemCount) == totalItemCount && (totalItemCount > 0)) {
+                mPage++;
+                loadItems();
+            }
         }
     }
 
@@ -155,22 +158,16 @@ public abstract class ScrobblesListFragment extends ListFragment implements AbsL
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                if (NetworkStatusChecker.isNetworkAvailable()) {
                     if (!isLoading) {
                         allIsLoaded = false;
                         getView().findViewById(R.id.list_head).setVisibility(View.GONE);
                         KillTaskIfRunning(mGetItemsAsynctask);
                         mScrobbles.clear();
+                        mRankedItems.clear();
                         mListAdapter.notifyDataSetChanged();
                         mPage = 1;
                         loadItems();
-//                        loadItemsFromWeb(mPage, mFrom, mTo);
                     }
-                } else {
-                    Toast toast;
-                    toast = Toast.makeText(getContext(), R.string.network_is_not_connected, Toast.LENGTH_SHORT);
-                    toast.show();
-                }
                 return true;
             case R.id.action_filter:
                 if (!isLoading) {
@@ -273,22 +270,19 @@ public abstract class ScrobblesListFragment extends ListFragment implements AbsL
     }
 
     public void loadItems() {
-        isLoading = true;
-        mListView.addFooterView(mFooterView);
+//
+//            if (!allIsLoaded) {
+//            mPage++;
+            isLoading = true;
+            mListView.addFooterView(mFooterView);
 
-        if (!allIsLoaded) {
-            if (NetworkStatusChecker.isNetworkAvailable()) {
-//                mPage++;
-                loadItemsFromWeb();
-            } else {
-                //loadItemsFromDatabase
-            }
-        }
+        loadItemsFromWeb();
+
     }
 
     protected abstract BaseAdapter createAdapter();
 
-    public void loadItemsFromWeb(){}
+    protected void loadItemsFromWeb(){}
 
     @Override
     public void onFinishEditDialog(String pFrom, String pTo) {
@@ -325,7 +319,13 @@ public abstract class ScrobblesListFragment extends ListFragment implements AbsL
         isLoading = false;
         wasEmpty = false;
 
-        if (scrobbles.size() > 0) {
+//        if (scrobbles.size() < AppContext.getInstance().getLimit())
+
+        int size = scrobbles.size();
+        if (size > 0) {
+
+            onAllIsLoaded(size);
+
             list_head.setVisibility(View.VISIBLE);
             // result.get(i));
             mScrobbles.addAll(scrobbles);
@@ -335,9 +335,17 @@ public abstract class ScrobblesListFragment extends ListFragment implements AbsL
         }
     }
 
+    protected void onAllIsLoaded(int size){
+        if (size < AppContext.getInstance().getLimit()){
+            allIsLoaded = true;
+            Toast.makeText(getContext(), getResources().getText(R.string.all_scrobbles_are_loaded), Toast.LENGTH_SHORT).show();
+        }
+    }
+
     @Override
     public void onException(Exception pException) {
         mListView.removeFooterView(mFooterView);
+        isLoading = false;
         Toast.makeText(getContext(), pException.getMessage(), Toast.LENGTH_LONG).show();//TODO get context activity or fragment here?
     }
 
@@ -357,59 +365,3 @@ public abstract class ScrobblesListFragment extends ListFragment implements AbsL
         }
     }
 }
-
-//        @Override
-//        protected void onPostExecute(List<Scrobble> result) {
-//            mListView.removeFooterView(mFooterView);
-//            isLoading = false;
-//            wasEmpty = false;
-//            if (exception == 0 && result.size() > 0){
-//                list_head.setVisibility(View.VISIBLE);
-//                for (int i = 0; i < result.size(); i++) {
-//                    mScrobbles.add(result.get(i));// result.get(i));
-//                }
-//                mListAdapter.notifyDataSetChanged();
-//                list_head_text = "Scrobbles: " + mListView.getCount() + ((filter_string == null) ? "" : " within " + filter_string);
-//                ((TextView) list_head.findViewById(R.id.list_head)).setText(list_head_text);
-//            }
-//            if (exception == 0 && result.size() == 0 && mListView.getCount() > 0) {
-//                allIsLoaded = true;
-//                wasEmpty = false;
-//            }
-//            if (exception == 0 && result.size() == 0 && mListView.getCount() == 0) {
-//                empty_list.setVisibility(View.VISIBLE);
-//                empty_list_text = "No scrobbles" + ((filter_string == null) ? "" : "\nwithin " + filter_string);
-//                ((TextView) empty_list.findViewById(R.id.empty_list_text)).setText(empty_list_text);
-//            }
-//            if (exception == 1 && mListView.getCount() == 0){
-//                mPage--;
-//                empty_list.setVisibility(View.VISIBLE);
-//                empty_list_text = "Error occurred";
-//                ((TextView) empty_list.findViewById(R.id.empty_list_text)).setText(empty_list_text);
-//                wasEmpty = true;
-//                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-//            }
-//            if (exception == 1 && mListView.getCount() > 0) {
-//                mPage--;
-//                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-//            }
-//            if (exception > 1 && mListView.getCount() == 0){
-//                mPage--;
-//                empty_list.setVisibility(View.VISIBLE);
-//                empty_list_text = "Error occurred";
-//                ((TextView) empty_list.findViewById(R.id.empty_list_text)).setText(empty_list_text);
-//                wasEmpty = true;
-//                String[] exception_message = getResources().getStringArray(R.array.Exception_messages);
-//                Toast.makeText(getContext(), exception_message[exception - 1], Toast.LENGTH_SHORT).show();
-//            }
-//            if (exception > 1 && mListView.getCount() > 0) {
-//                mPage--;
-//                String[] exception_message = getResources().getStringArray(R.array.Exception_messages);
-//                Toast.makeText(getContext(), exception_message[exception - 1], Toast.LENGTH_SHORT).show();
-//            }
-//        }
-
-//        @Override
-//        protected void onCancelled() {
-//            isLoading = false;
-//        }

@@ -52,7 +52,7 @@ public class UrlConstructor {
     public UrlConstructor() {
         mSessionKey = AppContext.getInstance().getSessionKey();
         mUsername = AppContext.getInstance().getUser() != null ? AppContext.getInstance().getUser().getUsername() : null ;
-        mPerPage = AppContext.getInstance().getLimit();
+        mPerPage = String.valueOf(AppContext.getInstance().getLimit());
     }
 
     @NonNull

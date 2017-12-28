@@ -50,10 +50,14 @@ public class Scrobble{
         return mImageUri;
     }
 
-    public String getDate(){
+    public String getFormattedDate(){
         java.util.Date date = new java.util.Date (mUnixDate * 1000L);
         SimpleDateFormat sdf = new SimpleDateFormat("d MMM yyyy, HH:mm:ss", Locale.ENGLISH);
         String formattedDate = sdf.format(date);
         return formattedDate;
+    }
+
+    public long getDate(){
+        return mUnixDate;
     }
 }

@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.widget.BaseAdapter;
+import android.widget.Toast;
 
 import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.R;
@@ -32,9 +33,17 @@ public class RecentScrobblesFragment extends ScrobblesListFragment {
     }
 
     @Override
-    public void loadItemsFromWeb() {
+    protected void loadItemsFromWeb() {
         String[] asynctaskArgs = {String.valueOf(mPage), mFrom, mTo};
         mGetItemsAsynctask = new GetRecentScrobblesAsynctask(this);
         mGetItemsAsynctask.execute(asynctaskArgs);
+    }
+
+    @Override
+    protected void onAllIsLoaded(int pSize) {
+        if (pSize < AppContext.getInstance().getLimit()) {
+            allIsLoaded = true;
+            Toast.makeText(getContext(), getResources().getText(R.string.all_scrobbles_are_loaded), Toast.LENGTH_SHORT).show();
+        }
     }
 }

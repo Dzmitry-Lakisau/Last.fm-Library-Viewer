@@ -45,5 +45,7 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="track_scrobble_ignored_message">Scrobble was ignored. Probably because of timestamp was too old or new</string>
+    <string name="scrobble_ignored_message">Scrobble was ignored. Probably because of timestamp was too old or new</string>
+    <string name="scrobble_accepted">Scrobble was accepted</string>
+    <string name="all_scrobbles_are_loaded">All scrobbles are loaded</string>
 </resources>

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+import android.widget.Toast;
 
 import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.R;
@@ -71,4 +72,10 @@ public class ScrobblesOfTrackFragment extends ScrobblesListFragment {
 
     @Override
     public void onScroll(AbsListView l, int firstVisibleItem, int visibleItemCount, int totalItemCount) {}
+
+    @Override
+    protected void onAllIsLoaded(int size) {
+        allIsLoaded = true;
+        Toast.makeText(getContext(), getResources().getText(R.string.all_scrobbles_are_loaded), Toast.LENGTH_SHORT).show();
+    }
 }

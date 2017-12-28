@@ -94,8 +94,8 @@ public class AppContext extends Application {
         mSessionKey = pSessionKey;
     }
 
-    public String getLimit() {
-        return mPerPage;
+    public int getLimit() {
+        return Integer.valueOf(mPerPage);
     }
 
     public void setLimit(String pPerPage) {
