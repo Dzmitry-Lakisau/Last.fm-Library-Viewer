@@ -17,6 +17,7 @@ public class AppContext extends Application {
     public static final String USERNAME_KEY = "username";
     public static final String SESSIONKEY_KEY = "session_key";
     private static final String DEFAULT_LIMIT = "10";
+    //TODO 'm' - only for members here should be 's'
     private static AppContext mInstance;
     private SharedPreferences mSharedPreferences;
 
@@ -38,15 +39,18 @@ public class AppContext extends Application {
     public void onCreate() {
         super.onCreate();
 
+        //TODO just call static method
         AppContext.initInstance(this);
 
         Malevich.INSTANCE.setConfig(new Malevich.Config(this.getCacheDir()));
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        //TODO remove commented code
 //        mUsername = mSharedPreferences.getString(USERNAME_KEY, null);
         mSessionKey = mSharedPreferences.getString(SESSIONKEY_KEY, null);
         mPerPage = mSharedPreferences.getString(SCROBBLES_PER_PAGE_KEY, DEFAULT_LIMIT);
 
+        //TODO remove warning
         Gson gson = new Gson();
         String json = mSharedPreferences.getString("user", null);
         mUser = gson.fromJson(json, User.class);
@@ -68,6 +72,7 @@ public class AppContext extends Application {
 
     public void saveSettings(){
         SharedPreferences.Editor editor = mSharedPreferences.edit();
+        //TODO remove commented code
 //        editor.putString(USERNAME_KEY, mUsername);
         editor.putString(SESSIONKEY_KEY, mSessionKey);
         editor.putString(SCROBBLES_PER_PAGE_KEY, mPerPage);
@@ -78,6 +83,7 @@ public class AppContext extends Application {
         editor.apply();
     }
 
+    //TODO move user management logic to separate class - single responsibility principle
     public User getUser() {
         return mUser;
     }
@@ -94,6 +100,7 @@ public class AppContext extends Application {
         mSessionKey = pSessionKey;
     }
 
+    //TODO move to separate class
     public int getLimit() {
         return Integer.valueOf(mPerPage);
     }

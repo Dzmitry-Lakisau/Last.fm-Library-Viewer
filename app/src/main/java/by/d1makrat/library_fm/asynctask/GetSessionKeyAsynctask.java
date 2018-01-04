@@ -9,6 +9,7 @@ import by.d1makrat.library_fm.GetSessionKeyAsynctaskCallback;
 import by.d1makrat.library_fm.HttpsClient;
 import by.d1makrat.library_fm.UrlConstructor;
 import by.d1makrat.library_fm.json.JsonParser;
+import by.d1makrat.library_fm.operation.SessionKeyOperation;
 
 public class GetSessionKeyAsynctask extends AsyncTask<String, Void, String> {
 
@@ -21,32 +22,12 @@ public class GetSessionKeyAsynctask extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... params) {
-        URL apiRequestUrl;
-        String sessionKey = null;
-
-        String username = params[0];
-        String password = params[1];
-
         try {
-            UrlConstructor urlConstructor = new UrlConstructor();
-            apiRequestUrl = urlConstructor.constructGetSessionKeyApiRequestUrl(username, password);
-
-            HttpsClient httpsClient = new HttpsClient();
-            String response = httpsClient.request(apiRequestUrl, "POST");
-
-            JsonParser jsonParser = new JsonParser();
-
-            String errorOrNot = jsonParser.checkForApiErrors(response);
-            if (!errorOrNot.equals("No error"))
-                mException = new APIException(errorOrNot);
-            else
-                sessionKey = jsonParser.parseSessionkey(response);
-        } catch (Exception e) {
-            e.printStackTrace();
-            mException = e;
+            return new SessionKeyOperation(params[0], params[1]).perform();
+        } catch (Exception pException) {
+            mException = pException;
+            return null;
         }
-
-        return sessionKey;
     }
 
     @Override

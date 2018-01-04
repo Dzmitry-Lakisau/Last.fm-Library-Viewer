@@ -52,6 +52,7 @@ public class TabTopTracksFragment extends Fragment {
 //        this.menu = menu;
     }
 
+    //TODO looks like the same method for open_in_browser - should be in one place
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){

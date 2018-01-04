@@ -11,6 +11,7 @@ import by.d1makrat.library_fm.UrlConstructor;
 import by.d1makrat.library_fm.json.JsonParser;
 import by.d1makrat.library_fm.model.User;
 
+//TODO refactor to operation example @GetSessionKeyAsyncTask
 public class GetUserInfoAsynctask extends AsyncTask<Void, Void, User> {
 
     private GetUserInfoAsynctaskCallback mAsynctaskCallback;
@@ -29,6 +30,7 @@ public class GetUserInfoAsynctask extends AsyncTask<Void, Void, User> {
             UrlConstructor urlConstructor = new UrlConstructor();
             URL apiRequestUrl = urlConstructor.constructGetUserInfoApiRequestUrl(null);
 
+            //TODO move to userInfoOperation
             HttpsClient httpsClient = new HttpsClient();
             String response = httpsClient.request(apiRequestUrl, "GET");
 

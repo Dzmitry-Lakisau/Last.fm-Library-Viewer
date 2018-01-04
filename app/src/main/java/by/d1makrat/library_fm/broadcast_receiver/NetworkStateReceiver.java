@@ -12,6 +12,7 @@ public class NetworkStateReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        //TODO {}
         if (!HttpsClient.isNetworkAvailable())
             Toast.makeText(context, context.getResources().getString(R.string.offline_mode_message), Toast.LENGTH_SHORT).show();
     }

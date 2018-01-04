@@ -26,6 +26,7 @@ public class FilterDialogFragment extends android.support.v4.app.DialogFragment 
 
     private View view;
     private Long from, to;
+    //TODO naming
     private Calendar calendar_from, calendar_to;
 
     public interface DialogListener {
@@ -37,6 +38,7 @@ public class FilterDialogFragment extends android.support.v4.app.DialogFragment 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //TODO remove package
         android.support.v4.app.Fragment fragment = getTargetFragment();
         try {
             mListener = (DialogListener) fragment;
@@ -49,6 +51,7 @@ public class FilterDialogFragment extends android.support.v4.app.DialogFragment 
         if (temp!=null){
             from = Long.valueOf(temp);
             calendar_from = Calendar.getInstance(TimeZone.getDefault());
+            //TODO magic numbers - create DateUtils class to manage
             calendar_from.setTimeInMillis(from*1000);
         }
         temp = getArguments().getString(FILTER_DIALOG_TO_BUNDLE_KEY);
@@ -73,9 +76,11 @@ public class FilterDialogFragment extends android.support.v4.app.DialogFragment 
         adb.setView(view);
 
         TextView title =  new TextView(getActivity().getApplicationContext());
+        //TODO move to strings for all
         title.setText("Show scrobbles");
         title.setIncludeFontPadding(true);
         title.setGravity(Gravity.CENTER);
+        //TODO hardcoded dimens need to be in resources
         title.setTextSize(24);
         title.setTextColor(Color.BLACK);
         adb.setCustomTitle(title);
@@ -93,6 +98,7 @@ public class FilterDialogFragment extends android.support.v4.app.DialogFragment 
 //            }
 //        });
 
+        //TODO comments :(
         // кнопка отрицательного ответа
         adb.setNegativeButton("Cancel", myClickListener);// new DialogInterface.OnClickListener() {
 //            public void onClick(DialogInterface dialog, int id) {

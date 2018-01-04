@@ -3,6 +3,8 @@ package by.d1makrat.library_fm.ui.fragment;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,6 +31,7 @@ public class RecentScrobblesFragment extends ScrobblesListFragment {
     @Override
     protected BaseAdapter createAdapter(){
 
+        //TODO ContextCompat.getDrawable()
         Drawable drawable;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             drawable = getResources().getDrawable(R.drawable.default_albumart);

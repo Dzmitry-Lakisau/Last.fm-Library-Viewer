@@ -39,6 +39,7 @@ import by.d1makrat.library_fm.adapter.list.SearchArtistsAdapter;
 import by.d1makrat.library_fm.asynctask.SearchArtistsAsynctask;
 import by.d1makrat.library_fm.model.Artist;
 
+//TODO one fragment 1 asynctask - 1 operation
 public class SearchArtistFragment extends ListFragment implements OnScrollListener, SearchArtistsAsynctaskCallback {
 
     private String url = null;
@@ -63,7 +64,7 @@ public class SearchArtistFragment extends ListFragment implements OnScrollListen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        //TODO url?
         url = "https://www.last.fm/search/artists?q=";
         mPage = 1;
         setHasOptionsMenu(true);

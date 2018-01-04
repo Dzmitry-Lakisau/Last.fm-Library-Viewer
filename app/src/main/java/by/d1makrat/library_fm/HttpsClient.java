@@ -21,6 +21,7 @@ public class HttpsClient {
 
         HttpURLConnection httpsURLConnection = (HttpsURLConnection) pUrl.openConnection();
 
+        //TODO move to enum
         if (pMethod.equals("POST")) {
             httpsURLConnection.setRequestMethod("POST");
             httpsURLConnection.setDoOutput(true);
@@ -28,11 +29,13 @@ public class HttpsClient {
             httpsURLConnection.setRequestMethod("GET");
         }
         httpsURLConnection.setDoInput(true);
+        //TODO move to constants
         httpsURLConnection.setConnectTimeout(2000);
         httpsURLConnection.setReadTimeout(2000);
         httpsURLConnection.connect();
 
         InputStreamReader inputStreamReader;
+        //TODO use constants
         if (httpsURLConnection.getResponseCode() > 399) {
             inputStreamReader = new InputStreamReader(httpsURLConnection.getErrorStream());
         } else if (httpsURLConnection.getResponseCode() == 200) {
@@ -40,6 +43,8 @@ public class HttpsClient {
         }
         else return null;
 
+        //TODO close streams
+        //TODO format code
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
         StringBuilder stringBuilder = new StringBuilder();
         String line;

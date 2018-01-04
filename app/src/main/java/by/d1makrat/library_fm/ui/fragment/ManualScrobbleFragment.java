@@ -67,12 +67,14 @@ public class ManualScrobbleFragment extends Fragment implements CalendarDatePick
 		return rootView;
 	}
 
+	//TODO split on 3 listeners, single responsibility
 	public View.OnClickListener pressListener = new View.OnClickListener() {
 		public void onClick(View view) {
 			hideKeyboard();
 
 			switch (view.getId()) {
 				case R.id.button_scrobble:
+					//TODO move to async
 					if (HttpsClient.isNetworkAvailable()) {
 						String track = ((TextView) getView().findViewById(R.id.track)).getText().toString();
 						String artist = ((TextView) getView().findViewById(R.id.artist)).getText().toString();
@@ -150,6 +152,7 @@ public class ManualScrobbleFragment extends Fragment implements CalendarDatePick
 	@Override
 	public void onStop(){
 		super.onStop();
+		//TODO naming
 		KillTaskIfRunning(mSendScrobbleTask);
 	}
 
@@ -161,6 +164,7 @@ public class ManualScrobbleFragment extends Fragment implements CalendarDatePick
 
 	@Override
 	public void onException(Exception pException) {
+		//TODO move to var
 		if (getView() != null)
 			getView().findViewById(R.id.button_scrobble).setEnabled(false);
 		spinner.setVisibility(View.INVISIBLE);

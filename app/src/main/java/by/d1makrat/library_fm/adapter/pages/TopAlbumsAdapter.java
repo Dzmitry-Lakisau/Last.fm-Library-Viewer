@@ -13,6 +13,7 @@ import static by.d1makrat.library_fm.Constants.DATE_PERIODS_FOR_TAB_NAMES;
 import static by.d1makrat.library_fm.Constants.DATE_PRESETS_FOR_URL;
 import static by.d1makrat.library_fm.Constants.PERIOD_KEY;
 
+//TODO create common abstract PageAdapter with abstract methods for fragment creation and url creation
 public class TopAlbumsAdapter extends FragmentPagerAdapter {
 
     public TopAlbumsAdapter(FragmentManager fm) {

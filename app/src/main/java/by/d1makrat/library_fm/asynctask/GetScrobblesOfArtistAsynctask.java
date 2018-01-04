@@ -12,9 +12,10 @@ import by.d1makrat.library_fm.UrlConstructor;
 import by.d1makrat.library_fm.database.DatabaseWorker;
 import by.d1makrat.library_fm.json.JsonParser;
 import by.d1makrat.library_fm.model.Scrobble;
-
+//TODO refactor to operation example @GetSessionKeyAsyncTask
 public class GetScrobblesOfArtistAsynctask extends GetScrobblesAsynctask{
 
+    //TODO refactor to Generic async task
     private Exception mException = null;
     private AsynctaskCallback mAsynctaskCallback;
 
@@ -51,6 +52,7 @@ public class GetScrobblesOfArtistAsynctask extends GetScrobblesAsynctask{
                 scrobbles = databaseWorker.getScrobblesOfArtist(params[0], params[1], params[2], params[3]);
             }
         } catch (Exception e) {
+            //TODO read about DRY
             e.printStackTrace();
             mException = e;
         } finally {

@@ -12,7 +12,7 @@ import by.d1makrat.library_fm.UrlConstructor;
 import by.d1makrat.library_fm.database.DatabaseWorker;
 import by.d1makrat.library_fm.json.JsonParser;
 import by.d1makrat.library_fm.model.RankedItem;
-
+//TODO refactor to operation example @GetSessionKeyAsyncTask
 public class GetUserTopAlbumsAsynctask extends GetRankedItemsAsynctask {
 
     private Exception mException;

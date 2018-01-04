@@ -15,10 +15,15 @@ import by.d1makrat.library_fm.image_loader.Malevich;
 import by.d1makrat.library_fm.model.RankedItem;
 import by.d1makrat.library_fm.model.Scrobble;
 
+//abstract CommonAdapter<Element>
+// CommonAdapter(List<Element> list)
+// with common logic for all adapters
 public class RankedListAdapter extends BaseAdapter {
 
     private final Drawable mPlaceholderDrawable;
     private LayoutInflater mLayoutInflater;
+    //TODO naming
+    //TODO use generic for list element
     private List<RankedItem> rankedItems;
 
     public RankedListAdapter(LayoutInflater pLayoutInflater, Drawable pPlaceholderDrawable, List<RankedItem> pRankedItems) {
@@ -72,6 +77,7 @@ public class RankedListAdapter extends BaseAdapter {
         String imageUri = rankedItem.getImageUri();
         ImageView imageView = viewHolder.albumart_imgView;
 
+        //TODO the logic of tag comparision needs to be in Malevich
         if (viewHolder.albumart_imgView.getTag() == null || !viewHolder.albumart_imgView.getTag().equals(imageUri)) {
 
             Malevich.INSTANCE.load(imageUri).instead(mPlaceholderDrawable).into(imageView);//TODO images setting up multiple times?
@@ -82,6 +88,7 @@ public class RankedListAdapter extends BaseAdapter {
     }
 
     static class ViewHolder {
+        //TODO naming
         TextView rank_txt;
         TextView primaryField_txt;
         TextView secondaryField_txt;

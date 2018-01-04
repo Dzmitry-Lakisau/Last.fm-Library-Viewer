@@ -15,8 +15,11 @@ import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.model.RankedItem;
 import by.d1makrat.library_fm.model.Scrobble;
 
+//TODO split to several depends on bussiness model
+// in DatabaseWorker should be only transaction management, all other things should be in separate classes depends on logic
 public class DatabaseWorker {
 
+    //TODO lower case without spaces
     private static final String DATABASE_NAME = "Last.fm Library Viewer.db";
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_SCROBBLES_TABLE = "Scrobbles";
@@ -157,6 +160,7 @@ public class DatabaseWorker {
                         long unixDate = cursor.getLong(unixDateColumn);
                         String imageUri = cursor.getString(imageUriColumn);
 
+                        //TODO could be used as third model for UI displaying
                         Scrobble scrobble = new Scrobble();
                         scrobble.setTrackTitle(trackTitle);
                         scrobble.setArtist(artist);
@@ -600,6 +604,7 @@ public class DatabaseWorker {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
+            //TODO foreach by small classes with unified interface for table creation()
             db.execSQL(CREATE_SCROBBLES_TABLE_QUERY);
             db.execSQL(CREATE_TOP_TRACKS_TABLE_QUERY);
             db.execSQL(CREATE_TOP_ARTISTS_TABLE_QUERY);

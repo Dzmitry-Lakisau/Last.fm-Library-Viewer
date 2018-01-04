@@ -62,7 +62,7 @@ public class ParserTest {
                 break;
             out.append(buffer, 0, rsz);
         }
-
+        //TODO input stream is not closed
         final JsonParser jsonParser = new JsonParser();
         List<RankedItem> topAlbumsList = jsonParser.parseUserTopAlbums(out.toString());
         assertEquals(topAlbumsList.size(), 10);
@@ -85,6 +85,7 @@ public class ParserTest {
                 break;
             out.append(buffer, 0, rsz);
         }
+        //TODO input stream is not closed
 
         final JsonParser jsonParser = new JsonParser();
         List<Artist> artists = jsonParser.parseSearchArtistResults(out.toString());

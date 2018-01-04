@@ -14,6 +14,7 @@ import by.d1makrat.library_fm.database.DatabaseWorker;
 import by.d1makrat.library_fm.json.JsonParser;
 import by.d1makrat.library_fm.model.Scrobble;
 
+//TODO refactor to operation example @GetSessionKeyAsyncTask
 public class GetRecentScrobblesAsynctask extends GetScrobblesAsynctask{
 
     private Exception mException = null;
@@ -50,6 +51,7 @@ public class GetRecentScrobblesAsynctask extends GetScrobblesAsynctask{
                 databaseWorker.bulkInsertScrobbles(scrobbles);
             }
             else {
+                //TODO refactor names
                 scrobbles = databaseWorker.getScrobbles(params[0], params[1], params[2]);
             }
         } catch (Exception e) {

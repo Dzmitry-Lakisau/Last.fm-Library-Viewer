@@ -13,6 +13,8 @@ import java.util.*;
 
 import static by.d1makrat.library_fm.BuildConfig.SECRET;
 
+
+//TODO refactor - DRY. Move the same logic to separate method
 public class UrlConstructor {
 
     private static final String API_BASE_URL = "https://ws.audioscrobbler.com/2.0/?";

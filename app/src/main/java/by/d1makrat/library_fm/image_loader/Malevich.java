@@ -186,6 +186,7 @@ public enum Malevich {
             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
             return bitmap;
         } finally {
+            //TODO to close output stream
             IOUtils.closeStream(inputStream);
         }
     }

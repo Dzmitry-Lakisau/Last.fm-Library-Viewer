@@ -33,6 +33,7 @@ import by.d1makrat.library_fm.model.Scrobble;
 
 import static by.d1makrat.library_fm.Constants.*;
 
+//TODO split class on several: one for fragment state management another one for pagination management
 public abstract class ScrobblesListFragment extends ListFragment implements AbsListView.OnScrollListener, FilterDialogFragment.DialogListener, AsynctaskCallback {
     public static final String FORMATTING_DATE_PATTERN = "d MMM yyyy";
     //max limit=1000
@@ -46,7 +47,7 @@ public abstract class ScrobblesListFragment extends ListFragment implements AbsL
     private boolean isViewAlreadyCreated = false;
     protected boolean allIsLoaded = false;
     private boolean isEmpty = false;
-
+    //TODO naming
     protected AsyncTask mGetItemsAsynctask;
     protected BaseAdapter mListAdapter;
     private ListView mListView;
@@ -164,6 +165,7 @@ public abstract class ScrobblesListFragment extends ListFragment implements AbsL
                 Intent intent;
 
                 if (mFrom != null && mTo != null) {
+                    //TODO move date to date utils
                     Date date_from = new Date(Long.valueOf(mFrom) * 1000);
                     Date date_to = new Date(Long.valueOf(mTo) * 1000);
 
@@ -241,7 +243,7 @@ public abstract class ScrobblesListFragment extends ListFragment implements AbsL
         return fragment;
     }
 
-
+    //TODO naming
     private void KillTaskIfRunning(AsyncTask task) {
         if (task != null && task.getStatus() != AsyncTask.Status.FINISHED) {
             mPage--;

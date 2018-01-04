@@ -14,6 +14,7 @@ import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.image_loader.Malevich;
 import by.d1makrat.library_fm.model.Scrobble;
 
+//TODO Create base adapter for Lists
 public class ScrobblesListAdapter extends BaseAdapter {
 
     private final Drawable mPlaceholderDrawable;
@@ -87,6 +88,7 @@ public class ScrobblesListAdapter extends BaseAdapter {
     }
 
     static class ViewHolder {
+        //TODO naming
         TextView track_txt;
         TextView artist_txt;
         TextView album_txt;

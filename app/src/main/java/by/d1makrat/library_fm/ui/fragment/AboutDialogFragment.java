@@ -39,6 +39,7 @@ public class AboutDialogFragment extends android.support.v4.app.DialogFragment {
         adb.setView(view);
 
         final TextView textView = (TextView) view.findViewById(R.id.about_text_title);
+        //TODO move to strings
         textView.setText("About " + getString(R.string.app_name));
 
         return adb.create();

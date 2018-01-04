@@ -13,6 +13,7 @@ import by.d1makrat.library_fm.UrlConstructor;
 import by.d1makrat.library_fm.json.JsonParser;
 import by.d1makrat.library_fm.model.Artist;
 
+//TODO refactor to operation example @GetSessionKeyAsyncTask
 public class SearchArtistsAsynctask extends AsyncTask<String, Void, List<Artist>> {
 
     private Exception mException;

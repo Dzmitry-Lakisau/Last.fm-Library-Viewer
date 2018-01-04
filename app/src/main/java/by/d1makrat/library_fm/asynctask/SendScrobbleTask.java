@@ -10,6 +10,7 @@ import by.d1makrat.library_fm.SendScrobbleAsynctaskCallback;
 import by.d1makrat.library_fm.UrlConstructor;
 import by.d1makrat.library_fm.json.JsonParser;
 
+//TODO refactor to operation example @GetSessionKeyAsyncTask
 public class SendScrobbleTask extends AsyncTask<String, Void, String> {
 
     private Exception mException = null;

@@ -18,7 +18,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private List<Scrobble> mScrobbles;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-
+        //TODO naming
         TextView track_txt;
         TextView artist_txt;
         TextView album_txt;

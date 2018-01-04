@@ -14,6 +14,7 @@ import by.d1makrat.library_fm.model.RankedItem;
 import by.d1makrat.library_fm.model.Scrobble;
 import by.d1makrat.library_fm.model.User;
 
+//TODO refactor to small one classes, where will be parsers for each model
 public class JsonParser {
 
     public String checkForApiErrors(String pStringToParse) throws JSONException {
