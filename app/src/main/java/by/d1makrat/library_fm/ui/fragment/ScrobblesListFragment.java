@@ -7,11 +7,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,9 +25,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import by.d1makrat.library_fm.AppContext;
+import by.d1makrat.library_fm.APIException;
 import by.d1makrat.library_fm.AsynctaskCallback;
-import by.d1makrat.library_fm.HttpsClient;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.model.RankedItem;
 import by.d1makrat.library_fm.model.Scrobble;
@@ -38,23 +34,23 @@ import by.d1makrat.library_fm.model.Scrobble;
 import static by.d1makrat.library_fm.Constants.*;
 
 public abstract class ScrobblesListFragment extends ListFragment implements AbsListView.OnScrollListener, FilterDialogFragment.DialogListener, AsynctaskCallback {
+    public static final String FORMATTING_DATE_PATTERN = "d MMM yyyy";
     //max limit=1000
-    protected static String urlForBrowser;
-    private String filter_string = null;
-    private String list_head_text = null;
-    private String empty_list_text = null;
+    protected String mUrlForBrowser;
+    private String mListHeadMessage = null;
+    private String mEmptyListMessage = null;
     protected String mFrom = null;
     protected String mTo = null;
 
     private boolean isLoading = false;
-    private boolean isCreated = true;
+    private boolean isViewAlreadyCreated = false;
     protected boolean allIsLoaded = false;
-    private boolean wasEmpty = false;
+    private boolean isEmpty = false;
 
     protected AsyncTask mGetItemsAsynctask;
     protected BaseAdapter mListAdapter;
     private ListView mListView;
-    private View list_head;
+    private TextView list_head;
     protected List<Scrobble> mScrobbles = new ArrayList<>();
     protected List<RankedItem> mRankedItems = new ArrayList<>();
     protected int mPage = 1;
@@ -71,45 +67,29 @@ public abstract class ScrobblesListFragment extends ListFragment implements AbsL
         mListAdapter = createAdapter();
     }
 
-//    private BaseAdapter createAdapter(){
-//
-//        Drawable drawable;
-//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-//            drawable = getResources().getDrawable(R.drawable.default_albumart);
-//        } else
-//            drawable = getResources().getDrawable(R.drawable.default_albumart, null);
-//
-//        return mListAdapter = new ScrobblesListAdapter(getActivity().getLayoutInflater(), drawable, mScrobbles);
-//    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.list_with_head, container, false);
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.scrobbles));
+        list_head = rootView.findViewById(R.id.list_head);
+        mListView = rootView.findViewById(android.R.id.list);
+
+//        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.scrobbles));
 //        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(null);
 
-        if (!isCreated) {
-            if (wasEmpty) {
-                //было загружено и пусто
-                rootView.findViewById(R.id.empty_list).setVisibility(View.VISIBLE);
-                ((TextView) rootView.findViewById(R.id.empty_list_text)).setText(empty_list_text);
+        if (isViewAlreadyCreated) {
+            if (isEmpty) {
+                showEmptyList(rootView);
             } else {
                 //было загружено и данные не пустые
-//                rootView.findViewById(R.id.list_head).setVisibility(View.VISIBLE);
-                ((TextView) rootView.findViewById(R.id.list_head)).setText(list_head_text);
-            }
-        } else {
-            if (!HttpsClient.isNetworkAvailable()) {
-                //создаётся и сеть отсуствует
-
-                //loadItemsFromDatabase
+                list_head.setVisibility(View.VISIBLE);
+                list_head.setText(mListHeadMessage);
             }
         }
 
-        mListView = rootView.findViewById(android.R.id.list);
-        list_head = rootView.findViewById(R.id.list_head);
+
+
 
         mFooterView = getActivity().getLayoutInflater().inflate(R.layout.list_spinner, (ViewGroup) null);
         mListView.addFooterView(mFooterView);
@@ -125,13 +105,17 @@ public abstract class ScrobblesListFragment extends ListFragment implements AbsL
         return rootView;
     }
 
+    private void showEmptyList(View pRootView) {
+        pRootView.findViewById(R.id.empty_list).setVisibility(View.VISIBLE);
+        ((TextView) pRootView.findViewById(R.id.empty_list_text)).setText(mEmptyListMessage);
+    }
+
     @Override
     public void onStart() {
         super.onStart();
 
-        if (isCreated)
+        if (!isViewAlreadyCreated)
             loadItems();
-//            loadItemsFromWeb(mPage, null, null);
     }
 
     @Override
@@ -148,11 +132,7 @@ public abstract class ScrobblesListFragment extends ListFragment implements AbsL
         }
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        inflater.inflate(R.menu.menu_scrobbles, menu);
-    }
+//    public abstract void onCreateOptionsMenu(Menu menu, MenuInflater inflater);
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -187,10 +167,10 @@ public abstract class ScrobblesListFragment extends ListFragment implements AbsL
                     Date date_from = new Date(Long.valueOf(mFrom) * 1000);
                     Date date_to = new Date(Long.valueOf(mTo) * 1000);
 
-                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlForBrowser.concat("?from=" + new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(date_from) + "&to=" + new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(date_to))));
+                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mUrlForBrowser.concat("?from=" + new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(date_from) + "&to=" + new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(date_to))));
                 }
                 else
-                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlForBrowser));
+                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mUrlForBrowser));
 
                 startActivity(intent);
 
@@ -270,11 +250,10 @@ public abstract class ScrobblesListFragment extends ListFragment implements AbsL
     }
 
     public void loadItems() {
-//
-//            if (!allIsLoaded) {
-//            mPage++;
-            isLoading = true;
-            mListView.addFooterView(mFooterView);
+
+        isLoading = true;
+        getView().findViewById(R.id.empty_list).setVisibility(View.GONE);
+        mListView.addFooterView(mFooterView);
 
         loadItemsFromWeb();
 
@@ -293,23 +272,15 @@ public abstract class ScrobblesListFragment extends ListFragment implements AbsL
         mScrobbles.clear();
         mListAdapter.notifyDataSetChanged();
         mPage = 1;
-        filter_string = null;
 
         KillTaskIfRunning(mGetItemsAsynctask);
         loadItems();
-//        loadItemsFromWeb(mPage, pFrom, pTo);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        isCreated = false;
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        isCreated = false;//TODO isCreated должно быть true и false только В onPostExecute
+
         KillTaskIfRunning(mGetItemsAsynctask);
     }
 
@@ -317,26 +288,50 @@ public abstract class ScrobblesListFragment extends ListFragment implements AbsL
     public void onLoadingScrobblesSuccessful(List<Scrobble> scrobbles) {
         mListView.removeFooterView(mFooterView);
         isLoading = false;
-        wasEmpty = false;
-
-//        if (scrobbles.size() < AppContext.getInstance().getLimit())
+        isViewAlreadyCreated = true;
 
         int size = scrobbles.size();
-        if (size > 0) {
+        if (size > 0) {//show items
+            isEmpty = false;
 
-            onAllIsLoaded(size);
-
-            list_head.setVisibility(View.VISIBLE);
-            // result.get(i));
             mScrobbles.addAll(scrobbles);
             mListAdapter.notifyDataSetChanged();
-            list_head_text = "Scrobbles: " + mListView.getCount() + ((filter_string == null) ? "" : " within " + filter_string);
-            ((TextView) list_head.findViewById(R.id.list_head)).setText(list_head_text);
+
+            if (mFrom != null && mTo != null) {
+                String string_from = new SimpleDateFormat(FORMATTING_DATE_PATTERN, Locale.ENGLISH).format(new Date(Long.valueOf(mFrom) * 1000));
+                String string_to = new SimpleDateFormat(FORMATTING_DATE_PATTERN, Locale.ENGLISH).format(new Date(Long.valueOf(mTo) * 1000));
+                mListHeadMessage = "Scrobbles: " + mListView.getCount() + " within " + string_from + " - " + string_to;
+            }
+            else
+                mListHeadMessage = "Scrobbles: " + mListView.getCount();
+
+            list_head.setVisibility(View.VISIBLE);
+            list_head.setText(mListHeadMessage);
         }
+        else if (mListView.getCount() == 0){//show message "Nothing found"
+            isEmpty = true;
+
+            getView().findViewById(R.id.empty_list).setVisibility(View.VISIBLE);
+
+            if (mFrom != null && mTo != null) {
+                String string_from = new SimpleDateFormat(FORMATTING_DATE_PATTERN, Locale.ENGLISH).format(new Date(Long.valueOf(mFrom) * 1000));
+                String string_to = new SimpleDateFormat(FORMATTING_DATE_PATTERN, Locale.ENGLISH).format(new Date(Long.valueOf(mTo) * 1000));
+                mEmptyListMessage = "No scrobbles\nwithin " + string_from + " - " + string_to;
+            }
+            else
+                mEmptyListMessage = "No scrobbles at all";
+
+            ((TextView) getView().findViewById(R.id.empty_list).findViewById(R.id.empty_list_text)).setText(mEmptyListMessage);
+        }
+        else {//
+            isEmpty = false;
+        }
+
+        checkIfAllIsLoaded(size);//TODO rewrite this nethod => override it in track and album fragments, make additional tests
     }
 
-    protected void onAllIsLoaded(int size){
-        if (size < AppContext.getInstance().getLimit()){
+    protected void checkIfAllIsLoaded(int size){//TODO make check with usage of API attribute "totalpages"?
+        if (size == 0){
             allIsLoaded = true;
             Toast.makeText(getContext(), getResources().getText(R.string.all_scrobbles_are_loaded), Toast.LENGTH_SHORT).show();
         }
@@ -346,22 +341,59 @@ public abstract class ScrobblesListFragment extends ListFragment implements AbsL
     public void onException(Exception pException) {
         mListView.removeFooterView(mFooterView);
         isLoading = false;
-        Toast.makeText(getContext(), pException.getMessage(), Toast.LENGTH_LONG).show();//TODO get context activity or fragment here?
+        isViewAlreadyCreated = true;
+        mPage--;
+        isEmpty = mListView.getCount() == 0;
+        if (isEmpty) {
+            mEmptyListMessage = "Error occurred";
+            showEmptyList(getView());
+        }
+        if (pException instanceof APIException)
+            Toast.makeText(getContext(), pException.getMessage(), Toast.LENGTH_LONG).show();//TODO get context may nullpointerexception on api before 23 ?
     }
 
     @Override
     public void onLoadingRankedItemsSuccessful(List<RankedItem> rankedItems) {
         mListView.removeFooterView(mFooterView);
         isLoading = false;
-        wasEmpty = false;
+        isViewAlreadyCreated = true;
 
-        if (rankedItems.size() > 0) {
-//            list_head.setVisibility(View.VISIBLE);
-            // result.get(i));
+        int size = rankedItems.size();
+        if (size > 0) {//show items
+            isEmpty = false;
+
             mRankedItems.addAll(rankedItems);
             mListAdapter.notifyDataSetChanged();
-//            list_head_text = "Scrobbles: " + mListView.getCount() + ((filter_string == null) ? "" : " within " + filter_string);
-//            ((TextView) list_head.findViewById(R.id.list_head)).setText(list_head_text);
+
+//            if (mFrom != null && mTo != null) {
+//                String string_from = new SimpleDateFormat(FORMATTING_DATE_PATTERN, Locale.ENGLISH).format(new Date(Long.valueOf(mFrom) * 1000));
+//                String string_to = new SimpleDateFormat(FORMATTING_DATE_PATTERN, Locale.ENGLISH).format(new Date(Long.valueOf(mTo) * 1000));
+//                mListHeadMessage = "Scrobbles: " + mListView.getCount() + " within " + string_from + " - " + string_to;
+//            }
+//            else
+//                mListHeadMessage = "Scrobbles: " + mListView.getCount();
+//
+//            list_head.setVisibility(View.VISIBLE);
+//            list_head.setText(mListHeadMessage);
+        }
+        else if (mListView.getCount() == 0){//show message "Nothing found"
+            isEmpty = true;
+
+            getView().findViewById(R.id.empty_list).setVisibility(View.VISIBLE);
+
+//            if (mFrom != null && mTo != null) {
+//                String string_from = new SimpleDateFormat(FORMATTING_DATE_PATTERN, Locale.ENGLISH).format(new Date(Long.valueOf(mFrom) * 1000));
+//                String string_to = new SimpleDateFormat(FORMATTING_DATE_PATTERN, Locale.ENGLISH).format(new Date(Long.valueOf(mTo) * 1000));
+//                mEmptyListMessage = "No scrobbles\nwithin " + string_from + " - " + string_to;
+//            }
+//            else
+                mEmptyListMessage = "Nothing found";
+
+            ((TextView) getView().findViewById(R.id.empty_list).findViewById(R.id.empty_list_text)).setText(mEmptyListMessage);
+        }
+        else {//
+            isEmpty = false;
+            checkIfAllIsLoaded(size);
         }
     }
 }

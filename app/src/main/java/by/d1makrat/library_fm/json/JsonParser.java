@@ -237,7 +237,7 @@ public class JsonParser {
                 message = "Accepted";
             }
             else
-                message = AppContext.getInstance().getResources().getString(R.string.track_scrobble_ignored_message);
+                message = AppContext.getInstance().getResources().getString(R.string.scrobble_ignored_message);
         }
         catch (JSONException e){
             e.printStackTrace();

@@ -1,7 +1,9 @@
 package by.d1makrat.library_fm.ui.activity;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -32,6 +34,7 @@ import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.asynctask.GetUserInfoAsynctask;
 import by.d1makrat.library_fm.image_loader.Malevich;
 import by.d1makrat.library_fm.model.User;
+import by.d1makrat.library_fm.broadcast_receiver.NetworkStateReceiver;
 import by.d1makrat.library_fm.ui.fragment.ManualScrobbleFragment;
 import by.d1makrat.library_fm.ui.fragment.RecentScrobblesFragment;
 import by.d1makrat.library_fm.ui.fragment.SearchArtistFragment;
@@ -48,6 +51,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private FragmentManager fragmentManager = getSupportFragmentManager();
     private User mUser;
+    private BroadcastReceiver mNetworkStatusReceiver;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mNetworkStatusReceiver = new NetworkStateReceiver();
+        registerReceiver(mNetworkStatusReceiver, new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,12 +96,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        menu.clear();
-
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        menu.clear();
+//
+//        return true;
+//    }
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -125,21 +136,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         		if (fragment==null) fragment = new ManualScrobbleFragment();
         		break;
         	case (R.id.scrobbles):
+                getSupportActionBar().setTitle(R.string.scrobbles);
                 tag = "RecentScrobblesFragment";
                 fragment = fragmentManager.findFragmentByTag(tag);
                 if (fragment==null) fragment = new RecentScrobblesFragment();
         		break;
         	case (R.id.top_tracks):
+//                getSupportActionBar().setTitle(R.string.top_tracks);
                 tag = TAB_TOP_TRACKS_FRAGMENT_TAG;
                 fragment = fragmentManager.findFragmentByTag(tag);
                 if (fragment==null) fragment = new TabTopTracksFragment();
         		break;
         	case (R.id.top_artists):
+//                getSupportActionBar().setTitle(R.string.top_artists);
                 tag = TAB_TOP_ARTISTS_FRAGMENT_TAG;
                 fragment = fragmentManager.findFragmentByTag(tag);
                 if (fragment==null) fragment = new TabTopArtistsFragment();
                 break;
             case (R.id.top_albums):
+//                getSupportActionBar().setTitle(R.string.top_albums);
                 tag = TAB_TOP_ALBUMS_FRAGMENT_TAG;
                 fragment = fragmentManager.findFragmentByTag(tag);
                 if (fragment==null) fragment = new TabTopAlbumsFragment();
@@ -237,6 +252,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onStop();
 
         AppContext.getInstance().saveSettings();
+        unregisterReceiver(mNetworkStatusReceiver);
     }
 
     @Override

@@ -54,10 +54,13 @@ public class LoginActivity extends AppCompatActivity implements GetSessionKeyAsy
 
                         getSessionKeyAsynctask = new GetSessionKeyAsynctask(LoginActivity.this);
                         getSessionKeyAsynctask.execute(mUsername, password);
+
+                        spinner.setVisibility(View.VISIBLE);
+                        username_field.setVisibility(View.INVISIBLE);
+                        password_field.setVisibility(View.INVISIBLE);
                     }
-                    else {Toast toast;
-                        toast = Toast.makeText(getApplicationContext(), R.string.network_is_not_connected, Toast.LENGTH_SHORT);
-                        toast.show();}
+                    else
+                        Toast.makeText(getApplicationContext(), R.string.network_is_not_connected, Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -71,6 +74,9 @@ public class LoginActivity extends AppCompatActivity implements GetSessionKeyAsy
 
         GetUserInfoAsynctask getUserInfoAsynctask = new GetUserInfoAsynctask(this);
         getUserInfoAsynctask.execute();
+
+//        NetworkStateReceiver networkStateReceiver =
+
     }
 
     @Override

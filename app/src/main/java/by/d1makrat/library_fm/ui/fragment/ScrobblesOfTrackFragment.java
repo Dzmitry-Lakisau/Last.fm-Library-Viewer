@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -30,7 +32,7 @@ public class ScrobblesOfTrackFragment extends ScrobblesListFragment {
 
         artist = getArguments().getString(ARTIST_BUNDLE_KEY);
         track = getArguments().getString(TRACK_BUNDLE_KEY);
-        urlForBrowser = AppContext.getInstance().getUser().getUrl() + "/library/music/" + artist + "/_/" + track;
+        mUrlForBrowser = AppContext.getInstance().getUser().getUrl() + "/library/music/" + artist + "/_/" + track;
     }
 
     @Override
@@ -43,6 +45,12 @@ public class ScrobblesOfTrackFragment extends ScrobblesListFragment {
             drawable = getResources().getDrawable(R.drawable.default_albumart, null);
 
         return new ScrobblesListAdapter(getActivity().getLayoutInflater(), drawable, mScrobbles);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.menu_scrobbles, menu);
     }
 
     @Override
@@ -74,7 +82,7 @@ public class ScrobblesOfTrackFragment extends ScrobblesListFragment {
     public void onScroll(AbsListView l, int firstVisibleItem, int visibleItemCount, int totalItemCount) {}
 
     @Override
-    protected void onAllIsLoaded(int size) {
+    protected void checkIfAllIsLoaded(int size) {
         allIsLoaded = true;
         Toast.makeText(getContext(), getResources().getText(R.string.all_scrobbles_are_loaded), Toast.LENGTH_SHORT).show();
     }

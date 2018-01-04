@@ -63,7 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/password"
         android:layout_alignParentLeft="true"
-        android:visibility="invisible" />
+        android:visibility="invisible"/>
 
 
 </RelativeLayout>

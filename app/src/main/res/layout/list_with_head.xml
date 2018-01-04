@@ -28,18 +28,17 @@
         android:paddingLeft="@dimen/text_margin" />
 
     <ListView
+        android:id="@android:id/list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@android:id/list"
-        android:background="@android:color/transparent"
-        android:visibility="visible"
-        android:focusableInTouchMode="true"
+        android:layout_below="@id/list_head"
         android:clickable="true"
-        android:focusable="true"
         android:divider="#000000"
         android:dividerHeight="0dp"
-        android:layout_below="@id/list_head"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:footerDividersEnabled="true"
-        android:headerDividersEnabled="true" />
+        android:headerDividersEnabled="true"
+        android:visibility="visible"/>
 
 </RelativeLayout>

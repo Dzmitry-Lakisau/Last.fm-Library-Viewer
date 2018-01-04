@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,7 +28,7 @@ public class TopArtistsFragment extends ScrobblesListFragment {
         super.onCreate(savedInstanceState);
 
         mPeriod = getArguments().getString(PERIOD_KEY);
-        urlForBrowser = AppContext.getInstance().getUser().getUrl() + "/library/artists/";
+        mUrlForBrowser = AppContext.getInstance().getUser().getUrl() + "/library/artists/";
     }
 
     @Override
@@ -42,17 +43,24 @@ public class TopArtistsFragment extends ScrobblesListFragment {
         return new RankedListAdapter(getActivity().getLayoutInflater(), drawable, mRankedItems);
     }
 
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+//        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+//
+//        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.top_artists);
+//
+//        return rootView;
+//    }
+
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//    }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.top_artists);
-
-        return rootView;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateContextMenu(ContextMenu contextMenu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(contextMenu, v, menuInfo);
+        contextMenu.getItem(1).setVisible(false);
+        contextMenu.getItem(2).setVisible(false);
     }
 
     @Override

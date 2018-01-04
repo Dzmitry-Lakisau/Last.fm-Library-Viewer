@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,18 +42,25 @@ public class TopAlbumsFragment extends ScrobblesListFragment {
         return new RankedListAdapter(getActivity().getLayoutInflater(), drawable, mRankedItems);
     }
 
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+//        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+//
+//        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.top_albums);
+//
+//        return rootView;
+//    }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.top_albums);
-
-        return rootView;
+    public void onCreateContextMenu(ContextMenu contextMenu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(contextMenu, v, menuInfo);
+        contextMenu.getItem(0).setVisible(false);
+        contextMenu.getItem(1).setVisible(false);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    }
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//    }
 
     @Override
     public void loadItemsFromWeb() {

@@ -101,7 +101,8 @@ public class FilterDialogFragment extends android.support.v4.app.DialogFragment 
 //            }
 //        });
 
-        view.findViewById(R.id.equate_button).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.equate_button);
+        view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 datePicker2.updateDate(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth());

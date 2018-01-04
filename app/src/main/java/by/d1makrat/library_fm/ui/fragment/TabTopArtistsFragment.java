@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,9 +35,11 @@ public class TabTopArtistsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.top_artists);
+
         View view = inflater.inflate(R.layout.viewpager, container, false);
         viewPager = view.findViewById(R.id.viewpager);
-//        viewPager.setOffscreenPageLimit(5);
+        viewPager.setOffscreenPageLimit(adapter.getCount() - 1);
         viewPager.setAdapter(adapter);
 
         return view;

@@ -54,7 +54,6 @@ public class StartFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.main, menu);
-        mMenu = menu;
     }
 
     @Override

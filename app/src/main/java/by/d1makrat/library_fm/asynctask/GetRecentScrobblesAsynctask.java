@@ -1,6 +1,7 @@
 package by.d1makrat.library_fm.asynctask;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class GetRecentScrobblesAsynctask extends GetScrobblesAsynctask{
         DatabaseWorker databaseWorker = new DatabaseWorker(AppContext.getInstance().getApplicationContext());
 
         try {
-            databaseWorker.open();
+            databaseWorker.openDatabase();
 
             if (HttpsClient.isNetworkAvailable()) {
                 UrlConstructor urlConstructor = new UrlConstructor();
@@ -51,12 +52,11 @@ public class GetRecentScrobblesAsynctask extends GetScrobblesAsynctask{
             else {
                 scrobbles = databaseWorker.getScrobbles(params[0], params[1], params[2]);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
             mException = e;
         } finally {
-            databaseWorker.close();
+            databaseWorker.closeDatabase();
         }
 
         return scrobbles;

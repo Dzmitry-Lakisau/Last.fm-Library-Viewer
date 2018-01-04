@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -25,7 +27,7 @@ public class ScrobblesOfArtistFragment extends ScrobblesListFragment {
         super.onCreate(savedInstanceState);
 
         artist = getArguments().getString(ARTIST_KEY);
-        urlForBrowser = AppContext.getInstance().getUser().getUrl() + "/library/music/" + artist;
+        mUrlForBrowser = AppContext.getInstance().getUser().getUrl() + "/library/music/" + artist;
     }
 
     @Override
@@ -38,6 +40,12 @@ public class ScrobblesOfArtistFragment extends ScrobblesListFragment {
             drawable = getResources().getDrawable(R.drawable.default_albumart, null);
 
         return new ScrobblesListAdapter(getActivity().getLayoutInflater(), drawable, mScrobbles);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.menu_scrobbles, menu);
     }
 
     @Override

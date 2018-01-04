@@ -54,7 +54,6 @@ public class SearchArtistFragment extends ListFragment implements OnScrollListen
     private View rootView;
     private ListView mListView;
     private View empty_list;
-    private Menu menu;
     private List<Artist> mArtists = new ArrayList<>();
     private EditText search_field;
 
@@ -196,8 +195,6 @@ public class SearchArtistFragment extends ListFragment implements OnScrollListen
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.menu_search, menu);
-
-        this.menu = menu;
     }
 
     @Override

@@ -20,7 +20,7 @@ import com.codetroopers.betterpickers.radialtimepicker.RadialTimePickerDialogFra
 
 import java.util.Calendar;
 
-import by.d1makrat.library_fm.NetworkStatusChecker;
+import by.d1makrat.library_fm.HttpsClient;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.SendScrobbleAsynctaskCallback;
 import by.d1makrat.library_fm.asynctask.SendScrobbleTask;
@@ -73,7 +73,7 @@ public class ManualScrobbleFragment extends Fragment implements CalendarDatePick
 
 			switch (view.getId()) {
 				case R.id.button_scrobble:
-					if (NetworkStatusChecker.isNetworkAvailable()) {
+					if (HttpsClient.isNetworkAvailable()) {
 						String track = ((TextView) getView().findViewById(R.id.track)).getText().toString();
 						String artist = ((TextView) getView().findViewById(R.id.artist)).getText().toString();
 						String album = ((TextView) getView().findViewById(R.id.album)).getText().toString();

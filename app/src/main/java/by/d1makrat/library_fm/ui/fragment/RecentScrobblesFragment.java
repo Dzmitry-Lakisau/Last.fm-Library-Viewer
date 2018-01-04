@@ -3,6 +3,12 @@ package by.d1makrat.library_fm.ui.fragment;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Toast;
 
@@ -17,7 +23,7 @@ public class RecentScrobblesFragment extends ScrobblesListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        urlForBrowser = AppContext.getInstance().getUser().getUrl() + "/library/";
+        mUrlForBrowser = AppContext.getInstance().getUser().getUrl() + "/library/";
     }
 
     @Override
@@ -33,17 +39,24 @@ public class RecentScrobblesFragment extends ScrobblesListFragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.menu_scrobbles, menu);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.scrobbles);
+
+        return rootView;
+    }
+
+    @Override
     protected void loadItemsFromWeb() {
         String[] asynctaskArgs = {String.valueOf(mPage), mFrom, mTo};
         mGetItemsAsynctask = new GetRecentScrobblesAsynctask(this);
         mGetItemsAsynctask.execute(asynctaskArgs);
-    }
-
-    @Override
-    protected void onAllIsLoaded(int pSize) {
-        if (pSize < AppContext.getInstance().getLimit()) {
-            allIsLoaded = true;
-            Toast.makeText(getContext(), getResources().getText(R.string.all_scrobbles_are_loaded), Toast.LENGTH_SHORT).show();
-        }
     }
 }
