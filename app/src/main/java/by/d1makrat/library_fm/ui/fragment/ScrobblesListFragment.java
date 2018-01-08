@@ -345,7 +345,7 @@ public abstract class ScrobblesListFragment extends ListFragment implements AbsL
         mPage--;
         isEmpty = mListView.getCount() == 0;
         if (isEmpty) {
-            mEmptyListMessage = "Error occurred";
+            mEmptyListMessage = getResources().getString(R.string.error_occurred);
             showEmptyList(getView());
         }
         if (pException instanceof APIException)

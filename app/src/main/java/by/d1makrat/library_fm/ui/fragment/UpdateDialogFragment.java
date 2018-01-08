@@ -16,43 +16,30 @@ import by.d1makrat.library_fm.R;
 
 public class UpdateDialogFragment extends android.support.v4.app.DialogFragment {
 
+    private static final String GOOGLE_PLAY_LINK = "https://play.google.com/store/apps/details?id=";
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstance) {
         AlertDialog.Builder adb = new AlertDialog.Builder(getActivity(), R.style.DialogTheme);
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.dialog, null);
+        View view = inflater.inflate(R.layout.dialog_update, null);
         adb.setView(view);
 
-        TextView title =  new TextView(getActivity().getApplicationContext());
-        title.setText("Update");
-        title.setIncludeFontPadding(true);
-        title.setGravity(Gravity.CENTER);
-        title.setTextSize(24);
-        title.setTextColor(Color.BLACK);
-        adb.setCustomTitle(title);
-//        adb.setTitle("Show scrobbles");
-        //// кнопка положительного ответа
-        adb.setPositiveButton("Download now", myClickListener);
+        adb.setPositiveButton("Download now", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(GOOGLE_PLAY_LINK + getActivity().getPackageName()));
+                startActivity(intent);
+            }
+        });
 
-        // кнопка отрицательного ответа
-        adb.setNegativeButton("Cancel", myClickListener);
+
+        adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
 
         return adb.create();
     }
-
-    private static final String GOOGLE_PLAY_LINK = "https://play.google.com/store/apps/details?id=";
-
-    DialogInterface.OnClickListener myClickListener = new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int which) {
-            switch (which) {
-                // положительная кнопка
-                case DialogInterface.BUTTON_POSITIVE:
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(GOOGLE_PLAY_LINK + getActivity().getPackageName()));
-                    startActivity(intent);
-                    break;
-                case DialogInterface.BUTTON_NEGATIVE:
-                    break;
-            }
-        }
-    };
 }

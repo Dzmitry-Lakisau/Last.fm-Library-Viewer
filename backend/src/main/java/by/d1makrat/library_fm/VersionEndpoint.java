@@ -28,7 +28,6 @@ public class VersionEndpoint {
             path = "version",
             httpMethod = ApiMethod.HttpMethod.GET)
     public Version getLatestVersion() {
-
         return new Version();
     }
 }

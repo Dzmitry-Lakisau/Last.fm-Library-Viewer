@@ -14,7 +14,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -28,9 +27,12 @@ import com.google.android.gms.ads.MobileAds;
 import java.lang.reflect.Field;
 
 import by.d1makrat.library_fm.AppContext;
+import by.d1makrat.library_fm.BuildConfig;
+import by.d1makrat.library_fm.CheckNewVersionAsynctaskCallback;
 import by.d1makrat.library_fm.GetUserInfoAsynctaskCallback;
 import by.d1makrat.library_fm.HttpsClient;
 import by.d1makrat.library_fm.R;
+import by.d1makrat.library_fm.asynctask.CheckNewVersionTask;
 import by.d1makrat.library_fm.asynctask.GetUserInfoAsynctask;
 import by.d1makrat.library_fm.image_loader.Malevich;
 import by.d1makrat.library_fm.model.User;
@@ -42,14 +44,15 @@ import by.d1makrat.library_fm.ui.fragment.StartFragment;
 import by.d1makrat.library_fm.ui.fragment.TabTopAlbumsFragment;
 import by.d1makrat.library_fm.ui.fragment.TabTopArtistsFragment;
 import by.d1makrat.library_fm.ui.fragment.TabTopTracksFragment;
+import by.d1makrat.library_fm.ui.fragment.UpdateDialogFragment;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, GetUserInfoAsynctaskCallback {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, GetUserInfoAsynctaskCallback, CheckNewVersionAsynctaskCallback {
 
     public static final String TAB_TOP_ALBUMS_FRAGMENT_TAG = "TabTopAlbumsFragment";
     public static final String TAB_TOP_TRACKS_FRAGMENT_TAG = "TabTopTracksFragment";
     public static final String TAB_TOP_ARTISTS_FRAGMENT_TAG = "TabTopArtistsFragment";
 
-    private FragmentManager fragmentManager = getSupportFragmentManager();
+    private FragmentManager mFragmentManager = getSupportFragmentManager();
     private User mUser;
     private BroadcastReceiver mNetworkStatusReceiver;
 
@@ -58,6 +61,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onStart();
         mNetworkStatusReceiver = new NetworkStateReceiver();
         registerReceiver(mNetworkStatusReceiver, new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
+
+        CheckNewVersionTask checkNewVersionTask = new CheckNewVersionTask(this);
+        checkNewVersionTask.execute();
     }
 
     @Override
@@ -70,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         createView();
 
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         StartFragment fragment = new StartFragment();
         fragmentTransaction.replace(R.id.content_main, fragment, "StartFragment");
         fragmentTransaction.addToBackStack(null);
@@ -84,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             drawer.closeDrawer(GravityCompat.START);
         }
         else {
-            switch (fragmentManager.getBackStackEntryCount()) {
+            switch (mFragmentManager.getBackStackEntryCount()) {
                 case 1:
                     finish();
                     break;
@@ -127,36 +133,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case (R.id.search):
                 tag = "SearchFragment";
-                fragment = fragmentManager.findFragmentByTag(tag);
+                fragment = mFragmentManager.findFragmentByTag(tag);
                 if (fragment==null) fragment = new SearchArtistFragment();
                 break;
         	case (R.id.manual_scrobble):
                 tag = "ManualScrobbleFragment";
-                fragment = fragmentManager.findFragmentByTag(tag);
+                fragment = mFragmentManager.findFragmentByTag(tag);
         		if (fragment==null) fragment = new ManualScrobbleFragment();
         		break;
         	case (R.id.scrobbles):
                 getSupportActionBar().setTitle(R.string.scrobbles);
                 tag = "RecentScrobblesFragment";
-                fragment = fragmentManager.findFragmentByTag(tag);
+                fragment = mFragmentManager.findFragmentByTag(tag);
                 if (fragment==null) fragment = new RecentScrobblesFragment();
         		break;
         	case (R.id.top_tracks):
 //                getSupportActionBar().setTitle(R.string.top_tracks);
                 tag = TAB_TOP_TRACKS_FRAGMENT_TAG;
-                fragment = fragmentManager.findFragmentByTag(tag);
+                fragment = mFragmentManager.findFragmentByTag(tag);
                 if (fragment==null) fragment = new TabTopTracksFragment();
         		break;
         	case (R.id.top_artists):
 //                getSupportActionBar().setTitle(R.string.top_artists);
                 tag = TAB_TOP_ARTISTS_FRAGMENT_TAG;
-                fragment = fragmentManager.findFragmentByTag(tag);
+                fragment = mFragmentManager.findFragmentByTag(tag);
                 if (fragment==null) fragment = new TabTopArtistsFragment();
                 break;
             case (R.id.top_albums):
 //                getSupportActionBar().setTitle(R.string.top_albums);
                 tag = TAB_TOP_ALBUMS_FRAGMENT_TAG;
-                fragment = fragmentManager.findFragmentByTag(tag);
+                fragment = mFragmentManager.findFragmentByTag(tag);
                 if (fragment==null) fragment = new TabTopAlbumsFragment();
                 break;
             case (R.id.settings):
@@ -166,12 +172,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             try {
                 //TODO переписать переключение и передачу параметров
-                Fragment currentFragment = fragmentManager.findFragmentById(R.id.content_main);
+                Fragment currentFragment = mFragmentManager.findFragmentById(R.id.content_main);
                     if (currentFragment != null) {
                         if (currentFragment.getTag().equals(tag)) return true;
                         else {
                             if (fragment.getArguments() == null) fragment.setArguments(bundle);
-                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                            FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
                             fragmentTransaction.replace(R.id.content_main, fragment, tag);
                             fragmentTransaction.addToBackStack(null);
                             fragmentTransaction.commit();
@@ -179,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                     else {
                         if (fragment.getArguments() == null) fragment.setArguments(bundle);
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
                         fragmentTransaction.replace(R.id.content_main, fragment, tag);
                         fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.commit();
@@ -256,8 +262,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
+    public void onSuccess(Integer latestVersion) {
+        if (BuildConfig.VERSION_CODE < latestVersion) {
+            UpdateDialogFragment dialogFragment = new UpdateDialogFragment();
+            dialogFragment.show(mFragmentManager, "UpdateDialogFragment");
+        }
+    }
+
+    @Override
     public void onException(Exception exception) {
-        Toast.makeText(this, exception.getMessage(), Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, getResources().getText(R.string.error_occurred), Toast.LENGTH_LONG).show();
     }
 }
 

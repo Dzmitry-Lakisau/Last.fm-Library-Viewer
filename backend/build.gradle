@@ -1,3 +1,10 @@
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'appengine'
+
+sourceCompatibility = JavaVersion.VERSION_1_7
+targetCompatibility = JavaVersion.VERSION_1_7
+
 buildscript {
     repositories {
         jcenter()
@@ -10,13 +17,6 @@ buildscript {
 repositories {
     jcenter()
 }
-
-apply plugin: 'java'
-apply plugin: 'war'
-apply plugin: 'appengine'
-
-sourceCompatibility = JavaVersion.VERSION_1_7
-targetCompatibility = JavaVersion.VERSION_1_7
 
 dependencies {
     appengineSdk 'com.google.appengine:appengine-java-sdk:1.9.58'

@@ -49,4 +49,5 @@
     <string name="scrobble_accepted">Scrobble was accepted</string>
     <string name="all_scrobbles_are_loaded">All scrobbles are loaded</string>
     <string name="offline_mode_message">Network is unavailable. App will show data from offline storage</string>
+    <string name="error_occurred">Error occurred</string>
 </resources>
