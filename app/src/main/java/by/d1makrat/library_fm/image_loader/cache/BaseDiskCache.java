@@ -5,18 +5,16 @@ import android.graphics.Bitmap;
 import android.os.StatFs;
 import android.util.Log;
 
-import by.d1makrat.library_fm.image_loader.util.IOUtils;
-import by.d1makrat.library_fm.image_loader.util.MD5;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Comparator;
+
+import by.d1makrat.library_fm.image_loader.util.IOUtils;
 
 public class BaseDiskCache implements DiskCache {
     private static final String TAG = "DiskCache";

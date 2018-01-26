@@ -3,21 +3,11 @@ package by.d1makrat.library_fm.image_loader;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
 import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
-
-import by.d1makrat.library_fm.image_loader.cache.BaseDiskCache;
-import by.d1makrat.library_fm.image_loader.cache.DiskCache;
-import by.d1makrat.library_fm.image_loader.streams.FileStreamProvider;
-import by.d1makrat.library_fm.image_loader.streams.HttpStreamProvider;
-import by.d1makrat.library_fm.image_loader.util.IOUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -28,13 +18,18 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
 
+import by.d1makrat.library_fm.image_loader.cache.BaseDiskCache;
+import by.d1makrat.library_fm.image_loader.cache.DiskCache;
+import by.d1makrat.library_fm.image_loader.streams.FileStreamProvider;
+import by.d1makrat.library_fm.image_loader.streams.HttpStreamProvider;
+import by.d1makrat.library_fm.image_loader.util.IOUtils;
+
 public enum Malevich {
 
     INSTANCE;
 
     private Config config;
     DiskCache diskCache;
-//    private Drawable mPlaceholderDrawable;
 
     public void setConfig(Config config) {
         this.config = config;
@@ -50,7 +45,7 @@ public enum Malevich {
             this.cacheDir = cacheDir;
         }
 
-        public boolean hasDiskCache() {
+        boolean hasDiskCache() {
             return cacheDir != null;
         }
     }
@@ -91,13 +86,13 @@ public enum Malevich {
         if (imageResult != null) {
             ImageRequest request = imageResult.getRequest();
             ImageView imageView = request.target.get();
-            if (imageView != null) {
-                Object tag = imageView.getTag();
-                if (tag != null && tag.equals(request.url)) {
-//                    TransitionDrawable drawable = new TransitionDrawable(new Drawable[]{mPlaceholderDrawable, new BitmapDrawable(imageResult.getBitmap())});
-//                    imageView.setImageDrawable(drawable);
-//                    drawable.startTransition(100);
-                    imageView.setImageBitmap(imageResult.getBitmap());
+            if (imageResult.getBitmap() != null){
+                if (imageView != null) {
+                    Object tag = imageView.getTag();
+                    if (tag != null && tag.equals(request.url)) {
+                        imageView.setImageBitmap(imageResult.getBitmap());
+                        Log.d(TAG, "set image " + request.url + " for " + tag);
+                    }
                 }
             }
         }
@@ -109,15 +104,17 @@ public enum Malevich {
         if (imageView == null) return;
 
         imageView.setImageDrawable(request.placeholderDrawable);
-//        imageView.setImageBitmap(null);
-        if (request.url != null) {
-//            Log.d("MYTAG", "enqueue for " + request.url);
+
+        if (request.url != null && !request.url.equals("")) {
+            Log.d(TAG, "enqueue for " + request.url);
             if (imageHasSize(request)) {
                 imageView.setTag(request.url);
                 queue.addFirst(request);
                 dispatchLoading();
+                Log.d(TAG, "dispatchLoading " + request.url);
             } else {
                 deferImageRequest(request);
+                Log.d(TAG, "deferImageRequest " + request.url);
             }
         }
     }
@@ -183,8 +180,7 @@ public enum Malevich {
 
             // Decode bitmap with inSampleSize set
             options.inJustDecodeBounds = false;
-            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
-            return bitmap;
+            return BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
         } finally {
             IOUtils.closeStream(inputStream);
         }
