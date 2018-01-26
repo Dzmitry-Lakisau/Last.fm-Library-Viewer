@@ -1,12 +1,9 @@
 package by.d1makrat.library_fm.ui.activity;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-//import android.preference.SeekBarPreference;
+import android.preference.EditTextPreference;
+import android.preference.Preference;
 import android.view.Gravity;
-import android.widget.SeekBar;
-import android.preference.*;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,8 +28,8 @@ public class PreferenceActivity extends android.preference.PreferenceActivity {
                     if (temp > 0 && temp < 1001) {
                         if (temp > 200) {
                             Toast toast = Toast.makeText(getApplicationContext(), "Some Last.fm requests allow maximum limit equal to 200. Limit during this requests will be equal to 200", Toast.LENGTH_LONG);
-                            TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
-                            if (v != null) v.setGravity(Gravity.CENTER);
+                            TextView v = toast.getView().findViewById(android.R.id.message);
+                            if (v != null) v.setGravity(Gravity.CENTER);//TODO make toast centered everywhere
                             toast.show();
                         }
                         AppContext.getInstance().setLimit(String.valueOf(temp));

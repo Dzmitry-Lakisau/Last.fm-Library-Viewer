@@ -1,6 +1,5 @@
 package by.d1makrat.library_fm.ui.fragment;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,8 +9,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,19 +16,21 @@ import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialo
 import com.codetroopers.betterpickers.radialtimepicker.RadialTimePickerDialogFragment;
 
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
-import by.d1makrat.library_fm.HttpsClient;
 import by.d1makrat.library_fm.R;
-import by.d1makrat.library_fm.SendScrobbleAsynctaskCallback;
-import by.d1makrat.library_fm.asynctask.SendScrobbleTask;
+import by.d1makrat.library_fm.asynctask.SendScrobbleCallback;
+import by.d1makrat.library_fm.asynctask.SendScrobbleAsyncTask;
+import by.d1makrat.library_fm.https.HttpsClient;
+import by.d1makrat.library_fm.utils.InputUtils;
 
-public class ManualScrobbleFragment extends Fragment implements CalendarDatePickerDialogFragment.OnDateSetListener, RadialTimePickerDialogFragment.OnTimeSetListener, SendScrobbleAsynctaskCallback {
+public class ManualScrobbleFragment extends Fragment implements CalendarDatePickerDialogFragment.OnDateSetListener, RadialTimePickerDialogFragment.OnTimeSetListener, SendScrobbleCallback {
 
-	private SendScrobbleTask mSendScrobbleTask;
+	private SendScrobbleAsyncTask mSendScrobbleAsyncTask;
 	private int mYear, mMonth, mDay, mHour, mMinute;
 	private Calendar mCalendar;
-	private ProgressBar spinner;
-	private SendScrobbleAsynctaskCallback mCallback;
+	private View mSpinner;
+	private SendScrobbleCallback mCallback;
 
 	@Override
 	public void onCreate(Bundle savedInstance){
@@ -51,88 +50,89 @@ public class ManualScrobbleFragment extends Fragment implements CalendarDatePick
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		View rootView = inflater.inflate(R.layout.activity_manualscrobble, container, false);
+		final View rootView = inflater.inflate(R.layout.fragment_manualscrobble, container, false);
 		(rootView.findViewById(R.id.button_scrobble)).setEnabled(true);
 
-		rootView.findViewById(R.id.button_scrobble).setOnClickListener(pressListener);
-		rootView.findViewById(R.id.button_date).setOnClickListener(pressListener);
-		rootView.findViewById(R.id.button_time).setOnClickListener(pressListener);
-		rootView.setOnClickListener(pressListener);
+		rootView.findViewById(R.id.button_scrobble).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				InputUtils.hideKeyboard(getActivity());
+				if (HttpsClient.isNetworkAvailable()) {
+					String track = ((TextView) rootView.findViewById(R.id.track)).getText().toString();
+					String artist = ((TextView) rootView.findViewById(R.id.artist)).getText().toString();
+					String album = ((TextView) rootView.findViewById(R.id.album)).getText().toString();
+					String trackNumber = ((TextView) rootView.findViewById(R.id.tracknumber)).getText().toString();
+					String trackDuration = ((TextView) rootView.findViewById(R.id.trackduration)).getText().toString();
 
-		spinner = rootView.findViewById(R.id.progressBar);
-		spinner.setVisibility(View.INVISIBLE);
+					mCalendar = Calendar.getInstance();
+					mCalendar.set(mYear, mMonth, mDay, mHour, mMinute, 0);
+					Long timestamp = (TimeUnit.MILLISECONDS.toSeconds(mCalendar.getTimeInMillis()));
+
+					if (artist.equals("") || track.equals("") || trackDuration.equals("")) {
+						mSpinner.setVisibility(View.INVISIBLE);
+						Toast.makeText(getContext(), getString(R.string.manual_fragment_fill_required_fields), Toast.LENGTH_SHORT).show();
+					}
+					else
+					if (TextUtils.isDigitsOnly(trackNumber) && TextUtils.isDigitsOnly(trackDuration)){
+						v.setEnabled(false);
+						mSpinner.setVisibility(View.VISIBLE);
+						String[] asynctaskArgs = new String[]{track, artist, album, String.valueOf(trackNumber), String.valueOf(trackDuration), String.valueOf(timestamp)};
+						mSendScrobbleAsyncTask = new SendScrobbleAsyncTask(mCallback);
+						mSendScrobbleAsyncTask.execute(asynctaskArgs);
+					}
+					else
+						Toast.makeText(getContext(), getString(R.string.manual_fragment_nonnumerical_input), Toast.LENGTH_SHORT).show();
+				}
+				else
+					Toast.makeText(getContext(), R.string.network_is_not_connected, Toast.LENGTH_SHORT).show();
+			}
+		});
+		rootView.findViewById(R.id.button_date).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				InputUtils.hideKeyboard(getActivity());
+				CalendarDatePickerDialogFragment calendarDatePickerDialogFragment = new CalendarDatePickerDialogFragment()
+						.setThemeCustom(R.style.CustomBetterPickersDialogs)
+						.setOnDateSetListener(ManualScrobbleFragment.this)
+						.setFirstDayOfWeek(Calendar.MONDAY)
+						.setPreselectedDate(mYear, mMonth, mDay)
+						.setDoneText("OK")
+						.setCancelText("Cancel");
+				calendarDatePickerDialogFragment.show(getActivity().getSupportFragmentManager(), "DatePicker");
+			}
+		});
+		rootView.findViewById(R.id.button_time).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				InputUtils.hideKeyboard(getActivity());
+				RadialTimePickerDialogFragment radialTimePickerDialogFragment = new RadialTimePickerDialogFragment()
+						.setThemeCustom(R.style.CustomBetterPickersDialogs)
+						.setOnTimeSetListener(ManualScrobbleFragment.this)
+						.setStartTime(mHour, mMinute)
+						.setDoneText("OK")
+						.setCancelText("Cancel");
+				radialTimePickerDialogFragment.show(getActivity().getSupportFragmentManager(), "TimePicker");
+			}
+		});
+		rootView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				InputUtils.hideKeyboard(getActivity());
+			}
+		});
+
+		mSpinner = rootView.findViewById(R.id.progressBar);
+		mSpinner.setVisibility(View.INVISIBLE);
 
 		((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.manual_scrobble));
 
 		return rootView;
 	}
 
-	public View.OnClickListener pressListener = new View.OnClickListener() {
-		public void onClick(View view) {
-			hideKeyboard();
-
-			switch (view.getId()) {
-				case R.id.button_scrobble:
-					if (HttpsClient.isNetworkAvailable()) {
-						String track = ((TextView) getView().findViewById(R.id.track)).getText().toString();
-						String artist = ((TextView) getView().findViewById(R.id.artist)).getText().toString();
-						String album = ((TextView) getView().findViewById(R.id.album)).getText().toString();
-						String trackNumber = ((TextView) getView().findViewById(R.id.tracknumber)).getText().toString();
-						String trackDuration = ((TextView) getView().findViewById(R.id.trackduration)).getText().toString();
-
-						mCalendar = Calendar.getInstance();
-						mCalendar.set(mYear, mMonth, mDay, mHour, mMinute, 0);
-						Long timestamp = (mCalendar.getTimeInMillis() / 1000L);
-
-						if (artist.equals("") || track.equals("") || trackDuration.equals("")) {
-							spinner.setVisibility(View.INVISIBLE);
-							Toast.makeText(view.getContext(), "Fill required fields \"Track title\", \"Artist\", \"Duration\"", Toast.LENGTH_SHORT).show();
-						}
-						else
-						if (TextUtils.isDigitsOnly(trackNumber) && TextUtils.isDigitsOnly(trackDuration)){
-							view.setEnabled(false);
-							spinner.setVisibility(View.VISIBLE);
-							String[] asynctaskArgs = new String[]{track, artist, album, String.valueOf(trackNumber), String.valueOf(trackDuration), String.valueOf(timestamp)};
-							mSendScrobbleTask = new SendScrobbleTask(mCallback);
-							mSendScrobbleTask.execute(asynctaskArgs);
-						}
-						else
-							Toast.makeText(view.getContext(), "Nonnumerical input", Toast.LENGTH_SHORT).show();
-					}
-					else
-						Toast.makeText(getContext(), R.string.network_is_not_connected, Toast.LENGTH_SHORT).show();
-					break;
-				case R.id.button_date:
-					hideKeyboard();
-					CalendarDatePickerDialogFragment calendarDatePickerDialogFragment = new CalendarDatePickerDialogFragment()
-							.setThemeCustom(R.style.CustomBetterPickersDialogs)
-							.setOnDateSetListener(ManualScrobbleFragment.this)
-							.setFirstDayOfWeek(Calendar.MONDAY)
-							.setPreselectedDate(mYear, mMonth, mDay)
-							.setDoneText("OK")
-							.setCancelText("Cancel");
-					calendarDatePickerDialogFragment.show(getActivity().getSupportFragmentManager(), "DatePicker");
-					break;
-				case R.id.button_time:
-					hideKeyboard();
-					RadialTimePickerDialogFragment radialTimePickerDialogFragment = new RadialTimePickerDialogFragment()
-							.setThemeCustom(R.style.CustomBetterPickersDialogs)
-							.setOnTimeSetListener(ManualScrobbleFragment.this)
-							.setStartTime(mHour, mMinute)
-							.setDoneText("OK")
-							.setCancelText("Cancel");
-					radialTimePickerDialogFragment.show(getActivity().getSupportFragmentManager(), "TimePicker");
-					break;
-				default:
-					break;
-			}
-		}
-	};
-
-	private void hideKeyboard() {
-		InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
-		inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
-	}
+//	private void hideKeyboard() {
+//		InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+//		inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+//	}
 
 	@Override
 	public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
@@ -150,10 +150,10 @@ public class ManualScrobbleFragment extends Fragment implements CalendarDatePick
 	@Override
 	public void onStop(){
 		super.onStop();
-		KillTaskIfRunning(mSendScrobbleTask);
+		killTaskIfRunning(mSendScrobbleAsyncTask);
 	}
 
-	private void KillTaskIfRunning(AsyncTask task) {
+	private void killTaskIfRunning(AsyncTask task) {
 		if (task != null && task.getStatus() != AsyncTask.Status.FINISHED){
 			task.cancel(true);
 		}
@@ -162,16 +162,16 @@ public class ManualScrobbleFragment extends Fragment implements CalendarDatePick
 	@Override
 	public void onException(Exception pException) {
 		if (getView() != null)
-			getView().findViewById(R.id.button_scrobble).setEnabled(false);
-		spinner.setVisibility(View.INVISIBLE);
-		Toast.makeText(getContext(), pException.getMessage(), Toast.LENGTH_LONG).show();
+			getView().findViewById(R.id.button_scrobble).setEnabled(true);
+		mSpinner.setVisibility(View.INVISIBLE);
+		Toast.makeText(getActivity(), pException.getMessage(), Toast.LENGTH_LONG).show();
 	}
 
 	@Override
 	public void onSendScrobbleResult(String result) {
 		if (getView() != null)
-			getView().findViewById(R.id.button_scrobble).setEnabled(false);
-		spinner.setVisibility(View.INVISIBLE);
-		Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+			getView().findViewById(R.id.button_scrobble).setEnabled(true);
+		mSpinner.setVisibility(View.INVISIBLE);
+		Toast.makeText(getActivity(), result, Toast.LENGTH_LONG).show();
 	}
 }

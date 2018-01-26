@@ -2,6 +2,7 @@ package by.d1makrat.library_fm.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,6 +20,7 @@ import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.image_loader.Malevich;
 import by.d1makrat.library_fm.model.User;
+import by.d1makrat.library_fm.ui.fragment.dialog.AboutDialogFragment;
 
 public class StartFragment extends Fragment {
 
@@ -33,7 +35,7 @@ public class StartFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.start_layout, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_start, container, false);
 
         AdView adView = rootView.findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
@@ -43,7 +45,7 @@ public class StartFragment extends Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(null);
 
         User user = AppContext.getInstance().getUser();
-        Malevich.INSTANCE.load(user.getAvatarUri()).into((ImageView) rootView.findViewById(R.id.user_avatar_start_screen));
+        Malevich.INSTANCE.load(user.getAvatarUri()).instead(ContextCompat.getDrawable(getActivity(), R.drawable.img_app_logo_large)).into((ImageView) rootView.findViewById(R.id.user_avatar_start_screen));
 
         TextView textView = rootView.findViewById(R.id.hello_start_screen);
         textView.setText(String.format("You are logged in as %s.\n%s scrobbles since %s.\nExplore your music!", user.getUsername(), user.getPlaycount(), user.getRegistered()));
@@ -53,7 +55,7 @@ public class StartFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.main, menu);
+        inflater.inflate(R.menu.menu_about, menu);
     }
 
     @Override
