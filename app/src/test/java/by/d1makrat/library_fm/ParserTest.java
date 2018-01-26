@@ -2,13 +2,15 @@ package by.d1makrat.library_fm;
 
 import android.annotation.TargetApi;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
+import org.mockito.ArgumentMatchers;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -16,10 +18,11 @@ import java.net.URL;
 import java.util.List;
 
 import by.d1makrat.library_fm.json.JsonParser;
+import by.d1makrat.library_fm.json.TopsParser;
 import by.d1makrat.library_fm.mocks.IHttpClient;
 import by.d1makrat.library_fm.mocks.Mocks;
 import by.d1makrat.library_fm.model.Artist;
-import by.d1makrat.library_fm.model.RankedItem;
+import by.d1makrat.library_fm.model.TopAlbum;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -40,6 +43,9 @@ public class ParserTest {
     private static final String EXPECTED_IMAGE_URI = "https://lastfm-img2.akamaized.net/i/u/300x300/ed753560072eda4aced924492ba72c71.png";
 
     private IHttpClient mHttpClient;
+    private InputStream mockedInputStream = null;
+    private InputStream response = null;
+    private Reader reader = null;
 
     @Before
     public void mockHttpClient() {
@@ -48,39 +54,39 @@ public class ParserTest {
 
     @Test
     public void parseUserTopAlbums() throws Exception {
-        InputStream mockedInputStream = Mocks.stream("topalbums.json");
-        when(mHttpClient.request((URL) Matchers.anyObject(), Matchers.anyString())).thenReturn(mockedInputStream);
-        InputStream response = mHttpClient.request(new URL("http://api"), "GET");
+        mockedInputStream = Mocks.stream("topalbums.json");
+        when(mHttpClient.request((URL) ArgumentMatchers.any(), ArgumentMatchers.anyString())).thenReturn(mockedInputStream);
+        response = mHttpClient.request(new URL("http://api"), "GET");
 
         final int bufferSize = 1024;
         final char[] buffer = new char[bufferSize];
         final StringBuilder out = new StringBuilder();
-        Reader in = new InputStreamReader(response, "UTF-8");
+        reader = new InputStreamReader(response, "UTF-8");
         for (; ; ) {
-            int rsz = in.read(buffer, 0, buffer.length);
+            int rsz = reader.read(buffer, 0, buffer.length);
             if (rsz < 0)
                 break;
             out.append(buffer, 0, rsz);
         }
 
-        final JsonParser jsonParser = new JsonParser();
-        List<RankedItem> topAlbumsList = jsonParser.parseUserTopAlbums(out.toString());
+        final TopsParser topsParser = new TopsParser(out.toString());
+        List<TopAlbum> topAlbumsList = topsParser.parseUserTopAlbums();
         assertEquals(topAlbumsList.size(), 10);
-        assertEquals(topAlbumsList.get(0).getSecondaryField(), EXPECTED_ARTIST_NAME);
+        assertEquals(topAlbumsList.get(0).getArtistName(), EXPECTED_ARTIST_NAME);
     }
 
     @Test
     public void parseArtists() throws Exception {
-        InputStream mockedInputStream = Mocks.stream("search_results.json");
-        when(mHttpClient.request((URL) Matchers.anyObject(), Matchers.anyString())).thenReturn(mockedInputStream);
-        InputStream response = mHttpClient.request(new URL("http://api"), "GET");
+        mockedInputStream = Mocks.stream("search_results.json");
+        when(mHttpClient.request((URL) ArgumentMatchers.any(), ArgumentMatchers.anyString())).thenReturn(mockedInputStream);
+        response = mHttpClient.request(new URL("http://api"), "GET");
 
         final int bufferSize = 1024;
         final char[] buffer = new char[bufferSize];
         final StringBuilder out = new StringBuilder();
-        Reader in = new InputStreamReader(response, "UTF-8");
+        reader = new InputStreamReader(response, "UTF-8");
         for (; ; ) {
-            int rsz = in.read(buffer, 0, buffer.length);
+            int rsz = reader.read(buffer, 0, buffer.length);
             if (rsz < 0)
                 break;
             out.append(buffer, 0, rsz);
@@ -93,5 +99,13 @@ public class ParserTest {
         assertEquals(artists.get(0).getListenersCount(), EXPECTED_LISTENERS_COUNT);
         assertEquals(artists.get(0).getImageUri(), EXPECTED_IMAGE_URI);
         assertEquals(artists.get(0).getUrl(), EXPECTED_URL);
-    }    
+    }
+
+
+    @After
+    public void closeStreams() throws IOException{
+        if (mockedInputStream != null) mockedInputStream.close();
+        if (response != null) response.close();
+        if (reader != null) reader.close();
+    }
 }
