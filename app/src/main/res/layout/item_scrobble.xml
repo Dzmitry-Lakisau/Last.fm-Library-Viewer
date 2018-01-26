@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/dividerline"
-    android:id="@+id/list_item"
     app:popupTheme="@style/AppTheme.PopupOverlay"
     >
 
@@ -22,6 +21,7 @@
         android:background="@android:color/transparent"
         android:includeFontPadding="false"
         android:textAppearance="?android:attr/textAppearanceLarge"
+        android:maxLines="1"
         tools:text="Track title"
         />
 
@@ -74,5 +74,5 @@
         android:background="@android:color/transparent"
 
         android:scaleType="fitXY"
-        app:srcCompat="@drawable/default_albumart" />
+        app:srcCompat="@drawable/img_vinyl" />
 </RelativeLayout>
