@@ -2,14 +2,15 @@ package by.d1makrat.library_fm.model;
 
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
-public class User {
+public class User implements IUser {
 
     private String username;
 
     private String playcount;
 
-    private long registered;
+    private String registered;
 
     private String url;
 
@@ -31,13 +32,14 @@ public class User {
         this.playcount = playcount;
     }
 
+    @Override
     public String getRegistered() {
         Calendar mydate = Calendar.getInstance();
-        mydate.setTimeInMillis(registered * 1000);
+        mydate.setTimeInMillis(TimeUnit.SECONDS.toMillis(Long.valueOf(registered)));
         return mydate.get(Calendar.DAY_OF_MONTH) + " " + mydate.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH) + " " + mydate.get(Calendar.YEAR);
     }
 
-    public void setRegistered(long registered) {
+    public void setRegistered(String registered) {
         this.registered = registered;
     }
 

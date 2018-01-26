@@ -2,6 +2,7 @@ package by.d1makrat.library_fm.model;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class Scrobble{
 
@@ -35,26 +36,22 @@ public class Scrobble{
         return mArtist;
     }
 
-
     public String getTrackTitle() {
         return mTrack;
     }
 
-
     public String getAlbum()  {
         return mAlbum;
     }
-
 
     public String getImageUri() {
         return mImageUri;
     }
 
     public String getFormattedDate(){
-        java.util.Date date = new java.util.Date (mUnixDate * 1000L);
+        java.util.Date date = new java.util.Date (TimeUnit.SECONDS.toMillis(mUnixDate));
         SimpleDateFormat sdf = new SimpleDateFormat("d MMM yyyy, HH:mm:ss", Locale.ENGLISH);
-        String formattedDate = sdf.format(date);
-        return formattedDate;
+        return sdf.format(date);
     }
 
     public long getDate(){
