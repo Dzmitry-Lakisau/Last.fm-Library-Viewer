@@ -1,8 +1,8 @@
-package by.d1makrat.library_fm;
+package by.d1makrat.library_fm.asynctask;
 
 import by.d1makrat.library_fm.model.User;
 
-public interface GetUserInfoAsynctaskCallback {
+public interface GetUserInfoCallback {
     void onUserInfoReceived(User user);
     void onException(Exception exception);
 }

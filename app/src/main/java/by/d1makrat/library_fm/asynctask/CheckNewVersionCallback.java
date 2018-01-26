@@ -1,6 +1,6 @@
-package by.d1makrat.library_fm;
+package by.d1makrat.library_fm.asynctask;
 
-public interface CheckNewVersionAsynctaskCallback {
+public interface CheckNewVersionCallback {
     void onSuccess(Integer latestVersion);
     void onException(Exception exception);
 }

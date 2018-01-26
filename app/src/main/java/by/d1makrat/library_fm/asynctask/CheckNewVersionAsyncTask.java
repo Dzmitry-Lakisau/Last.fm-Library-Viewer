@@ -6,18 +6,18 @@ import org.json.JSONObject;
 
 import java.net.URL;
 
-import by.d1makrat.library_fm.CheckNewVersionAsynctaskCallback;
-import by.d1makrat.library_fm.HttpsClient;
+import by.d1makrat.library_fm.https.HttpsClient;
+import by.d1makrat.library_fm.https.RequestMethod;
 
-public class CheckNewVersionTask extends AsyncTask<Void, Void, Integer> {
+public class CheckNewVersionAsyncTask extends AsyncTask<Void, Void, Integer> {
 
     private static final String BACKEND_URL = "https://lastfmlibraryviewer.appspot.com/_ah/api/versionApi/v1/version";
     private static final String LATEST_VERSION_KEY = "latestVersion";
 
     private Exception mException = null;
-    private CheckNewVersionAsynctaskCallback mAsynctaskCallback;
+    private CheckNewVersionCallback mAsynctaskCallback;
 
-    public CheckNewVersionTask(CheckNewVersionAsynctaskCallback pAsynctaskCallback) {
+    public CheckNewVersionAsyncTask(CheckNewVersionCallback pAsynctaskCallback) {
         mAsynctaskCallback = pAsynctaskCallback;
     }
 
@@ -28,7 +28,7 @@ public class CheckNewVersionTask extends AsyncTask<Void, Void, Integer> {
 
         try {
             HttpsClient httpsClient = new HttpsClient();
-            String response = httpsClient.request(new URL(BACKEND_URL), "GET");
+            String response = httpsClient.request(new URL(BACKEND_URL), RequestMethod.GET);
 
             JSONObject jsonObject = new JSONObject(response);
             result = jsonObject.getInt(LATEST_VERSION_KEY);

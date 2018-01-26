@@ -5,19 +5,22 @@ import android.os.AsyncTask;
 import java.net.URL;
 
 import by.d1makrat.library_fm.APIException;
-import by.d1makrat.library_fm.GetUserInfoAsynctaskCallback;
-import by.d1makrat.library_fm.HttpsClient;
-import by.d1makrat.library_fm.UrlConstructor;
+import by.d1makrat.library_fm.https.HttpsClient;
+import by.d1makrat.library_fm.https.RequestMethod;
 import by.d1makrat.library_fm.json.JsonParser;
+import by.d1makrat.library_fm.json.UserParser;
 import by.d1makrat.library_fm.model.User;
+import by.d1makrat.library_fm.utils.UrlConstructor;
 
-public class GetUserInfoAsynctask extends AsyncTask<Void, Void, User> {
+import static by.d1makrat.library_fm.Constants.API_NO_ERROR;
 
-    private GetUserInfoAsynctaskCallback mAsynctaskCallback;
+public class GetUserInfoAsyncTask extends AsyncTask<Void, Void, User> {
+
+    private GetUserInfoCallback mAsynctaskCallback;
     private Exception mException = null;
 
-    public GetUserInfoAsynctask(GetUserInfoAsynctaskCallback pGetUserInfoAsynctaskCallback) {
-        mAsynctaskCallback = pGetUserInfoAsynctaskCallback;
+    public GetUserInfoAsyncTask(GetUserInfoCallback pGetUserInfoCallback) {
+        mAsynctaskCallback = pGetUserInfoCallback;
     }
 
     @Override
@@ -30,15 +33,18 @@ public class GetUserInfoAsynctask extends AsyncTask<Void, Void, User> {
             URL apiRequestUrl = urlConstructor.constructGetUserInfoApiRequestUrl(null);
 
             HttpsClient httpsClient = new HttpsClient();
-            String response = httpsClient.request(apiRequestUrl, "GET");
+            String response = httpsClient.request(apiRequestUrl, RequestMethod.GET);
 
             JsonParser jsonParser = new JsonParser();
 
             String errorOrNot = jsonParser.checkForApiErrors(response);
-            if (!errorOrNot.equals("No error"))
+            if (!errorOrNot.equals(API_NO_ERROR)) {
                 mException = new APIException(errorOrNot);
-            else
-                user = jsonParser.parseUserInfo(response);
+            }
+            else {
+                UserParser userParser = new UserParser(response);
+                user = userParser.parse();
+            }
         } catch (Exception e) {
             e.printStackTrace();
             mException = e;

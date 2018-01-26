@@ -5,17 +5,19 @@ import android.os.AsyncTask;
 import java.net.URL;
 
 import by.d1makrat.library_fm.APIException;
-import by.d1makrat.library_fm.GetSessionKeyAsynctaskCallback;
-import by.d1makrat.library_fm.HttpsClient;
-import by.d1makrat.library_fm.UrlConstructor;
+import by.d1makrat.library_fm.https.HttpsClient;
+import by.d1makrat.library_fm.utils.UrlConstructor;
+import by.d1makrat.library_fm.https.RequestMethod;
 import by.d1makrat.library_fm.json.JsonParser;
 
-public class GetSessionKeyAsynctask extends AsyncTask<String, Void, String> {
+import static by.d1makrat.library_fm.Constants.API_NO_ERROR;
 
-    private GetSessionKeyAsynctaskCallback asynctaskCallback;
+public class GetSessionKeyAsyncTask extends AsyncTask<String, Void, String> {
+
+    private GetSessionKeyCallback asynctaskCallback;
     private Exception mException = null;
 
-    public GetSessionKeyAsynctask(GetSessionKeyAsynctaskCallback pAsynctaskCallback) {
+    public GetSessionKeyAsyncTask(GetSessionKeyCallback pAsynctaskCallback) {
         asynctaskCallback = pAsynctaskCallback;
     }
 
@@ -32,12 +34,12 @@ public class GetSessionKeyAsynctask extends AsyncTask<String, Void, String> {
             apiRequestUrl = urlConstructor.constructGetSessionKeyApiRequestUrl(username, password);
 
             HttpsClient httpsClient = new HttpsClient();
-            String response = httpsClient.request(apiRequestUrl, "POST");
+            String response = httpsClient.request(apiRequestUrl, RequestMethod.POST);
 
             JsonParser jsonParser = new JsonParser();
 
             String errorOrNot = jsonParser.checkForApiErrors(response);
-            if (!errorOrNot.equals("No error"))
+            if (!errorOrNot.equals(API_NO_ERROR))
                 mException = new APIException(errorOrNot);
             else
                 sessionKey = jsonParser.parseSessionkey(response);

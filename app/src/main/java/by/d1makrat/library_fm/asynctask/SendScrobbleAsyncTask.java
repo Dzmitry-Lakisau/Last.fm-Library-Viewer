@@ -5,17 +5,19 @@ import android.os.AsyncTask;
 import java.net.URL;
 
 import by.d1makrat.library_fm.APIException;
-import by.d1makrat.library_fm.HttpsClient;
-import by.d1makrat.library_fm.SendScrobbleAsynctaskCallback;
-import by.d1makrat.library_fm.UrlConstructor;
+import by.d1makrat.library_fm.https.HttpsClient;
+import by.d1makrat.library_fm.utils.UrlConstructor;
+import by.d1makrat.library_fm.https.RequestMethod;
 import by.d1makrat.library_fm.json.JsonParser;
 
-public class SendScrobbleTask extends AsyncTask<String, Void, String> {
+import static by.d1makrat.library_fm.Constants.API_NO_ERROR;
+
+public class SendScrobbleAsyncTask extends AsyncTask<String, Void, String> {
 
     private Exception mException = null;
-    private SendScrobbleAsynctaskCallback mAsynctaskCallback;
+    private SendScrobbleCallback mAsynctaskCallback;
 
-    public SendScrobbleTask(SendScrobbleAsynctaskCallback pAsynctaskCallback) {
+    public SendScrobbleAsyncTask(SendScrobbleCallback pAsynctaskCallback) {
         mAsynctaskCallback = pAsynctaskCallback;
     }
 
@@ -29,12 +31,12 @@ public class SendScrobbleTask extends AsyncTask<String, Void, String> {
             URL apiRequestUrl = urlConstructor.constructSendScrobbleApiRequestUrl(params[0], params[1], params[2], params[3], params[4], params[5]);
 
             HttpsClient httpsClient = new HttpsClient();
-            String response = httpsClient.request(apiRequestUrl, "POST");
+            String response = httpsClient.request(apiRequestUrl, RequestMethod.POST);
 
             JsonParser jsonParser = new JsonParser();
 
             String errorOrNot = jsonParser.checkForApiErrors(response);
-            if (!errorOrNot.equals("No error"))
+            if (!errorOrNot.equals(API_NO_ERROR))
                 mException = new APIException(errorOrNot);
             else
                 result = jsonParser.parseSendScrobbleResult(response);
