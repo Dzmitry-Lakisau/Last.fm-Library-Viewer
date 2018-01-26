@@ -1,85 +1,65 @@
 package by.d1makrat.library_fm.adapter.list;
 
 import android.graphics.drawable.Drawable;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.List;
-
+import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.image_loader.Malevich;
 import by.d1makrat.library_fm.model.Artist;
-import by.d1makrat.library_fm.model.Scrobble;
 
-public class SearchArtistsAdapter extends BaseAdapter {
+public class SearchArtistsAdapter extends ItemsAdapter<Artist>{
 
-    private final Drawable mPlaceholderDrawable;
-    private LayoutInflater mLayoutInflater;
-    private List<Artist> artists;
+    private final View.OnClickListener mClickListener;
 
-    public SearchArtistsAdapter(LayoutInflater pLayoutInflater, Drawable pPlaceholderDrawable, List<Artist> pArtists) {
+    public SearchArtistsAdapter(LayoutInflater pLayoutInflater, Drawable pPlaceholderDrawable, View.OnClickListener pClickListener) {
         mLayoutInflater = pLayoutInflater;
         mPlaceholderDrawable = pPlaceholderDrawable;
-        this.artists = pArtists;
+        mClickListener = pClickListener;
     }
 
     @Override
-    public int getCount() {
-        return artists.size();
+    protected RecyclerView.ViewHolder createItemViewHolder(ViewGroup parent) {
+
+        View view = mLayoutInflater.inflate(R.layout.item_artist, parent, false);
+
+        return new ArtistViewHolder(view, mClickListener);
     }
 
     @Override
-    public Scrobble getItem(int position) {
-        return artists.get(position);
+    protected void bindItemViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+        final ArtistViewHolder holder = (ArtistViewHolder) viewHolder;
+        holder.bind(getItem(position), mPlaceholderDrawable);
     }
+    
+    private static class ArtistViewHolder extends RecyclerView.ViewHolder{
 
-    @Override
-    public long getItemId(int position) {
-        return position;//better is "unixtime + artist + title"
-    }
+        private final TextView artistTextView;
+        private final TextView playcountTextView;
+        private final ImageView artistImgView;
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup viewGroup) {
+        ArtistViewHolder(View pView, View.OnClickListener pClickListener) {
+            super(pView);
 
-        ViewHolder viewHolder;
+            artistTextView = pView.findViewById(R.id.artistName_textView);
+            playcountTextView = pView.findViewById(R.id.playcount_textView);
+            artistImgView = pView.findViewById(R.id.artistImage_ImgView);
 
-        if (convertView == null) {
-            convertView = mLayoutInflater.inflate(R.layout.ranked_list_item, viewGroup, false);
-
-            viewHolder = new ViewHolder();
-            viewHolder.primaryField_txt = convertView.findViewById(R.id.primaryField_textView);
-            viewHolder.playcount_txt = convertView.findViewById(R.id.playcount_textView);
-            viewHolder.albumart_imgView = convertView.findViewById(R.id.albumart);
-
-            convertView.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) convertView.getTag();
+            pView.setOnClickListener(pClickListener);
         }
 
-        final Artist artist = artists.get(position);
+        private void bind(Artist artist, Drawable pPlaceholderDrawable){
 
-        viewHolder.primaryField_txt.setText(artist.getName());
-        viewHolder.playcount_txt.setText(String.format("%s listeners", artist.getListenersCount()));
+            artistTextView.setText(artist.getName());
+            playcountTextView.setText(String.format(AppContext.getInstance().getString(R.string.listeners_count), artist.getListenersCount()));
 
-        String imageUri = artist.getImageUri();
-        ImageView imageView = viewHolder.albumart_imgView;
-
-        if (viewHolder.albumart_imgView.getTag() == null || !viewHolder.albumart_imgView.getTag().equals(imageUri)) {
-
-            Malevich.INSTANCE.load(imageUri).instead(mPlaceholderDrawable).into(imageView);//TODO images setting up multiple times?
-            viewHolder.albumart_imgView.setTag(imageUri);
+            String imageUri = artist.getImageUri();
+            Malevich.INSTANCE.load(imageUri).instead(pPlaceholderDrawable).into(artistImgView);//TODO make icon larger
         }
-
-        return convertView;
-    }
-
-    static class ViewHolder {
-        TextView primaryField_txt;
-        TextView playcount_txt;
-        ImageView albumart_imgView;
     }
 }
