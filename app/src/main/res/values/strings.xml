@@ -5,24 +5,11 @@
     <string name="banner_ad_unit_id">ca-app-pub-2835136610089326/2369727491</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="about">About</string>
+    <string name="about_app">About %s</string>
     <string name="login">Last.fm Login</string>
     <string name="password">Password</string>
     <string name="network_is_not_connected">Network is not connected</string>
 
-    <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
-    <string name="button_list">Recent</string>
     <string name="button_scrobble">Scrobble</string>
     <string name="button_time">Set Time</string>
     <string name="button_date">Set Date</string>
@@ -34,9 +21,7 @@
     <string name="action_filter">Filter</string>
     <string name="action_refresh">Refresh</string>
     <string name="open_in_browser">Open web page</string>
-    <string name="logout">Logout</string>
     <string name="scrobbles">Scrobbles</string>
-    <string name="recent">Recent</string>
     <string name="manual_scrobble">Manual Scrobble</string>
     <string name="top_tracks">Top Tracks</string>
     <string name="top_artists">Top Artists</string>
@@ -48,6 +33,25 @@
     <string name="scrobble_ignored_message">Scrobble was ignored. Probably because of timestamp was too old or new</string>
     <string name="scrobble_accepted">Scrobble was accepted</string>
     <string name="all_scrobbles_are_loaded">All scrobbles are loaded</string>
+    <string name="all_items_are_loaded">All items are loaded</string>
     <string name="offline_mode_message">Network is unavailable. App will show data from offline storage</string>
     <string name="error_occurred">Error occurred</string>
+
+    <string name="filter_dialog_title">Show scrobbles</string>
+    <string name="filter_dialog_accept">Filter</string>
+    <string name="filter_dialog_all">All</string>
+    <string name="filter_dialog_cancel">Cancel</string>
+    <string name="filter_dialog_wrong_input">Wrong dates</string>
+
+    <string name="manual_fragment_fill_required_fields">"Fill required fields \"Track title\", \"Artist\", \"Duration\""</string>
+    <string name="manual_fragment_nonnumerical_input">"Nonnumerical input"</string>
+
+    <string name="no_scrobbles_within_period">"No scrobbles\nwithin "</string>
+    <string name="no_scrobbles">"No scrobbles</string>
+    <string name="no_items">Nothing in rankings.\nHave you already scrobbled?\n:)</string>
+    <string name="recent_scrobbles_count">Scrobbles: %d</string>
+    <string name="top_scrobbles_count">"%s scrobbles"</string>
+    <string name="listeners_count">%s listeners</string>
+    <string name="search_fragment_no_result">Nothing found</string>
+    <string name="total_items">Total: %s</string>
 </resources>
