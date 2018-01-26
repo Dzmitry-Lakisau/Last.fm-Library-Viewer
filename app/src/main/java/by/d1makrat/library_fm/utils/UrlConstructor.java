@@ -1,4 +1,4 @@
-package by.d1makrat.library_fm;
+package by.d1makrat.library_fm.utils;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,7 +11,14 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.*;
 
+import by.d1makrat.library_fm.AppContext;
+import by.d1makrat.library_fm.BuildConfig;
+
 import static by.d1makrat.library_fm.BuildConfig.SECRET;
+import static by.d1makrat.library_fm.Constants.ALBUM_KEY;
+import static by.d1makrat.library_fm.Constants.ARTIST_KEY;
+import static by.d1makrat.library_fm.Constants.DATE_LONG_DEFAUT_VALUE;
+import static by.d1makrat.library_fm.Constants.TRACK_KEY;
 
 public class UrlConstructor {
 
@@ -28,7 +35,7 @@ public class UrlConstructor {
     private static final String API_SIGNATURE_KEY = "api_sig=";
     private static final String FORMAT_KEY = "format=json";
     private static final String METHOD_GET_ARTIST_TRACKS_VALUE = "user.getArtistTracks";
-    private static final String ARTIST_KEY = "artist";
+//    private static final String ARTIST_KEY = ARTIST_KEY;
     private static final String START_TIMESTAMP_KEY = "startTimestamp";
     private static final String END_TIMESTAMP_KEY = "endTimestamp";
     private static final String METHOD_GET_MOBILE_SESSION_VALUE = "auth.getMobileSession";
@@ -40,8 +47,8 @@ public class UrlConstructor {
     private static final String METHOD_GET_USER_TOP_ARTISTS_VALUE = "user.getTopArtists";
     private static final String METHOD_GET_USER_TOP_TRACKS_VALUE = "user.getTopTracks";
     private static final String METHOD_SEARCH_ARTISTS_VALUE = "artist.search";
-    private static final String TRACK_KEY = "track";
-    private static final String ALBUM_KEY = "album";
+//    private static final String TRACK_KEY = TRACK_KEY;
+//    private static final String ALBUM_KEY = ALBUM_KEY;
     private static final String TRACK_NUMBER_KEY = "trackNumber";
     private static final String TRACK_DURATION_KEY = "duration";
     private static final String TIMESTAMP_KEY = "timestamp";
@@ -56,7 +63,7 @@ public class UrlConstructor {
     }
 
     @NonNull
-    private String generateApiSignature(Map<String, String> params) {
+    private String generateApiSignature(TreeMap<String, String> params) {
         StringBuilder stringBuilder = new StringBuilder();
         for (Map.Entry<String, String> e : params.entrySet()) {
             stringBuilder.append(e.getKey()).append(e.getValue());
@@ -65,34 +72,37 @@ public class UrlConstructor {
         return new String(Hex.encodeHex(DigestUtils.md5(stringBuilder.toString())));
     }
 
-    public URL constructRecentScrobblesApiRequestUrl(String pPage, @Nullable String pFrom, @Nullable String pTo) throws MalformedURLException {//URL MUST be encoded. hash is not.
-
-        TreeMap<String, String> requestParams = new TreeMap<>();
-
-        requestParams.put(APIKEY_KEY, BuildConfig.API_KEY);
-        requestParams.put(SESSIONKEY_KEY, mSessionKey);
-        requestParams.put(USER_KEY, mUsername);
-        requestParams.put(SCROBBLES_PER_PAGE_KEY, mPerPage);
-        requestParams.put(METHOD_KEY, METHOD_GET_RECENT_TRACKS_VALUE);
-        requestParams.put(PAGE_KEY, pPage);
-        if (pFrom != null) requestParams.put(FROM_KEY, pFrom);
-        if (pTo != null) requestParams.put(TO_KEY, pTo);
-
-        String apiSignature = generateApiSignature(requestParams);
+    private URL appendParams(Map<String, String> pParams) throws MalformedURLException{
+        String apiSignature = generateApiSignature(new TreeMap<>(pParams));
         StringBuilder stringBuilder = new StringBuilder(API_BASE_URL);
-        for (Map.Entry<String, String> e : requestParams.entrySet()) {
+        for (Map.Entry<String, String> e : pParams.entrySet()) {
             stringBuilder.append(e.getKey()).append("=").append(URLEncoder.encode(e.getValue())).append("&");
         }
-
         stringBuilder.append(API_SIGNATURE_KEY).append(apiSignature).append("&");
         stringBuilder.append(FORMAT_KEY);
 
         return new URL(stringBuilder.toString());
     }
 
-    public URL constructScrobblesByArtistApiRequestUrl(String pArtist, String pPage, String pFrom, String pTo) throws MalformedURLException {
+    public URL constructRecentScrobblesApiRequestUrl(int pPage, Long pFrom, Long pTo) throws MalformedURLException {//URL MUST be encoded. hash is not.
 
-        TreeMap<String, String> requestParams = new TreeMap<>();
+        Map<String, String> requestParams = new TreeMap<>();
+
+        requestParams.put(APIKEY_KEY, BuildConfig.API_KEY);
+        requestParams.put(SESSIONKEY_KEY, mSessionKey);
+        requestParams.put(USER_KEY, mUsername);
+        requestParams.put(SCROBBLES_PER_PAGE_KEY, mPerPage);
+        requestParams.put(METHOD_KEY, METHOD_GET_RECENT_TRACKS_VALUE);
+        requestParams.put(PAGE_KEY, String.valueOf(pPage));
+        if (pFrom.equals(DATE_LONG_DEFAUT_VALUE)) requestParams.put(FROM_KEY, String.valueOf(pFrom));
+        if (pTo.equals(DATE_LONG_DEFAUT_VALUE)) requestParams.put(TO_KEY, String.valueOf(pTo));
+
+        return appendParams(requestParams);
+    }
+
+    public URL constructScrobblesByArtistApiRequestUrl(String pArtist, int pPage, Long pFrom, Long pTo) throws MalformedURLException {
+
+        Map<String, String> requestParams = new TreeMap<>();
 
         requestParams.put(APIKEY_KEY, BuildConfig.API_KEY);
         requestParams.put(SESSIONKEY_KEY, mSessionKey);
@@ -100,20 +110,11 @@ public class UrlConstructor {
         requestParams.put(SCROBBLES_PER_PAGE_KEY, mPerPage);
         requestParams.put(METHOD_KEY, METHOD_GET_ARTIST_TRACKS_VALUE);
         requestParams.put(ARTIST_KEY, pArtist);
-        requestParams.put(PAGE_KEY, pPage);
-        if (pFrom != null) requestParams.put(START_TIMESTAMP_KEY, pFrom);
-        if (pTo != null) requestParams.put(END_TIMESTAMP_KEY, pTo);
+        requestParams.put(PAGE_KEY, String.valueOf(pPage));
+        if (pFrom.equals(DATE_LONG_DEFAUT_VALUE)) requestParams.put(START_TIMESTAMP_KEY, String.valueOf(pFrom));
+        if (pTo.equals(DATE_LONG_DEFAUT_VALUE)) requestParams.put(END_TIMESTAMP_KEY, String.valueOf(pTo));
 
-        String apiSignature = generateApiSignature(requestParams);
-        StringBuilder stringBuilder = new StringBuilder(API_BASE_URL);
-        for (Map.Entry<String, String> e : requestParams.entrySet()) {
-            stringBuilder.append(e.getKey()).append("=").append(URLEncoder.encode(e.getValue())).append("&");
-        }
-
-        stringBuilder.append(API_SIGNATURE_KEY).append(apiSignature).append("&");
-        stringBuilder.append(FORMAT_KEY);
-
-        return new URL(stringBuilder.toString());
+        return appendParams(requestParams);
     }
 
     public URL constructGetSessionKeyApiRequestUrl(String pUsername, String pPassword) throws MalformedURLException {
@@ -125,123 +126,80 @@ public class UrlConstructor {
         requestParams.put(USERNAME_KEY, pUsername);
         requestParams.put(PASSWORD_KEY, pPassword);
 
-        String apiSignature = generateApiSignature(new TreeMap<>(requestParams));
-        StringBuilder stringBuilder = new StringBuilder(API_BASE_URL);
-        for (Map.Entry<String, String> e : requestParams.entrySet()) {
-            stringBuilder.append(e.getKey()).append("=").append(URLEncoder.encode(e.getValue())).append("&");
-        }
-
-        stringBuilder.append(API_SIGNATURE_KEY).append(apiSignature).append("&");
-        stringBuilder.append(FORMAT_KEY);
-
-        return new URL(stringBuilder.toString());
+        return appendParams(requestParams);
     }
 
     public URL constructGetUserInfoApiRequestUrl(@Nullable String pUsername) throws MalformedURLException {
 
-        TreeMap<String, String> requestParams = new TreeMap<>();
+        Map<String, String> requestParams = new TreeMap<>();
 
         requestParams.put(APIKEY_KEY, BuildConfig.API_KEY);
         requestParams.put(METHOD_KEY, METHOD_GET_USER_INFO);
         requestParams.put(SESSIONKEY_KEY, mSessionKey);
         if (pUsername != null) requestParams.put(USER_KEY, pUsername);
 
-        StringBuilder stringBuilder = new StringBuilder(API_BASE_URL);
-        for (Map.Entry<String, String> e : requestParams.entrySet()) {
-            stringBuilder.append(e.getKey()).append("=").append(URLEncoder.encode(e.getValue())).append("&");
-        }
-
-        stringBuilder.append(FORMAT_KEY);
-
-        return new URL(stringBuilder.toString());
+        return appendParams(requestParams);
     }
 
-    public URL constructGetUserTopAlbumsApiRequestUrl(@NonNull String pPeriod, @NonNull String pPage) throws MalformedURLException {
+    public URL constructGetUserTopAlbumsApiRequestUrl(@NonNull String pPeriod, int pPage) throws MalformedURLException {
 
-        TreeMap<String, String> requestParams = new TreeMap<>();
+        Map<String, String> requestParams = new TreeMap<>();
 
         requestParams.put(APIKEY_KEY, BuildConfig.API_KEY);
         requestParams.put(USER_KEY, mUsername);
         requestParams.put(SCROBBLES_PER_PAGE_KEY, mPerPage);
         requestParams.put(METHOD_KEY, METHOD_GET_USER_TOP_ALBUMS_VALUE);
-        requestParams.put(PAGE_KEY, pPage);
+        requestParams.put(PAGE_KEY, String.valueOf(pPage));
         requestParams.put(PERIOD_KEY, pPeriod);
 
-        StringBuilder stringBuilder = new StringBuilder(API_BASE_URL);
-        for (Map.Entry<String, String> e : requestParams.entrySet()) {
-            stringBuilder.append(e.getKey()).append("=").append(URLEncoder.encode(e.getValue())).append("&");
-        }
-
-        stringBuilder.append(FORMAT_KEY);
-
-        return new URL(stringBuilder.toString());
+        return appendParams(requestParams);
     }
 
-    public URL constructGetUserTopArtistsApiRequestUrl(@NonNull String pPeriod, @NonNull String pPage) throws MalformedURLException {
+    public URL constructGetUserTopArtistsApiRequestUrl(@NonNull String pPeriod, int pPage) throws MalformedURLException {
 
-        TreeMap<String, String> requestParams = new TreeMap<>();
+        Map<String, String> requestParams = new TreeMap<>();
 
         requestParams.put(APIKEY_KEY, BuildConfig.API_KEY);
         requestParams.put(USER_KEY, mUsername);
         requestParams.put(SCROBBLES_PER_PAGE_KEY, mPerPage);
         requestParams.put(METHOD_KEY, METHOD_GET_USER_TOP_ARTISTS_VALUE);
-        requestParams.put(PAGE_KEY, pPage);
+        requestParams.put(PAGE_KEY, String.valueOf(pPage));
         requestParams.put(PERIOD_KEY, pPeriod);
 
-        StringBuilder stringBuilder = new StringBuilder(API_BASE_URL);
-        for (Map.Entry<String, String> e : requestParams.entrySet()) {
-            stringBuilder.append(e.getKey()).append("=").append(URLEncoder.encode(e.getValue())).append("&");
-        }
-
-        stringBuilder.append(FORMAT_KEY);
-
-        return new URL(stringBuilder.toString());
+        return appendParams(requestParams);
     }
 
-    public URL constructGetUserTopTracksApiRequestUrl(@NonNull String pPeriod, @NonNull String pPage) throws MalformedURLException {
+    public URL constructGetUserTopTracksApiRequestUrl(@NonNull String pPeriod, int pPage) throws MalformedURLException {
 
-        TreeMap<String, String> requestParams = new TreeMap<>();
+        Map<String, String> requestParams = new TreeMap<>();
 
         requestParams.put(APIKEY_KEY, BuildConfig.API_KEY);
         requestParams.put(USER_KEY, mUsername);
         requestParams.put(SCROBBLES_PER_PAGE_KEY, mPerPage);
         requestParams.put(METHOD_KEY, METHOD_GET_USER_TOP_TRACKS_VALUE);
-        requestParams.put(PAGE_KEY, pPage);
+        requestParams.put(PAGE_KEY, String.valueOf(pPage));
         requestParams.put(PERIOD_KEY, pPeriod);
 
-        StringBuilder stringBuilder = new StringBuilder(API_BASE_URL);
-        for (Map.Entry<String, String> e : requestParams.entrySet()) {
-            stringBuilder.append(e.getKey()).append("=").append(URLEncoder.encode(e.getValue())).append("&");
-        }
-
-        stringBuilder.append(FORMAT_KEY);
-
-        return new URL(stringBuilder.toString());
+        return appendParams(requestParams);
     }
 
-    public URL constructSearchArtistsApiRequestUrl(@NonNull String pArtistQuery, @NonNull String pPage) throws MalformedURLException {
+    public URL constructSearchArtistsApiRequestUrl(@NonNull String pSearchQuery, int pPage) throws MalformedURLException {
 
-        TreeMap<String, String> requestParams = new TreeMap<>();
+        Map<String, String> requestParams = new TreeMap<>();
 
         requestParams.put(APIKEY_KEY, BuildConfig.API_KEY);
-        requestParams.put(ARTIST_KEY, pArtistQuery);
+        requestParams.put(ARTIST_KEY, pSearchQuery);
         requestParams.put(SCROBBLES_PER_PAGE_KEY, mPerPage);
         requestParams.put(METHOD_KEY, METHOD_SEARCH_ARTISTS_VALUE);
-        requestParams.put(PAGE_KEY, pPage);
+        requestParams.put(PAGE_KEY, String.valueOf(pPage));
 
-        StringBuilder stringBuilder = new StringBuilder(API_BASE_URL);
-        for (Map.Entry<String, String> e : requestParams.entrySet()) {
-            stringBuilder.append(e.getKey()).append("=").append(URLEncoder.encode(e.getValue())).append("&");
-        }
-
-        stringBuilder.append(FORMAT_KEY);
-
-        return new URL(stringBuilder.toString());
+        return appendParams(requestParams);
     }
 
     public URL constructSendScrobbleApiRequestUrl(@NonNull String pTrack, @NonNull String pArtist, String pAlbum, String pTrackNumber,
                                                   @NonNull String pTrackDuration, @NonNull String pTimestamp) throws MalformedURLException {
-        TreeMap<String, String> requestParams = new TreeMap<>();
+
+        Map<String, String> requestParams = new TreeMap<>();
 
         requestParams.put(APIKEY_KEY, BuildConfig.API_KEY);
         requestParams.put(SESSIONKEY_KEY, mSessionKey);
@@ -253,15 +211,6 @@ public class UrlConstructor {
         requestParams.put(TIMESTAMP_KEY, pTimestamp);
         requestParams.put(METHOD_KEY, METHOD_SCROBBLE_TRACK_VALUE);
 
-        String apiSignature = generateApiSignature(requestParams);
-        StringBuilder stringBuilder = new StringBuilder(API_BASE_URL);
-        for (Map.Entry<String, String> e : requestParams.entrySet()) {
-            stringBuilder.append(e.getKey()).append("=").append(URLEncoder.encode(e.getValue())).append("&");
-        }
-
-        stringBuilder.append(API_SIGNATURE_KEY).append(apiSignature).append("&");
-        stringBuilder.append(FORMAT_KEY);
-
-        return new URL(stringBuilder.toString());
+        return appendParams(requestParams);
     }
 }
