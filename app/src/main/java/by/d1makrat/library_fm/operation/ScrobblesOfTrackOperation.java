@@ -14,6 +14,7 @@ import by.d1makrat.library_fm.model.Scrobble;
 import by.d1makrat.library_fm.utils.UrlConstructor;
 
 import static by.d1makrat.library_fm.Constants.API_NO_ERROR;
+import static by.d1makrat.library_fm.Constants.NAME_KEY;
 
 public class ScrobblesOfTrackOperation implements IOperation<List<Scrobble>> {
 
@@ -66,7 +67,7 @@ public class ScrobblesOfTrackOperation implements IOperation<List<Scrobble>> {
 
                     page++;
                 }
-                while (response.contains("name"));
+                while (response.contains(NAME_KEY));
             }
             else {
                 trackScrobbles = databaseWorker.getScrobblesTable().getScrobblesOfTrack(artist, track, mFrom, mTo);

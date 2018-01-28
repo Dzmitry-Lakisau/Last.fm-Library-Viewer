@@ -11,10 +11,10 @@ import by.d1makrat.library_fm.image_loader.Malevich;
 import by.d1makrat.library_fm.model.User;
 
 import static by.d1makrat.library_fm.Constants.SCROBBLES_PER_PAGE_KEY;
+import static by.d1makrat.library_fm.Constants.USER_KEY;
 
 public class AppContext extends Application {
 
-    public static final String USERNAME_KEY = "username";
     public static final String SESSIONKEY_KEY = "session_key";
     private static final String DEFAULT_LIMIT = "10";
     private static AppContext mInstance;
@@ -48,7 +48,7 @@ public class AppContext extends Application {
         mPerPage = mSharedPreferences.getString(SCROBBLES_PER_PAGE_KEY, DEFAULT_LIMIT);
 
         Gson gson = new Gson();
-        String json = mSharedPreferences.getString("user", null);
+        String json = mSharedPreferences.getString(USER_KEY, null);
         mUser = gson.fromJson(json, User.class);
     }
 
@@ -74,7 +74,7 @@ public class AppContext extends Application {
 
         final Gson gson = new Gson();
         String serializedObject = gson.toJson(mUser);
-        editor.putString("user", serializedObject);
+        editor.putString(USER_KEY, serializedObject);
         editor.apply();
     }
 

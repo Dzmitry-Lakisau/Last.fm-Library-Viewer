@@ -7,9 +7,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import by.d1makrat.library_fm.ui.fragment.ItemsFragment;
 
 import static by.d1makrat.library_fm.Constants.DATE_PERIODS_FOR_API;
-import static by.d1makrat.library_fm.Constants.DATE_PERIODS_FOR_TAB_NAMES;
 
 public abstract class TabTopAdapter extends FragmentPagerAdapter {
+
+    private static final String[] DATE_PERIODS_FOR_TAB_NAMES = {"Overall", "Week", "Month", "3 months", "6 months", "Year"};
 
     TabTopAdapter(FragmentManager fm) {
         super(fm);

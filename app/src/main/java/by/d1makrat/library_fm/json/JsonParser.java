@@ -13,8 +13,14 @@ import by.d1makrat.library_fm.model.Artist;
 
 import static by.d1makrat.library_fm.Constants.API_NO_ERROR;
 import static by.d1makrat.library_fm.Constants.ARTIST_KEY;
+import static by.d1makrat.library_fm.Constants.JsonConstants.IMAGE_KEY;
+import static by.d1makrat.library_fm.Constants.JsonConstants.TEXT_KEY;
+import static by.d1makrat.library_fm.Constants.NAME_KEY;
+import static by.d1makrat.library_fm.Constants.URL_KEY;
 
 public class JsonParser {
+
+    private static final int MAX_IMAGE_RESOLUTION_INDEX = 4;
 
     public String checkForApiErrors(String pStringToParse) throws JSONException {
 
@@ -39,14 +45,14 @@ public class JsonParser {
 
             Artist artist = new Artist();
 
-            artist.setName(artistJsonObject.getString("name"));
+            artist.setName(artistJsonObject.getString(NAME_KEY));
 
             artist.setListenersCount(artistJsonObject.getString("listeners"));
 
-            artist.setUrl(artistJsonObject.getString("url"));
+            artist.setUrl(artistJsonObject.getString(URL_KEY));
 
-            JSONArray jsonArray = artistJsonObject.getJSONArray("image");
-            String imageUri = jsonArray.getJSONObject(4).getString("#text");
+            JSONArray jsonArray = artistJsonObject.getJSONArray(IMAGE_KEY);
+            String imageUri = jsonArray.getJSONObject(MAX_IMAGE_RESOLUTION_INDEX).getString(TEXT_KEY);
             artist.setImageUri(imageUri.equals("") ? null : imageUri);
 
             artists.add(artist);
@@ -61,12 +67,19 @@ public class JsonParser {
 
         JSONObject messageJsonObject = (new JSONObject(pStringToParse)).getJSONObject("scrobbles").getJSONObject("scrobble").getJSONObject("ignoredMessage");
         message = messageJsonObject.getString("code");
-        if (message.equals("0")){
-            message = "Accepted";
+        switch (message){
+            case "0":
+                return AppContext.getInstance().getString(R.string.manual_fragment_scrobble_accepted);
+            case "2":
+                return AppContext.getInstance().getString(R.string.manual_fragment_track_ignored);
+            case "3":
+                return AppContext.getInstance().getString(R.string.manual_fragment_timestamp_old);
+            case "4":
+                return AppContext.getInstance().getString(R.string.manual_fragment_timestamp_new);
+            case "5":
+                return AppContext.getInstance().getString(R.string.manual_fragment_limit_exceeded);
+            default:
+                return AppContext.getInstance().getString(R.string.manual_fragment_ignored_message);
         }
-        else
-            message = AppContext.getInstance().getString(R.string.scrobble_ignored_message);
-
-        return message;
     }
 }

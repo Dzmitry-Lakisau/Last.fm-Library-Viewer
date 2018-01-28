@@ -9,7 +9,9 @@ import org.apache.commons.codec.digest.DigestUtils;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.BuildConfig;
@@ -18,14 +20,15 @@ import static by.d1makrat.library_fm.BuildConfig.SECRET;
 import static by.d1makrat.library_fm.Constants.ALBUM_KEY;
 import static by.d1makrat.library_fm.Constants.ARTIST_KEY;
 import static by.d1makrat.library_fm.Constants.DATE_LONG_DEFAUT_VALUE;
+import static by.d1makrat.library_fm.Constants.PERIOD_KEY;
 import static by.d1makrat.library_fm.Constants.TRACK_KEY;
+import static by.d1makrat.library_fm.Constants.USER_KEY;
 
 public class UrlConstructor {
 
     private static final String API_BASE_URL = "https://ws.audioscrobbler.com/2.0/?";
     private static final String APIKEY_KEY = "api_key";
     private static final String SESSIONKEY_KEY = "sk";
-    private static final String USER_KEY = "user";
     private static final String SCROBBLES_PER_PAGE_KEY = "limit";
     private static final String METHOD_KEY = "method";
     private static final String METHOD_GET_RECENT_TRACKS_VALUE = "user.getRecentTracks";
@@ -35,20 +38,16 @@ public class UrlConstructor {
     private static final String API_SIGNATURE_KEY = "api_sig=";
     private static final String FORMAT_KEY = "format=json";
     private static final String METHOD_GET_ARTIST_TRACKS_VALUE = "user.getArtistTracks";
-//    private static final String ARTIST_KEY = ARTIST_KEY;
     private static final String START_TIMESTAMP_KEY = "startTimestamp";
     private static final String END_TIMESTAMP_KEY = "endTimestamp";
     private static final String METHOD_GET_MOBILE_SESSION_VALUE = "auth.getMobileSession";
     private static final String USERNAME_KEY = "username";
     private static final String PASSWORD_KEY = "password";
     private static final String METHOD_GET_USER_INFO = "user.getInfo";
-    private static final String PERIOD_KEY = "period";
     private static final String METHOD_GET_USER_TOP_ALBUMS_VALUE = "user.getTopAlbums";
     private static final String METHOD_GET_USER_TOP_ARTISTS_VALUE = "user.getTopArtists";
     private static final String METHOD_GET_USER_TOP_TRACKS_VALUE = "user.getTopTracks";
     private static final String METHOD_SEARCH_ARTISTS_VALUE = "artist.search";
-//    private static final String TRACK_KEY = TRACK_KEY;
-//    private static final String ALBUM_KEY = ALBUM_KEY;
     private static final String TRACK_NUMBER_KEY = "trackNumber";
     private static final String TRACK_DURATION_KEY = "duration";
     private static final String TIMESTAMP_KEY = "timestamp";

@@ -7,14 +7,16 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import by.d1makrat.library_fm.json.model.ScrobbleJson;
 import by.d1makrat.library_fm.model.Scrobble;
 
-import static by.d1makrat.library_fm.Constants.ALBUM_KEY;
-import static by.d1makrat.library_fm.Constants.ARTIST_KEY;
+import static by.d1makrat.library_fm.Constants.JsonConstants.ATTRIBUTE_KEY;
 import static by.d1makrat.library_fm.Constants.TRACK_KEY;
 
 public class ScrobblesParser {
 
+    private static final String RECENT_TRACKS_KEY = "recenttracks";
+    private static final String ARTIST_TRACKS_KEY = "artisttracks";
     private String mStringToParse;
 
     public ScrobblesParser(String pStringToParse) {
@@ -22,37 +24,38 @@ public class ScrobblesParser {
     }
 
     public List<Scrobble> parse() throws JSONException {
+        if (mStringToParse.contains(RECENT_TRACKS_KEY)) {
+            return recentScrobbles(new JSONObject(mStringToParse));
+        } else {
+            return artistScrobbles(new JSONObject(mStringToParse));
+        }
+    }
+
+    private List<Scrobble> artistScrobbles(JSONObject rootJsonObject) throws JSONException {
+        return parseJsonArray(rootJsonObject.getJSONObject(ARTIST_TRACKS_KEY).getJSONArray(TRACK_KEY));
+    }
+
+    private List<Scrobble> recentScrobbles(JSONObject rootJsonObject) throws JSONException {
+        return parseJsonArray(rootJsonObject.getJSONObject(RECENT_TRACKS_KEY).getJSONArray(TRACK_KEY));
+    }
+
+    private List<Scrobble> parseJsonArray(JSONArray scrobblesJsonArray) throws JSONException {
 
         List<Scrobble> scrobbles = new ArrayList<>();
 
-        JSONObject source = new JSONObject(mStringToParse);
+        for (int i = 0; i < scrobblesJsonArray.length(); i++) {
+            JSONObject scrobbleJsonObject = scrobblesJsonArray.getJSONObject(i);
 
-        JSONArray tracksJsonArray;
-        if (source.has("recenttracks"))
-            tracksJsonArray = source.getJSONObject("recenttracks").getJSONArray(TRACK_KEY);
-        else
-            tracksJsonArray = source.getJSONObject("artisttracks").getJSONArray(TRACK_KEY);
-
-        for (int i = 0; i < tracksJsonArray.length(); i++) {
-            JSONObject trackJsonObject = tracksJsonArray.getJSONObject(i);
-
-            if (!trackJsonObject.has("@attr")) {//TODO ?
+            if (!scrobbleJsonObject.has(ATTRIBUTE_KEY)) {//TODO parse and show scrobble that "now playing"
                 Scrobble scrobble = new Scrobble();
 
-                JSONObject jsonObject = trackJsonObject.getJSONObject(ARTIST_KEY);
-                scrobble.setArtist(jsonObject.getString("#text"));
+                ScrobbleJson scrobbleJson = new ScrobbleJson(scrobbleJsonObject);
 
-                scrobble.setTrackTitle(trackJsonObject.getString("name"));
-
-                jsonObject = trackJsonObject.getJSONObject(ALBUM_KEY);
-                scrobble.setAlbum(jsonObject.getString("#text"));
-
-                JSONArray jsonArray = trackJsonObject.getJSONArray("image");
-                String imageUri = jsonArray.getJSONObject(3).getString("#text");
-                scrobble.setImageUri(imageUri.equals("") ? null : imageUri);
-
-                jsonObject = trackJsonObject.getJSONObject("date");
-                scrobble.setDate(jsonObject.getLong("uts"));
+                scrobble.setTrackTitle(scrobbleJson.getTrack());
+                scrobble.setArtist(scrobbleJson.getArtist());
+                scrobble.setAlbum(scrobbleJson.getAlbum());
+                scrobble.setImageUri(scrobbleJson.getImageUrl());
+                scrobble.setDate(scrobbleJson.getDate());
 
                 scrobbles.add(scrobble);
             }

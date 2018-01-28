@@ -31,15 +31,16 @@ import by.d1makrat.library_fm.utils.DateUtils;
 import static by.d1makrat.library_fm.Constants.ALBUM_KEY;
 import static by.d1makrat.library_fm.Constants.ARTIST_KEY;
 import static by.d1makrat.library_fm.Constants.DATE_LONG_DEFAUT_VALUE;
-import static by.d1makrat.library_fm.Constants.DIALOG_FRAGMENT_KEY;
 import static by.d1makrat.library_fm.Constants.FILTER_DIALOG_FROM_BUNDLE_KEY;
 import static by.d1makrat.library_fm.Constants.FILTER_DIALOG_TO_BUNDLE_KEY;
-import static by.d1makrat.library_fm.Constants.SCROBBLES_OF_ALBUM_TAG;
 import static by.d1makrat.library_fm.Constants.SCROBBLES_OF_ARTIST_TAG;
-import static by.d1makrat.library_fm.Constants.SCROBBLES_OF_TRACK_TAG;
 import static by.d1makrat.library_fm.Constants.TRACK_KEY;
 
 public abstract class ScrobblesFragment extends ItemsFragment<Scrobble> implements FilterDialogFragment.FilterDialogListener, GetItemsCallback<Scrobble> {
+
+    private static final String SCROBBLES_OF_TRACK_TAG = "ScrobblesOfTrackFragment";
+    private static final String SCROBBLES_OF_ALBUM_TAG = "ScrobblesOfAlbumFragment";
+    private static final String FILTER_DIALOG_KEY = "FilterDialogFragment";
 
     private TextView listHeadTextView;
 
@@ -109,7 +110,7 @@ public abstract class ScrobblesFragment extends ItemsFragment<Scrobble> implemen
                     args.putLong(FILTER_DIALOG_TO_BUNDLE_KEY, mTo);
                     dialogFragment.setArguments(args);
                     dialogFragment.setTargetFragment(this, 0);
-                    dialogFragment.show(getFragmentManager(), DIALOG_FRAGMENT_KEY);
+                    dialogFragment.show(getFragmentManager(), FILTER_DIALOG_KEY);
                 }
                 return true;
             case R.id.open_in_browser:

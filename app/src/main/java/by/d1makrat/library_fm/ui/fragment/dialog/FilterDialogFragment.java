@@ -20,12 +20,13 @@ import java.util.concurrent.TimeUnit;
 
 import by.d1makrat.library_fm.R;
 
-import static by.d1makrat.library_fm.Constants.DATE_LASTFM_LAUNCHED;
 import static by.d1makrat.library_fm.Constants.DATE_LONG_DEFAUT_VALUE;
 import static by.d1makrat.library_fm.Constants.FILTER_DIALOG_FROM_BUNDLE_KEY;
 import static by.d1makrat.library_fm.Constants.FILTER_DIALOG_TO_BUNDLE_KEY;
 
 public class FilterDialogFragment extends DialogFragment {
+
+    public static final Long DATE_LASTFM_LAUNCHED = 1016582400L;
 
     private Long mFrom, mTo;
     private Calendar mCalendarFrom, mCalendarTo;
