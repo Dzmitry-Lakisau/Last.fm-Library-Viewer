@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import java.net.URL;
 
 import by.d1makrat.library_fm.APIException;
+import by.d1makrat.library_fm.AppContext;
+import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.https.HttpsClient;
 import by.d1makrat.library_fm.utils.UrlConstructor;
 import by.d1makrat.library_fm.https.RequestMethod;
@@ -37,9 +39,13 @@ public class SendScrobbleAsyncTask extends AsyncTask<String, Void, String> {
 
             String errorOrNot = jsonParser.checkForApiErrors(response);
             if (!errorOrNot.equals(API_NO_ERROR))
-                mException = new APIException(errorOrNot);
-            else
+                throw new APIException(errorOrNot);
+            else {
                 result = jsonParser.parseSendScrobbleResult(response);
+                if (!result.equals(AppContext.getInstance().getString(R.string.manual_fragment_scrobble_accepted))) {
+                    throw new APIException(result);
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
             mException = e;
