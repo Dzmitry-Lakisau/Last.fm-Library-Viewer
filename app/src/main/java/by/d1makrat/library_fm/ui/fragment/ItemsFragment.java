@@ -13,6 +13,7 @@ import android.widget.Toast;
 import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.adapter.list.ItemsAdapter;
+import by.d1makrat.library_fm.ui.CenteredToast;
 
 public abstract class ItemsFragment<T> extends Fragment{
 
@@ -107,7 +108,7 @@ public abstract class ItemsFragment<T> extends Fragment{
     protected void checkIfAllIsLoaded(int size){
         if (size < AppContext.getInstance().getLimit()){
             allIsLoaded = true;
-            Toast.makeText(getActivity(), getResources().getText(R.string.all_scrobbles_are_loaded), Toast.LENGTH_SHORT).show();
+            CenteredToast.show(getContext(), R.string.all_scrobbles_are_loaded, Toast.LENGTH_SHORT);
         }
     }
 }

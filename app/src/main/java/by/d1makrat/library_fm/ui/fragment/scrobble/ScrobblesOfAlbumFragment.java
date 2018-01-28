@@ -13,6 +13,7 @@ import by.d1makrat.library_fm.asynctask.GetItemsAsyncTask;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.model.Scrobble;
 import by.d1makrat.library_fm.operation.ScrobblesOfAlbumOperation;
+import by.d1makrat.library_fm.ui.CenteredToast;
 
 import static by.d1makrat.library_fm.Constants.ALBUM_KEY;
 import static by.d1makrat.library_fm.Constants.ARTIST_KEY;
@@ -61,6 +62,6 @@ public class ScrobblesOfAlbumFragment extends ScrobblesFragment {
     @Override
     protected void checkIfAllIsLoaded(int size) {
         allIsLoaded = true;
-        Toast.makeText(getActivity(), getResources().getText(R.string.all_scrobbles_are_loaded), Toast.LENGTH_SHORT).show();
+        CenteredToast.show(getContext(), R.string.all_scrobbles_are_loaded, Toast.LENGTH_SHORT);
     }
 }

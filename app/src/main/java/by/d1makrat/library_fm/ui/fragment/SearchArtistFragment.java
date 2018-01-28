@@ -28,6 +28,7 @@ import by.d1makrat.library_fm.asynctask.GetItemsAsyncTask;
 import by.d1makrat.library_fm.asynctask.GetItemsCallback;
 import by.d1makrat.library_fm.model.Artist;
 import by.d1makrat.library_fm.operation.SearchArtistOperation;
+import by.d1makrat.library_fm.ui.CenteredToast;
 import by.d1makrat.library_fm.ui.fragment.scrobble.ScrobblesOfArtistFragment;
 import by.d1makrat.library_fm.utils.InputUtils;
 
@@ -188,7 +189,7 @@ public class SearchArtistFragment extends ItemsFragment<Artist> implements View.
         }
 
         if (pException instanceof APIException){
-            Toast.makeText(getActivity(), pException.getMessage(), Toast.LENGTH_LONG).show();
+            CenteredToast.show(getContext(), pException.getMessage(), Toast.LENGTH_SHORT);
         }
     }
 }

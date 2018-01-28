@@ -20,6 +20,7 @@ import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.asynctask.GetTopItemsCallback;
 import by.d1makrat.library_fm.operation.model.TopOperationResult;
+import by.d1makrat.library_fm.ui.CenteredToast;
 import by.d1makrat.library_fm.ui.fragment.ItemsFragment;
 
 import static by.d1makrat.library_fm.Constants.PERIOD_KEY;
@@ -113,7 +114,7 @@ public abstract class TopItemsFragment<T> extends ItemsFragment<T> implements Ge
     protected void checkIfAllIsLoaded(int size) {
         if (size < AppContext.getInstance().getLimit()){
             allIsLoaded = true;
-            Toast.makeText(getActivity(), getResources().getText(R.string.all_items_are_loaded), Toast.LENGTH_SHORT).show();//TODO strings
+            CenteredToast.show(getContext(), R.string.all_items_are_loaded, Toast.LENGTH_SHORT);//TODO strings
         }
     }
 
@@ -158,7 +159,7 @@ public abstract class TopItemsFragment<T> extends ItemsFragment<T> implements Ge
         }
 
         if (pException instanceof APIException){
-            Toast.makeText(getActivity(), pException.getMessage(), Toast.LENGTH_LONG).show();
+            CenteredToast.show(getActivity(), pException.getMessage(), Toast.LENGTH_SHORT);
         }
     }
 }

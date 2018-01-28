@@ -26,23 +26,23 @@ import java.lang.reflect.Field;
 
 import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.BuildConfig;
-import by.d1makrat.library_fm.asynctask.CheckNewVersionCallback;
-import by.d1makrat.library_fm.asynctask.GetUserInfoCallback;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.asynctask.CheckNewVersionAsyncTask;
+import by.d1makrat.library_fm.asynctask.CheckNewVersionCallback;
 import by.d1makrat.library_fm.asynctask.GetUserInfoAsyncTask;
+import by.d1makrat.library_fm.asynctask.GetUserInfoCallback;
 import by.d1makrat.library_fm.broadcast_receiver.NetworkStateReceiver;
 import by.d1makrat.library_fm.https.HttpsClient;
 import by.d1makrat.library_fm.image_loader.Malevich;
 import by.d1makrat.library_fm.model.User;
 import by.d1makrat.library_fm.ui.fragment.ManualScrobbleFragment;
-import by.d1makrat.library_fm.ui.fragment.scrobble.RecentScrobblesFragment;
 import by.d1makrat.library_fm.ui.fragment.SearchArtistFragment;
 import by.d1makrat.library_fm.ui.fragment.StartFragment;
+import by.d1makrat.library_fm.ui.fragment.dialog.UpdateDialogFragment;
+import by.d1makrat.library_fm.ui.fragment.scrobble.RecentScrobblesFragment;
 import by.d1makrat.library_fm.ui.fragment.tabTop.TabTopAlbumsFragment;
 import by.d1makrat.library_fm.ui.fragment.tabTop.TabTopArtistsFragment;
 import by.d1makrat.library_fm.ui.fragment.tabTop.TabTopTracksFragment;
-import by.d1makrat.library_fm.ui.fragment.dialog.UpdateDialogFragment;
 import by.d1makrat.library_fm.utils.InputUtils;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, GetUserInfoCallback, CheckNewVersionCallback {
@@ -251,7 +251,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onException(Exception exception) {
-//        Toast.makeText(this, getResources().getText(R.string.error_occurred), Toast.LENGTH_LONG).show();
     }
 }
-

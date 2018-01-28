@@ -15,6 +15,7 @@ import by.d1makrat.library_fm.asynctask.GetSessionKeyAsyncTask;
 import by.d1makrat.library_fm.asynctask.GetUserInfoAsyncTask;
 import by.d1makrat.library_fm.https.HttpsClient;
 import by.d1makrat.library_fm.model.User;
+import by.d1makrat.library_fm.ui.CenteredToast;
 
 import static by.d1makrat.library_fm.utils.InputUtils.hideKeyboard;
 
@@ -59,7 +60,7 @@ public class LoginActivity extends AppCompatActivity implements GetSessionKeyCal
                         mButton.setVisibility(View.INVISIBLE);
                     }
                     else
-                        Toast.makeText(getApplicationContext(), R.string.network_is_not_connected, Toast.LENGTH_SHORT).show();
+                        CenteredToast.show(getApplicationContext(), R.string.network_is_not_connected, Toast.LENGTH_SHORT);
                 }
             });
             findViewById(R.id.sign_in_page).setOnClickListener(new View.OnClickListener() {
@@ -100,7 +101,6 @@ public class LoginActivity extends AppCompatActivity implements GetSessionKeyCal
         spinner.setVisibility(View.INVISIBLE);
         mButton.setVisibility(View.VISIBLE);
 
-        Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_SHORT).show();
+        CenteredToast.show(getApplicationContext(), exception.getMessage(), Toast.LENGTH_SHORT);
     }
 }
-

@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.R;
+import by.d1makrat.library_fm.ui.CenteredToast;
 
 import static by.d1makrat.library_fm.Constants.SCROBBLES_PER_PAGE_KEY;
 
@@ -27,19 +28,16 @@ public class PreferenceActivity extends android.preference.PreferenceActivity {
                     int temp = Integer.parseInt((String) newValue);
                     if (temp > 0 && temp < 1001) {
                         if (temp > 200) {
-                            Toast toast = Toast.makeText(getApplicationContext(), "Some Last.fm requests allow maximum limit equal to 200. Limit during this requests will be equal to 200", Toast.LENGTH_LONG);
-                            TextView v = toast.getView().findViewById(android.R.id.message);
-                            if (v != null) v.setGravity(Gravity.CENTER);//TODO make toast centered everywhere
-                            toast.show();
+                            CenteredToast.show(getApplicationContext(), "Some Last.fm requests allow maximum limit equal to 200. Limit during this requests will be equal to 200", Toast.LENGTH_SHORT);
                         }
                         AppContext.getInstance().setLimit(String.valueOf(temp));
                         return true;
                     } else {
-                        (Toast.makeText(getApplicationContext(), "Value must be between 1 and 1000 including", Toast.LENGTH_LONG)).show();
+                        CenteredToast.show(getApplicationContext(), "Value must be between 1 and 1000 including", Toast.LENGTH_SHORT);
                         return false;
                     }
                 } catch (NumberFormatException e) {
-                    (Toast.makeText(getApplicationContext(), "Nonnumerical input", Toast.LENGTH_LONG)).show();
+                    CenteredToast.show(getApplicationContext(), "Nonnumerical input", Toast.LENGTH_SHORT);
                     return false;
                 }
             }

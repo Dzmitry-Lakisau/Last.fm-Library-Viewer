@@ -22,6 +22,7 @@ import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.asynctask.SendScrobbleCallback;
 import by.d1makrat.library_fm.asynctask.SendScrobbleAsyncTask;
 import by.d1makrat.library_fm.https.HttpsClient;
+import by.d1makrat.library_fm.ui.CenteredToast;
 import by.d1makrat.library_fm.utils.InputUtils;
 
 public class ManualScrobbleFragment extends Fragment implements CalendarDatePickerDialogFragment.OnDateSetListener, RadialTimePickerDialogFragment.OnTimeSetListener, SendScrobbleCallback {
@@ -70,7 +71,7 @@ public class ManualScrobbleFragment extends Fragment implements CalendarDatePick
 
 					if (artist.equals("") || track.equals("") || trackDuration.equals("")) {
 						mSpinner.setVisibility(View.INVISIBLE);
-						Toast.makeText(getContext(), getString(R.string.manual_fragment_fill_required_fields), Toast.LENGTH_SHORT).show();
+						CenteredToast.show(getContext(), R.string.manual_fragment_fill_required_fields, Toast.LENGTH_SHORT);
 					}
 					else
 					if (TextUtils.isDigitsOnly(trackNumber) && TextUtils.isDigitsOnly(trackDuration)){
@@ -81,10 +82,10 @@ public class ManualScrobbleFragment extends Fragment implements CalendarDatePick
 						mSendScrobbleAsyncTask.execute(asynctaskArgs);
 					}
 					else
-						Toast.makeText(getContext(), getString(R.string.manual_fragment_nonnumerical_input), Toast.LENGTH_SHORT).show();
+						CenteredToast.show(getContext(), R.string.manual_fragment_nonnumerical_input, Toast.LENGTH_SHORT);
 				}
 				else
-					Toast.makeText(getContext(), R.string.network_is_not_connected, Toast.LENGTH_SHORT).show();
+					CenteredToast.show(getContext(), R.string.network_is_not_connected, Toast.LENGTH_SHORT);
 			}
 		});
 		rootView.findViewById(R.id.button_date).setOnClickListener(new View.OnClickListener() {
@@ -164,7 +165,7 @@ public class ManualScrobbleFragment extends Fragment implements CalendarDatePick
 		if (getView() != null)
 			getView().findViewById(R.id.button_scrobble).setEnabled(true);
 		mSpinner.setVisibility(View.INVISIBLE);
-		Toast.makeText(getActivity(), pException.getMessage(), Toast.LENGTH_LONG).show();
+		CenteredToast.show(getContext(), pException.getMessage(), Toast.LENGTH_SHORT);
 	}
 
 	@Override
@@ -172,6 +173,6 @@ public class ManualScrobbleFragment extends Fragment implements CalendarDatePick
 		if (getView() != null)
 			getView().findViewById(R.id.button_scrobble).setEnabled(true);
 		mSpinner.setVisibility(View.INVISIBLE);
-		Toast.makeText(getActivity(), result, Toast.LENGTH_LONG).show();
+		CenteredToast.show(getContext(), result, Toast.LENGTH_SHORT);
 	}
 }

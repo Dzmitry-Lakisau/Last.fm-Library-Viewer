@@ -24,6 +24,7 @@ import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.adapter.list.ScrobblesAdapter;
 import by.d1makrat.library_fm.asynctask.GetItemsCallback;
 import by.d1makrat.library_fm.model.Scrobble;
+import by.d1makrat.library_fm.ui.CenteredToast;
 import by.d1makrat.library_fm.ui.fragment.ItemsFragment;
 import by.d1makrat.library_fm.ui.fragment.dialog.FilterDialogFragment;
 import by.d1makrat.library_fm.utils.DateUtils;
@@ -260,7 +261,7 @@ public abstract class ScrobblesFragment extends ItemsFragment<Scrobble> implemen
         }
         //TODO ? add footer with retry behavior
         if (pException instanceof APIException){
-            Toast.makeText(getActivity(), pException.getMessage(), Toast.LENGTH_LONG).show();//TODO check if get context may nullpointerexception on api before 23
+            CenteredToast.show(getContext(), pException.getMessage(), Toast.LENGTH_SHORT);
         }
     }
 }

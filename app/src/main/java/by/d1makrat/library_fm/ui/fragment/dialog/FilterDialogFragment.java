@@ -19,6 +19,7 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import by.d1makrat.library_fm.R;
+import by.d1makrat.library_fm.ui.CenteredToast;
 
 import static by.d1makrat.library_fm.Constants.DATE_LONG_DEFAUT_VALUE;
 import static by.d1makrat.library_fm.Constants.FILTER_DIALOG_FROM_BUNDLE_KEY;
@@ -102,8 +103,7 @@ public class FilterDialogFragment extends DialogFragment {
                 calendar_to.set(year, month, day, 23, 59, 59);
                 mTo = TimeUnit.MILLISECONDS.toSeconds(calendar_to.getTimeInMillis());
                 if (mFrom > mTo || mTo < DATE_LASTFM_LAUNCHED ){
-                    Toast toast = Toast.makeText(getContext(), R.string.filter_dialog_wrong_input, Toast.LENGTH_SHORT);
-                    toast.show();
+                    CenteredToast.show(getContext(), R.string.filter_dialog_wrong_input, Toast.LENGTH_SHORT);
                 }
                 else mFilterDialogListener.onFinishFilterDialog(mFrom, mTo);
             }
