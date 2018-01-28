@@ -94,8 +94,8 @@ public class UrlConstructor {
         requestParams.put(SCROBBLES_PER_PAGE_KEY, mPerPage);
         requestParams.put(METHOD_KEY, METHOD_GET_RECENT_TRACKS_VALUE);
         requestParams.put(PAGE_KEY, String.valueOf(pPage));
-        if (pFrom.equals(DATE_LONG_DEFAUT_VALUE)) requestParams.put(FROM_KEY, String.valueOf(pFrom));
-        if (pTo.equals(DATE_LONG_DEFAUT_VALUE)) requestParams.put(TO_KEY, String.valueOf(pTo));
+        if (!pFrom.equals(DATE_LONG_DEFAUT_VALUE)) requestParams.put(FROM_KEY, String.valueOf(pFrom));
+        if (!pTo.equals(DATE_LONG_DEFAUT_VALUE)) requestParams.put(TO_KEY, String.valueOf(pTo));
 
         return appendParams(requestParams);
     }
@@ -111,8 +111,8 @@ public class UrlConstructor {
         requestParams.put(METHOD_KEY, METHOD_GET_ARTIST_TRACKS_VALUE);
         requestParams.put(ARTIST_KEY, pArtist);
         requestParams.put(PAGE_KEY, String.valueOf(pPage));
-        if (pFrom.equals(DATE_LONG_DEFAUT_VALUE)) requestParams.put(START_TIMESTAMP_KEY, String.valueOf(pFrom));
-        if (pTo.equals(DATE_LONG_DEFAUT_VALUE)) requestParams.put(END_TIMESTAMP_KEY, String.valueOf(pTo));
+        if (!pFrom.equals(DATE_LONG_DEFAUT_VALUE)) requestParams.put(START_TIMESTAMP_KEY, String.valueOf(pFrom));
+        if (!pTo.equals(DATE_LONG_DEFAUT_VALUE)) requestParams.put(END_TIMESTAMP_KEY, String.valueOf(pTo));
 
         return appendParams(requestParams);
     }
