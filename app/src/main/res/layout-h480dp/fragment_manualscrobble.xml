@@ -115,7 +115,7 @@
             android:text="@string/button_scrobble"
             android:id="@+id/button_scrobble"
             android:layout_marginBottom="16dp"
-            android:background="@color/dark_red"
+            android:background="@drawable/button"
             android:layout_alignLeft="@+id/button_date"
             android:layout_alignRight="@id/button_time"
             android:layout_below="@id/progressBar"

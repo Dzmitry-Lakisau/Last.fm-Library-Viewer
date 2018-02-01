@@ -15,8 +15,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -38,12 +38,13 @@ import static by.d1makrat.library_fm.Constants.SCROBBLES_OF_ARTIST_TAG;
 public class SearchArtistFragment extends ItemsFragment<Artist> implements View.OnClickListener, GetItemsCallback<Artist>{
 
     private String mSearchQuery;
+    private Button mSearchButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mUrlForBrowser = "https://www.last.fm/fragment_search/artists?q=";
+        mUrlForBrowser = "https://www.last.fm/search/artists?q=";
     }
 
     @Override
@@ -73,10 +74,26 @@ public class SearchArtistFragment extends ItemsFragment<Artist> implements View.
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.search));
 
-        rootView.findViewById(R.id.search_button).setOnClickListener(new View.OnClickListener() {
+        mSearchButton = rootView.findViewById(R.id.search_button);
+
+        ((EditText) rootView.findViewById(R.id.search_field)).addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+                mSearchButton.setEnabled(s.length() > 0);
+                mSearchQuery = s.toString();
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
+
+        mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isLoading && mSearchQuery.length() > 0) {
+                if (!isLoading) {
                     InputUtils.hideKeyboard(getActivity());
 
                     mListAdapter.removeAll();
@@ -88,20 +105,6 @@ public class SearchArtistFragment extends ItemsFragment<Artist> implements View.
                     mPage = 1;
                     loadItems();
                 }
-            }
-        });
-
-        rootView.<EditText>findViewById(R.id.search_field).addTextChangedListener(new TextWatcher() {
-
-            public void afterTextChanged(Editable s) {
-                rootView.findViewById(R.id.search_button).setEnabled(true);
-                mSearchQuery = ((TextView) rootView.findViewById(R.id.search_field)).getText().toString();
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
         });
 

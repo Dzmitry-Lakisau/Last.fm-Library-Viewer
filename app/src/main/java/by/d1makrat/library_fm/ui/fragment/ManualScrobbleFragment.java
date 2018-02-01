@@ -5,10 +5,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +36,8 @@ public class ManualScrobbleFragment extends Fragment implements CalendarDatePick
 	private Calendar mCalendar;
 	private View mSpinner;
 	private SendScrobbleCallback mCallback;
+	private EditText mArtistEditText, mTrackEditText, mTrackDurationEditText;
+	private Button mScrobbleButton;
 
 	@Override
 	public void onCreate(Bundle savedInstance){
@@ -52,9 +58,10 @@ public class ManualScrobbleFragment extends Fragment implements CalendarDatePick
 		super.onCreate(savedInstanceState);
 
 		final View rootView = inflater.inflate(R.layout.fragment_manualscrobble, container, false);
-		(rootView.findViewById(R.id.button_scrobble)).setEnabled(true);
 
-		rootView.findViewById(R.id.button_scrobble).setOnClickListener(new View.OnClickListener() {
+		mScrobbleButton = rootView.findViewById(R.id.button_scrobble);
+		mScrobbleButton.setEnabled(false);
+		mScrobbleButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				InputUtils.hideKeyboard(getActivity());
@@ -69,11 +76,6 @@ public class ManualScrobbleFragment extends Fragment implements CalendarDatePick
 					mCalendar.set(mYear, mMonth, mDay, mHour, mMinute, 0);
 					Long timestamp = (TimeUnit.MILLISECONDS.toSeconds(mCalendar.getTimeInMillis()));
 
-					if (artist.equals("") || track.equals("") || trackDuration.equals("")) {
-						mSpinner.setVisibility(View.INVISIBLE);
-						CenteredToast.show(getContext(), R.string.manual_fragment_fill_required_fields, Toast.LENGTH_SHORT);
-					}
-					else
 					if (TextUtils.isDigitsOnly(trackNumber) && TextUtils.isDigitsOnly(trackDuration)){
 						v.setEnabled(false);
 						mSpinner.setVisibility(View.VISIBLE);
@@ -125,15 +127,33 @@ public class ManualScrobbleFragment extends Fragment implements CalendarDatePick
 		mSpinner = rootView.findViewById(R.id.progressBar);
 		mSpinner.setVisibility(View.INVISIBLE);
 
+		mArtistEditText = rootView.findViewById(R.id.artist);
+		mArtistEditText.addTextChangedListener(mTextWatcher);
+
+		mTrackEditText = rootView.findViewById(R.id.track);
+		mTrackEditText.addTextChangedListener(mTextWatcher);
+
+		mTrackDurationEditText = rootView.findViewById(R.id.trackduration);
+		mTrackDurationEditText.addTextChangedListener(mTextWatcher);
+
 		((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.manual_scrobble));
 
 		return rootView;
 	}
 
-//	private void hideKeyboard() {
-//		InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
-//		inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
-//	}
+	private TextWatcher mTextWatcher = new TextWatcher() {
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+		@Override
+		public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+		@Override
+		public void afterTextChanged(Editable s) {
+			mScrobbleButton.setEnabled(mArtistEditText.getText().toString().length() > 0 &&
+					mTrackEditText.getText().toString().length() > 0 && mTrackDurationEditText.getText().toString().length() > 0);
+		}
+	};
 
 	@Override
 	public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
@@ -162,16 +182,14 @@ public class ManualScrobbleFragment extends Fragment implements CalendarDatePick
 
 	@Override
 	public void onException(Exception pException) {
-		if (getView() != null)
-			getView().findViewById(R.id.button_scrobble).setEnabled(true);
+//		mScrobbleButton.setEnabled(true);
 		mSpinner.setVisibility(View.INVISIBLE);
 		CenteredToast.show(getContext(), pException.getMessage(), Toast.LENGTH_SHORT);
 	}
 
 	@Override
 	public void onSendScrobbleResult(String result) {
-		if (getView() != null)
-			getView().findViewById(R.id.button_scrobble).setEnabled(true);
+//		mScrobbleButton.setEnabled(true);
 		mSpinner.setVisibility(View.INVISIBLE);
 		CenteredToast.show(getContext(), result, Toast.LENGTH_SHORT);
 	}

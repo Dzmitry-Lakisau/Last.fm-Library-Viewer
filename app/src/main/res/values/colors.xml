@@ -4,4 +4,5 @@
     <color name="light_red">#9a0202</color>
     <color name="dark_red">#60060a</color>
     <color name="black">#000000</color>
+    <color name="deactivated_button">#C60D17</color>
 </resources>
