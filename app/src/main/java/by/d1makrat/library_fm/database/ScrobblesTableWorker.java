@@ -20,6 +20,7 @@ import static by.d1makrat.library_fm.Constants.DatabaseConstants.COLUMN_DATE;
 import static by.d1makrat.library_fm.Constants.DatabaseConstants.COLUMN_IMAGEURI;
 import static by.d1makrat.library_fm.Constants.DatabaseConstants.COLUMN_TRACK;
 import static by.d1makrat.library_fm.Constants.DatabaseConstants.DATABASE_SCROBBLES_TABLE;
+import static by.d1makrat.library_fm.Constants.EMPTY_STRING;
 
 public class ScrobblesTableWorker {
 
@@ -53,7 +54,7 @@ public class ScrobblesTableWorker {
                 contentValues.put(COLUMN_DATE, item.getDate());
                 contentValues.put(COLUMN_IMAGEURI, item.getImageUri());
 
-                database.insertWithOnConflict(DATABASE_SCROBBLES_TABLE, "", contentValues, SQLiteDatabase.CONFLICT_IGNORE);
+                database.insertWithOnConflict(DATABASE_SCROBBLES_TABLE, EMPTY_STRING, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
 
                 inserted++;
             }

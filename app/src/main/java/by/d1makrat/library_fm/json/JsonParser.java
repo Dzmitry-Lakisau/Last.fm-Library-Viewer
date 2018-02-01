@@ -13,6 +13,7 @@ import by.d1makrat.library_fm.model.Artist;
 
 import static by.d1makrat.library_fm.Constants.API_NO_ERROR;
 import static by.d1makrat.library_fm.Constants.ARTIST_KEY;
+import static by.d1makrat.library_fm.Constants.EMPTY_STRING;
 import static by.d1makrat.library_fm.Constants.JsonConstants.IMAGE_KEY;
 import static by.d1makrat.library_fm.Constants.JsonConstants.TEXT_KEY;
 import static by.d1makrat.library_fm.Constants.NAME_KEY;
@@ -53,7 +54,7 @@ public class JsonParser {
 
             JSONArray jsonArray = artistJsonObject.getJSONArray(IMAGE_KEY);
             String imageUri = jsonArray.getJSONObject(MAX_IMAGE_RESOLUTION_INDEX).getString(TEXT_KEY);
-            artist.setImageUri(imageUri.equals("") ? null : imageUri);
+            artist.setImageUri(imageUri.equals(EMPTY_STRING) ? null : imageUri);
 
             artists.add(artist);
         }

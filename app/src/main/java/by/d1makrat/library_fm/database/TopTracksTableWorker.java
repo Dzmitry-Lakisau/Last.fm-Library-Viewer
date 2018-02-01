@@ -19,6 +19,7 @@ import static by.d1makrat.library_fm.Constants.DatabaseConstants.COLUMN_PLAYCOUN
 import static by.d1makrat.library_fm.Constants.DatabaseConstants.COLUMN_RANK;
 import static by.d1makrat.library_fm.Constants.DatabaseConstants.COLUMN_TRACK;
 import static by.d1makrat.library_fm.Constants.DatabaseConstants.DATABASE_TOP_TRACKS_TABLE;
+import static by.d1makrat.library_fm.Constants.EMPTY_STRING;
 
 public class TopTracksTableWorker {
 
@@ -44,7 +45,7 @@ public class TopTracksTableWorker {
                 contentValues.put(COLUMN_IMAGEURI, item.getImageUri());
                 contentValues.put(COLUMN_PERIOD, pPeriod);
 
-                database.insertWithOnConflict(DATABASE_TOP_TRACKS_TABLE, "", contentValues, SQLiteDatabase.CONFLICT_IGNORE);
+                database.insertWithOnConflict(DATABASE_TOP_TRACKS_TABLE, EMPTY_STRING, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
 
                 inserted++;
             }

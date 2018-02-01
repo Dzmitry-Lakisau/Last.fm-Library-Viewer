@@ -13,6 +13,7 @@ import by.d1makrat.library_fm.model.TopTrack;
 
 import static by.d1makrat.library_fm.Constants.ALBUM_KEY;
 import static by.d1makrat.library_fm.Constants.ARTIST_KEY;
+import static by.d1makrat.library_fm.Constants.EMPTY_STRING;
 import static by.d1makrat.library_fm.Constants.JsonConstants.ATTRIBUTE_KEY;
 import static by.d1makrat.library_fm.Constants.JsonConstants.IMAGE_KEY;
 import static by.d1makrat.library_fm.Constants.JsonConstants.TEXT_KEY;
@@ -53,7 +54,7 @@ public class TopsParser {
 
             JSONArray jsonArray = albumJsonObject.getJSONArray(IMAGE_KEY);
             String imageUri = jsonArray.getJSONObject(MAX_IMAGE_RESOLUTION_INDEX).getString(TEXT_KEY);
-            altopAlbumum.setImageUri(imageUri.equals("") ? null : imageUri);
+            altopAlbumum.setImageUri(imageUri.equals(EMPTY_STRING) ? null : imageUri);
 
             altopAlbumum.setRank(albumJsonObject.getJSONObject(ATTRIBUTE_KEY).getString(RANK_KEY));
 
@@ -80,7 +81,7 @@ public class TopsParser {
 
             JSONArray jsonArray = artistsJsonObject.getJSONArray(IMAGE_KEY);
             String imageUri = jsonArray.getJSONObject(MAX_IMAGE_RESOLUTION_INDEX).getString(TEXT_KEY);
-            topArtist.setImageUri(imageUri.equals("") ? null : imageUri);
+            topArtist.setImageUri(imageUri.equals(EMPTY_STRING) ? null : imageUri);
 
             topArtist.setRank(artistsJsonObject.getJSONObject(ATTRIBUTE_KEY).getString(RANK_KEY));
 
@@ -109,7 +110,7 @@ public class TopsParser {
 
             JSONArray jsonArray = trackJsonObject.getJSONArray(IMAGE_KEY);
             String imageUri = jsonArray.getJSONObject(MAX_IMAGE_RESOLUTION_INDEX).getString(TEXT_KEY);
-            topTrack.setImageUri(imageUri.equals("") ? null : imageUri);
+            topTrack.setImageUri(imageUri.equals(EMPTY_STRING) ? null : imageUri);
 
             topTrack.setRank(trackJsonObject.getJSONObject(ATTRIBUTE_KEY).getString(RANK_KEY));
 

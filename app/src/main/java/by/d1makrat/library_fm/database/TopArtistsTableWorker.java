@@ -18,6 +18,7 @@ import static by.d1makrat.library_fm.Constants.DatabaseConstants.COLUMN_PERIOD;
 import static by.d1makrat.library_fm.Constants.DatabaseConstants.COLUMN_PLAYCOUNT;
 import static by.d1makrat.library_fm.Constants.DatabaseConstants.COLUMN_RANK;
 import static by.d1makrat.library_fm.Constants.DatabaseConstants.DATABASE_TOP_ARTISTS_TABLE;
+import static by.d1makrat.library_fm.Constants.EMPTY_STRING;
 
 public class TopArtistsTableWorker {
 
@@ -42,7 +43,7 @@ public class TopArtistsTableWorker {
                 contentValues.put(COLUMN_IMAGEURI, item.getImageUri());
                 contentValues.put(COLUMN_PERIOD, pPeriod);
 
-                database.insertWithOnConflict(DATABASE_TOP_ARTISTS_TABLE, "", contentValues, SQLiteDatabase.CONFLICT_IGNORE);
+                database.insertWithOnConflict(DATABASE_TOP_ARTISTS_TABLE, EMPTY_STRING, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
 
                 inserted++;
             }

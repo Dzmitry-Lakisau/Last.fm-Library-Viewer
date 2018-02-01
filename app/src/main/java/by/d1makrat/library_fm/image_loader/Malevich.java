@@ -24,6 +24,8 @@ import by.d1makrat.library_fm.image_loader.streams.FileStreamProvider;
 import by.d1makrat.library_fm.image_loader.streams.HttpStreamProvider;
 import by.d1makrat.library_fm.image_loader.util.IOUtils;
 
+import static by.d1makrat.library_fm.Constants.EMPTY_STRING;
+
 public enum Malevich {
 
     INSTANCE;
@@ -105,7 +107,7 @@ public enum Malevich {
 
         imageView.setImageDrawable(request.placeholderDrawable);
 
-        if (request.url != null && !request.url.equals("")) {
+        if (request.url != null && !request.url.equals(EMPTY_STRING)) {
             Log.d(TAG, "enqueue for " + request.url);
             if (imageHasSize(request)) {
                 imageView.setTag(request.url);
