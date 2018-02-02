@@ -224,7 +224,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ((TextView) headerView.findViewById(R.id.user_name)).setText(pUser.getUsername());
 
         ImageView avatarInHeader = headerView.findViewById(R.id.nav_header_image);
-        Malevich.INSTANCE.load(pUser.getAvatarUri()).instead(ContextCompat.getDrawable(this, R.drawable.img_app_logo_large)).into(avatarInHeader);
+        Malevich.INSTANCE.load(pUser.getAvatarUri()).onError(ContextCompat.getDrawable(this, R.drawable.img_app_logo_large)).into(avatarInHeader);
     }
 
     @Override

@@ -9,6 +9,7 @@ class ImageRequest {
     String url;
     WeakReference<ImageView> target;
     Drawable placeholderDrawable;
+    Drawable onErrorDrawable;
     int width;
     int height;
 
@@ -16,13 +17,15 @@ class ImageRequest {
         url = builder.url;
         target = builder.target;
         placeholderDrawable = builder.placeholderDrawable;
+        onErrorDrawable = builder.onErrorDrawable;
     }
 
     public static final class Builder {
         private final Malevich malevich;
         private String url;
         private WeakReference<ImageView> target;
-        Drawable placeholderDrawable;
+        private Drawable placeholderDrawable;
+        private Drawable onErrorDrawable;
 
         Builder(Malevich malevich) {
             this.malevich = malevich;
@@ -35,6 +38,11 @@ class ImageRequest {
 
         public Builder instead(Drawable pPlaceholderDrawable) {
             placeholderDrawable = pPlaceholderDrawable;
+            return this;
+        }
+
+        public Builder onError(Drawable pOnErrorDrawable){
+            onErrorDrawable = pOnErrorDrawable;
             return this;
         }
 

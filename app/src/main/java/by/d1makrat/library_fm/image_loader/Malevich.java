@@ -93,9 +93,12 @@ public enum Malevich {
                     Object tag = imageView.getTag();
                     if (tag != null && tag.equals(request.url)) {
                         imageView.setImageBitmap(imageResult.getBitmap());
-                        Log.d(TAG, "set image " + request.url + " for " + tag);
+                        Log.d(TAG, "set image " + request.url + " for " + imageView.toString());
                     }
                 }
+            }
+            else if (request.onErrorDrawable != null){
+                imageView.setImageDrawable(request.onErrorDrawable);
             }
         }
     }

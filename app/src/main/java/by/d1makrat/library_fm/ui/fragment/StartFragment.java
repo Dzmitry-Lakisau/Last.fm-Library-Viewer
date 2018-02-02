@@ -45,7 +45,8 @@ public class StartFragment extends Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(null);
 
         User user = AppContext.getInstance().getUser();
-        Malevich.INSTANCE.load(user.getAvatarUri()).instead(ContextCompat.getDrawable(getActivity(), R.drawable.img_app_logo_large)).into((ImageView) rootView.findViewById(R.id.user_avatar_start_screen));
+        Malevich.INSTANCE.load(user.getAvatarUri()).onError(ContextCompat.getDrawable(getActivity(), R.drawable.img_app_logo_large)).
+                into((ImageView) rootView.findViewById(R.id.user_avatar_start_screen));
 
         TextView textView = rootView.findViewById(R.id.hello_start_screen);
         textView.setText(String.format("You are logged in as %s.\n%s scrobbles since %s.\nExplore your music!", user.getUsername(), user.getPlaycount(), user.getRegistered()));
