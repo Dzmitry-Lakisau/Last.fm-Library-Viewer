@@ -1,44 +1,104 @@
 package by.d1makrat.library_fm.ui.activity;
 
+import android.app.Activity;
+import android.database.SQLException;
 import android.os.Bundle;
-import android.preference.EditTextPreference;
-import android.preference.Preference;
-import android.view.Gravity;
-import android.widget.TextView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
+
+import java.io.IOException;
 
 import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.R;
+import by.d1makrat.library_fm.database.DatabaseWorker;
+import by.d1makrat.library_fm.image_loader.Malevich;
 import by.d1makrat.library_fm.ui.CenteredToast;
 
-import static by.d1makrat.library_fm.Constants.SCROBBLES_PER_PAGE_KEY;
-
 //TODO write own preference window and Appsettings.getLimit to return int
-public class PreferenceActivity extends android.preference.PreferenceActivity {
+public class PreferenceActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.preferences);
-        EditTextPreference edit_Pref = (EditTextPreference) getPreferenceScreen().findPreference(SCROBBLES_PER_PAGE_KEY);
-        edit_Pref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+
+        setContentView(R.layout.activity_preferences);
+
+        ((EditText) findViewById(R.id.set_limit_editText)).setHint(String.valueOf(AppContext.getInstance().getLimit()));
+
+        ((EditText) findViewById(R.id.set_limit_editText)).addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                findViewById(R.id.set_limit_button).setEnabled(s.length() > 0);
+            }
+        });
+
+        findViewById(R.id.set_limit_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 try {
-                    int temp = Integer.parseInt((String) newValue);
+                    int temp = Integer.parseInt(((EditText) findViewById(R.id.set_limit_editText)).getText().toString());
                     if (temp > 0 && temp < 1001) {
                         if (temp > 200) {
-                            CenteredToast.show(getApplicationContext(), "Some Last.fm requests allow maximum limit equal to 200. Limit during this requests will be equal to 200", Toast.LENGTH_SHORT);
+                            CenteredToast.show(getApplicationContext(), R.string.limit_more_than_200, Toast.LENGTH_LONG);
                         }
                         AppContext.getInstance().setLimit(String.valueOf(temp));
-                        return true;
+                        CenteredToast.show(getApplicationContext(), R.string.limit_has_been_set, Toast.LENGTH_SHORT);
                     } else {
-                        CenteredToast.show(getApplicationContext(), "Value must be between 1 and 1000 including", Toast.LENGTH_SHORT);
-                        return false;
+                        CenteredToast.show(getApplicationContext(), R.string.limit_must_be_between, Toast.LENGTH_SHORT);
                     }
                 } catch (NumberFormatException e) {
-                    CenteredToast.show(getApplicationContext(), "Nonnumerical input", Toast.LENGTH_SHORT);
-                    return false;
+                    CenteredToast.show(getApplicationContext(), R.string.limit_nonnumerical_input, Toast.LENGTH_SHORT);
+                }
+            }
+        });
+
+        findViewById(R.id.clear_image_cache_textView).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Malevich.INSTANCE.clearCache();
+
+                    CenteredToast.show(getApplicationContext(), R.string.OK, Toast.LENGTH_SHORT);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    CenteredToast.show(getApplicationContext(), R.string.unable_to_clear_cache, Toast.LENGTH_SHORT);
+                }
+            }
+        });
+
+        findViewById(R.id.drop_database_textView).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {//TODO catch Exception
+                DatabaseWorker databaseWorker = new DatabaseWorker();
+
+                try {
+                    databaseWorker.openDatabase();
+                    databaseWorker.deleteScrobbles();
+                    databaseWorker.deleteTopAlbums(null);
+                    databaseWorker.deleteTopArtists(null);
+                    databaseWorker.deleteTopTracks(null);
+
+                    CenteredToast.show(getApplicationContext(), R.string.OK, Toast.LENGTH_SHORT);
+                }
+                catch (SQLException e){
+                    e.printStackTrace();
+                    CenteredToast.show(getApplicationContext(), R.string.unable_to_drop_database, Toast.LENGTH_SHORT);
+                }
+                finally {
+                    databaseWorker.closeDatabase();
                 }
             }
         });

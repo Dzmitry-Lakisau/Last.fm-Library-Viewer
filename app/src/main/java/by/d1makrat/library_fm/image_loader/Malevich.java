@@ -40,6 +40,12 @@ public enum Malevich {
         }
     }
 
+    public void clearCache() throws IOException {
+        if (diskCache != null){
+            diskCache.clear();
+        }
+    }
+
     public static class Config {
         File cacheDir;
 

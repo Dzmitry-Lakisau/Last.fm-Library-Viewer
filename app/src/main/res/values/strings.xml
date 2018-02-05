@@ -3,8 +3,7 @@
 
     <string name="app_name">Last.fm Library Viewer</string>
     <string name="banner_ad_unit_id">ca-app-pub-2835136610089326/2369727491</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="OK">OK</string>
     <string name="about_app">About %s</string>
     <string name="login">Last.fm Login</string>
     <string name="password">Password</string>
@@ -59,4 +58,15 @@
     <string name="listeners_count">%s listeners</string>
     <string name="search_fragment_no_result">Nothing found</string>
     <string name="total_items">Total: %s</string>
+
+    <string name="set_scrobbles_per_request">Amount of scrobbles to process at once</string>
+    <string name="clear_image_cache">Clear image cache</string>
+    <string name="drop_database">Delete data from offline database</string>
+    <string name="set">Set</string>
+    <string name="limit_has_been_set">Option has been set successfully</string>
+    <string name="limit_more_than_200">Some Last.fm requests allow maximum limit equal to 200. Limit during this requests will be equal to 200</string>
+    <string name="limit_must_be_between">Value must be between 1 and 1000 including</string>
+    <string name="limit_nonnumerical_input">Nonnumerical input</string>
+    <string name="unable_to_clear_cache">Unable to clear cache</string>
+    <string name="unable_to_drop_database">Unable to delete data from database</string>
 </resources>

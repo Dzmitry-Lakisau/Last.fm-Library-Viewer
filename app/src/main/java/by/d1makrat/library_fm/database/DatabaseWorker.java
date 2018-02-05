@@ -2,6 +2,7 @@ package by.d1makrat.library_fm.database;
 
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.Nullable;
 
 import by.d1makrat.library_fm.AppContext;
 
@@ -84,19 +85,28 @@ public class DatabaseWorker {
         database.execSQL(DatabaseWorker.CREATE_TOP_ALBUMS_TABLE_QUERY);
     }
 
-    private void deleteRecordsFromTable(String pTableName, String pPeriod) throws SQLException {
+    private void deleteRecordsFromTable(String pTableName, @Nullable String pPeriod) throws SQLException {
         final SQLiteDatabase database = mDatabaseHelper.getWritableDatabase();
 
         database.beginTransaction();
 
         try {
-            database.delete(pTableName, COLUMN_PERIOD + " = ?", new String[]{pPeriod});
+            if (pPeriod != null) {
+                database.delete(pTableName, COLUMN_PERIOD + " = ?", new String[]{pPeriod});
+            }
+            else {
+                database.delete(pTableName, null, null);
+            }
 
             database.setTransactionSuccessful();
         } finally {
             database.endTransaction();
             database.close();
         }
+    }
+
+    public void deleteScrobbles() throws SQLException{
+        deleteRecordsFromTable(DATABASE_SCROBBLES_TABLE, null);
     }
 
     public void deleteTopAlbums(String pPeriod) throws SQLException{

@@ -10,4 +10,6 @@ public interface DiskCache {
 	File get(String imageUri) throws IOException;
 
 	void save(String imageUri, Bitmap bitmap) throws IOException;
+
+	void clear() throws IOException;
 }

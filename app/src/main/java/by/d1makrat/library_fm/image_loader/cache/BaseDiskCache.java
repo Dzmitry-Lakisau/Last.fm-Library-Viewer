@@ -48,6 +48,25 @@ public class BaseDiskCache implements DiskCache {
     }
 
     @Override
+    public void clear() throws IOException {
+        purgeDirectory(cacheDir);
+        if (cacheDir.list().length > 0) {
+            throw new IOException("Unable to clear cache");
+        }
+    }
+
+    private void purgeDirectory(File dir) {
+        for (File file: dir.listFiles()) {
+            if (file.isDirectory()) {
+                purgeDirectory(file);
+            }
+            else {
+                file.delete();
+            }
+        }
+    }
+
+    @Override
     public File get(String imageUri) throws IOException {
 
         final String fileName =imageUri.substring(imageUri.lastIndexOf("/") + 1);
