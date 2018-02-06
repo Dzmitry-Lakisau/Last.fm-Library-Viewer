@@ -38,7 +38,7 @@ public class ScrobblesAdapter extends ItemsAdapter<Scrobble> {
         holder.bind(getItem(position), mPlaceholderDrawable);
     }
 
-    private static class ScrobbleViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener{
+    private static class ScrobbleViewHolder extends LongClickableViewHolder {
 
         private final TextView trackTextView;
         private final TextView artistTextView;
@@ -46,19 +46,14 @@ public class ScrobblesAdapter extends ItemsAdapter<Scrobble> {
         private final TextView timestampTextView;
         private final ImageView albumartImgView;
 
-        private LongClickListener mLongClickListener;
-
         ScrobbleViewHolder(View pView, LongClickListener pLongClickListener) {
-            super(pView);
+            super(pView, pLongClickListener);
 
             trackTextView = pView.findViewById(R.id.track);
             artistTextView = pView.findViewById(R.id.artist);
             albumTextView = pView.findViewById(R.id.album);
             timestampTextView = pView.findViewById(R.id.timestamp);
             albumartImgView = pView.findViewById(R.id.albumart);
-
-            pView.setOnLongClickListener(this);
-            mLongClickListener = pLongClickListener;
         }
 
         private void bind(Scrobble scrobble, Drawable pPlaceholderDrawable){
@@ -70,12 +65,6 @@ public class ScrobblesAdapter extends ItemsAdapter<Scrobble> {
 
             String imageUri = scrobble.getImageUri();
             Malevich.INSTANCE.load(imageUri).instead(pPlaceholderDrawable).into(albumartImgView);
-        }
-
-        @Override
-        public boolean onLongClick(View v) {
-            mLongClickListener.onItemLongClick(getLayoutPosition());
-            return false;
         }
     }
 }

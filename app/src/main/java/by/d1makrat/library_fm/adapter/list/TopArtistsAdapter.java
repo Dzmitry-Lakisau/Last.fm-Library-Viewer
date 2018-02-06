@@ -34,26 +34,20 @@ public class TopArtistsAdapter extends ItemsAdapter<TopArtist> {
         holder.bind(getItem(position), mPlaceholderDrawable);
     }
 
-    private static class TopArtistViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
+    private static class TopArtistViewHolder extends LongClickableViewHolder {
 
         private final TextView artistTextView;
         private final TextView playcountTextView;
         private final TextView rankTextView;
         private final ImageView albumartImgView;
 
-        private LongClickListener mLongClickListener;
-
         TopArtistViewHolder(View pView, LongClickListener pLongClickListener) {
-            super(pView);
+            super(pView, pLongClickListener);
 
             artistTextView = pView.findViewById(R.id.artistName_textView);
             playcountTextView = pView.findViewById(R.id.playcount_textView);
             rankTextView = pView.findViewById(R.id.rank);
             albumartImgView = pView.findViewById(R.id.albumart);
-
-            pView.setOnLongClickListener(this);
-
-            mLongClickListener = pLongClickListener;
         }
 
         private void bind(TopArtist topArtist, Drawable pPlaceholderDrawable){
@@ -64,12 +58,6 @@ public class TopArtistsAdapter extends ItemsAdapter<TopArtist> {
 
             String imageUri = topArtist.getImageUri();
             Malevich.INSTANCE.load(imageUri).instead(pPlaceholderDrawable).into(albumartImgView);
-        }
-
-        @Override
-        public boolean onLongClick(View v) {
-            mLongClickListener.onItemLongClick(getLayoutPosition());
-            return false;
         }
     }
 }

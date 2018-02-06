@@ -34,7 +34,7 @@ public class TopAlbumsAdapter extends ItemsAdapter<TopAlbum> {
         holder.bind(getItem(position), mPlaceholderDrawable);
     }
 
-    private static class TopAlbumViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
+    private static class TopAlbumViewHolder extends LongClickableViewHolder {
 
         private final TextView albumTextView;
         private final TextView artistTextView;
@@ -42,20 +42,14 @@ public class TopAlbumsAdapter extends ItemsAdapter<TopAlbum> {
         private final TextView rankTextView;
         private final ImageView albumartImgView;
 
-        private LongClickListener mLongClickListener;
-
         TopAlbumViewHolder(View pView, LongClickListener pLongClickListener) {
-            super(pView);
+            super(pView, pLongClickListener);
 
             albumTextView = pView.findViewById(R.id.artistName_textView);
             artistTextView = pView.findViewById(R.id.secondaryField_textView);
             playcountTextView = pView.findViewById(R.id.playcount_textView);
             rankTextView = pView.findViewById(R.id.rank);
             albumartImgView = pView.findViewById(R.id.albumart);
-
-            pView.setOnLongClickListener(this);
-
-            mLongClickListener = pLongClickListener;
         }
 
         private void bind(TopAlbum topAlbum, Drawable pPlaceholderDrawable){
@@ -67,12 +61,6 @@ public class TopAlbumsAdapter extends ItemsAdapter<TopAlbum> {
 
             String imageUri = topAlbum.getImageUri();
             Malevich.INSTANCE.load(imageUri).instead(pPlaceholderDrawable).into(albumartImgView);
-        }
-
-        @Override
-        public boolean onLongClick(View v) {
-            mLongClickListener.onItemLongClick(getLayoutPosition());
-            return false;
         }
     }
 }

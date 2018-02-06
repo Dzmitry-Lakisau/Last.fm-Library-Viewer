@@ -34,7 +34,7 @@ public class TopTracksAdapter extends ItemsAdapter<TopTrack> {
         holder.bind(getItem(position), mPlaceholderDrawable);
     }
 
-    private static class TopTrackViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
+    private static class TopTrackViewHolder extends LongClickableViewHolder {
 
         private final TextView trackTextView;
         private final TextView artistTextView;
@@ -42,20 +42,14 @@ public class TopTracksAdapter extends ItemsAdapter<TopTrack> {
         private final TextView rankTextView;
         private final ImageView albumartImgView;
 
-        private LongClickListener mLongClickListener;
-
         TopTrackViewHolder(View pView, LongClickListener pLongClickListener) {
-            super(pView);
+            super(pView, pLongClickListener);
 
             trackTextView = pView.findViewById(R.id.artistName_textView);
             artistTextView = pView.findViewById(R.id.secondaryField_textView);
             playcountTextView = pView.findViewById(R.id.playcount_textView);
             rankTextView = pView.findViewById(R.id.rank);
             albumartImgView = pView.findViewById(R.id.albumart);
-
-            pView.setOnLongClickListener(this);
-
-            mLongClickListener = pLongClickListener;
         }
 
         private void bind(TopTrack topTrack, Drawable pPlaceholderDrawable){
@@ -67,12 +61,6 @@ public class TopTracksAdapter extends ItemsAdapter<TopTrack> {
 
             String imageUri = topTrack.getImageUri();
             Malevich.INSTANCE.load(imageUri).instead(pPlaceholderDrawable).into(albumartImgView);
-        }
-
-        @Override
-        public boolean onLongClick(View v) {
-            mLongClickListener.onItemLongClick(getLayoutPosition());
-            return false;
         }
     }
 }

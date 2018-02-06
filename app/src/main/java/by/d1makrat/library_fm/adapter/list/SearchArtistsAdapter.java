@@ -15,12 +15,9 @@ import by.d1makrat.library_fm.model.Artist;
 
 public class SearchArtistsAdapter extends ItemsAdapter<Artist>{
 
-    private final View.OnClickListener mClickListener;
-
-    public SearchArtistsAdapter(LayoutInflater pLayoutInflater, Drawable pPlaceholderDrawable, View.OnClickListener pClickListener) {
+    public SearchArtistsAdapter(LayoutInflater pLayoutInflater, Drawable pPlaceholderDrawable) {
         mLayoutInflater = pLayoutInflater;
         mPlaceholderDrawable = pPlaceholderDrawable;
-        mClickListener = pClickListener;
     }
 
     @Override
@@ -28,7 +25,7 @@ public class SearchArtistsAdapter extends ItemsAdapter<Artist>{
 
         View view = mLayoutInflater.inflate(R.layout.item_artist, parent, false);
 
-        return new ArtistViewHolder(view, mClickListener);
+        return new ArtistViewHolder(view, this);
     }
 
     @Override
@@ -37,20 +34,18 @@ public class SearchArtistsAdapter extends ItemsAdapter<Artist>{
         holder.bind(getItem(position), mPlaceholderDrawable);
     }
     
-    private static class ArtistViewHolder extends RecyclerView.ViewHolder{
+    private static class ArtistViewHolder extends LongClickableViewHolder {
 
         private final TextView artistTextView;
         private final TextView playcountTextView;
         private final ImageView artistImgView;
 
-        ArtistViewHolder(View pView, View.OnClickListener pClickListener) {
-            super(pView);
+        ArtistViewHolder(View pView, LongClickListener pLongClickListener) {
+            super(pView, pLongClickListener);
 
             artistTextView = pView.findViewById(R.id.artistName_textView);
             playcountTextView = pView.findViewById(R.id.playcount_textView);
             artistImgView = pView.findViewById(R.id.artistImage_ImgView);
-
-            pView.setOnClickListener(pClickListener);
         }
 
         private void bind(Artist artist, Drawable pPlaceholderDrawable){
