@@ -32,6 +32,9 @@
 
     <string name="all_scrobbles_are_loaded">All scrobbles are loaded</string>
     <string name="all_items_are_loaded">All items are loaded</string>
+    <string name="all_albums_are_loaded">All albums are loaded</string>
+    <string name="all_artists_are_loaded">All artists are loaded</string>
+    <string name="all_tracks_are_loaded">All tracks are loaded</string>
     <string name="offline_mode_message">Network is unavailable. App will show data from offline storage</string>
     <string name="error_occurred">Error occurred</string>
 
@@ -58,6 +61,9 @@
     <string name="listeners_count">%s listeners</string>
     <string name="search_fragment_no_result">Nothing found</string>
     <string name="total_items">Total: %s</string>
+    <string name="total_albums">Total listened albums: %s</string>
+    <string name="total_artists">Total listened artists: %s</string>
+    <string name="total_tracks">Total listened tracks: %s</string>
 
     <string name="set_scrobbles_per_request">Amount of scrobbles to process at once</string>
     <string name="clear_image_cache">Clear image cache</string>
@@ -69,4 +75,8 @@
     <string name="limit_nonnumerical_input">Nonnumerical input</string>
     <string name="unable_to_clear_cache">Unable to clear cache</string>
     <string name="unable_to_drop_database">Unable to delete data from database</string>
+
+    <string name="scrobbles_of_artist">Scrobbles of this artist</string>
+    <string name="scrobbles_of_track">Scrobbles of this track</string>
+    <string name="scrobbles_of_album">Scrobbles of this album</string>
 </resources>

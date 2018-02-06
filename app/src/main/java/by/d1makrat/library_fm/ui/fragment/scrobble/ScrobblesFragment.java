@@ -20,6 +20,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import by.d1makrat.library_fm.APIException;
+import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.adapter.list.ScrobblesAdapter;
 import by.d1makrat.library_fm.asynctask.GetItemsCallback;
@@ -34,26 +35,19 @@ import static by.d1makrat.library_fm.Constants.ARTIST_KEY;
 import static by.d1makrat.library_fm.Constants.DATE_LONG_DEFAUT_VALUE;
 import static by.d1makrat.library_fm.Constants.FILTER_DIALOG_FROM_BUNDLE_KEY;
 import static by.d1makrat.library_fm.Constants.FILTER_DIALOG_TO_BUNDLE_KEY;
+import static by.d1makrat.library_fm.Constants.SCROBBLES_OF_ALBUM_TAG;
 import static by.d1makrat.library_fm.Constants.SCROBBLES_OF_ARTIST_TAG;
+import static by.d1makrat.library_fm.Constants.SCROBBLES_OF_TRACK_TAG;
 import static by.d1makrat.library_fm.Constants.TRACK_KEY;
 
 public abstract class ScrobblesFragment extends ItemsFragment<Scrobble> implements FilterDialogFragment.FilterDialogListener, GetItemsCallback<Scrobble> {
 
-    private static final String SCROBBLES_OF_TRACK_TAG = "ScrobblesOfTrackFragment";
-    private static final String SCROBBLES_OF_ALBUM_TAG = "ScrobblesOfAlbumFragment";
     private static final String FILTER_DIALOG_KEY = "FilterDialogFragment";
 
     private TextView listHeadTextView;
 
     protected Long mFrom = DATE_LONG_DEFAUT_VALUE;
     protected Long mTo = DATE_LONG_DEFAUT_VALUE;
-
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//
-//
-//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -169,7 +163,6 @@ public abstract class ScrobblesFragment extends ItemsFragment<Scrobble> implemen
         return true;
     }
 
-    @Override
     protected Fragment createFragment(String pTypeOfFragment, Scrobble scrobble){
 
         Fragment fragment = new Fragment();
@@ -244,6 +237,13 @@ public abstract class ScrobblesFragment extends ItemsFragment<Scrobble> implemen
         }
 
         checkIfAllIsLoaded(size);
+    }
+
+    protected void checkIfAllIsLoaded(int size){
+        if (size < AppContext.getInstance().getLimit()){
+            allIsLoaded = true;
+            CenteredToast.show(getContext(), R.string.all_scrobbles_are_loaded, Toast.LENGTH_SHORT);
+        }
     }
 
     @Override

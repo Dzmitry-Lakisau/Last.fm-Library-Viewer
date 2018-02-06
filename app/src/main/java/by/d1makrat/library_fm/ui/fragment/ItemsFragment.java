@@ -8,12 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import by.d1makrat.library_fm.AppContext;
-import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.adapter.list.ItemsAdapter;
-import by.d1makrat.library_fm.ui.CenteredToast;
 
 public abstract class ItemsFragment<T> extends Fragment{
 
@@ -49,7 +45,7 @@ public abstract class ItemsFragment<T> extends Fragment{
 //            loadItems();
 //    }
 
-    protected abstract Fragment createFragment(String pTypeOfFragment, T t);
+//    protected abstract Fragment createFragment(String pTypeOfFragment, T t);
 
     protected void killTaskIfRunning(AsyncTask task) {
         if (task != null && task.getStatus() != AsyncTask.Status.FINISHED) {
@@ -105,10 +101,5 @@ public abstract class ItemsFragment<T> extends Fragment{
         killTaskIfRunning(mGetItemsAsynctask);
     }
 
-    protected void checkIfAllIsLoaded(int size){
-        if (size < AppContext.getInstance().getLimit()){
-            allIsLoaded = true;
-            CenteredToast.show(getContext(), R.string.all_scrobbles_are_loaded, Toast.LENGTH_SHORT);
-        }
-    }
+    protected abstract void checkIfAllIsLoaded(int size);
 }
