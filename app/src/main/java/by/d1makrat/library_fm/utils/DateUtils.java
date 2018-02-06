@@ -20,6 +20,9 @@ public class DateUtils {
     public static String getMessageFromTimestamps(Long pFrom, Long pTo) {
 
         if (pFrom.equals(DATE_LONG_DEFAUT_VALUE) && pTo.equals(DATE_LONG_DEFAUT_VALUE)) {
+            return AppContext.getInstance().getString(R.string.no_scrobbles);
+        }
+        else {
             Date date_from = new Date(TimeUnit.SECONDS.toMillis(pFrom));
             Date date_to = new Date(TimeUnit.SECONDS.toMillis(pTo));
 
@@ -27,8 +30,7 @@ public class DateUtils {
             String string_to = new SimpleDateFormat(FORMATTING_DATE_PATTERN_FOR_MESSAGE, Locale.ENGLISH).format(date_to);
 
             return AppContext.getInstance().getString(R.string.no_scrobbles_within_period)+ string_from + " - " + string_to;
-            }
-            else return AppContext.getInstance().getString(R.string.no_scrobbles);
+        }
     }
 
     @NonNull
