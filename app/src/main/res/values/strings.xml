@@ -44,19 +44,20 @@
     <string name="filter_dialog_cancel">Cancel</string>
     <string name="filter_dialog_wrong_input">Wrong dates</string>
 
-    <string name="manual_fragment_fill_required_fields">"Fill required fields \"Track title\", \"Artist\", \"Duration\""</string>
-    <string name="manual_fragment_nonnumerical_input">"Nonnumerical input"</string>
+    <string name="manual_fragment_fill_required_fields">Fill required fields \"Track title\", \"Artist\", \"Duration\"</string>
+    <string name="manual_fragment_nonnumerical_input">Nonnumerical input</string>
     <string name="manual_fragment_ignored_message">Scrobble was ignored. Probably because of timestamp was too old or new</string>
-    <string name="manual_fragment_track_ignored">"Track was ignored"</string>
-    <string name="manual_fragment_timestamp_old">"Timestamp was too old"</string>
-    <string name="manual_fragment_timestamp_new">"Timestamp was too new"</string>
-    <string name="manual_fragment_limit_exceeded">"Daily scrobble limit exceeded"</string>
+    <string name="manual_fragment_track_ignored">Track was ignored</string>
+    <string name="manual_fragment_timestamp_old">Timestamp was too old</string>
+    <string name="manual_fragment_timestamp_new">Timestamp was too new</string>
+    <string name="manual_fragment_limit_exceeded">Daily scrobble limit exceeded</string>
     <string name="manual_fragment_scrobble_accepted">Scrobble was accepted</string>
 
     <string name="no_scrobbles_within_period">"No scrobbles\nwithin "</string>
-    <string name="no_scrobbles">"No scrobbles</string>
+    <string name="no_scrobbles">No scrobbles.\nHave you already scrobbled?\n:)</string>
     <string name="no_items">Nothing in rankings.\nHave you already scrobbled?\n:)</string>
-    <string name="recent_scrobbles_count">Scrobbles: %d</string>
+    <string name="scrobbles_count">%d scrobbles</string>
+    <string name="scrobbles_count_within_period">"%d scrobbles within "</string>
     <string name="top_scrobbles_count">"%s scrobbles"</string>
     <string name="listeners_count">%s listeners</string>
     <string name="search_fragment_no_result">Nothing found</string>

@@ -17,10 +17,15 @@ public class DateUtils {
     private static final String FORMATTING_DATE_PATTERN_FOR_URL = "yyyy-MM-dd";
     private static final String FORMATTING_DATE_PATTERN_FOR_MESSAGE = "d MMM yyyy";
 
-    public static String getMessageFromTimestamps(Long pFrom, Long pTo) {
+    public static String getMessageFromTimestamps(int pScrobbleCount, Long pFrom, Long pTo) {
 
         if (pFrom.equals(DATE_LONG_DEFAUT_VALUE) && pTo.equals(DATE_LONG_DEFAUT_VALUE)) {
-            return AppContext.getInstance().getString(R.string.no_scrobbles);
+            if (pScrobbleCount > 0) {
+                return String.format(AppContext.getInstance().getString(R.string.scrobbles_count), pScrobbleCount);
+            }
+            else {
+                return AppContext.getInstance().getString(R.string.no_scrobbles);
+            }
         }
         else {
             Date date_from = new Date(TimeUnit.SECONDS.toMillis(pFrom));
@@ -29,7 +34,12 @@ public class DateUtils {
             String string_from = new SimpleDateFormat(FORMATTING_DATE_PATTERN_FOR_MESSAGE, Locale.ENGLISH).format(date_from);
             String string_to = new SimpleDateFormat(FORMATTING_DATE_PATTERN_FOR_MESSAGE, Locale.ENGLISH).format(date_to);
 
-            return AppContext.getInstance().getString(R.string.no_scrobbles_within_period)+ string_from + " - " + string_to;
+            if (pScrobbleCount > 0) {
+                return String.format(AppContext.getInstance().getString(R.string.scrobbles_count_within_period), pScrobbleCount) + string_from + " - " + string_to;
+            }
+            else {
+                return AppContext.getInstance().getString(R.string.no_scrobbles_within_period) + string_from + " - " + string_to;
+            }
         }
     }
 

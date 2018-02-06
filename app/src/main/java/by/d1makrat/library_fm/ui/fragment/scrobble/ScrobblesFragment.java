@@ -68,7 +68,7 @@ public abstract class ScrobblesFragment extends ItemsFragment<Scrobble> implemen
             listHeadTextView.setVisibility(View.GONE);
         } else {
             listHeadTextView.setVisibility(View.VISIBLE);
-            listHeadTextView.setText(String.format(getString(R.string.recent_scrobbles_count), mListAdapter.getItemCount()));
+            listHeadTextView.setText(DateUtils.getMessageFromTimestamps(mListAdapter.getItemCount(), mFrom, mTo));
         }
 
         return rootView;
@@ -230,10 +230,10 @@ public abstract class ScrobblesFragment extends ItemsFragment<Scrobble> implemen
         if (size > 0) {
             mListAdapter.addAll(items);
             listHeadTextView.setVisibility(View.VISIBLE);
-            listHeadTextView.setText(String.format(getString(R.string.recent_scrobbles_count), mListAdapter.getItemCount()));
+            listHeadTextView.setText(DateUtils.getMessageFromTimestamps(mListAdapter.getItemCount(), mFrom, mTo));
         }
         else if (mListAdapter.isEmpty()){
-            mListAdapter.addEmptyHeader(DateUtils.getMessageFromTimestamps(mFrom, mTo));
+            mListAdapter.addEmptyHeader(DateUtils.getMessageFromTimestamps(mListAdapter.getItemCount(), mFrom, mTo));
         }
 
         checkIfAllIsLoaded(size);
