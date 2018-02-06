@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import by.d1makrat.library_fm.APIException;
+import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.adapter.list.SearchArtistsAdapter;
 import by.d1makrat.library_fm.asynctask.GetItemsAsyncTask;
@@ -35,8 +37,10 @@ import by.d1makrat.library_fm.utils.InputUtils;
 import static by.d1makrat.library_fm.Constants.ARTIST_KEY;
 import static by.d1makrat.library_fm.Constants.SCROBBLES_OF_ARTIST_TAG;
 
-public class SearchArtistFragment extends ItemsFragment<Artist> implements View.OnClickListener, GetItemsCallback<Artist>{
+public class SearchArtistFragment extends ItemsFragment<Artist> implements GetItemsCallback<Artist>{
 
+    private static final int MENU_SCROBBLES_OF_ARTIST = 0;
+    private static final int MENU_OPEN_IN_BROWSER = 1;
     private String mSearchQuery;
     private Button mSearchButton;
 
@@ -49,7 +53,7 @@ public class SearchArtistFragment extends ItemsFragment<Artist> implements View.
 
     @Override
     protected SearchArtistsAdapter createAdapter(){
-        return new SearchArtistsAdapter(getActivity().getLayoutInflater(), ContextCompat.getDrawable(getActivity(), R.drawable.ic_person), this);
+        return new SearchArtistsAdapter(getActivity().getLayoutInflater(), ContextCompat.getDrawable(getActivity(), R.drawable.ic_person));
     }
 
     @Override
@@ -70,7 +74,7 @@ public class SearchArtistFragment extends ItemsFragment<Artist> implements View.
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mListAdapter);
         mRecyclerView.addOnScrollListener(recyclerViewOnScrollListener);
-        mRecyclerView.setOnClickListener(this);
+        registerForContextMenu(mRecyclerView);
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.search));
 
@@ -112,19 +116,6 @@ public class SearchArtistFragment extends ItemsFragment<Artist> implements View.
     }
 
     @Override
-    protected Fragment createFragment(String pTypeOfFragment, Artist artist) {
-
-        String artistName = artist.getName();
-
-        Bundle bundle = new Bundle();
-        bundle.putString(ARTIST_KEY, artistName);
-
-        Fragment fragment = new ScrobblesOfArtistFragment();
-        fragment.setArguments(bundle);
-        return fragment;
-    }
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.menu_search, menu);
@@ -140,6 +131,46 @@ public class SearchArtistFragment extends ItemsFragment<Artist> implements View.
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        menu.add(0, MENU_SCROBBLES_OF_ARTIST, 0, R.string.scrobbles_of_artist);
+        menu.add(0, MENU_OPEN_IN_BROWSER, 1, R.string.open_in_browser);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case MENU_SCROBBLES_OF_ARTIST:
+                InputUtils.hideKeyboard(getActivity());//TODO ? delete
+
+                Artist listItemPressed = mListAdapter.getSelectedItem();
+
+                Bundle bundle = new Bundle();
+                bundle.putString(ARTIST_KEY, listItemPressed.getName());
+
+                Fragment fragment = new ScrobblesOfArtistFragment();
+                fragment.setArguments(bundle);
+
+                getFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.appear_from_right, R.anim.disappear_to_left,
+                                R.anim.appear_from_left, R.anim.disappear_to_right)
+                        .replace(R.id.content_main, fragment, SCROBBLES_OF_ARTIST_TAG)
+                        .addToBackStack(null)
+                        .commit();
+                return true;
+            case MENU_OPEN_IN_BROWSER:
+                listItemPressed = mListAdapter.getSelectedItem();
+                Uri address = Uri.parse(listItemPressed.getUrl());
+                Intent intent = new Intent(Intent.ACTION_VIEW, address);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onContextItemSelected(item);
         }
     }
 
@@ -163,20 +194,11 @@ public class SearchArtistFragment extends ItemsFragment<Artist> implements View.
         checkIfAllIsLoaded(size);
     }
 
-    @Override
-    public void onClick(View view) {
-        InputUtils.hideKeyboard(getActivity());
-
-        int clickedItemPosition = mRecyclerView.getChildAdapterPosition(view);
-
-        Fragment fragment = createFragment(SCROBBLES_OF_ARTIST_TAG, mListAdapter.getItem(clickedItemPosition));
-
-        getFragmentManager().beginTransaction()
-                .setCustomAnimations(R.anim.appear_from_right, R.anim.disappear_to_left,
-                        R.anim.appear_from_left, R.anim.disappear_to_right)
-                .replace(R.id.content_main, fragment, SCROBBLES_OF_ARTIST_TAG)
-                .addToBackStack(null)
-                .commit();
+    protected void checkIfAllIsLoaded(int size){
+        if (size < AppContext.getInstance().getLimit()){
+            allIsLoaded = true;
+            CenteredToast.show(getContext(), R.string.all_artists_are_loaded, Toast.LENGTH_SHORT);
+        }
     }
 
     @Override

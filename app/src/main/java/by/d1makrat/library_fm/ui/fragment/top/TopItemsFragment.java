@@ -1,9 +1,7 @@
 package by.d1makrat.library_fm.ui.fragment.top;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,7 +14,6 @@ import android.widget.Toast;
 import java.util.List;
 
 import by.d1makrat.library_fm.APIException;
-import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.asynctask.GetTopItemsCallback;
 import by.d1makrat.library_fm.operation.model.TopOperationResult;
@@ -27,9 +24,13 @@ import static by.d1makrat.library_fm.Constants.PERIOD_KEY;
 
 public abstract class TopItemsFragment<T> extends ItemsFragment<T> implements GetTopItemsCallback<T> {
 
+    protected static final int MENU_SCROBBLES_OF_ARTIST = 0;
+    protected static final int MENU_SCROBBLES_OF_TRACK = 1;
+    protected static final int MENU_SCROBBLES_OF_ALBUM = 2;
+
     protected String mPeriod;
-    private TextView listHeadTextView;
-    private String listHeadText;
+    protected TextView listHeadTextView;
+    protected String listHeadText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,11 +40,6 @@ public abstract class TopItemsFragment<T> extends ItemsFragment<T> implements Ge
 
         loadItems();
     }
-
-//    @Override
-//    protected void checkIfAllIsLoaded(int size) {
-//        super.checkIfAllIsLoaded(size);
-//    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -72,15 +68,6 @@ public abstract class TopItemsFragment<T> extends ItemsFragment<T> implements Ge
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        return super.onContextItemSelected(item);
-    }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.list_with_head, container, false);
 
@@ -105,18 +92,10 @@ public abstract class TopItemsFragment<T> extends ItemsFragment<T> implements Ge
         return rootView;
     }
 
-    @Override
-    protected Fragment createFragment(String pTypeOfFragment, T t) {
-        return null;
-    }
-
-    @Override
-    protected void checkIfAllIsLoaded(int size) {
-        if (size < AppContext.getInstance().getLimit()){
-            allIsLoaded = true;
-            CenteredToast.show(getContext(), R.string.all_items_are_loaded, Toast.LENGTH_SHORT);//TODO strings
-        }
-    }
+//    @Override
+//    protected Fragment createFragment(String pTypeOfFragment, T t) {
+//        return null;
+//    }
 
     @Override
     public void onLoadingSuccessful(TopOperationResult<T> result) {
@@ -133,9 +112,7 @@ public abstract class TopItemsFragment<T> extends ItemsFragment<T> implements Ge
         int size = items.size();
         if (size > 0) {
             mListAdapter.addAll(items);
-            listHeadText = String.format(getString(R.string.total_items), itemsCount);
-            listHeadTextView.setVisibility(View.VISIBLE);
-            listHeadTextView.setText(listHeadText);
+            setUpListHead(itemsCount);
         }
         else if (mListAdapter.isEmpty()){
             mListAdapter.addEmptyHeader(getString(R.string.no_items));
@@ -143,6 +120,8 @@ public abstract class TopItemsFragment<T> extends ItemsFragment<T> implements Ge
 
         checkIfAllIsLoaded(size);
     }
+
+    public abstract void setUpListHead(String itemsCount);
 
     @Override
     public void onException(Exception pException) {
