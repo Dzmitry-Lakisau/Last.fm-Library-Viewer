@@ -42,7 +42,7 @@ public class ScrobblesOfAlbumOperation implements IOperation<List<Scrobble>> {
                 int page = 1;
                 do {
                     UrlConstructor urlConstructor = new UrlConstructor();
-                    URL apiRequestUrl = urlConstructor.constructScrobblesByArtistApiRequestUrl(artist, page, mFrom, mTo);
+                    URL apiRequestUrl = urlConstructor.constructScrobblesOfArtistApiRequestUrl(artist, page, mFrom, mTo);
 
                     HttpsClient httpsClient = new HttpsClient();
                     response = httpsClient.request(apiRequestUrl, RequestMethod.GET);

@@ -101,7 +101,7 @@ public class UrlConstructor {
         return appendParams(requestParams);
     }
 
-    public URL constructScrobblesByArtistApiRequestUrl(String pArtist, int pPage, Long pFrom, Long pTo) throws MalformedURLException {
+    public URL constructScrobblesOfArtistApiRequestUrl(String pArtist, int pPage, Long pFrom, Long pTo) throws MalformedURLException {
 
         Map<String, String> requestParams = new TreeMap<>();
 
@@ -147,7 +147,7 @@ public class UrlConstructor {
         return appendParams(requestParams);
     }
 
-    public URL constructGetUserTopAlbumsApiRequestUrl(@NonNull String pPeriod, int pPage) throws MalformedURLException {
+    public URL constructTopAlbumsApiRequestUrl(@NonNull String pPeriod, int pPage) throws MalformedURLException {
 
         Map<String, String> requestParams = new TreeMap<>();
 
@@ -161,7 +161,7 @@ public class UrlConstructor {
         return appendParams(requestParams);
     }
 
-    public URL constructGetUserTopArtistsApiRequestUrl(@NonNull String pPeriod, int pPage) throws MalformedURLException {
+    public URL constructTopArtistsApiRequestUrl(@NonNull String pPeriod, int pPage) throws MalformedURLException {
 
         Map<String, String> requestParams = new TreeMap<>();
 
@@ -175,7 +175,7 @@ public class UrlConstructor {
         return appendParams(requestParams);
     }
 
-    public URL constructGetUserTopTracksApiRequestUrl(@NonNull String pPeriod, int pPage) throws MalformedURLException {
+    public URL constructTopTracksApiRequestUrl(@NonNull String pPeriod, int pPage) throws MalformedURLException {
 
         Map<String, String> requestParams = new TreeMap<>();
 
@@ -189,7 +189,7 @@ public class UrlConstructor {
         return appendParams(requestParams);
     }
 
-    public URL constructSearchArtistsApiRequestUrl(@NonNull String pSearchQuery, int pPage) throws MalformedURLException {
+    public URL constructSearchArtistApiRequestUrl(@NonNull String pSearchQuery, int pPage) throws MalformedURLException {
 
         Map<String, String> requestParams = new TreeMap<>();
 

@@ -37,7 +37,7 @@ public class TopArtistsOperation implements IOperation<TopOperationResult<TopArt
 
             if (HttpsClient.isNetworkAvailable()) {
                 UrlConstructor urlConstructor = new UrlConstructor();
-                URL apiRequestUrl = urlConstructor.constructGetUserTopArtistsApiRequestUrl(period, mPage);
+                URL apiRequestUrl = urlConstructor.constructTopArtistsApiRequestUrl(period, mPage);
 
                 HttpsClient httpsClient = new HttpsClient();
                 String response = httpsClient.request(apiRequestUrl, RequestMethod.GET);

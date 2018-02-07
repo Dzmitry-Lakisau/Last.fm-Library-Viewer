@@ -37,7 +37,7 @@ public class TopTracksOperation implements IOperation<TopOperationResult<TopTrac
 
             if (HttpsClient.isNetworkAvailable()) {
                 UrlConstructor urlConstructor = new UrlConstructor();
-                URL apiRequestUrl = urlConstructor.constructGetUserTopTracksApiRequestUrl(period, mPage);
+                URL apiRequestUrl = urlConstructor.constructTopTracksApiRequestUrl(period, mPage);
 
                 HttpsClient httpsClient = new HttpsClient();
                 String response = httpsClient.request(apiRequestUrl, RequestMethod.GET);

@@ -38,7 +38,7 @@ public class ScrobblesOfArtistOperation implements IOperation<List<Scrobble>> {
 
             if (HttpsClient.isNetworkAvailable()) {
                 UrlConstructor urlConstructor = new UrlConstructor();
-                apiRequestUrl = urlConstructor.constructScrobblesByArtistApiRequestUrl(artist, mPage, mFrom, mTo);
+                apiRequestUrl = urlConstructor.constructScrobblesOfArtistApiRequestUrl(artist, mPage, mFrom, mTo);
 
                 HttpsClient httpsClient = new HttpsClient();
                 String response = httpsClient.request(apiRequestUrl, RequestMethod.GET);

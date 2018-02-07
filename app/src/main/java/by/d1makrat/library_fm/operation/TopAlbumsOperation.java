@@ -37,7 +37,7 @@ public class TopAlbumsOperation implements IOperation<TopOperationResult<TopAlbu
 
             if (HttpsClient.isNetworkAvailable()) {
                 UrlConstructor urlConstructor = new UrlConstructor();
-                URL apiRequestUrl = urlConstructor.constructGetUserTopAlbumsApiRequestUrl(period, mPage);
+                URL apiRequestUrl = urlConstructor.constructTopAlbumsApiRequestUrl(period, mPage);
 
                 HttpsClient httpsClient = new HttpsClient();
                 String response = httpsClient.request(apiRequestUrl, RequestMethod.GET);

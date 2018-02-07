@@ -26,7 +26,7 @@ public class SearchArtistOperation implements IOperation<List<Artist>> {
     public List<Artist> perform() throws Exception {
 
         UrlConstructor urlConstructor = new UrlConstructor();
-        URL apiRequestUrl = urlConstructor.constructSearchArtistsApiRequestUrl(mSearchQuery, mPage);
+        URL apiRequestUrl = urlConstructor.constructSearchArtistApiRequestUrl(mSearchQuery, mPage);
 
         HttpsClient httpsClient = new HttpsClient();
         String response = httpsClient.request(apiRequestUrl, RequestMethod.GET);
