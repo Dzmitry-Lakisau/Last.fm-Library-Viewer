@@ -146,8 +146,6 @@ public class SearchArtistFragment extends ItemsFragment<Artist> implements GetIt
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case MENU_SCROBBLES_OF_ARTIST:
-                InputUtils.hideKeyboard(getActivity());//TODO ? delete
-
                 Artist listItemPressed = mListAdapter.getSelectedItem();
 
                 Bundle bundle = new Bundle();

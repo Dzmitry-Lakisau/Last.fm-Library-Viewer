@@ -36,7 +36,6 @@ public class ScrobblesOfArtistFragment extends ScrobblesFragment {
 
         return rootView;
     }
-//TODO check behaviour for limit>200
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo){
