@@ -28,6 +28,7 @@ public final class Constants {
     public static final String[] DATE_PERIODS_FOR_API = {"overall", "7day", "1month", "3month", "6month", "12month"};
 
     public static final String API_NO_ERROR = "No error";
+    public static final int API_MAX_FOR_SCROBBLES_BY_ARTIST = 200;
 
     public static final Long DATE_LONG_DEFAUT_VALUE = -1L;
 

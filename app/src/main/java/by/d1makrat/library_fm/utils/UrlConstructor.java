@@ -18,6 +18,7 @@ import by.d1makrat.library_fm.BuildConfig;
 
 import static by.d1makrat.library_fm.BuildConfig.SECRET;
 import static by.d1makrat.library_fm.Constants.ALBUM_KEY;
+import static by.d1makrat.library_fm.Constants.API_MAX_FOR_SCROBBLES_BY_ARTIST;
 import static by.d1makrat.library_fm.Constants.ARTIST_KEY;
 import static by.d1makrat.library_fm.Constants.DATE_LONG_DEFAUT_VALUE;
 import static by.d1makrat.library_fm.Constants.PERIOD_KEY;
@@ -53,12 +54,13 @@ public class UrlConstructor {
     private static final String TIMESTAMP_KEY = "timestamp";
     private static final String METHOD_SCROBBLE_TRACK_VALUE = "track.scrobble";
 
-    private String mSessionKey, mUsername, mPerPage;
+    private String mSessionKey, mUsername;
+    private int mItemsPerRequest;
 
     public UrlConstructor() {
         mSessionKey = AppContext.getInstance().getSessionKey();
         mUsername = AppContext.getInstance().getUser() != null ? AppContext.getInstance().getUser().getUsername() : null ;
-        mPerPage = String.valueOf(AppContext.getInstance().getLimit());
+        mItemsPerRequest = AppContext.getInstance().getLimit();
     }
 
     @NonNull
@@ -90,7 +92,7 @@ public class UrlConstructor {
         requestParams.put(APIKEY_KEY, BuildConfig.API_KEY);
         requestParams.put(SESSIONKEY_KEY, mSessionKey);
         requestParams.put(USER_KEY, mUsername);
-        requestParams.put(SCROBBLES_PER_PAGE_KEY, mPerPage);
+        requestParams.put(SCROBBLES_PER_PAGE_KEY, String.valueOf(mItemsPerRequest));
         requestParams.put(METHOD_KEY, METHOD_GET_RECENT_TRACKS_VALUE);
         requestParams.put(PAGE_KEY, String.valueOf(pPage));
         if (!pFrom.equals(DATE_LONG_DEFAUT_VALUE)) requestParams.put(FROM_KEY, String.valueOf(pFrom));
@@ -106,7 +108,12 @@ public class UrlConstructor {
         requestParams.put(APIKEY_KEY, BuildConfig.API_KEY);
         requestParams.put(SESSIONKEY_KEY, mSessionKey);
         requestParams.put(USER_KEY, mUsername);
-        requestParams.put(SCROBBLES_PER_PAGE_KEY, mPerPage);
+
+        if (mItemsPerRequest > API_MAX_FOR_SCROBBLES_BY_ARTIST) {
+            requestParams.put(SCROBBLES_PER_PAGE_KEY, String.valueOf(API_MAX_FOR_SCROBBLES_BY_ARTIST));
+        }
+        else requestParams.put(SCROBBLES_PER_PAGE_KEY, String.valueOf(mItemsPerRequest));
+
         requestParams.put(METHOD_KEY, METHOD_GET_ARTIST_TRACKS_VALUE);
         requestParams.put(ARTIST_KEY, pArtist);
         requestParams.put(PAGE_KEY, String.valueOf(pPage));
@@ -146,7 +153,7 @@ public class UrlConstructor {
 
         requestParams.put(APIKEY_KEY, BuildConfig.API_KEY);
         requestParams.put(USER_KEY, mUsername);
-        requestParams.put(SCROBBLES_PER_PAGE_KEY, mPerPage);
+        requestParams.put(SCROBBLES_PER_PAGE_KEY, String.valueOf(mItemsPerRequest));
         requestParams.put(METHOD_KEY, METHOD_GET_USER_TOP_ALBUMS_VALUE);
         requestParams.put(PAGE_KEY, String.valueOf(pPage));
         requestParams.put(PERIOD_KEY, pPeriod);
@@ -160,7 +167,7 @@ public class UrlConstructor {
 
         requestParams.put(APIKEY_KEY, BuildConfig.API_KEY);
         requestParams.put(USER_KEY, mUsername);
-        requestParams.put(SCROBBLES_PER_PAGE_KEY, mPerPage);
+        requestParams.put(SCROBBLES_PER_PAGE_KEY, String.valueOf(mItemsPerRequest));
         requestParams.put(METHOD_KEY, METHOD_GET_USER_TOP_ARTISTS_VALUE);
         requestParams.put(PAGE_KEY, String.valueOf(pPage));
         requestParams.put(PERIOD_KEY, pPeriod);
@@ -174,7 +181,7 @@ public class UrlConstructor {
 
         requestParams.put(APIKEY_KEY, BuildConfig.API_KEY);
         requestParams.put(USER_KEY, mUsername);
-        requestParams.put(SCROBBLES_PER_PAGE_KEY, mPerPage);
+        requestParams.put(SCROBBLES_PER_PAGE_KEY, String.valueOf(mItemsPerRequest));
         requestParams.put(METHOD_KEY, METHOD_GET_USER_TOP_TRACKS_VALUE);
         requestParams.put(PAGE_KEY, String.valueOf(pPage));
         requestParams.put(PERIOD_KEY, pPeriod);
@@ -188,7 +195,7 @@ public class UrlConstructor {
 
         requestParams.put(APIKEY_KEY, BuildConfig.API_KEY);
         requestParams.put(ARTIST_KEY, pSearchQuery);
-        requestParams.put(SCROBBLES_PER_PAGE_KEY, mPerPage);
+        requestParams.put(SCROBBLES_PER_PAGE_KEY, String.valueOf(mItemsPerRequest));
         requestParams.put(METHOD_KEY, METHOD_SEARCH_ARTISTS_VALUE);
         requestParams.put(PAGE_KEY, String.valueOf(pPage));
 

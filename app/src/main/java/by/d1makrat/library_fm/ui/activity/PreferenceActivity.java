@@ -17,8 +17,11 @@ import by.d1makrat.library_fm.database.DatabaseWorker;
 import by.d1makrat.library_fm.image_loader.Malevich;
 import by.d1makrat.library_fm.ui.CenteredToast;
 
-//TODO write own preference window and Appsettings.getLimit to return int
+import static by.d1makrat.library_fm.Constants.API_MAX_FOR_SCROBBLES_BY_ARTIST;
+
 public class PreferenceActivity extends Activity {
+
+    private static final int MAX_ITEMS_PER_REQUEST = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +53,8 @@ public class PreferenceActivity extends Activity {
             public void onClick(View v) {
                 try {
                     int temp = Integer.parseInt(((EditText) findViewById(R.id.set_limit_editText)).getText().toString());
-                    if (temp > 0 && temp < 1001) {
-                        if (temp > 200) {
+                    if (temp > 0 && temp <= MAX_ITEMS_PER_REQUEST) {
+                        if (temp > API_MAX_FOR_SCROBBLES_BY_ARTIST) {
                             CenteredToast.show(getApplicationContext(), R.string.limit_more_than_200, Toast.LENGTH_LONG);
                         }
                         AppContext.getInstance().setLimit(String.valueOf(temp));
