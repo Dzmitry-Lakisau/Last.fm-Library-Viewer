@@ -2,14 +2,29 @@ package by.d1makrat.library_fm.ui.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.Toast;
 
+import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.adapter.list.ItemsAdapter;
+import by.d1makrat.library_fm.ui.CenteredToast;
+import by.d1makrat.library_fm.ui.fragment.scrobble.ScrobblesOfAlbumFragment;
+import by.d1makrat.library_fm.ui.fragment.scrobble.ScrobblesOfArtistFragment;
+import by.d1makrat.library_fm.ui.fragment.scrobble.ScrobblesOfTrackFragment;
+
+import static by.d1makrat.library_fm.Constants.ALBUM_KEY;
+import static by.d1makrat.library_fm.Constants.ARTIST_KEY;
+import static by.d1makrat.library_fm.Constants.SCROBBLES_OF_ALBUM_TAG;
+import static by.d1makrat.library_fm.Constants.SCROBBLES_OF_ARTIST_TAG;
+import static by.d1makrat.library_fm.Constants.SCROBBLES_OF_TRACK_TAG;
+import static by.d1makrat.library_fm.Constants.TRACK_KEY;
 
 public abstract class ItemsFragment<T> extends Fragment{
 
@@ -22,7 +37,7 @@ public abstract class ItemsFragment<T> extends Fragment{
 
     protected AsyncTask mGetItemsAsynctask;
     protected ItemsAdapter<T> mListAdapter;
-    protected LinearLayoutManager mLayoutManager;
+    private LinearLayoutManager mLayoutManager;
     protected RecyclerView mRecyclerView;
     protected int mPage = 1;
 
@@ -35,17 +50,13 @@ public abstract class ItemsFragment<T> extends Fragment{
         mListAdapter = createAdapter();
     }
 
-    public abstract View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
-
 //    @Override
-//    public void onStart() {
-//        super.onStart();
-//
-//        if (!isViewAlreadyCreated)
-//            loadItems();
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        menu.clear();
+//        inflater.inflate(R.menu.menu_options, menu);
 //    }
 
-//    protected abstract Fragment createFragment(String pTypeOfFragment, T t);
+//    public abstract View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
 
     protected void killTaskIfRunning(AsyncTask task) {
         if (task != null && task.getStatus() != AsyncTask.Status.FINISHED) {
@@ -102,4 +113,74 @@ public abstract class ItemsFragment<T> extends Fragment{
     }
 
     protected abstract void checkIfAllIsLoaded(int size);
+
+    public void onException(Exception pException) {//TODO ? add footer with retry behavior
+        isLoading = false;
+
+        mListAdapter.removeAllHeadersAndFooters();
+
+        mPage--;
+
+        if (mListAdapter.isEmpty()) {
+            mListAdapter.addErrorHeader();
+        }
+
+        CenteredToast.show(getContext(), pException.getMessage(), Toast.LENGTH_SHORT);
+    }
+
+    protected void setUpRecyclerView(View pRootView){
+
+        mRecyclerView = pRootView.findViewById(R.id.rv);
+
+        mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mListAdapter);
+        mRecyclerView.addOnScrollListener(recyclerViewOnScrollListener);
+        registerForContextMenu(mRecyclerView);
+    }
+
+    protected abstract void setUpActionBar(AppCompatActivity pActivity);
+
+    protected void replaceFragment(@NonNull String pArtist, @Nullable String pTrack, @Nullable String pAlbum){
+        Bundle bundle = new Bundle();
+        Fragment fragment;
+        String tag;
+
+        if (pTrack == null && pAlbum == null){
+            bundle.putString(ARTIST_KEY, pArtist);
+
+            fragment = new ScrobblesOfArtistFragment();
+            fragment.setArguments(bundle);
+
+            tag = SCROBBLES_OF_ARTIST_TAG;
+        }
+        else if (pAlbum == null) {
+            bundle.putString(ARTIST_KEY, pArtist);
+            bundle.putString(TRACK_KEY, pTrack);
+
+            fragment = new ScrobblesOfTrackFragment();
+            fragment.setArguments(bundle);
+
+            tag = SCROBBLES_OF_TRACK_TAG;
+        }
+        else {
+            bundle.putString(ARTIST_KEY, pArtist);
+            bundle.putString(ALBUM_KEY, pAlbum);
+
+            fragment = new ScrobblesOfAlbumFragment();
+            fragment.setArguments(bundle);
+
+            tag = SCROBBLES_OF_ALBUM_TAG;
+        }
+
+        FragmentActivity activity = getActivity();
+        if (activity != null) {
+            activity.getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.appear_from_right, R.anim.disappear_to_left,
+                            R.anim.appear_from_left, R.anim.disappear_to_right)
+                    .replace(R.id.content_main, fragment, tag)
+                    .addToBackStack(null)
+                    .commit();
+        }
+    }
 }

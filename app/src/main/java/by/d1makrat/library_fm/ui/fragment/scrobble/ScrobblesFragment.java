@@ -3,10 +3,8 @@ package by.d1makrat.library_fm.ui.fragment.scrobble;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,7 +17,6 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import by.d1makrat.library_fm.APIException;
 import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.adapter.list.ScrobblesAdapter;
@@ -30,15 +27,9 @@ import by.d1makrat.library_fm.ui.fragment.ItemsFragment;
 import by.d1makrat.library_fm.ui.fragment.dialog.FilterDialogFragment;
 import by.d1makrat.library_fm.utils.DateUtils;
 
-import static by.d1makrat.library_fm.Constants.ALBUM_KEY;
-import static by.d1makrat.library_fm.Constants.ARTIST_KEY;
 import static by.d1makrat.library_fm.Constants.DATE_LONG_DEFAUT_VALUE;
 import static by.d1makrat.library_fm.Constants.FILTER_DIALOG_FROM_BUNDLE_KEY;
 import static by.d1makrat.library_fm.Constants.FILTER_DIALOG_TO_BUNDLE_KEY;
-import static by.d1makrat.library_fm.Constants.SCROBBLES_OF_ALBUM_TAG;
-import static by.d1makrat.library_fm.Constants.SCROBBLES_OF_ARTIST_TAG;
-import static by.d1makrat.library_fm.Constants.SCROBBLES_OF_TRACK_TAG;
-import static by.d1makrat.library_fm.Constants.TRACK_KEY;
 
 public abstract class ScrobblesFragment extends ItemsFragment<Scrobble> implements FilterDialogFragment.FilterDialogListener, GetItemsCallback<Scrobble> {
 
@@ -54,21 +45,18 @@ public abstract class ScrobblesFragment extends ItemsFragment<Scrobble> implemen
 
         View rootView = inflater.inflate(R.layout.list_with_head, container, false);
 
-        mRecyclerView = rootView.findViewById(R.id.rv);
-
-        mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mListAdapter);
-        mRecyclerView.addOnScrollListener(recyclerViewOnScrollListener);
-        registerForContextMenu(mRecyclerView);
+        setUpRecyclerView(rootView);
+        setUpActionBar((AppCompatActivity) getActivity());
 
         listHeadTextView = rootView.findViewById(R.id.list_head);
 
         if (mListAdapter.isEmpty()) {
-            listHeadTextView.setVisibility(View.GONE);
+//            listHeadTextView.setVisibility(View.GONE);
+            setUpListHead(mListAdapter.getItemCount(), mFrom, mTo, View.GONE);
         } else {
-            listHeadTextView.setVisibility(View.VISIBLE);
-            listHeadTextView.setText(DateUtils.getMessageFromTimestamps(mListAdapter.getItemCount(), mFrom, mTo));
+//            listHeadTextView.setVisibility(View.VISIBLE);
+//            listHeadTextView.setText(DateUtils.getMessageFromTimestamps(mListAdapter.getItemCount(), mFrom, mTo));
+            setUpListHead(mListAdapter.getItemCount(), mFrom, mTo, View.VISIBLE);
         }
 
         return rootView;
@@ -77,7 +65,7 @@ public abstract class ScrobblesFragment extends ItemsFragment<Scrobble> implemen
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.menu_scrobbles, menu);
+        inflater.inflate(R.menu.menu_options, menu);
     }
 
     @Override
@@ -87,11 +75,10 @@ public abstract class ScrobblesFragment extends ItemsFragment<Scrobble> implemen
                     if (!isLoading) {
                         allIsLoaded = false;
 
-                        listHeadTextView.setVisibility(View.GONE);
-
                         killTaskIfRunning(mGetItemsAsynctask);
 
                         mListAdapter.removeAll();
+                        setUpListHead(mListAdapter.getItemCount(), mFrom, mTo, View.GONE);
 
                         mPage = 1;
                         loadItems();
@@ -137,70 +124,40 @@ public abstract class ScrobblesFragment extends ItemsFragment<Scrobble> implemen
 
         Scrobble listItemPressed = mListAdapter.getSelectedItem();
 
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction()
-                .setCustomAnimations(R.anim.appear_from_right, R.anim.disappear_to_left,
-                R.anim.appear_from_left, R.anim.disappear_to_right);
-        Fragment fragment;
-
         switch (pMenuItem.getItemId()) {
             case R.id.scrobbles_of_artist:
-                fragment = createFragment(SCROBBLES_OF_ARTIST_TAG, listItemPressed);
-                fragmentTransaction.replace(R.id.content_main, fragment, SCROBBLES_OF_ARTIST_TAG);
-                break;
+                replaceFragment(listItemPressed.getArtist(), null, null);
+                return true;
             case R.id.scrobbles_of_track:
-                fragment = createFragment(SCROBBLES_OF_TRACK_TAG, listItemPressed);
-                fragmentTransaction.replace(R.id.content_main, fragment, SCROBBLES_OF_TRACK_TAG);
-                break;
+                replaceFragment(listItemPressed.getArtist(), listItemPressed.getTrackTitle(), null);
+                return true;
             case R.id.scrobbles_of_album:
-                fragment = createFragment(SCROBBLES_OF_ALBUM_TAG, listItemPressed);
-                fragmentTransaction.replace(R.id.content_main, fragment, SCROBBLES_OF_ALBUM_TAG);
-                break;
+                replaceFragment(listItemPressed.getArtist(), null, listItemPressed.getAlbum());
+                return true;
             default:
                 return super.onContextItemSelected(pMenuItem);
         }
-        fragmentTransaction.addToBackStack(null).commit();
-
-        return true;
-    }
-
-    protected Fragment createFragment(String pTypeOfFragment, Scrobble scrobble){
-
-        Fragment fragment = new Fragment();
-        Bundle bundle = new Bundle();
-
-        String artist = scrobble.getArtist();
-
-        switch (pTypeOfFragment) {
-            case SCROBBLES_OF_ARTIST_TAG:
-                fragment = new ScrobblesOfArtistFragment();
-                break;
-            case SCROBBLES_OF_TRACK_TAG:
-                fragment = new ScrobblesOfTrackFragment();
-                bundle.putString(TRACK_KEY, scrobble.getTrackTitle());
-                break;
-            case SCROBBLES_OF_ALBUM_TAG:
-                fragment = new ScrobblesOfAlbumFragment();
-                bundle.putString(ALBUM_KEY, scrobble.getAlbum());
-                break;
-        }
-        bundle.putString(ARTIST_KEY, artist);
-        fragment.setArguments(bundle);
-        return fragment;
     }
 
     @Override
     public void onFinishFilterDialog(Long pFrom, Long pTo) {
-        listHeadTextView.setVisibility(View.GONE);
+
         allIsLoaded = false;
         mFrom = pFrom;
         mTo = pTo;
 
         mListAdapter.removeAll();
+        setUpListHead(mListAdapter.getItemCount(), mFrom, mTo, View.GONE);
 
         mPage = 1;
 
         killTaskIfRunning(mGetItemsAsynctask);
         loadItems();
+    }
+
+    private void setUpListHead(int pItemCount, Long pFrom, Long pTo, int pVisibility) {
+        listHeadTextView.setVisibility(pVisibility);
+        listHeadTextView.setText(DateUtils.getMessageFromTimestamps(pItemCount, pFrom, pTo));
     }
 
     @Override
@@ -220,17 +177,13 @@ public abstract class ScrobblesFragment extends ItemsFragment<Scrobble> implemen
     @Override
     public void onLoadingSuccessful(List<Scrobble> items) {
         isLoading = false;
-//        isViewAlreadyCreated = true;
 
         mListAdapter.removeAllHeadersAndFooters();
-
-//        isEmpty = mListAdapter.getItemCount() == 0;
 
         int size = items.size();
         if (size > 0) {
             mListAdapter.addAll(items);
-            listHeadTextView.setVisibility(View.VISIBLE);
-            listHeadTextView.setText(DateUtils.getMessageFromTimestamps(mListAdapter.getItemCount(), mFrom, mTo));
+            setUpListHead(mListAdapter.getItemCount(), mFrom, mTo, View.VISIBLE);
         }
         else if (mListAdapter.isEmpty()){
             mListAdapter.addEmptyHeader(DateUtils.getMessageFromTimestamps(mListAdapter.getItemCount(), mFrom, mTo));
@@ -246,22 +199,4 @@ public abstract class ScrobblesFragment extends ItemsFragment<Scrobble> implemen
         }
     }
 
-    @Override
-    public void onException(Exception pException) {
-        isLoading = false;
-//        isViewAlreadyCreated = true;
-
-        mListAdapter.removeAllHeadersAndFooters();
-
-        mPage--;
-
-//        isEmpty = mListAdapter.getItemCount() == 0;
-        if (mListAdapter.isEmpty()) {
-            mListAdapter.addErrorHeader();
-        }
-        //TODO ? add footer with retry behavior
-        if (pException instanceof APIException){
-            CenteredToast.show(getContext(), pException.getMessage(), Toast.LENGTH_SHORT);
-        }
-    }
 }

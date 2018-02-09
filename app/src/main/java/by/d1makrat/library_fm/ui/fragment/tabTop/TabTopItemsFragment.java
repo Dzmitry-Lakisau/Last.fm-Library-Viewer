@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.adapter.pages.TabTopAdapter;
 
-public class TabTopItemsFragment<A extends TabTopAdapter> extends Fragment {
+public abstract class TabTopItemsFragment<A extends TabTopAdapter> extends Fragment {
 
     protected A adapter;
     private ViewPager viewPager;
@@ -32,6 +32,8 @@ public class TabTopItemsFragment<A extends TabTopAdapter> extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+       adapter = createAdapter();
+
         View view = inflater.inflate(R.layout.viewpager, container, false);
         viewPager = view.findViewById(R.id.viewpager);
 //        viewPager.setOffscreenPageLimit(0);
@@ -40,10 +42,13 @@ public class TabTopItemsFragment<A extends TabTopAdapter> extends Fragment {
         return view;
     }
 
+    protected abstract A createAdapter();
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.menu_top, menu);
+        inflater.inflate(R.menu.menu_options, menu);
+        menu.removeItem(R.id.action_filter);
     }
 
     @Override

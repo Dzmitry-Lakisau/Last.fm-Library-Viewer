@@ -105,13 +105,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        menu.removeAll();
-//
-//        return true;
-//    }
-
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
@@ -161,7 +154,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private <T extends Fragment> void showFragment(String pTag, Class<T> tClass){
-
         try {
             Fragment currentFragment = mFragmentManager.findFragmentById(R.id.content_main);
             if (!currentFragment.getTag().equals(pTag)) {
@@ -253,3 +245,4 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onException(Exception exception) {
     }
 }
+

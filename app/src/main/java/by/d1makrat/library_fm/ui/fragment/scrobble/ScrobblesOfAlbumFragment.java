@@ -1,11 +1,10 @@
 package by.d1makrat.library_fm.ui.fragment.scrobble;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import by.d1makrat.library_fm.AppContext;
@@ -35,20 +34,10 @@ public class ScrobblesOfAlbumFragment extends ScrobblesFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(artist);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(album);
-
-        return rootView;
-    }
-
-    @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo){
         super.onCreateContextMenu(menu, v ,menuInfo);
 
-        menu.getItem(2).setVisible(false);
+        menu.findItem(R.id.scrobbles_of_album).setVisible(false);
     }
 
     @Override
@@ -62,5 +51,14 @@ public class ScrobblesOfAlbumFragment extends ScrobblesFragment {
     protected void checkIfAllIsLoaded(int size) {
         allIsLoaded = true;
         CenteredToast.show(getContext(), R.string.all_scrobbles_are_loaded, Toast.LENGTH_SHORT);
+    }
+
+    @Override
+    protected void setUpActionBar(AppCompatActivity pActivity) {
+        ActionBar actionBar = pActivity.getSupportActionBar();
+        if (actionBar != null){
+            actionBar.setTitle(artist);
+            actionBar.setSubtitle(album);
+        }
     }
 }

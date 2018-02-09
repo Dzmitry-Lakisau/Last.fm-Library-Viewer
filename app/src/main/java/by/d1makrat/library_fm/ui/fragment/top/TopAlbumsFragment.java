@@ -1,14 +1,11 @@
 package by.d1makrat.library_fm.ui.fragment.top;
 
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import by.d1makrat.library_fm.AppContext;
@@ -18,24 +15,8 @@ import by.d1makrat.library_fm.asynctask.GetTopItemsAsyncTask;
 import by.d1makrat.library_fm.model.TopAlbum;
 import by.d1makrat.library_fm.operation.TopAlbumsOperation;
 import by.d1makrat.library_fm.ui.CenteredToast;
-import by.d1makrat.library_fm.ui.fragment.scrobble.ScrobblesOfAlbumFragment;
-import by.d1makrat.library_fm.ui.fragment.scrobble.ScrobblesOfArtistFragment;
-
-import static by.d1makrat.library_fm.Constants.ALBUM_KEY;
-import static by.d1makrat.library_fm.Constants.ARTIST_KEY;
-import static by.d1makrat.library_fm.Constants.SCROBBLES_OF_ALBUM_TAG;
-import static by.d1makrat.library_fm.Constants.SCROBBLES_OF_ARTIST_TAG;
 
 public class TopAlbumsFragment extends TopItemsFragment<TopAlbum> {
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.top_albums);
-
-        return rootView;
-    }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -50,37 +31,11 @@ public class TopAlbumsFragment extends TopItemsFragment<TopAlbum> {
         if (item.getGroupId() == mPeriod.hashCode()) {
             switch (item.getItemId()) {
                 case MENU_SCROBBLES_OF_ARTIST:
-                    TopAlbum listItemPressed = mListAdapter.getSelectedItem();
-
-                    Bundle bundle = new Bundle();
-                    bundle.putString(ARTIST_KEY, listItemPressed.getArtistName());
-
-                    Fragment fragment = new ScrobblesOfArtistFragment();
-                    fragment.setArguments(bundle);
-
-                    getParentFragment().getFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.anim.appear_from_right, R.anim.disappear_to_left,
-                                    R.anim.appear_from_left, R.anim.disappear_to_right)
-                            .replace(R.id.content_main, fragment, SCROBBLES_OF_ARTIST_TAG)
-                            .addToBackStack(null)
-                            .commit();
+                    replaceFragment(mListAdapter.getSelectedItem().getArtistName(), null, null);
                     return true;
                 case MENU_SCROBBLES_OF_ALBUM:
-                    listItemPressed = mListAdapter.getSelectedItem();
-
-                    bundle = new Bundle();
-                    bundle.putString(ARTIST_KEY, listItemPressed.getArtistName());
-                    bundle.putString(ALBUM_KEY, listItemPressed.getTitle());
-
-                    fragment = new ScrobblesOfAlbumFragment();
-                    fragment.setArguments(bundle);
-
-                    getParentFragment().getFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.anim.appear_from_right, R.anim.disappear_to_left,
-                                    R.anim.appear_from_left, R.anim.disappear_to_right)
-                            .replace(R.id.content_main, fragment, SCROBBLES_OF_ALBUM_TAG)
-                            .addToBackStack(null)
-                            .commit();
+                    TopAlbum listItemPressed = mListAdapter.getSelectedItem();
+                    replaceFragment(listItemPressed.getArtistName(), null, listItemPressed.getTitle());
                     return true;
                 default:
                     return super.onContextItemSelected(item);
@@ -90,10 +45,9 @@ public class TopAlbumsFragment extends TopItemsFragment<TopAlbum> {
     }
 
     @Override
-    public void setUpListHead(String pItemsCount) {
-        listHeadText = String.format(getString(R.string.total_albums), pItemsCount);
-        listHeadTextView.setVisibility(View.VISIBLE);
-        listHeadTextView.setText(listHeadText);
+    protected void setUpListHead(String pItemsCount, int pVisibility) {
+        listHeadTextView.setVisibility(pVisibility);
+        listHeadTextView.setText(String.format(getString(R.string.total_albums), pItemsCount));
     }
 
     @Override
@@ -114,5 +68,13 @@ public class TopAlbumsFragment extends TopItemsFragment<TopAlbum> {
         TopAlbumsOperation topAlbumsOperation = new TopAlbumsOperation(mPeriod, mPage);
         GetTopItemsAsyncTask<TopAlbum> getTopItemsAsyncTask = new GetTopItemsAsyncTask<>(this);
         getTopItemsAsyncTask.execute(topAlbumsOperation);
+    }
+
+    @Override
+    protected void setUpActionBar(AppCompatActivity pActivity) {
+        ActionBar actionBar = pActivity.getSupportActionBar();
+        if (actionBar != null){
+            actionBar.setTitle(R.string.top_albums);
+        }
     }
 }
