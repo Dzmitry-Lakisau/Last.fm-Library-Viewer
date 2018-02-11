@@ -14,7 +14,7 @@ import static by.d1makrat.library_fm.Constants.API_NO_ERROR;
 
 public class GetSessionKeyAsyncTask extends AsyncTask<String, Void, String> {
 
-    private GetSessionKeyCallback asynctaskCallback;
+    private final GetSessionKeyCallback asynctaskCallback;
     private Exception mException = null;
 
     public GetSessionKeyAsyncTask(GetSessionKeyCallback pAsynctaskCallback) {

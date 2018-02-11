@@ -9,7 +9,7 @@ import by.d1makrat.library_fm.operation.IOperation;
 public class GetItemsAsyncTask<T> extends AsyncTask<IOperation<List<T>>, Void, List<T>> {
 
     private Exception mException = null;
-    private GetItemsCallback<T> mGetItemsCallback;
+    private final GetItemsCallback<T> mGetItemsCallback;
 
     public GetItemsAsyncTask(GetItemsCallback<T> mGetItemsCallback) {
         this.mGetItemsCallback = mGetItemsCallback;

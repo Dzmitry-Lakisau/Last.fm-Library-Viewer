@@ -18,8 +18,10 @@ import static by.d1makrat.library_fm.Constants.NAME_KEY;
 
 public class ScrobblesOfAlbumOperation implements IOperation<List<Scrobble>> {
 
-    private String artist, album;
-    private Long mFrom, mTo;
+    private final String artist;
+    private final String album;
+    private final Long mFrom;
+    private final Long mTo;
 
     public ScrobblesOfAlbumOperation(String artist, String album, Long mFrom, Long mTo) {
         this.artist = artist;

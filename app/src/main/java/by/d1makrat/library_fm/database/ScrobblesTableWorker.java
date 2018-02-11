@@ -33,15 +33,14 @@ public class ScrobblesTableWorker {
     private static final String ARTIST_AND_ALBUM_EQUALS_CONDITION = ARTIST_EQUALS_CONDITION + " AND " + COLUMN_ALBUM + " = ?";
     private static final String ARTIST_AND_ALBUM_EQUALS_AND_DATE_INTERVAL_CONDITION = ARTIST_AND_ALBUM_EQUALS_CONDITION + " AND " +DATE_INTERVAL_CONDITION;
 
-    private SQLiteOpenHelper mDatabaseHelper;
+    private final SQLiteOpenHelper mDatabaseHelper;
 
     ScrobblesTableWorker(SQLiteOpenHelper pDatabaseHelper) {
         mDatabaseHelper = pDatabaseHelper;
     }
 
-    public int bulkInsertScrobbles(final List<Scrobble> items) throws SQLException {
+    public void bulkInsertScrobbles(final List<Scrobble> items) throws SQLException {
         final SQLiteDatabase database = mDatabaseHelper.getWritableDatabase();
-        int inserted = 0;
 
         database.beginTransaction();
 
@@ -55,8 +54,6 @@ public class ScrobblesTableWorker {
                 contentValues.put(COLUMN_IMAGEURI, item.getImageUri());
 
                 database.insertWithOnConflict(DATABASE_SCROBBLES_TABLE, EMPTY_STRING, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
-
-                inserted++;
             }
 
             database.setTransactionSuccessful();
@@ -65,7 +62,6 @@ public class ScrobblesTableWorker {
             database.close();
         }
 
-        return inserted;
     }
 
     @Nullable

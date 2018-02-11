@@ -15,7 +15,7 @@ import static by.d1makrat.library_fm.Constants.USER_KEY;
 
 public class AppContext extends Application {
 
-    public static final String SESSIONKEY_KEY = "session_key";
+    private static final String SESSIONKEY_KEY = "session_key";
     private static final String DEFAULT_LIMIT = "10";
     private static AppContext mInstance;
     private SharedPreferences mSharedPreferences;

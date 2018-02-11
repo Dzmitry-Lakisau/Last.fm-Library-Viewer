@@ -17,8 +17,8 @@ import static by.d1makrat.library_fm.Constants.API_NO_ERROR;
 
 public class TopArtistsOperation implements IOperation<TopOperationResult<TopArtist>> {
 
-    private String period;
-    private int mPage;
+    private final String period;
+    private final int mPage;
 
     public TopArtistsOperation(String period, int mPage) {
         this.period = period;

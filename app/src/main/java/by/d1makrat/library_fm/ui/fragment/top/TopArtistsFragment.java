@@ -4,6 +4,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -42,7 +43,7 @@ public class TopArtistsFragment extends TopItemsFragment<TopArtist> {
     @Override
     protected void setUpListHead(String pItemsCount, int pVisibility) {
         listHeadTextView.setVisibility(pVisibility);
-        listHeadTextView.setText(String.format(getString(R.string.total_artists), pItemsCount));
+        listHeadTextView.setText(getString(R.string.total_artists, pItemsCount));
     }
 
     @Override
@@ -54,8 +55,8 @@ public class TopArtistsFragment extends TopItemsFragment<TopArtist> {
     }
 
     @Override
-    protected TopArtistsAdapter createAdapter() {
-        return new TopArtistsAdapter(getActivity().getLayoutInflater(), ContextCompat.getDrawable(getActivity(), R.drawable.ic_person));
+    protected TopArtistsAdapter createAdapter(LayoutInflater pLayoutInflater) {
+        return new TopArtistsAdapter(pLayoutInflater, ContextCompat.getDrawable(AppContext.getInstance(), R.drawable.ic_person_black_24dp));
     }
 
     @Override

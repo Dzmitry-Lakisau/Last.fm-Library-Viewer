@@ -2,12 +2,15 @@
 <resources>
 
     <string name="app_name">Last.fm Library Viewer</string>
-    <string name="banner_ad_unit_id">ca-app-pub-2835136610089326/2369727491</string>
+    <string name="admob_ad_unit_id">ca-app-pub-2835136610089326/2369727491</string>
     <string name="OK">OK</string>
     <string name="about_app">About %s</string>
     <string name="login">Last.fm Login</string>
     <string name="password">Password</string>
     <string name="network_is_not_connected">Network is not connected</string>
+    <string name="sign_in">Sign in</string>
+    <string name="settings">Settings</string>
+    <string name="logout">Logout</string>
 
     <string name="button_scrobble">Scrobble</string>
     <string name="button_time">Set Time</string>
@@ -25,16 +28,16 @@
     <string name="top_tracks">Top Tracks</string>
     <string name="top_artists">Top Artists</string>
     <string name="top_albums">Top Albums</string>
-    <string name="search">Search Artist</string>
+    <string name="search_artist">Search Artist</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="all_scrobbles_are_loaded">All scrobbles are loaded</string>
-    <string name="all_items_are_loaded">All items are loaded</string>
     <string name="all_albums_are_loaded">All albums are loaded</string>
     <string name="all_artists_are_loaded">All artists are loaded</string>
     <string name="all_tracks_are_loaded">All tracks are loaded</string>
+
     <string name="offline_mode_message">Network is unavailable. App will show data from offline storage</string>
     <string name="error_occurred">Error occurred</string>
 
@@ -44,7 +47,9 @@
     <string name="filter_dialog_cancel">Cancel</string>
     <string name="filter_dialog_wrong_input">Wrong dates</string>
 
-    <string name="manual_fragment_fill_required_fields">Fill required fields \"Track title\", \"Artist\", \"Duration\"</string>
+    <string name="about_dialog_message">Developed by Dzmitry Lakisau\n\nFor tips, help, support or to report a bug, email laki.dimon@gmail.com \n\nThanks!</string>
+    <string name="dialog_update_message">Update is available.\nGet it on Google Play!</string>
+
     <string name="manual_fragment_nonnumerical_input">Nonnumerical input</string>
     <string name="manual_fragment_ignored_message">Scrobble was ignored. Probably because of timestamp was too old or new</string>
     <string name="manual_fragment_track_ignored">Track was ignored</string>
@@ -53,15 +58,14 @@
     <string name="manual_fragment_limit_exceeded">Daily scrobble limit exceeded</string>
     <string name="manual_fragment_scrobble_accepted">Scrobble was accepted</string>
 
-    <string name="no_scrobbles_within_period">"No scrobbles\nwithin "</string>
+    <string name="no_scrobbles_within_period">"No scrobbles\nwithin %1$s - %2$s"</string>
     <string name="no_scrobbles">No scrobbles.\nHave you already scrobbled?\n:)</string>
     <string name="no_items">Nothing in rankings.\nHave you already scrobbled?\n:)</string>
-    <string name="scrobbles_count">%d scrobbles</string>
-    <string name="scrobbles_count_within_period">"%d scrobbles within "</string>
+
     <string name="top_scrobbles_count">"%s scrobbles"</string>
     <string name="listeners_count">%s listeners</string>
     <string name="search_fragment_no_result">Nothing found</string>
-    <string name="total_items">Total: %s</string>
+
     <string name="total_albums">Total listened albums: %s</string>
     <string name="total_artists">Total listened artists: %s</string>
     <string name="total_tracks">Total listened tracks: %s</string>
@@ -80,4 +84,15 @@
     <string name="scrobbles_of_artist">Scrobbles of this artist</string>
     <string name="scrobbles_of_track">Scrobbles of this track</string>
     <string name="scrobbles_of_album">Scrobbles of this album</string>
+
+    <string name="app_icon">App icon</string>
+    <string name="avatar">Avatar</string>
+    <string name="artist_photo">Artist photo</string>
+    <string name="album_cover">Album cover</string>
+    <string name="search">Search</string>
+    <string name="from">From</string>
+    <string name="equate_fields">Equate fields</string>
+    <string name="to">To</string>
+    <string name="navigation_drawer_header_message">%1$s scrobbles since %2$s</string>
+    <string name="hello_message">You are logged in as %1$s.\n%2$s scrobbles since %3$s.\nExplore your music!</string>
 </resources>

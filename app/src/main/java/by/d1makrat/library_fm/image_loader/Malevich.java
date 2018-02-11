@@ -47,7 +47,7 @@ public enum Malevich {
     }
 
     public static class Config {
-        File cacheDir;
+        final File cacheDir;
 
         public Config(File cacheDir) {
             this.cacheDir = cacheDir;

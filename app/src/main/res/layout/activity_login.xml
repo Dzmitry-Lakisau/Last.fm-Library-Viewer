@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/sign_in_page"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/light_red"
-    android:clickable="true"
-    android:orientation="vertical"
-    android:padding="20dp">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/sign_in_page"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="20dp">
 
     <ImageView
         android:id="@+id/imageView"
@@ -17,9 +15,10 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp"
         android:adjustViewBounds="true"
+        android:contentDescription="@string/app_icon"
         android:cropToPadding="false"
         android:scaleType="fitCenter"
-        app:srcCompat="@drawable/img_app_logo_large" />
+        app:srcCompat="@drawable/img_app_logo_large"/>
 
     <TextView
         android:id="@+id/app_label"
@@ -28,7 +27,7 @@
         android:layout_above="@+id/login"
         android:layout_centerHorizontal="true"
         android:text="@string/app_name"
-        android:textSize="25sp" />
+        android:textSize="25sp"/>
 
     <EditText
         android:id="@+id/login"
@@ -37,7 +36,7 @@
         android:layout_centerInParent="true"
         android:hint="@string/login"
         android:inputType="textPersonName"
-        android:textColorHint="@color/dark_red" />
+        android:textColorHint="@color/dark_red"/>
 
 
     <EditText
@@ -47,14 +46,14 @@
         android:layout_below="@+id/login"
         android:hint="@string/password"
         android:inputType="textPassword"
-        android:textColorHint="@color/dark_red" />
+        android:textColorHint="@color/dark_red"/>
 
     <Button
         android:id="@+id/enter_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/password"
-        android:text="Sign In" />
+        android:text="@string/sign_in"/>
 
     <ProgressBar
         android:id="@+id/progressBar2"

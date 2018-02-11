@@ -18,8 +18,7 @@ import com.google.api.server.spi.config.ApiNamespace;
         version = "v1",
         namespace = @ApiNamespace(
                 ownerDomain = "library_fm.d1makrat.by",
-                ownerName = "library_fm.d1makrat.by",
-                packagePath = ""
+                ownerName = "library_fm.d1makrat.by"
         )
 )
 public class VersionEndpoint {

@@ -23,15 +23,14 @@ import static by.d1makrat.library_fm.Constants.EMPTY_STRING;
 
 public class TopAlbumsTableWorker{
 
-    private SQLiteOpenHelper mDatabaseHelper;
+    private final SQLiteOpenHelper mDatabaseHelper;
 
     TopAlbumsTableWorker(SQLiteOpenHelper pDatabaseHelper) {
         mDatabaseHelper = pDatabaseHelper;
     }
 
-    public int bulkInsertTopAlbums(final List<TopAlbum> items, final String pPeriod) throws SQLException {
+    public void bulkInsertTopAlbums(final List<TopAlbum> items, final String pPeriod) throws SQLException {
         final SQLiteDatabase database = mDatabaseHelper.getWritableDatabase();
-        int inserted = 0;
 
         database.beginTransaction();
 
@@ -46,8 +45,6 @@ public class TopAlbumsTableWorker{
                 contentValues.put(COLUMN_PERIOD, pPeriod);
 
                 database.insertWithOnConflict(DATABASE_TOP_ALBUMS_TABLE, EMPTY_STRING, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
-
-                inserted++;
             }
 
             database.setTransactionSuccessful();
@@ -56,7 +53,6 @@ public class TopAlbumsTableWorker{
             database.close();
         }
 
-        return inserted;
     }
 
     public List<TopAlbum> getTopAlbums(String pPeriod, int pPage) throws SQLException {

@@ -15,7 +15,7 @@ public class CheckNewVersionAsyncTask extends AsyncTask<Void, Void, Integer> {
     private static final String LATEST_VERSION_KEY = "latestVersion";
 
     private Exception mException = null;
-    private CheckNewVersionCallback mAsynctaskCallback;
+    private final CheckNewVersionCallback mAsynctaskCallback;
 
     public CheckNewVersionAsyncTask(CheckNewVersionCallback pAsynctaskCallback) {
         mAsynctaskCallback = pAsynctaskCallback;
@@ -42,9 +42,8 @@ public class CheckNewVersionAsyncTask extends AsyncTask<Void, Void, Integer> {
 
     @Override
     protected void onPostExecute (Integer result) {
-        if (mException != null)
-            mAsynctaskCallback.onException(mException);
-        else
+        if (mException == null) {
             mAsynctaskCallback.onSuccess(result);
+        }
     }
 }

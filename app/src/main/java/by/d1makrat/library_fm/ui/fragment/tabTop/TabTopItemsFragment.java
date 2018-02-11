@@ -18,7 +18,7 @@ import by.d1makrat.library_fm.adapter.pages.TabTopAdapter;
 
 public abstract class TabTopItemsFragment<A extends TabTopAdapter> extends Fragment {
 
-    protected A adapter;
+    private A adapter;
     private ViewPager viewPager;
 
     @Override

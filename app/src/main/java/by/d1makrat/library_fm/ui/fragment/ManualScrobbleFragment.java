@@ -23,8 +23,8 @@ import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 import by.d1makrat.library_fm.R;
-import by.d1makrat.library_fm.asynctask.SendScrobbleCallback;
 import by.d1makrat.library_fm.asynctask.SendScrobbleAsyncTask;
+import by.d1makrat.library_fm.asynctask.SendScrobbleCallback;
 import by.d1makrat.library_fm.https.HttpsClient;
 import by.d1makrat.library_fm.ui.CenteredToast;
 import by.d1makrat.library_fm.utils.InputUtils;
@@ -90,58 +90,62 @@ public class ManualScrobbleFragment extends Fragment implements CalendarDatePick
 					CenteredToast.show(getContext(), R.string.network_is_not_connected, Toast.LENGTH_SHORT);
 			}
 		});
-		rootView.findViewById(R.id.button_date).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				InputUtils.hideKeyboard(getActivity());
-				CalendarDatePickerDialogFragment calendarDatePickerDialogFragment = new CalendarDatePickerDialogFragment()
-						.setThemeCustom(R.style.CustomBetterPickersDialogs)
-						.setOnDateSetListener(ManualScrobbleFragment.this)
-						.setFirstDayOfWeek(Calendar.MONDAY)
-						.setPreselectedDate(mYear, mMonth, mDay)
-						.setDoneText("OK")
-						.setCancelText("Cancel");
-				calendarDatePickerDialogFragment.show(getActivity().getSupportFragmentManager(), "DatePicker");
-			}
-		});
-		rootView.findViewById(R.id.button_time).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				InputUtils.hideKeyboard(getActivity());
-				RadialTimePickerDialogFragment radialTimePickerDialogFragment = new RadialTimePickerDialogFragment()
-						.setThemeCustom(R.style.CustomBetterPickersDialogs)
-						.setOnTimeSetListener(ManualScrobbleFragment.this)
-						.setStartTime(mHour, mMinute)
-						.setDoneText("OK")
-						.setCancelText("Cancel");
-				radialTimePickerDialogFragment.show(getActivity().getSupportFragmentManager(), "TimePicker");
-			}
-		});
-		rootView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				InputUtils.hideKeyboard(getActivity());
-			}
-		});
 
-		mSpinner = rootView.findViewById(R.id.progressBar);
-		mSpinner.setVisibility(View.INVISIBLE);
+		final AppCompatActivity activity = (AppCompatActivity) getActivity();
+		if (activity != null) {
+			rootView.findViewById(R.id.button_date).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    InputUtils.hideKeyboard(getActivity());
+                    CalendarDatePickerDialogFragment calendarDatePickerDialogFragment = new CalendarDatePickerDialogFragment()
+                            .setThemeCustom(R.style.CustomBetterPickersDialogs)
+                            .setOnDateSetListener(ManualScrobbleFragment.this)
+                            .setFirstDayOfWeek(Calendar.MONDAY)
+                            .setPreselectedDate(mYear, mMonth, mDay)
+                            .setDoneText("OK")
+                            .setCancelText("Cancel");
+                    calendarDatePickerDialogFragment.show(activity.getSupportFragmentManager(), "DatePicker");
+                }
+            });
+			rootView.findViewById(R.id.button_time).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    InputUtils.hideKeyboard(getActivity());
+                    RadialTimePickerDialogFragment radialTimePickerDialogFragment = new RadialTimePickerDialogFragment()
+                            .setThemeCustom(R.style.CustomBetterPickersDialogs)
+                            .setOnTimeSetListener(ManualScrobbleFragment.this)
+                            .setStartTime(mHour, mMinute)
+                            .setDoneText("OK")
+                            .setCancelText("Cancel");
+                    radialTimePickerDialogFragment.show(activity.getSupportFragmentManager(), "TimePicker");
+                }
+            });
+			rootView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    InputUtils.hideKeyboard(activity);
+                }
+            });
 
-		mArtistEditText = rootView.findViewById(R.id.artist);
-		mArtistEditText.addTextChangedListener(mTextWatcher);
+			mSpinner = rootView.findViewById(R.id.progressBar);
+			mSpinner.setVisibility(View.INVISIBLE);
 
-		mTrackEditText = rootView.findViewById(R.id.track);
-		mTrackEditText.addTextChangedListener(mTextWatcher);
+			mArtistEditText = rootView.findViewById(R.id.artist);
+			mArtistEditText.addTextChangedListener(mTextWatcher);
 
-		mTrackDurationEditText = rootView.findViewById(R.id.trackduration);
-		mTrackDurationEditText.addTextChangedListener(mTextWatcher);
+			mTrackEditText = rootView.findViewById(R.id.track);
+			mTrackEditText.addTextChangedListener(mTextWatcher);
 
-		((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.manual_scrobble));
+			mTrackDurationEditText = rootView.findViewById(R.id.trackduration);
+			mTrackDurationEditText.addTextChangedListener(mTextWatcher);
+
+			if (activity.getSupportActionBar() != null) activity.getSupportActionBar().setTitle(getString(R.string.manual_scrobble));
+		}
 
 		return rootView;
 	}
 
-	private TextWatcher mTextWatcher = new TextWatcher() {
+	private final TextWatcher mTextWatcher = new TextWatcher() {
 		@Override
 		public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -182,14 +186,12 @@ public class ManualScrobbleFragment extends Fragment implements CalendarDatePick
 
 	@Override
 	public void onException(Exception pException) {
-//		mScrobbleButton.setEnabled(true);
 		mSpinner.setVisibility(View.INVISIBLE);
-		CenteredToast.show(getContext(), pException.getMessage(), Toast.LENGTH_SHORT);
+		CenteredToast.show(getContext(), pException.getMessage(), Toast.LENGTH_LONG);
 	}
 
 	@Override
 	public void onSendScrobbleResult(String result) {
-//		mScrobbleButton.setEnabled(true);
 		mSpinner.setVisibility(View.INVISIBLE);
 		CenteredToast.show(getContext(), result, Toast.LENGTH_SHORT);
 	}

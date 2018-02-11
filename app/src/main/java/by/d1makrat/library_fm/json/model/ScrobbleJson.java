@@ -13,9 +13,9 @@ import static by.d1makrat.library_fm.Constants.NAME_KEY;
 public class ScrobbleJson {
 
     private static final int MAX_IMAGE_RESOLUTION_INDEX = 3;
-    private JSONObject mRootJsonObject;
+    private final JSONObject mRootJsonObject;
 
-    public ScrobbleJson(JSONObject pRootJsonObject) throws JSONException {
+    public ScrobbleJson(JSONObject pRootJsonObject) {
         mRootJsonObject = pRootJsonObject;
     }
 

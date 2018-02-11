@@ -14,8 +14,8 @@ import static by.d1makrat.library_fm.Constants.API_NO_ERROR;
 
 public class SearchArtistOperation implements IOperation<List<Artist>> {
 
-    private String mSearchQuery;
-    private int mPage;
+    private final String mSearchQuery;
+    private final int mPage;
 
     public SearchArtistOperation(String mSearchQuery, int mPage) {
         this.mSearchQuery = mSearchQuery;

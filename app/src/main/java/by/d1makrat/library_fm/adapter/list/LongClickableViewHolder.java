@@ -3,9 +3,9 @@ package by.d1makrat.library_fm.adapter.list;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-public class LongClickableViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener{
+class LongClickableViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener{
 
-    private LongClickListener mLongClickListener;
+    private final LongClickListener mLongClickListener;
 
     LongClickableViewHolder(View pView, LongClickListener pLongClickListener) {
         super(pView);

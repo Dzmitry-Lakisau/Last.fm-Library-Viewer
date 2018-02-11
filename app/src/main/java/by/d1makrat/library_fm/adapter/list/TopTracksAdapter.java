@@ -56,7 +56,7 @@ public class TopTracksAdapter extends ItemsAdapter<TopTrack> {
 
             trackTextView.setText(topTrack.getTitle());
             artistTextView.setText(topTrack.getArtistName());
-            playcountTextView.setText(String.format(AppContext.getInstance().getString(R.string.top_scrobbles_count), topTrack.getPlaycount()));
+            playcountTextView.setText(AppContext.getInstance().getString(R.string.top_scrobbles_count, topTrack.getPlaycount()));
             rankTextView.setText(topTrack.getRank());
 
             String imageUri = topTrack.getImageUri();

@@ -39,7 +39,7 @@
 		android:background="@drawable/button"
 		android:enabled="false"
 		android:padding="0dp"
-		android:text="Search" />
+		android:text="@string/search" />
 
 	<View
 		android:id="@+id/dividerline"

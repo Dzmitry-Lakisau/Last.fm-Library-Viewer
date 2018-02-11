@@ -56,7 +56,7 @@ public class TopAlbumsAdapter extends ItemsAdapter<TopAlbum> {
 
             albumTextView.setText(topAlbum.getTitle());
             artistTextView.setText(topAlbum.getArtistName());
-            playcountTextView.setText(String.format(AppContext.getInstance().getString(R.string.top_scrobbles_count), topAlbum.getPlaycount()));
+            playcountTextView.setText(AppContext.getInstance().getString(R.string.top_scrobbles_count, topAlbum.getPlaycount()));
             rankTextView.setText(topAlbum.getRank());
 
             String imageUri = topAlbum.getImageUri();

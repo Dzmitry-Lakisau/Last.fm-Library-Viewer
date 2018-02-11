@@ -3,6 +3,7 @@ package by.d1makrat.library_fm.ui.fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -46,8 +47,8 @@ public class SearchArtistFragment extends ItemsFragment<Artist> implements GetIt
     }
 
     @Override
-    protected SearchArtistsAdapter createAdapter(){
-        return new SearchArtistsAdapter(getActivity().getLayoutInflater(), ContextCompat.getDrawable(getActivity(), R.drawable.ic_person));
+    protected SearchArtistsAdapter createAdapter(LayoutInflater pLayoutInflater){
+        return new SearchArtistsAdapter(pLayoutInflater, ContextCompat.getDrawable(AppContext.getInstance(), R.drawable.ic_person_black_24dp));
     }
 
     @Override
@@ -58,7 +59,7 @@ public class SearchArtistFragment extends ItemsFragment<Artist> implements GetIt
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.fragment_search, container, false);
 
@@ -175,7 +176,7 @@ public class SearchArtistFragment extends ItemsFragment<Artist> implements GetIt
     protected void setUpActionBar(AppCompatActivity pActivity) {
         ActionBar actionBar = pActivity.getSupportActionBar();
         if (actionBar != null){
-            actionBar.setTitle(R.string.search);
+            actionBar.setTitle(R.string.search_artist);
         }
     }
 }

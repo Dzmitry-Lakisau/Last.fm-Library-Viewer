@@ -25,11 +25,11 @@ public abstract class ItemsAdapter<T> extends RecyclerView.Adapter<RecyclerView.
     private boolean isErrorHeaderAdded = false;
     private boolean isEmptyHeaderAdded = false;
 
-    private T t;
+    private final T t = null;
 
     Drawable mPlaceholderDrawable;
     LayoutInflater mLayoutInflater;
-    private List<T> mItems = new ArrayList<>();
+    private final List<T> mItems = new ArrayList<>();
     private int mSelectedItemPosition;
     private String message;
 
@@ -85,17 +85,8 @@ public abstract class ItemsAdapter<T> extends RecyclerView.Adapter<RecyclerView.
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
 
         switch (getItemViewType(position)) {
-            case HEADER:
-                bindHeaderViewHolder();
-                break;
             case ITEM:
                 bindItemViewHolder(viewHolder, position);
-                break;
-            case FOOTER:
-                bindFooterViewHolder();
-                break;
-            case ERROR_HEADER:
-                bindErrorHeaderViewHolder();
                 break;
             case EMPTY_HEADER:
                 bindEmptyHeaderViewHolder(viewHolder, message);
@@ -129,20 +120,14 @@ public abstract class ItemsAdapter<T> extends RecyclerView.Adapter<RecyclerView.
         return new EmptyHeaderViewHolder(v);
     }
 
-    private void bindHeaderViewHolder(){}
-
     protected abstract void bindItemViewHolder(RecyclerView.ViewHolder viewHolder, int position);
-
-    private void bindFooterViewHolder(){}
-
-    private void bindErrorHeaderViewHolder(){}
 
     private void bindEmptyHeaderViewHolder(RecyclerView.ViewHolder viewHolder, String message){
         final EmptyHeaderViewHolder holder = (EmptyHeaderViewHolder) viewHolder;
         holder.bind(message);
     }
 
-    public T getItem(int position){
+    protected T getItem(int position){
         return mItems.get(position);
     }
 
@@ -150,7 +135,7 @@ public abstract class ItemsAdapter<T> extends RecyclerView.Adapter<RecyclerView.
         return mItems.get(mSelectedItemPosition);
     }
 
-    public void add(T item){
+    private void add(T item){
         mItems.add(item);
         notifyItemInserted(getItemCount() - 1);
     }
@@ -250,45 +235,33 @@ public abstract class ItemsAdapter<T> extends RecyclerView.Adapter<RecyclerView.
 
     public boolean isEmpty(){
         return !(getItemViewType(0) == ITEM) || mItems.size() == 0;
-//        return mItems.size() == 0;
     }
 
     private static class FooterViewHolder extends RecyclerView.ViewHolder {
 
-        View spinner;
-
         FooterViewHolder(View view) {
             super(view);
-
-            spinner = view.findViewById(R.id.item_empty_header_message);
         }
     }
 
     private static class HeaderViewHolder extends RecyclerView.ViewHolder {
 
-        View spinner;
-
         HeaderViewHolder(View view) {
             super(view);
-
-            spinner = view.findViewById(R.id.item_empty_header_message);
         }
     }
 
     private static class ErrorHeaderViewHolder extends RecyclerView.ViewHolder {
 
-        View spinner;
-
         ErrorHeaderViewHolder(View view) {
             super(view);
 
-            spinner = view.findViewById(R.id.item_error_header);
         }
     }
 
     protected static class EmptyHeaderViewHolder extends RecyclerView.ViewHolder {
 
-        TextView message_TextView;
+        final TextView message_TextView;
 
         EmptyHeaderViewHolder(View view) {
             super(view);

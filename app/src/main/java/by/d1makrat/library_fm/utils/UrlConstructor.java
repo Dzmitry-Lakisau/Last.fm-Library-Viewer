@@ -54,8 +54,9 @@ public class UrlConstructor {
     private static final String TIMESTAMP_KEY = "timestamp";
     private static final String METHOD_SCROBBLE_TRACK_VALUE = "track.scrobble";
 
-    private String mSessionKey, mUsername;
-    private int mItemsPerRequest;
+    private final String mSessionKey;
+    private final String mUsername;
+    private final int mItemsPerRequest;
 
     public UrlConstructor() {
         mSessionKey = AppContext.getInstance().getSessionKey();

@@ -13,7 +13,6 @@ public class FileStreamProvider implements StreamProvider<File> {
 
     @Override
     public InputStream get(File file) throws IOException {
-        BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(file), BUFFER_SIZE);
-        return inputStream;
+        return new BufferedInputStream(new FileInputStream(file), BUFFER_SIZE);
     }
 }

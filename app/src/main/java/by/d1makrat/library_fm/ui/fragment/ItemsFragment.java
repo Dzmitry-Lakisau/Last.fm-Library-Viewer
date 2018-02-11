@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
@@ -31,14 +32,11 @@ public abstract class ItemsFragment<T> extends Fragment{
     protected String mUrlForBrowser;
 
     protected boolean isLoading = false;
-//    protected boolean isViewAlreadyCreated = false;
     protected boolean allIsLoaded = false;
-    protected boolean isEmpty = false;
 
     protected AsyncTask mGetItemsAsynctask;
     protected ItemsAdapter<T> mListAdapter;
     private LinearLayoutManager mLayoutManager;
-    protected RecyclerView mRecyclerView;
     protected int mPage = 1;
 
     @Override
@@ -47,16 +45,8 @@ public abstract class ItemsFragment<T> extends Fragment{
 
         setHasOptionsMenu(true);
 
-        mListAdapter = createAdapter();
+        mListAdapter = createAdapter(getLayoutInflater());
     }
-
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        menu.clear();
-//        inflater.inflate(R.menu.menu_options, menu);
-//    }
-
-//    public abstract View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
 
     protected void killTaskIfRunning(AsyncTask task) {
         if (task != null && task.getStatus() != AsyncTask.Status.FINISHED) {
@@ -65,7 +55,7 @@ public abstract class ItemsFragment<T> extends Fragment{
         }
     }
 
-    public void loadItems() {
+    protected void loadItems() {
 
         isLoading = true;
 
@@ -79,14 +69,9 @@ public abstract class ItemsFragment<T> extends Fragment{
         performOperation();
     }
 
-    protected abstract ItemsAdapter<T> createAdapter();
+    protected abstract ItemsAdapter<T> createAdapter(LayoutInflater pLayoutInflater);
 
-    protected RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
-        @Override
-        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-            super.onScrollStateChanged(recyclerView, newState);
-        }
-
+    private final RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
@@ -130,7 +115,7 @@ public abstract class ItemsFragment<T> extends Fragment{
 
     protected void setUpRecyclerView(View pRootView){
 
-        mRecyclerView = pRootView.findViewById(R.id.rv);
+        RecyclerView mRecyclerView = pRootView.findViewById(R.id.rv);
 
         mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);

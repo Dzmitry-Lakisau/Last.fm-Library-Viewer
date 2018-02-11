@@ -1,8 +1,9 @@
 package by.d1makrat.library_fm.ui.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,8 +25,6 @@ import by.d1makrat.library_fm.ui.fragment.dialog.AboutDialogFragment;
 
 public class StartFragment extends Fragment {
 
-    private Menu mMenu;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,22 +33,21 @@ public class StartFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_start, container, false);
 
         AdView adView = rootView.findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(null);
+        setUpActionBar((AppCompatActivity) getActivity());
 
         User user = AppContext.getInstance().getUser();
-        Malevich.INSTANCE.load(user.getAvatarUri()).onError(ContextCompat.getDrawable(getActivity(), R.drawable.img_app_logo_large)).
+        Malevich.INSTANCE.load(user.getAvatarUri()).onError(getResources().getDrawable(R.drawable.img_app_logo_large)).
                 into((ImageView) rootView.findViewById(R.id.user_avatar_start_screen));
 
-        TextView textView = rootView.findViewById(R.id.hello_start_screen);
-        textView.setText(String.format("You are logged in as %s.\n%s scrobbles since %s.\nExplore your music!", user.getUsername(), user.getPlaycount(), user.getRegistered()));
+        TextView textView = rootView.findViewById(R.id.hello_textView);
+        textView.setText(getString(R.string.hello_message, user.getUsername(), user.getPlaycount(), user.getRegistered()));
         return rootView;
     }
 
@@ -63,12 +61,22 @@ public class StartFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.about:
-                AboutDialogFragment dialogFragment = new AboutDialogFragment();
-                dialogFragment.setTargetFragment(this, 0);
-                dialogFragment.show(getFragmentManager(), "AboutDialogFragment");
+                if (getFragmentManager() != null) {
+                    AboutDialogFragment dialogFragment = new AboutDialogFragment();
+                    dialogFragment.setTargetFragment(this, 0);
+                    dialogFragment.show(getFragmentManager(), "AboutDialogFragment");
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    protected void setUpActionBar(AppCompatActivity pActivity) {
+        ActionBar actionBar = pActivity.getSupportActionBar();
+        if (actionBar != null){
+            actionBar.setTitle(R.string.app_name);
+            actionBar.setSubtitle(null);
         }
     }
 }

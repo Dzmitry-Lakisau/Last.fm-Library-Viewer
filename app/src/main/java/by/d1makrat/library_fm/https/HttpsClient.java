@@ -8,12 +8,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.SocketTimeoutException;
 import java.net.URL;
-import java.net.UnknownHostException;
 
 import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLException;
 
 import by.d1makrat.library_fm.AppContext;
 
@@ -21,7 +18,7 @@ public class HttpsClient {
 
     private static final int TIMEOUT = 1000;
 
-    public String request(URL pUrl, RequestMethod pRequestMethod) throws SocketTimeoutException, UnknownHostException, SSLException, IOException{
+    public String request(URL pUrl, RequestMethod pRequestMethod) throws IOException{
 
         HttpURLConnection httpsURLConnection = null;
         InputStreamReader inputStreamReader = null;

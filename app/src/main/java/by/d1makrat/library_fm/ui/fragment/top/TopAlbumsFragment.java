@@ -4,6 +4,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -47,7 +48,7 @@ public class TopAlbumsFragment extends TopItemsFragment<TopAlbum> {
     @Override
     protected void setUpListHead(String pItemsCount, int pVisibility) {
         listHeadTextView.setVisibility(pVisibility);
-        listHeadTextView.setText(String.format(getString(R.string.total_albums), pItemsCount));
+        listHeadTextView.setText(getString(R.string.total_albums, pItemsCount));
     }
 
     @Override
@@ -59,8 +60,8 @@ public class TopAlbumsFragment extends TopItemsFragment<TopAlbum> {
     }
 
     @Override
-    protected TopAlbumsAdapter createAdapter() {
-        return new TopAlbumsAdapter(getActivity().getLayoutInflater(), ContextCompat.getDrawable(getActivity(), R.drawable.img_vinyl));
+    protected TopAlbumsAdapter createAdapter(LayoutInflater pLayoutInflater) {
+        return new TopAlbumsAdapter(pLayoutInflater, ContextCompat.getDrawable(AppContext.getInstance(), R.drawable.img_vinyl));
     }
 
     @Override

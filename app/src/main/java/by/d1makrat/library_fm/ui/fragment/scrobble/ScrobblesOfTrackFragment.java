@@ -26,8 +26,10 @@ public class ScrobblesOfTrackFragment extends ScrobblesFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        artist = getArguments().getString(ARTIST_KEY);
-        track = getArguments().getString(TRACK_KEY);
+        if (getArguments() != null) {
+            artist = getArguments().getString(ARTIST_KEY);
+            track = getArguments().getString(TRACK_KEY);
+        }
         mUrlForBrowser = AppContext.getInstance().getUser().getUrl() + "/library/music/" + artist + "/_/" + track;
 
         loadItems();

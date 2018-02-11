@@ -4,8 +4,8 @@ import java.util.List;
 
 public class TopOperationResult<T> {
 
-    private List<T> items;
-    private String count;
+    private final List<T> items;
+    private final String count;
 
     public TopOperationResult(List<T> items, String count) {
         this.items = items;

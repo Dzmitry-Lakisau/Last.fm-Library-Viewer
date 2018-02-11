@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public final class IOUtils {
 
-    public static final String LOG_TAG = IOUtils.class.getSimpleName();
+    private static final String LOG_TAG = IOUtils.class.getSimpleName();
 
     private IOUtils() {
     }

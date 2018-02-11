@@ -5,14 +5,14 @@
 
     <item
         android:id="@+id/action_refresh"
-        android:icon="@drawable/ic_refresh"
+        android:icon="@drawable/ic_refresh_black_24dp"
         android:title="@string/action_refresh"
         app:showAsAction="ifRoom"
         />
 
     <item
         android:id="@+id/action_filter"
-        android:icon="@drawable/ic_filter"
+        android:icon="@drawable/ic_filter_outline_black_24dp"
         android:title="@string/action_filter"
         app:showAsAction="ifRoom"
         />

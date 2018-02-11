@@ -1,53 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@android:color/transparent"
-    >
+    android:background="@android:color/transparent">
 
-
-        <item
-            android:id="@+id/scrobbles"
-            android:icon="@drawable/ic_queue_music_black_24dp"
-            android:title="@string/scrobbles"
-            />
+    <item
+        android:id="@+id/scrobbles"
+        android:icon="@drawable/ic_queue_music_black_24dp"
+        android:title="@string/scrobbles" />
 
     <group android:id="@+id/group_tops">
-    <item
+        <item
             android:id="@+id/top_tracks"
-            android:icon="@drawable/ic_music_note_black_24dp"
-            android:title="Top Tracks" />
+            android:icon="@drawable/ic_audiotrack_black_24dp"
+            android:title="@string/top_tracks" />
         <item
             android:id="@+id/top_artists"
-            android:icon="@drawable/ic_person"
-            android:title="Top Artists" />
+            android:icon="@drawable/ic_person_black_24dp"
+            android:title="@string/top_artists" />
         <item
             android:id="@+id/top_albums"
             android:icon="@drawable/ic_album_black_24dp"
-            android:title="Top Albums" />
+            android:title="@string/top_albums" />
     </group>
 
-    <group android:id="@+id/group_manual_scrobble">
+    <group android:id="@+id/group_other">
         <item
             android:id="@+id/search"
             android:icon="@drawable/ic_search_black_24dp"
-            android:title="Search Artist" />
+            android:title="@string/search_artist" />
         <item
             android:id="@+id/manual_scrobble"
             android:icon="@drawable/ic_create_black_24dp"
-            android:title="Manual Scrobble" />
+            android:title="@string/manual_scrobble" />
     </group>
 
-            <item
-                android:id="@+id/settings"
-                android:icon="@drawable/ic_settings"
-                android:title="Settings" />
-
-    <group android:id="@+id/group_logout">
+    <group android:id="@+id/group_settings">
         <item
-            android:id="@+id/logout"
-            android:icon="@drawable/ic_logout"
-            android:title="Logout" />
-
+            android:id="@+id/settings"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="@string/settings" />
     </group>
 
+    <item
+        android:id="@+id/logout"
+        android:icon="@drawable/ic_logout_black_24dp"
+        android:title="@string/logout" />
 
 </menu>

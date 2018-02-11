@@ -4,7 +4,7 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-public class User implements IUser {
+public class User {
 
     private String username;
 
@@ -32,7 +32,6 @@ public class User implements IUser {
         this.playcount = playcount;
     }
 
-    @Override
     public String getRegistered() {
         Calendar mydate = Calendar.getInstance();
         mydate.setTimeInMillis(TimeUnit.SECONDS.toMillis(Long.valueOf(registered)));

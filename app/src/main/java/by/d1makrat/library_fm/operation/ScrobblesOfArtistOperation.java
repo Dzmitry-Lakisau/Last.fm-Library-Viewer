@@ -16,9 +16,10 @@ import static by.d1makrat.library_fm.Constants.API_NO_ERROR;
 
 public class ScrobblesOfArtistOperation implements IOperation<List<Scrobble>> {
 
-    private String artist;
-    private int mPage;
-    private Long mFrom, mTo;
+    private final String artist;
+    private final int mPage;
+    private final Long mFrom;
+    private final Long mTo;
 
     public ScrobblesOfArtistOperation(String artist, int mPage, Long mFrom, Long mTo) {
         this.artist = artist;

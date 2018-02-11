@@ -1,6 +1,7 @@
 package by.d1makrat.library_fm.ui.fragment.top;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -25,23 +26,16 @@ public abstract class TopItemsFragment<T> extends ItemsFragment<T> implements Ge
 
     protected String mPeriod;
     protected TextView listHeadTextView;
-//    protected String listHeadText;
-    protected String mTotalItemCount;
+    private String mTotalItemCount;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mPeriod = getArguments().getString(PERIOD_KEY);
+        if (getArguments() != null) mPeriod = getArguments().getString(PERIOD_KEY);
 
         loadItems();
     }
-
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        menu.clear();
-//        inflater.inflate(R.menu.menu_top, menu);
-//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -65,7 +59,7 @@ public abstract class TopItemsFragment<T> extends ItemsFragment<T> implements Ge
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.list_with_head, container, false);
 
         setUpRecyclerView(rootView);
@@ -74,22 +68,13 @@ public abstract class TopItemsFragment<T> extends ItemsFragment<T> implements Ge
         listHeadTextView = rootView.findViewById(R.id.list_head);
 
         if (mListAdapter.isEmpty()) {
-//            listHeadTextView.setVisibility(View.GONE);
-//            listHeadTextView.setText(listHeadText);
             setUpListHead(mTotalItemCount, View.GONE);
         } else {
-//            listHeadTextView.setVisibility(View.VISIBLE);
-//            listHeadTextView.setText(listHeadText);
             setUpListHead(mTotalItemCount, View.VISIBLE);
         }
 
         return rootView;
     }
-
-//    @Override
-//    protected Fragment createFragment(String pTypeOfFragment, T t) {
-//        return null;
-//    }
 
     @Override
     public void onLoadingSuccessful(TopOperationResult<T> result) {
@@ -113,23 +98,4 @@ public abstract class TopItemsFragment<T> extends ItemsFragment<T> implements Ge
     }
 
     protected abstract void setUpListHead(String pItemsCount, int pVisibility);
-
-//    @Override
-//    public void onException(Exception pException) {
-//        isLoading = false;
-////        isViewAlreadyCreated = true;
-//
-//        mListAdapter.removeAllHeadersAndFooters();
-//
-//        mPage--;
-//
-////        isEmpty = mListAdapter.getItemCount() == 0;
-//        if (mListAdapter.isEmpty()) {
-//            mListAdapter.addErrorHeader();
-//        }
-//
-//        if (pException instanceof APIException){
-//            CenteredToast.show(getActivity(), pException.getMessage(), Toast.LENGTH_SHORT);
-//        }
-//    }
 }

@@ -17,7 +17,7 @@ import static by.d1makrat.library_fm.Constants.API_NO_ERROR;
 public class SendScrobbleAsyncTask extends AsyncTask<String, Void, String> {
 
     private Exception mException = null;
-    private SendScrobbleCallback mAsynctaskCallback;
+    private final SendScrobbleCallback mAsynctaskCallback;
 
     public SendScrobbleAsyncTask(SendScrobbleCallback pAsynctaskCallback) {
         mAsynctaskCallback = pAsynctaskCallback;

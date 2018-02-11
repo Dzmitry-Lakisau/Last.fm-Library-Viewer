@@ -137,7 +137,7 @@ public class BaseDiskCache implements DiskCache {
         return currentSize;
     }
 
-    static long calculateDiskCacheSize(File dir) {
+    private static long calculateDiskCacheSize(File dir) {
         long size = MIN_DISK_CACHE_SIZE;
 
         try {

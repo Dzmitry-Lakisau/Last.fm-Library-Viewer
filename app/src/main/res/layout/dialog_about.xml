@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/light_red"
     android:orientation="vertical">
 
     <TextView
@@ -30,7 +29,7 @@
         android:layout_gravity="center"
         android:padding="10dp"
         android:autoLink="email"
-        android:text="Developed by Dzmitry Lakisau\n\nFor tips, help, support or to report a bug, email laki.dimon@gmail.com \n\nThanks!"
+        android:text="@string/about_dialog_message"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/black"
 

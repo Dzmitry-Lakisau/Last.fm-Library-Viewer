@@ -17,7 +17,7 @@ public class ScrobblesParser {
 
     private static final String RECENT_TRACKS_KEY = "recenttracks";
     private static final String ARTIST_TRACKS_KEY = "artisttracks";
-    private String mStringToParse;
+    private final String mStringToParse;
 
     public ScrobblesParser(String pStringToParse) {
         mStringToParse = pStringToParse;

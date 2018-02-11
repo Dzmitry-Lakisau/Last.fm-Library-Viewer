@@ -23,15 +23,14 @@ import static by.d1makrat.library_fm.Constants.EMPTY_STRING;
 
 public class TopTracksTableWorker {
 
-    private SQLiteOpenHelper mDatabaseHelper;
+    private final SQLiteOpenHelper mDatabaseHelper;
 
     TopTracksTableWorker(SQLiteOpenHelper pDatabaseHelper) {
         mDatabaseHelper = pDatabaseHelper;
     }
 
-    public int bulkInsertTopTracks(final List<TopTrack> items, final String pPeriod) throws SQLException {
+    public void bulkInsertTopTracks(final List<TopTrack> items, final String pPeriod) throws SQLException {
         final SQLiteDatabase database = mDatabaseHelper.getWritableDatabase();
-        int inserted = 0;
 
         database.beginTransaction();
 
@@ -46,8 +45,6 @@ public class TopTracksTableWorker {
                 contentValues.put(COLUMN_PERIOD, pPeriod);
 
                 database.insertWithOnConflict(DATABASE_TOP_TRACKS_TABLE, EMPTY_STRING, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
-
-                inserted++;
             }
 
             database.setTransactionSuccessful();
@@ -56,7 +53,6 @@ public class TopTracksTableWorker {
             database.close();
         }
 
-        return inserted;
     }
 
     public List<TopTrack> getTopTracks(String pPeriod, int pPage) throws SQLException {

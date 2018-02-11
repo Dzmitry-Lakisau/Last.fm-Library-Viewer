@@ -29,7 +29,7 @@ public class TopsParser {
     private static final String TOPTRACKS_KEY = "toptracks";
     private static final int MAX_IMAGE_RESOLUTION_INDEX = 3;
     private static final String TOTAL_KEY = "total";
-    private String mStringToParse;
+    private final String mStringToParse;
 
     public TopsParser(String pStringToParse) {
         mStringToParse = pStringToParse;

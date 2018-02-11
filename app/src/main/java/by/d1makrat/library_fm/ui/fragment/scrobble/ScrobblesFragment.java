@@ -3,6 +3,7 @@ package by.d1makrat.library_fm.ui.fragment.scrobble;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
@@ -41,7 +42,7 @@ public abstract class ScrobblesFragment extends ItemsFragment<Scrobble> implemen
     protected Long mTo = DATE_LONG_DEFAUT_VALUE;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.list_with_head, container, false);
 
@@ -51,11 +52,8 @@ public abstract class ScrobblesFragment extends ItemsFragment<Scrobble> implemen
         listHeadTextView = rootView.findViewById(R.id.list_head);
 
         if (mListAdapter.isEmpty()) {
-//            listHeadTextView.setVisibility(View.GONE);
             setUpListHead(mListAdapter.getItemCount(), mFrom, mTo, View.GONE);
         } else {
-//            listHeadTextView.setVisibility(View.VISIBLE);
-//            listHeadTextView.setText(DateUtils.getMessageFromTimestamps(mListAdapter.getItemCount(), mFrom, mTo));
             setUpListHead(mListAdapter.getItemCount(), mFrom, mTo, View.VISIBLE);
         }
 
@@ -86,13 +84,15 @@ public abstract class ScrobblesFragment extends ItemsFragment<Scrobble> implemen
                 return true;
             case R.id.action_filter:
                 if (!isLoading) {
-                    FilterDialogFragment dialogFragment = new FilterDialogFragment();
-                    Bundle args = new Bundle();
-                    args.putLong(FILTER_DIALOG_FROM_BUNDLE_KEY, mFrom);
-                    args.putLong(FILTER_DIALOG_TO_BUNDLE_KEY, mTo);
-                    dialogFragment.setArguments(args);
-                    dialogFragment.setTargetFragment(this, 0);
-                    dialogFragment.show(getFragmentManager(), FILTER_DIALOG_KEY);
+                    if (getFragmentManager() != null) {
+                        FilterDialogFragment dialogFragment = new FilterDialogFragment();
+                        Bundle args = new Bundle();
+                        args.putLong(FILTER_DIALOG_FROM_BUNDLE_KEY, mFrom);
+                        args.putLong(FILTER_DIALOG_TO_BUNDLE_KEY, mTo);
+                        dialogFragment.setArguments(args);
+                        dialogFragment.setTargetFragment(this, 0);
+                        dialogFragment.show(getFragmentManager(), FILTER_DIALOG_KEY);
+                    }
                 }
                 return true;
             case R.id.open_in_browser:
@@ -116,7 +116,10 @@ public abstract class ScrobblesFragment extends ItemsFragment<Scrobble> implemen
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        getActivity().getMenuInflater().inflate(R.menu.menu_context, menu);
+
+        if (getActivity() != null) {
+            getActivity().getMenuInflater().inflate(R.menu.menu_context, menu);
+        }
     }
 
     @Override
@@ -161,8 +164,8 @@ public abstract class ScrobblesFragment extends ItemsFragment<Scrobble> implemen
     }
 
     @Override
-    protected ScrobblesAdapter createAdapter(){
-        return new ScrobblesAdapter(getActivity().getLayoutInflater(), ContextCompat.getDrawable(getActivity(), R.drawable.img_vinyl));
+    protected ScrobblesAdapter createAdapter(LayoutInflater pLayoutInflater){
+        return new ScrobblesAdapter(pLayoutInflater, ContextCompat.getDrawable(AppContext.getInstance(), R.drawable.img_vinyl));//TODO resourcecompat
     }
 
     protected abstract void performOperation();

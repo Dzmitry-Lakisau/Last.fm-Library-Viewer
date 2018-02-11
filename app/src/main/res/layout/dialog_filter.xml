@@ -23,7 +23,7 @@
             android:layout_gravity="center"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="From"
+            android:text="@string/from"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@android:color/black" />
 
@@ -46,11 +46,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/light_red"
-        android:gravity="left|center_vertical"
-        android:text="Equate fields"
+        android:gravity="start|center_vertical"
+        android:text="@string/equate_fields"
         android:layout_marginLeft="10dp"
-        style="?android:attr/borderlessButtonStyle"
-        />
+        android:layout_marginStart="10dp"
+        style="?android:attr/borderlessButtonStyle" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -64,7 +64,7 @@
             android:layout_gravity="center"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="To"
+            android:text="@string/to"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@android:color/black" />
 

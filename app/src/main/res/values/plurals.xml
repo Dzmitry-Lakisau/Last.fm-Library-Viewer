@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="scrobbles_count">
+        <item quantity="one">%d scrobble</item>
+        <item quantity="other">%d scrobbles</item>
+    </plurals>
+    <plurals name="scrobbles_count_within_period">
+        <item quantity="one">%d scrobble within %2$s - %3$s</item>
+        <item quantity="other">%d scrobbles within %2$s - %3$s</item>
+    </plurals>
+</resources>

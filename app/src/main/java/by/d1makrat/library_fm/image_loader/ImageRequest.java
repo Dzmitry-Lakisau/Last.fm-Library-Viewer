@@ -6,10 +6,10 @@ import android.widget.ImageView;
 import java.lang.ref.WeakReference;
 
 class ImageRequest {
-    String url;
-    WeakReference<ImageView> target;
-    Drawable placeholderDrawable;
-    Drawable onErrorDrawable;
+    final String url;
+    final WeakReference<ImageView> target;
+    final Drawable placeholderDrawable;
+    final Drawable onErrorDrawable;
     int width;
     int height;
 

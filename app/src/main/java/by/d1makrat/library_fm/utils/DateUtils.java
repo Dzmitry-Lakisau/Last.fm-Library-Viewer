@@ -21,7 +21,7 @@ public class DateUtils {
 
         if (pFrom.equals(DATE_LONG_DEFAUT_VALUE) && pTo.equals(DATE_LONG_DEFAUT_VALUE)) {
             if (pScrobbleCount > 0) {
-                return String.format(AppContext.getInstance().getString(R.string.scrobbles_count), pScrobbleCount);
+                return AppContext.getInstance().getResources().getQuantityString(R.plurals.scrobbles_count, pScrobbleCount, pScrobbleCount);
             }
             else {
                 return AppContext.getInstance().getString(R.string.no_scrobbles);
@@ -35,10 +35,10 @@ public class DateUtils {
             String string_to = new SimpleDateFormat(FORMATTING_DATE_PATTERN_FOR_MESSAGE, Locale.ENGLISH).format(date_to);
 
             if (pScrobbleCount > 0) {
-                return String.format(AppContext.getInstance().getString(R.string.scrobbles_count_within_period), pScrobbleCount) + string_from + " - " + string_to;
+                return AppContext.getInstance().getResources().getQuantityString(R.plurals.scrobbles_count_within_period, pScrobbleCount, pScrobbleCount, string_from, string_to);
             }
             else {
-                return AppContext.getInstance().getString(R.string.no_scrobbles_within_period) + string_from + " - " + string_to;
+                return AppContext.getInstance().getString(R.string.no_scrobbles_within_period, string_from, string_to);
             }
         }
     }

@@ -8,7 +8,7 @@ import by.d1makrat.library_fm.operation.model.TopOperationResult;
 public class GetTopItemsAsyncTask<T> extends AsyncTask<IOperation<TopOperationResult<T>>, Void, TopOperationResult<T>> {
 
     private Exception mException = null;
-    private GetTopItemsCallback<T> mGetTopItemsCallback;
+    private final GetTopItemsCallback<T> mGetTopItemsCallback;
 
     public GetTopItemsAsyncTask(GetTopItemsCallback<T> mGetTopItemsCallback) {
         this.mGetTopItemsCallback = mGetTopItemsCallback;

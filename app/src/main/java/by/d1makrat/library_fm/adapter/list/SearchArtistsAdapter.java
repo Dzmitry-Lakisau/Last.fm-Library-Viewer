@@ -51,7 +51,7 @@ public class SearchArtistsAdapter extends ItemsAdapter<Artist>{
         private void bind(Artist artist, Drawable pPlaceholderDrawable){
 
             artistTextView.setText(artist.getName());
-            playcountTextView.setText(String.format(AppContext.getInstance().getString(R.string.listeners_count), artist.getListenersCount()));
+            playcountTextView.setText(AppContext.getInstance().getString(R.string.listeners_count, artist.getListenersCount()));
 
             String imageUri = artist.getImageUri();
             Malevich.INSTANCE.load(imageUri).instead(pPlaceholderDrawable).into(artistImgView);//TODO make icon larger

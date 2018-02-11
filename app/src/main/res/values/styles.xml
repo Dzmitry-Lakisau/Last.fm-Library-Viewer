@@ -1,17 +1,5 @@
 <resources>
 
-    <!--
-        Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-    -->
-    <style name="AppBaseTheme" parent="@android:style/Theme.Black">
-        <!--
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        -->
-    </style>
-
     <!-- Application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat">
         <item name="android:windowNoTitle">true</item>
@@ -35,22 +23,17 @@
     </style>
 
     <style name="AppTheme.OverFlow">
-        <item name="android:src">@drawable/ic_menu_overflow</item>
+        <item name="android:src">@drawable/ic_menu_overflow_black_96dp</item>
     </style>
 
     <style name="DialogTheme" parent="Theme.AppCompat.Dialog.Alert">
 
-        <item name="android:windowMinWidthMajor">@dimen/dialog_min_width_minor</item>
+        <item name="android:windowMinWidthMajor">@dimen/dialog_min_width_major</item>
         <item name="android:windowMinWidthMinor">@dimen/dialog_min_width_minor</item>
         <item name="android:textColorPrimary">@color/black</item>
         <item name="android:background">@color/light_red</item>
 
         <item name="colorAccent">#000000</item>
-    </style>
-
-    <style name="DialogTitle" parent="@android:style/TextAppearance.DialogWindowTitle">
-        <item name="android:gravity">center_horizontal</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.DeviceDefault.Large</item>
     </style>
 
     <style name="MyDrawerArrowToggleStyle" parent="Widget.AppCompat.DrawerArrowToggle">
@@ -59,11 +42,6 @@
 
     <style name="PopupMenu"  parent="@style/Widget.AppCompat.PopupMenu">
         <item name="android:popupBackground">@color/light_red</item>
-    </style>
-
-    <style name="MyMenuText">
-        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
-        <item name="android:textColor">@android:color/black</item>
     </style>
 
     <style name="ToolbarSubtitleAppearance" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle">

@@ -16,7 +16,7 @@ import static by.d1makrat.library_fm.Constants.API_NO_ERROR;
 
 public class GetUserInfoAsyncTask extends AsyncTask<Void, Void, User> {
 
-    private GetUserInfoCallback mAsynctaskCallback;
+    private final GetUserInfoCallback mAsynctaskCallback;
     private Exception mException = null;
 
     public GetUserInfoAsyncTask(GetUserInfoCallback pGetUserInfoCallback) {

@@ -16,8 +16,9 @@ import static by.d1makrat.library_fm.Constants.API_NO_ERROR;
 
 public class RecentScrobblesOperation implements IOperation<List<Scrobble>> {
 
-    private int  mPage;
-    private Long mFrom, mTo;
+    private final int  mPage;
+    private final Long mFrom;
+    private final Long mTo;
 
     public RecentScrobblesOperation(int mPage, Long mFrom, Long mTo) {
         this.mPage = mPage;

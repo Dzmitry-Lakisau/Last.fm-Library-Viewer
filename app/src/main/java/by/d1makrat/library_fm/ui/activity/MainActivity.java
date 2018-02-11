@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -56,7 +57,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String MANUAL_SCROBBLE_FRAGMENT_TAG = "ManualScrobbleFragment";
     private static final String RECENT_SCROBBLES_FRAGMENT_TAG = "RecentScrobblesFragment";
 
-    private FragmentManager mFragmentManager = getSupportFragmentManager();
+    private static final String ADMOB_APP_ID = "ca-app-pub-2835136610089326~9892994294";
+
+    private final FragmentManager mFragmentManager = getSupportFragmentManager();
     private User mUser;
     private BroadcastReceiver mNetworkStatusReceiver;
 
@@ -74,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        MobileAds.initialize(getApplicationContext(), "ca-app-pub-2835136610089326~9892994294");
+        MobileAds.initialize(getApplicationContext(), ADMOB_APP_ID);
 
         mUser = AppContext.getInstance().getUser();
 
@@ -98,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     finish();
                     break;
                 default:
-                    getSupportActionBar().setSubtitle(null);
+                    if (getSupportActionBar() != null) getSupportActionBar().setSubtitle(null);
                     super.onBackPressed();
                     break;
             }
@@ -106,9 +109,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-        getSupportActionBar().setSubtitle(null);
+        if (getSupportActionBar() != null) getSupportActionBar().setSubtitle(null);
         ((DrawerLayout) findViewById(R.id.drawer_layout)).closeDrawer(GravityCompat.START);
 
         if (HttpsClient.isNetworkAvailable()) {
@@ -130,19 +133,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 showFragment(MANUAL_SCROBBLE_FRAGMENT_TAG, ManualScrobbleFragment.class);
                 break;
             case (R.id.scrobbles):
-                getSupportActionBar().setTitle(R.string.scrobbles);
+//                getSupportActionBar().setTitle(R.string.scrobbles);
                 showFragment(RECENT_SCROBBLES_FRAGMENT_TAG, RecentScrobblesFragment.class);
                 break;
             case (R.id.top_tracks):
-//                getSupportActionBar().setTitle(R.string.top_tracks);
                 showFragment(TAB_TOP_TRACKS_FRAGMENT_TAG, TabTopTracksFragment.class);
                 break;
             case (R.id.top_artists):
-//                getSupportActionBar().setTitle(R.string.top_artists);
                 showFragment(TAB_TOP_ARTISTS_FRAGMENT_TAG, TabTopArtistsFragment.class);
                 break;
             case (R.id.top_albums):
-//                getSupportActionBar().setTitle(R.string.top_albums);
                 showFragment(TAB_TOP_ALBUMS_FRAGMENT_TAG, TabTopAlbumsFragment.class);
                 break;
             case (R.id.settings):
@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private <T extends Fragment> void showFragment(String pTag, Class<T> tClass){
         try {
             Fragment currentFragment = mFragmentManager.findFragmentById(R.id.content_main);
-            if (!currentFragment.getTag().equals(pTag)) {
+            if (currentFragment.getTag() != null && !currentFragment.getTag().equals(pTag)) {
 
                 Fragment targetFragment = mFragmentManager.findFragmentByTag(pTag);
 
@@ -211,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void setUserInfoInHeader(User pUser) {
         View headerView = ((NavigationView) findViewById(R.id.nav_view)).getHeaderView(0);
 
-        ((TextView) headerView.findViewById(R.id.user_registered)).setText(String.format("%s scrobbles since %s", pUser.getPlaycount(), pUser.getRegistered()));
+        ((TextView) headerView.findViewById(R.id.user_registered)).setText(getString(R.string.navigation_drawer_header_message, pUser.getPlaycount(), pUser.getRegistered()));
 
         ((TextView) headerView.findViewById(R.id.user_name)).setText(pUser.getUsername());
 
@@ -245,4 +245,3 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onException(Exception exception) {
     }
 }
-

@@ -18,7 +18,7 @@ public class UserParser {
     private static final String REGISTERED_KEY = "registered";
     private static final String UNIXTIME_KEY = "unixtime";
     private static final int MAX_IMAGE_RESOLUTION_INDEX = 3;
-    private String mStringToParse;
+    private final String mStringToParse;
 
     public UserParser(String pStringToParse) {
         mStringToParse = pStringToParse;
