@@ -46,11 +46,12 @@ public class FilterDialogFragment extends DialogFragment {
 
         mFilterDialogListener = (FilterDialogListener) getTargetFragment();
 
+        mCalendarFrom = Calendar.getInstance(TimeZone.getDefault());
+
         if (getArguments() != null) {
 
             mFrom = getArguments().getLong(FILTER_DIALOG_FROM_BUNDLE_KEY);
             if (mFrom > DATE_LONG_DEFAUT_VALUE) {
-                mCalendarFrom = Calendar.getInstance(TimeZone.getDefault());
                 mCalendarFrom.setTimeInMillis(TimeUnit.SECONDS.toMillis(mFrom));
             }
 
@@ -62,7 +63,6 @@ public class FilterDialogFragment extends DialogFragment {
         }
     }
 
-
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstance) {
@@ -71,15 +71,21 @@ public class FilterDialogFragment extends DialogFragment {
             AlertDialog.Builder adb = new AlertDialog.Builder(getActivity(), R.style.DialogTheme);
             LayoutInflater inflater = getActivity().getLayoutInflater();
             @SuppressLint("InflateParams") final View view = inflater.inflate(R.layout.dialog_filter, null);
+            adb.setView(view);
+
             final DatePicker datePicker = view.findViewById(R.id.datePicker_from);
             final DatePicker datePicker2 = view.findViewById(R.id.datePicker_to);
 
-            if (mFrom > DATE_LONG_DEFAUT_VALUE)
-                datePicker.init(mCalendarFrom.get(Calendar.YEAR), mCalendarFrom.get(Calendar.MONTH), mCalendarFrom.get(Calendar.DAY_OF_MONTH), null);
+            datePicker.init(mCalendarFrom.get(Calendar.YEAR), mCalendarFrom.get(Calendar.MONTH), mCalendarFrom.get(Calendar.DAY_OF_MONTH), new DatePicker.OnDateChangedListener() {
+                @Override
+                public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                    datePicker2.updateDate(view.getYear(), view.getMonth(), view.getDayOfMonth());
+                }
+            });
+
             if (mTo > DATE_LONG_DEFAUT_VALUE)
                 datePicker2.init(mCalendarTo.get(Calendar.YEAR), mCalendarTo.get(Calendar.MONTH), mCalendarTo.get(Calendar.DAY_OF_MONTH), null);
-            adb.setView(view);
-
+            
             TextView title = new TextView(getActivity().getApplicationContext());
             title.setText(R.string.filter_dialog_title);
             title.setIncludeFontPadding(true);
@@ -122,14 +128,6 @@ public class FilterDialogFragment extends DialogFragment {
             adb.setNegativeButton(R.string.filter_dialog_cancel, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int id) {
-                }
-            });
-
-            view.findViewById(R.id.equate_button);
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    datePicker2.updateDate(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth());
                 }
             });
 
