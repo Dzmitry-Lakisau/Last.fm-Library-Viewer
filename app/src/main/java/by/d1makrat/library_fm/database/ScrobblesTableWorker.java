@@ -50,7 +50,7 @@ public class ScrobblesTableWorker {
                 contentValues.put(COLUMN_TRACK, item.getTrackTitle());
                 contentValues.put(COLUMN_ARTIST, item.getArtist());
                 contentValues.put(COLUMN_ALBUM, item.getAlbum());
-                contentValues.put(COLUMN_DATE, item.getDate());
+                contentValues.put(COLUMN_DATE, item.getRawDate());
                 contentValues.put(COLUMN_IMAGEURI, item.getImageUri());
 
                 database.insertWithOnConflict(DATABASE_SCROBBLES_TABLE, EMPTY_STRING, contentValues, SQLiteDatabase.CONFLICT_IGNORE);

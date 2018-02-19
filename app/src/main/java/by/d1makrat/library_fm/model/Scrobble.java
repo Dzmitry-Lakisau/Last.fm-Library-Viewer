@@ -50,11 +50,11 @@ public class Scrobble{
 
     public String getFormattedDate(){
         java.util.Date date = new java.util.Date (TimeUnit.SECONDS.toMillis(mUnixDate));
-        SimpleDateFormat sdf = new SimpleDateFormat("d MMM yyyy, HH:mm:ss", Locale.ENGLISH);
+        SimpleDateFormat sdf = new SimpleDateFormat("d MMM yyyy, HH:mm:ss, EEEE", Locale.ENGLISH);
         return sdf.format(date);
     }
 
-    public long getDate(){
+    public long getRawDate(){
         return mUnixDate;
     }
 }
