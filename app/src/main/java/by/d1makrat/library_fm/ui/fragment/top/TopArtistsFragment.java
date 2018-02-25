@@ -56,7 +56,7 @@ public class TopArtistsFragment extends TopItemsFragment<TopArtist> {
 
     @Override
     protected TopArtistsAdapter createAdapter(LayoutInflater pLayoutInflater) {
-        return new TopArtistsAdapter(pLayoutInflater, ContextCompat.getDrawable(AppContext.getInstance(), R.drawable.ic_person_black_24dp));
+        return new TopArtistsAdapter(pLayoutInflater, ContextCompat.getDrawable(AppContext.getInstance(), R.drawable.ic_person_black_24dp_large));
     }
 
     @Override

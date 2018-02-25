@@ -48,7 +48,7 @@ public class SearchArtistFragment extends ItemsFragment<Artist> implements GetIt
 
     @Override
     protected SearchArtistsAdapter createAdapter(LayoutInflater pLayoutInflater){
-        return new SearchArtistsAdapter(pLayoutInflater, ContextCompat.getDrawable(AppContext.getInstance(), R.drawable.ic_person_black_24dp));
+        return new SearchArtistsAdapter(pLayoutInflater, ContextCompat.getDrawable(AppContext.getInstance(), R.drawable.ic_person_black_24dp_large));
     }
 
     @Override

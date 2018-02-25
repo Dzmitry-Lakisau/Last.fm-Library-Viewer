@@ -54,7 +54,7 @@ public class SearchArtistsAdapter extends ItemsAdapter<Artist>{
             playcountTextView.setText(AppContext.getInstance().getString(R.string.listeners_count, artist.getListenersCount()));
 
             String imageUri = artist.getImageUri();
-            Malevich.INSTANCE.load(imageUri).instead(pPlaceholderDrawable).into(artistImgView);//TODO make icon larger
+            Malevich.INSTANCE.load(imageUri).instead(pPlaceholderDrawable).into(artistImgView);
         }
     }
 }
