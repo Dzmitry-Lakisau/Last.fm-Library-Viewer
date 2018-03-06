@@ -1,137 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/track"
+        style="@style/EditTextStyle"
+        android:layout_alignParentTop="true"
+        android:hint="@string/track_hint"
+        android:inputType="textCapWords"/>
+
+    <EditText
+        android:id="@+id/artist"
+        style="@style/EditTextStyle"
+        android:layout_below="@id/track"
+        android:hint="@string/artist_hint"
+        android:inputType="textCapWords"/>
+
+    <EditText
+        android:id="@+id/album"
+        style="@style/EditTextStyle"
+        android:layout_below="@id/artist"
+        android:hint="@string/album_hint"
+        android:inputType="textCapWords"/>
+
+    <EditText
+        android:id="@+id/tracknumber"
+        style="@style/EditTextStyle"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentEnd="false"
+        android:layout_alignRight="@id/button_date"
+        android:layout_alignEnd="@id/button_date"
+        android:layout_below="@id/album"
+        android:layout_marginTop="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginEnd="0dp"
+        android:hint="@string/track_number_hint"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/trackduration"
+        style="@style/EditTextStyle"
+        android:layout_alignTop="@id/tracknumber"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentStart="false"
+        android:layout_alignRight="@id/track"
+        android:layout_alignEnd="@id/track"
+        android:layout_toRightOf="@id/progressBar"
+        android:layout_toEndOf="@id/progressBar"
+        android:layout_below="@id/album"
+        android:layout_marginTop="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginStart="0dp"
+        android:hint="@string/duration_hint"
+        android:inputType="number"/>
+
+    <Button
+        android:id="@+id/button_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/track"
+        android:layout_alignStart="@id/track"
+        android:layout_toLeftOf="@id/progressBar"
+        android:layout_toStartOf="@id/progressBar"
+        android:layout_below="@id/trackduration"
+        android:layout_marginTop="10dp"
+        android:text="@string/button_date" />
+
+    <Button
+        android:id="@+id/button_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/button_date"
+        android:layout_alignRight="@id/trackduration"
+        android:layout_alignEnd="@id/trackduration"
+        android:layout_toRightOf="@id/progressBar"
+        android:layout_toEndOf="@id/progressBar"
+        android:text="@string/button_time"/>
+
+    <Button
+        android:id="@+id/button_scrobble"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        xmlns:tools="http://schemas.android.com/tools"
-        style="@style/AppTheme"
-        android:orientation="vertical"
-        tools:context="by.d1makrat.library_fm.ui.activity.MainActivity"
-        android:id="@+id/manual_scrobble_fragment"
-        android:background="@android:color/transparent"
-        android:focusable="true"
-        android:layout_gravity="top"
-        android:fitsSystemWindows="true"
-        >
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/button_date"
+        android:layout_alignStart="@id/button_date"
+        android:layout_alignRight="@id/button_time"
+        android:layout_alignEnd="@id/button_date"
+        android:layout_below="@id/progressBar"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/button"
+        android:text="@string/button_scrobble"/>
 
-        <EditText
-            android:id="@+id/track"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="10dp"
-            android:ems="10"
-            android:hint="@string/track_hint"
-            android:inputType="textCapWords"
-            android:singleLine="true"
-            android:textColorHint="@color/dark_red" />
-
-        <EditText
-            android:id="@+id/artist"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/track"
-            android:layout_alignParentTop="false"
-            android:layout_below="@+id/track"
-            android:layout_marginTop="10dp"
-            android:ems="10"
-            android:singleLine="true"
-            android:hint="@string/artist_hint"
-            android:textColorHint="@color/dark_red"
-            android:layout_alignRight="@+id/track"
-            android:inputType="textCapWords"
-            />
-
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/album"
-            android:singleLine="true"
-            android:layout_alignLeft="@+id/track"
-            android:layout_below="@+id/artist"
-            android:layout_marginTop="10dp"
-            android:hint="@string/album_hint"
-            android:textColorHint="@color/dark_red"
-            android:layout_alignRight="@+id/track"
-            android:inputType="textCapWords"
-            />
-
-        <EditText
-            android:id="@+id/tracknumber"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/track"
-            android:layout_alignRight="@+id/button_date"
-            android:layout_below="@+id/album"
-            android:layout_marginTop="0dp"
-            android:hint="@string/track_number_hint"
-            android:inputType="number"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:textColorHint="@color/dark_red" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/trackduration"
-            android:layout_below="@+id/album"
-            android:layout_alignTop="@id/tracknumber"
-            android:hint="@string/duration_hint"
-            android:textColorHint="@color/dark_red"
-            android:layout_alignRight="@+id/track"
-            android:inputType="number"
-            android:maxLines="1"
-            android:layout_toRightOf="@+id/progressBar" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/button_time"
-            android:id="@+id/button_time"
-            android:layout_alignBottom="@+id/button_date"
-            android:layout_alignRight="@+id/trackduration"
-            android:background="@color/dark_red"
-            android:layout_toRightOf="@+id/progressBar" />
-
-        <Button
-            android:id="@+id/button_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/track"
-            android:layout_below="@+id/trackduration"
-            android:layout_marginTop="10dp"
-            android:layout_toLeftOf="@+id/progressBar"
-            android:background="@color/dark_red"
-            android:text="@string/button_date"
-
-            />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/button_scrobble"
-            android:id="@+id/button_scrobble"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/button"
-            android:layout_alignLeft="@+id/button_date"
-            android:layout_alignRight="@id/button_time"
-            android:layout_below="@id/progressBar"
-            />
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="@android:style/Widget.DeviceDefault.ProgressBar.Large"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/button_date"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10dp"/>
-
-
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@android:style/Widget.DeviceDefault.ProgressBar.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button_date"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="10dp" />
 
 </RelativeLayout>
-
-
