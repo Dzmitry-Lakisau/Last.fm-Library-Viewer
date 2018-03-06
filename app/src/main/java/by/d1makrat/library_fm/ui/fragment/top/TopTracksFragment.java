@@ -48,7 +48,9 @@ public class TopTracksFragment extends TopItemsFragment<TopTrack> {
     @Override
     protected void setUpListHead(String pItemsCount, int pVisibility) {
         listHeadTextView.setVisibility(pVisibility);
-        listHeadTextView.setText(getString(R.string.total_tracks, pItemsCount));
+        if (pVisibility == View.VISIBLE){
+            listHeadTextView.setText(getString(R.string.total_tracks, pItemsCount));
+        }
     }
 
     @Override

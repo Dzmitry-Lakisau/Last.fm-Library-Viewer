@@ -43,7 +43,9 @@ public class TopArtistsFragment extends TopItemsFragment<TopArtist> {
     @Override
     protected void setUpListHead(String pItemsCount, int pVisibility) {
         listHeadTextView.setVisibility(pVisibility);
-        listHeadTextView.setText(getString(R.string.total_artists, pItemsCount));
+        if (pVisibility == View.VISIBLE){
+            listHeadTextView.setText(getString(R.string.total_artists, pItemsCount));
+        }
     }
 
     @Override

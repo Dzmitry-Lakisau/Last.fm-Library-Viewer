@@ -52,7 +52,7 @@ public abstract class ScrobblesFragment extends ItemsFragment<Scrobble> implemen
         listHeadTextView = rootView.findViewById(R.id.list_head);
 
         if (mListAdapter.isEmpty()) {
-            setUpListHead(mListAdapter.getItemCount(), mFrom, mTo, View.GONE);
+            setUpListHead(mListAdapter.getItemCount(), mFrom, mTo, View.INVISIBLE);
         } else {
             setUpListHead(mListAdapter.getItemCount(), mFrom, mTo, View.VISIBLE);
         }
@@ -76,7 +76,7 @@ public abstract class ScrobblesFragment extends ItemsFragment<Scrobble> implemen
                         killTaskIfRunning(mGetItemsAsynctask);
 
                         mListAdapter.removeAll();
-                        setUpListHead(mListAdapter.getItemCount(), mFrom, mTo, View.GONE);
+                        setUpListHead(mListAdapter.getItemCount(), mFrom, mTo, View.INVISIBLE);
 
                         mPage = 1;
                         loadItems();
@@ -150,7 +150,7 @@ public abstract class ScrobblesFragment extends ItemsFragment<Scrobble> implemen
         mTo = pTo;
 
         mListAdapter.removeAll();
-        setUpListHead(mListAdapter.getItemCount(), mFrom, mTo, View.GONE);
+        setUpListHead(mListAdapter.getItemCount(), mFrom, mTo, View.INVISIBLE);
 
         mPage = 1;
 
@@ -160,7 +160,9 @@ public abstract class ScrobblesFragment extends ItemsFragment<Scrobble> implemen
 
     private void setUpListHead(int pItemCount, Long pFrom, Long pTo, int pVisibility) {
         listHeadTextView.setVisibility(pVisibility);
-        listHeadTextView.setText(DateUtils.getMessageFromTimestamps(pItemCount, pFrom, pTo));
+        if (pVisibility == View.VISIBLE){
+            listHeadTextView.setText(DateUtils.getMessageFromTimestamps(pItemCount, pFrom, pTo));
+        }
     }
 
     @Override

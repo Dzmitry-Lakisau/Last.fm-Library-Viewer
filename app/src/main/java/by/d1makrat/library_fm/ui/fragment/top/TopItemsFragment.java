@@ -47,7 +47,7 @@ public abstract class TopItemsFragment<T> extends ItemsFragment<T> implements Ge
                     killTaskIfRunning(mGetItemsAsynctask);
 
                     mListAdapter.removeAll();
-                    setUpListHead(mTotalItemCount, View.GONE);
+                    setUpListHead(mTotalItemCount, View.INVISIBLE);
 
                     mPage = 1;
                     loadItems();
@@ -68,7 +68,7 @@ public abstract class TopItemsFragment<T> extends ItemsFragment<T> implements Ge
         listHeadTextView = rootView.findViewById(R.id.list_head);
 
         if (mListAdapter.isEmpty()) {
-            setUpListHead(mTotalItemCount, View.GONE);
+            setUpListHead(mTotalItemCount, View.INVISIBLE);
         } else {
             setUpListHead(mTotalItemCount, View.VISIBLE);
         }

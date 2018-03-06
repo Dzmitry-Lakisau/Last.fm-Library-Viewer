@@ -48,7 +48,9 @@ public class TopAlbumsFragment extends TopItemsFragment<TopAlbum> {
     @Override
     protected void setUpListHead(String pItemsCount, int pVisibility) {
         listHeadTextView.setVisibility(pVisibility);
-        listHeadTextView.setText(getString(R.string.total_albums, pItemsCount));
+        if (pVisibility == View.VISIBLE){
+            listHeadTextView.setText(getString(R.string.total_albums, pItemsCount));
+        }
     }
 
     @Override
