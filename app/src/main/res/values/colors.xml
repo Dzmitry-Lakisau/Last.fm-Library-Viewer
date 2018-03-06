@@ -3,5 +3,23 @@
     <color name="light_red">#9a0202</color>
     <color name="dark_red">#60060a</color>
     <color name="black">#000000</color>
+    <color name="black_2">#0A0A0A</color>
     <color name="deactivated_button">#C60D17</color>
+    <color name="last_fm_black">#222222</color>
+
+    <!--Material red palette-->
+    <color name="md_red_50">#FFEBEE</color>
+    <color name="md_red_100">#FFCDD2</color>
+    <color name="md_red_200">#EF9A9A</color>
+    <color name="md_red_300">#E57373</color>
+    <color name="md_red_400">#EF5350</color>
+    <color name="md_red_500">#F44336</color>
+    <color name="md_red_600">#E53935</color>
+    <color name="md_red_700">#D32F2F</color>
+    <color name="md_red_800">#C62828</color>
+    <color name="md_red_900">#B71C1C</color>
+    <color name="md_red_A100">#FF8A80</color>
+    <color name="md_red_A200">#FF5252</color>
+    <color name="md_red_A400">#FF1744</color>
+    <color name="md_red_A700">#D50000</color>
 </resources>

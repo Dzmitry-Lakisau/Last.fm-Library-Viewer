@@ -36,21 +36,21 @@ public class SearchArtistsAdapter extends ItemsAdapter<Artist>{
     
     private static class ArtistViewHolder extends LongClickableViewHolder {
 
-        private final TextView artistTextView;
+        private final TextView artistNameTextView;
         private final TextView playcountTextView;
         private final ImageView artistImgView;
 
         ArtistViewHolder(View pView, LongClickListener pLongClickListener) {
             super(pView, pLongClickListener);
 
-            artistTextView = pView.findViewById(R.id.artistName_textView);
+            artistNameTextView = pView.findViewById(R.id.artistName_textView);
             playcountTextView = pView.findViewById(R.id.playcount_textView);
             artistImgView = pView.findViewById(R.id.artistImage_ImgView);
         }
 
         private void bind(Artist artist, Drawable pPlaceholderDrawable){
 
-            artistTextView.setText(artist.getName());
+            artistNameTextView.setText(artist.getName());
             playcountTextView.setText(AppContext.getInstance().getString(R.string.listeners_count, artist.getListenersCount()));
 
             String imageUri = artist.getImageUri();

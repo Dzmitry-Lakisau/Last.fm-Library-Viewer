@@ -44,7 +44,7 @@ public class TopArtistsAdapter extends ItemsAdapter<TopArtist> {
         TopArtistViewHolder(View pView, LongClickListener pLongClickListener) {
             super(pView, pLongClickListener);
 
-            artistTextView = pView.findViewById(R.id.artistName_textView);
+            artistTextView = pView.findViewById(R.id.primaryField_textView);
             playcountTextView = pView.findViewById(R.id.playcount_textView);
             rankTextView = pView.findViewById(R.id.rank);
             albumartImgView = pView.findViewById(R.id.albumart);

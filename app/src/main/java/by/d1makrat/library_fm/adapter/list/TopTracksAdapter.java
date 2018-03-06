@@ -45,7 +45,7 @@ public class TopTracksAdapter extends ItemsAdapter<TopTrack> {
         TopTrackViewHolder(View pView, LongClickListener pLongClickListener) {
             super(pView, pLongClickListener);
 
-            trackTextView = pView.findViewById(R.id.artistName_textView);
+            trackTextView = pView.findViewById(R.id.primaryField_textView);
             artistTextView = pView.findViewById(R.id.secondaryField_textView);
             playcountTextView = pView.findViewById(R.id.playcount_textView);
             rankTextView = pView.findViewById(R.id.rank);
