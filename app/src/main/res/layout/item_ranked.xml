@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/dividerline"
-    app:popupTheme="@style/AppTheme.PopupOverlay"
-    >
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/item_margin"
+                android:layout_marginBottom="0dp"
+                android:layout_marginLeft="@dimen/item_margin"
+                android:layout_marginRight="@dimen/item_margin"
+                android:background="@color/light_red">
 
     <TextView
-        android:includeFontPadding="false"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/rank"
-        android:layout_alignRight="@id/albumart"
-        android:layout_alignLeft="@id/albumart"
-        android:gravity="right"
-        android:background="@android:color/transparent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        />
+        android:layout_marginLeft="@dimen/item_margin"
+        android:layout_marginRight="@dimen/item_margin"
+        android:gravity="end|center_vertical"
+        android:includeFontPadding="false"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <TextView
-        android:maxLines="1"
         android:includeFontPadding="false"
-        android:id="@+id/artistName_textView"
+        android:id="@+id/primaryField_textView"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/albumart"
+        android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/albumart"
-        android:background="@android:color/transparent"
-        android:layout_marginRight="@dimen/text_margin"
+        android:layout_toEndOf="@+id/albumart"
+        android:layout_toLeftOf="@id/rank"
+        android:layout_toStartOf="@id/rank"
         />
 
     <TextView
@@ -41,9 +41,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        android:layout_below="@+id/artistName_textView"
-        android:layout_alignLeft="@+id/artistName_textView"
-        android:layout_marginRight="@dimen/text_margin"
+        android:layout_below="@+id/primaryField_textView"
+        android:layout_alignLeft="@+id/primaryField_textView"
+        android:layout_alignStart="@id/primaryField_textView"
+        android:layout_marginRight="@dimen/item_margin"
+        android:layout_marginEnd="@dimen/item_margin"
         />
 
     <TextView
@@ -56,18 +58,15 @@
         android:background="@android:color/transparent"
         android:layout_below="@+id/secondaryField_textView"
         android:layout_alignLeft="@+id/secondaryField_textView"
-        android:layout_marginRight="@dimen/text_margin"
+        android:layout_alignStart="@id/secondaryField_textView"
+        android:layout_marginRight="@dimen/item_margin"
+        android:layout_marginEnd="@dimen/item_margin"
         />
 
     <ImageView
-        android:layout_width="@android:dimen/notification_large_icon_width"
-        android:layout_height="@android:dimen/notification_large_icon_height"
-        android:background="@android:color/transparent"
+        android:layout_width="@dimen/item_image_size"
+        android:layout_height="@dimen/item_image_size"
         android:id="@+id/albumart"
-        android:layout_below="@id/rank"
-        android:layout_marginLeft="@dimen/text_margin"
-        android:layout_marginRight="@dimen/text_margin"
-        android:layout_marginBottom="@dimen/text_margin"
-        android:layout_marginEnd="@dimen/text_margin"
+        android:layout_margin="@dimen/item_margin"
         android:contentDescription="@string/artist_photo" />
 </RelativeLayout>

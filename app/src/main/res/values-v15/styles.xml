@@ -1,0 +1,7 @@
+<resources>
+    <style name="AppTheme" parent="BaseTheme">
+        <item name="android:itemBackground">?attr/colorPrimary</item>
+
+        <item name="android:textColorPrimaryInverse">?attr/colorPrimary</item>
+    </style>
+</resources>
