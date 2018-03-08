@@ -28,17 +28,17 @@ public class DateUtils {
             }
         }
         else {
-            Date date_from = new Date(TimeUnit.SECONDS.toMillis(pFrom));
-            Date date_to = new Date(TimeUnit.SECONDS.toMillis(pTo));
+            Date dateFrom = new Date(TimeUnit.SECONDS.toMillis(pFrom));
+            Date dateTo = new Date(TimeUnit.SECONDS.toMillis(pTo));
 
-            String string_from = new SimpleDateFormat(FORMATTING_DATE_PATTERN_FOR_MESSAGE, Locale.ENGLISH).format(date_from);
-            String string_to = new SimpleDateFormat(FORMATTING_DATE_PATTERN_FOR_MESSAGE, Locale.ENGLISH).format(date_to);
+            String stringFrom = new SimpleDateFormat(FORMATTING_DATE_PATTERN_FOR_MESSAGE, Locale.ENGLISH).format(dateFrom);
+            String stringTo = new SimpleDateFormat(FORMATTING_DATE_PATTERN_FOR_MESSAGE, Locale.ENGLISH).format(dateTo);
 
             if (pScrobbleCount > 0) {
-                return AppContext.getInstance().getResources().getQuantityString(R.plurals.scrobbles_count_within_period, pScrobbleCount, pScrobbleCount, string_from, string_to);
+                return AppContext.getInstance().getResources().getQuantityString(R.plurals.scrobbles_count_within_period, pScrobbleCount, pScrobbleCount, stringFrom, stringTo);
             }
             else {
-                return AppContext.getInstance().getString(R.string.no_scrobbles_within_period, string_from, string_to);
+                return AppContext.getInstance().getString(R.string.no_scrobbles_within_period, stringFrom, stringTo);
             }
         }
     }
@@ -46,8 +46,16 @@ public class DateUtils {
     @NonNull
     public static String getUrlFromTimestamps(String pUrlForBrowser, Long pFrom, Long pTo) {
 
-        return pUrlForBrowser.concat("?from=" +
-                new SimpleDateFormat(FORMATTING_DATE_PATTERN_FOR_URL, Locale.ENGLISH).format(new Date(TimeUnit.SECONDS.toMillis(pFrom))
-                + "&to=" + new SimpleDateFormat(FORMATTING_DATE_PATTERN_FOR_URL, Locale.ENGLISH).format(new Date(TimeUnit.SECONDS.toMillis(pTo)))));
+        if (pFrom.equals(DATE_LONG_DEFAUT_VALUE) && pTo.equals(DATE_LONG_DEFAUT_VALUE)) {
+            return pUrlForBrowser;
+        } else {
+            Date dateFrom = new Date(TimeUnit.SECONDS.toMillis(pFrom));
+            Date dateTo = new Date(TimeUnit.SECONDS.toMillis(pTo));
+
+            String stringFrom = new SimpleDateFormat(FORMATTING_DATE_PATTERN_FOR_URL, Locale.ENGLISH).format(dateFrom);
+            String stringTo = new SimpleDateFormat(FORMATTING_DATE_PATTERN_FOR_URL, Locale.ENGLISH).format(dateTo);
+
+            return pUrlForBrowser.concat("?from=" + stringFrom + "&to=" + stringTo);
+        }
     }
 }
