@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (item.getItemId()) {
             case R.id.logout:
                 AppContext.getInstance().setUser(null);
-
+                AppContext.getInstance().setSessionKey(null);
                 startActivity(new Intent(this, LoginActivity.class));
                 finish();
                 break;
@@ -133,7 +133,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 showFragment(MANUAL_SCROBBLE_FRAGMENT_TAG, ManualScrobbleFragment.class);
                 break;
             case (R.id.scrobbles):
-//                getSupportActionBar().setTitle(R.string.scrobbles);
                 showFragment(RECENT_SCROBBLES_FRAGMENT_TAG, RecentScrobblesFragment.class);
                 break;
             case (R.id.top_tracks):
