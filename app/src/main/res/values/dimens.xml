@@ -15,4 +15,6 @@
     <dimen name="item_image_size">74dp</dimen>
 
     <dimen name="avatar_size">300dp</dimen>
+
+    <dimen name="preferences_margin">10dp</dimen>
 </resources>

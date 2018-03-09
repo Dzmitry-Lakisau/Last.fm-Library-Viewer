@@ -65,6 +65,7 @@
         android:layout_toStartOf="@id/progressBar"
         android:layout_below="@id/trackduration"
         android:layout_marginTop="10dp"
+        android:background="@drawable/button"
         android:text="@string/button_date" />
 
     <Button
@@ -76,17 +77,18 @@
         android:layout_alignEnd="@id/trackduration"
         android:layout_toRightOf="@id/progressBar"
         android:layout_toEndOf="@id/progressBar"
+        android:background="@drawable/button"
         android:text="@string/button_time"/>
 
     <Button
         android:id="@+id/button_scrobble"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_alignLeft="@id/button_date"
         android:layout_alignStart="@id/button_date"
         android:layout_alignRight="@id/button_time"
         android:layout_alignEnd="@id/button_date"
-        android:layout_below="@id/progressBar"
         android:layout_marginBottom="16dp"
         android:background="@drawable/button"
         android:text="@string/button_scrobble"/>
@@ -96,6 +98,7 @@
         style="@android:style/Widget.DeviceDefault.ProgressBar.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@id/button_scrobble"
         android:layout_below="@id/button_date"
         android:layout_centerInParent="true"
         android:layout_marginBottom="10dp" />

@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/set_limit_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
+        android:layout_margin="@dimen/preferences_margin"
         android:text="@string/set_scrobbles_per_request"
-        android:textSize="16sp" />
+        android:textSize="18sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,9 +19,12 @@
 
         <EditText
             android:id="@+id/set_limit_editText"
+            style="@style/EditTextStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
+            android:layout_marginLeft="7dp"
+            android:layout_marginStart="7dp"
             android:inputType="number" />
 
         <Button
@@ -30,42 +34,51 @@
             android:layout_height="wrap_content"
             android:text="@string/set"
             android:layout_weight="1"
-            android:background="@drawable/button"/>
+            android:layout_marginRight="@dimen/preferences_margin"
+            android:layout_marginEnd="@dimen/preferences_margin"
+            android:background="@drawable/button" />
 
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/black"
-        android:layout_marginTop="@dimen/nav_header_vertical_spacing"/>
+        android:background="@color/black" />
 
     <TextView
         android:id="@+id/clear_image_cache_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
+        android:paddingTop="@dimen/nav_header_vertical_spacing"
+        android:paddingLeft="@dimen/preferences_margin"
+        android:paddingStart="@dimen/preferences_margin"
+        android:paddingRight="@dimen/preferences_margin"
+        android:paddingEnd="@dimen/preferences_margin"
+        android:paddingBottom="@dimen/nav_header_vertical_spacing"
         android:text="@string/clear_image_cache"
-        android:textSize="16sp" />
+        android:textSize="18sp" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/black"
-        android:layout_marginTop="@dimen/nav_header_vertical_spacing"/>
+        android:background="@color/black" />
 
     <TextView
         android:id="@+id/drop_database_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
+        android:paddingTop="@dimen/nav_header_vertical_spacing"
+        android:paddingLeft="@dimen/preferences_margin"
+        android:paddingStart="@dimen/preferences_margin"
+        android:paddingRight="@dimen/preferences_margin"
+        android:paddingEnd="@dimen/preferences_margin"
+        android:paddingBottom="@dimen/nav_header_vertical_spacing"
         android:text="@string/drop_database"
-        android:textSize="16sp" />
+        android:textSize="18sp" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/black"
-        android:layout_marginTop="@dimen/nav_header_vertical_spacing"/>
+        android:background="@color/black" />
 
 </LinearLayout>

@@ -50,18 +50,18 @@
 
     <style name="CustomBetterPickersDialogs" parent="BetterPickersDialogFragment">
         <item name="bpPreHeaderBackgroundColor">@color/bpTransparent</item>
-        <item name="bpHeaderBackgroundColor">@color/dark_red</item>
+        <item name="bpHeaderBackgroundColor">@color/light_red</item>
         <item name="bpHeaderSelectedTextColor">@color/black</item>
         <item name="bpHeaderUnselectedTextColor">@android:color/black</item>
-        <item name="bpBodyBackgroundColor">@color/light_red</item>
+        <item name="bpBodyBackgroundColor">@color/md_red_900</item>
         <item name="bpBodySelectedTextColor">@color/black</item>
         <item name="bpBodyUnselectedTextColor">@android:color/white</item>
-        <item name="bpButtonsBackgroundColor">@color/dark_red</item>
+        <item name="bpButtonsBackgroundColor">@color/light_red</item>
         <item name="bpButtonsTextColor">@color/black</item>
 
-        <item name="bpRadialBackgroundColor">@color/dark_red</item>
+        <item name="bpRadialBackgroundColor">@color/light_red</item>
         <item name="bpRadialTextColor">@color/black</item>
         <item name="bpRadialPointerColor">@android:color/black</item>
-        <item name="bpAmPmCircleColor">@color/dark_red</item>
+        <item name="bpAmPmCircleColor">@color/light_red</item>
     </style>
 </resources>

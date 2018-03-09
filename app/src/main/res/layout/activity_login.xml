@@ -53,6 +53,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/password"
+        android:background="@drawable/button"
+        android:enabled="false"
         android:text="@string/sign_in"/>
 
     <ProgressBar
@@ -60,8 +62,8 @@
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignTop="@id/login"
         android:layout_alignBottom="@id/password"
-        android:layout_alignParentLeft="true"
         android:visibility="invisible"/>
 
 
