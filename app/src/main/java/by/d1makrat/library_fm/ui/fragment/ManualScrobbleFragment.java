@@ -187,6 +187,7 @@ public class ManualScrobbleFragment extends Fragment implements CalendarDatePick
 	@Override
 	public void onException(Exception pException) {
 		mSpinner.setVisibility(View.INVISIBLE);
+		mScrobbleButton.setEnabled(true);
 		CenteredToast.show(getContext(), pException.getMessage(), Toast.LENGTH_LONG);
 	}
 

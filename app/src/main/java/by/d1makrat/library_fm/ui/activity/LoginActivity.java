@@ -3,16 +3,18 @@ package by.d1makrat.library_fm.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import by.d1makrat.library_fm.AppContext;
-import by.d1makrat.library_fm.asynctask.GetSessionKeyCallback;
-import by.d1makrat.library_fm.asynctask.GetUserInfoCallback;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.asynctask.GetSessionKeyAsyncTask;
+import by.d1makrat.library_fm.asynctask.GetSessionKeyCallback;
 import by.d1makrat.library_fm.asynctask.GetUserInfoAsyncTask;
+import by.d1makrat.library_fm.asynctask.GetUserInfoCallback;
 import by.d1makrat.library_fm.https.HttpsClient;
 import by.d1makrat.library_fm.model.User;
 import by.d1makrat.library_fm.ui.CenteredToast;
@@ -69,8 +71,31 @@ public class LoginActivity extends AppCompatActivity implements GetSessionKeyCal
                     hideKeyboard(LoginActivity.this);
                 }
             });
-        }
+            username_field.addTextChangedListener(new TextWatcher() {
 
+                public void afterTextChanged(Editable s) {
+                        mButton.setEnabled(password_field.getText().length() > 0 && s.length() > 0);
+                }
+
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+            });
+            password_field.addTextChangedListener(new TextWatcher() {
+
+                public void afterTextChanged(Editable s) {
+                        mButton.setEnabled(username_field.getText().length() > 0 && s.length() > 0);
+                }
+
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+            });
+        }
     }
 
     @Override
