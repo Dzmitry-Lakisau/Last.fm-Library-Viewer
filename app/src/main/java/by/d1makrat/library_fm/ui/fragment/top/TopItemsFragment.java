@@ -89,12 +89,15 @@ public abstract class TopItemsFragment<T> extends ItemsFragment<T> implements Ge
         if (size > 0) {
             mListAdapter.addAll(items);
             setUpListHead(mTotalItemCount, View.VISIBLE);
+
+            checkIfAllIsLoaded(size);
         }
         else if (mListAdapter.isEmpty()){
             mListAdapter.addEmptyHeader(getString(R.string.no_items));
         }
-
-        checkIfAllIsLoaded(size);
+        else {
+            checkIfAllIsLoaded(size);
+        }
     }
 
     protected abstract void setUpListHead(String pItemsCount, int pVisibility);

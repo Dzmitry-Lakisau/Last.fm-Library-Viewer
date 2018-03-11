@@ -189,12 +189,15 @@ public abstract class ScrobblesFragment extends ItemsFragment<Scrobble> implemen
         if (size > 0) {
             mListAdapter.addAll(items);
             setUpListHead(mListAdapter.getItemCount(), mFrom, mTo, View.VISIBLE);
+
+            checkIfAllIsLoaded(size);
         }
         else if (mListAdapter.isEmpty()){
             mListAdapter.addEmptyHeader(DateUtils.getMessageFromTimestamps(mListAdapter.getItemCount(), mFrom, mTo));
         }
-
-        checkIfAllIsLoaded(size);
+        else {
+            checkIfAllIsLoaded(size);
+        }
     }
 
     protected void checkIfAllIsLoaded(int size){

@@ -157,12 +157,15 @@ public class SearchArtistFragment extends ItemsFragment<Artist> implements GetIt
         int size = items.size();
         if (size > 0) {
             mListAdapter.addAll(items);
+
+            checkIfAllIsLoaded(size);
         }
         else if (mListAdapter.isEmpty()){
             mListAdapter.addEmptyHeader(getString(R.string.search_fragment_no_result));
         }
-
-        checkIfAllIsLoaded(size);
+        else {
+            checkIfAllIsLoaded(size);
+        }
     }
 
     protected void checkIfAllIsLoaded(int size){
