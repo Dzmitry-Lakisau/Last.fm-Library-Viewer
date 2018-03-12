@@ -2,6 +2,8 @@ package by.d1makrat.library_fm.asynctask;
 
 import android.os.AsyncTask;
 
+import com.google.firebase.crash.FirebaseCrash;
+
 import java.net.URL;
 
 import by.d1makrat.library_fm.APIException;
@@ -39,7 +41,7 @@ public class GetUserInfoAsyncTask extends AsyncTask<Void, Void, User> {
 
             String errorOrNot = jsonParser.checkForApiErrors(response);
             if (!errorOrNot.equals(API_NO_ERROR)) {
-                mException = new APIException(errorOrNot);
+                throw new APIException(errorOrNot);
             }
             else {
                 UserParser userParser = new UserParser(response);
@@ -47,6 +49,7 @@ public class GetUserInfoAsyncTask extends AsyncTask<Void, Void, User> {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            FirebaseCrash.report(e);
             mException = e;
         }
 

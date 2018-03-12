@@ -2,6 +2,8 @@ package by.d1makrat.library_fm.asynctask;
 
 import android.os.AsyncTask;
 
+import com.google.firebase.crash.FirebaseCrash;
+
 import org.json.JSONObject;
 
 import java.net.URL;
@@ -34,6 +36,7 @@ public class CheckNewVersionAsyncTask extends AsyncTask<Void, Void, Integer> {
             result = jsonObject.getInt(LATEST_VERSION_KEY);
         } catch (Exception e) {
             e.printStackTrace();
+            FirebaseCrash.report(e);
             mException = e;
         }
 

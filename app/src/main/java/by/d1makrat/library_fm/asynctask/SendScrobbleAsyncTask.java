@@ -2,6 +2,8 @@ package by.d1makrat.library_fm.asynctask;
 
 import android.os.AsyncTask;
 
+import com.google.firebase.crash.FirebaseCrash;
+
 import java.net.URL;
 
 import by.d1makrat.library_fm.APIException;
@@ -48,6 +50,7 @@ public class SendScrobbleAsyncTask extends AsyncTask<String, Void, String> {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            FirebaseCrash.report(e);
             mException = e;
         }
 

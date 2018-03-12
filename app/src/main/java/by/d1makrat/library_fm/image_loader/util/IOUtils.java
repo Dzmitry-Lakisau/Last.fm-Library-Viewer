@@ -1,13 +1,11 @@
 package by.d1makrat.library_fm.image_loader.util;
 
-import android.util.Log;
+import com.google.firebase.crash.FirebaseCrash;
 
 import java.io.Closeable;
 import java.io.IOException;
 
 public final class IOUtils {
-
-    private static final String LOG_TAG = IOUtils.class.getSimpleName();
 
     private IOUtils() {
     }
@@ -17,7 +15,8 @@ public final class IOUtils {
             try {
                 stream.close();
             } catch (IOException e) {
-                Log.e(LOG_TAG, "Could not close stream");
+                e.printStackTrace();
+                FirebaseCrash.report(e);
             }
         }
     }

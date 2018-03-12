@@ -2,6 +2,8 @@ package by.d1makrat.library_fm.asynctask;
 
 import android.os.AsyncTask;
 
+import com.google.firebase.crash.FirebaseCrash;
+
 import java.util.List;
 
 import by.d1makrat.library_fm.operation.IOperation;
@@ -23,6 +25,7 @@ public class GetItemsAsyncTask<T> extends AsyncTask<IOperation<List<T>>, Void, L
              items = operations[0].perform();
         } catch (Exception e) {
             e.printStackTrace();
+            FirebaseCrash.report(e);
             mException = e;
         }
 

@@ -138,14 +138,10 @@ public class BaseDiskCache implements DiskCache {
     }
 
     private static long calculateDiskCacheSize(File dir) {
-        long size = MIN_DISK_CACHE_SIZE;
 
-        try {
-            StatFs statFs = new StatFs(dir.getAbsolutePath());
-            long available = ((long) statFs.getBlockCount()) * statFs.getBlockSize();
-            size = available / 50;
-        } catch (IllegalArgumentException ignored) {
-        }
+        StatFs statFs = new StatFs(dir.getAbsolutePath());
+        long available = ((long) statFs.getBlockCount()) * statFs.getBlockSize();
+        long size = available / 50;
 
         return Math.max(Math.min(size, MAX_DISK_CACHE_SIZE), MIN_DISK_CACHE_SIZE);
 //        return 40772;

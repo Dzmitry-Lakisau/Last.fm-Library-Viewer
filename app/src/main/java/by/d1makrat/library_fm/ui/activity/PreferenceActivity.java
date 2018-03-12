@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.crash.FirebaseCrash;
+
 import java.io.IOException;
 
 import by.d1makrat.library_fm.AppContext;
@@ -18,6 +20,7 @@ import by.d1makrat.library_fm.image_loader.Malevich;
 import by.d1makrat.library_fm.ui.CenteredToast;
 
 import static by.d1makrat.library_fm.Constants.API_MAX_FOR_SCROBBLES_BY_ARTIST;
+import static by.d1makrat.library_fm.utils.InputUtils.hideKeyboard;
 
 public class PreferenceActivity extends Activity {
 
@@ -59,10 +62,14 @@ public class PreferenceActivity extends Activity {
                         }
                         AppContext.getInstance().setLimit(String.valueOf(temp));
                         CenteredToast.show(getApplicationContext(), R.string.limit_has_been_set, Toast.LENGTH_SHORT);
+                        hideKeyboard(PreferenceActivity.this);
+                        ((EditText) findViewById(R.id.set_limit_editText)).setHint(String.valueOf(AppContext.getInstance().getLimit()));
                     } else {
                         CenteredToast.show(getApplicationContext(), R.string.limit_must_be_between, Toast.LENGTH_SHORT);
                     }
                 } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    FirebaseCrash.report(e);
                     CenteredToast.show(getApplicationContext(), R.string.limit_nonnumerical_input, Toast.LENGTH_SHORT);
                 }
             }
@@ -77,6 +84,7 @@ public class PreferenceActivity extends Activity {
                     CenteredToast.show(getApplicationContext(), R.string.OK, Toast.LENGTH_SHORT);
                 } catch (IOException e) {
                     e.printStackTrace();
+                    FirebaseCrash.report(e);
                     CenteredToast.show(getApplicationContext(), R.string.unable_to_clear_cache, Toast.LENGTH_SHORT);
                 }
             }
@@ -84,7 +92,7 @@ public class PreferenceActivity extends Activity {
 
         findViewById(R.id.drop_database_textView).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {//TODO catch Exception
+            public void onClick(View v) {
                 DatabaseWorker databaseWorker = new DatabaseWorker();
 
                 try {
@@ -98,6 +106,7 @@ public class PreferenceActivity extends Activity {
                 }
                 catch (SQLException e){
                     e.printStackTrace();
+                    FirebaseCrash.report(e);
                     CenteredToast.show(getApplicationContext(), R.string.unable_to_drop_database, Toast.LENGTH_SHORT);
                 }
                 finally {

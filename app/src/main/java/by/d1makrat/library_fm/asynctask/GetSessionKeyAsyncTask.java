@@ -2,6 +2,8 @@ package by.d1makrat.library_fm.asynctask;
 
 import android.os.AsyncTask;
 
+import com.google.firebase.crash.FirebaseCrash;
+
 import java.net.URL;
 
 import by.d1makrat.library_fm.APIException;
@@ -40,11 +42,12 @@ public class GetSessionKeyAsyncTask extends AsyncTask<String, Void, String> {
 
             String errorOrNot = jsonParser.checkForApiErrors(response);
             if (!errorOrNot.equals(API_NO_ERROR))
-                mException = new APIException(errorOrNot);
+                throw new APIException(errorOrNot);
             else
                 sessionKey = jsonParser.parseSessionkey(response);
         } catch (Exception e) {
             e.printStackTrace();
+            FirebaseCrash.report(e);
             mException = e;
         }
 

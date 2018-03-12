@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
+import com.google.firebase.crash.FirebaseCrash;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -259,7 +261,8 @@ public enum Malevich {
                             return result;
                         }
                     } catch (Exception e) {
-                        Log.e(TAG, "doInBackground: can't get file for "+ request.url, e);
+                        e.printStackTrace();
+                        FirebaseCrash.report(e);
                     }
                 }
 
@@ -276,7 +279,8 @@ public enum Malevich {
 
                 return result;
             } catch (Exception e) {
-                Log.e(TAG, "doInBackground: ", e);
+                e.printStackTrace();
+                FirebaseCrash.report(e);
                 if (result != null) {
                     result.setException(e);
                 }
@@ -301,7 +305,8 @@ public enum Malevich {
                 diskCache.save(request.url, bitmap);
             }
         } catch (Exception e) {
-            Log.e(TAG, "doInBackground: ", e);
+            e.printStackTrace();
+            FirebaseCrash.report(e);
         }
     }
 }

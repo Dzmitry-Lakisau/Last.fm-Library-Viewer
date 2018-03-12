@@ -2,6 +2,8 @@ package by.d1makrat.library_fm.asynctask;
 
 import android.os.AsyncTask;
 
+import com.google.firebase.crash.FirebaseCrash;
+
 import by.d1makrat.library_fm.operation.IOperation;
 import by.d1makrat.library_fm.operation.model.TopOperationResult;
 
@@ -22,6 +24,7 @@ public class GetTopItemsAsyncTask<T> extends AsyncTask<IOperation<TopOperationRe
             result = operations[0].perform();
         } catch (Exception e) {
             e.printStackTrace();
+            FirebaseCrash.report(e);
             mException = e;
         }
 

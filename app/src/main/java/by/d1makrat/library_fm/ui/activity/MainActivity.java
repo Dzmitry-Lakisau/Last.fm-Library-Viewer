@@ -170,10 +170,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .addToBackStack(null)
                         .commit();
             }
-        } catch (InstantiationException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            FirebaseCrash.report(e);
         }
     }
 

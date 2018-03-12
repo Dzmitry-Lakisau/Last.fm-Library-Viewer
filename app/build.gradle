@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.firebase.firebase-perf'
 
 android {
     compileSdkVersion 27
@@ -24,14 +23,14 @@ android {
     buildTypes {
         debug {
             minifyEnabled false
-            manifestPlaceholders = [firebase_crash_enabled:false]
+            manifestPlaceholders = [crash_reporting_enabled:false]
         }
 
         release {
             minifyEnabled true
             shrinkResources true
-            manifestPlaceholders = [firebase_crash_enabled:true]
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            manifestPlaceholders = [crash_reporting_enabled:true]
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
@@ -42,7 +41,6 @@ dependencies {
     compile 'com.code-troopers.betterpickers:library:3.1.0'
     compile 'com.google.firebase:firebase-ads:11.8.0'
     compile 'com.google.firebase:firebase-crash:11.8.0'
-    compile 'com.google.firebase:firebase-perf:11.8.0'
     compile 'com.google.code.gson:gson:2.8.2'
     testImplementation 'junit:junit:4.12'
     testImplementation "org.robolectric:robolectric:3.5.1"
