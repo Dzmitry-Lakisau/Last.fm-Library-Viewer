@@ -83,10 +83,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         createView();
 
-        mFragmentManager.beginTransaction()
-                .replace(R.id.content_main, new StartFragment(), START_FRAGMENT_TAG)
-                .addToBackStack(null)
-                .commit();
+        if (mFragmentManager.getBackStackEntryCount() == 0) {
+            mFragmentManager.beginTransaction()
+                    .replace(R.id.content_main, new StartFragment(), START_FRAGMENT_TAG)
+                    .addToBackStack(null)
+                    .commit();
+        }
     }
 
     @Override
