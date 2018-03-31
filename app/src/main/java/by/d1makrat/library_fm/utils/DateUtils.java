@@ -3,6 +3,7 @@ package by.d1makrat.library_fm.utils;
 import android.support.annotation.NonNull;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -57,5 +58,14 @@ public class DateUtils {
 
             return pUrlForBrowser.concat("?from=" + stringFrom + "&to=" + stringTo);
         }
+    }
+
+    public static long getStartTimestampOfDay(long timestamp){
+        long rawdate = timestamp - timestamp % TimeUnit.DAYS.toSeconds(1);
+        return rawdate - TimeUnit.MILLISECONDS.toSeconds(Calendar.getInstance().getTimeZone().getOffset(rawdate));
+    }
+
+    public static long getEndTimestampOfDay(long timestamp) {
+        return getStartTimestampOfDay(timestamp) + TimeUnit.DAYS.toSeconds(1) - 1;
     }
 }

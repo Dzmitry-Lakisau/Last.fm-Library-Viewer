@@ -7,4 +7,6 @@
         android:id="@+id/scrobbles_of_track" />
     <item android:title="@string/scrobbles_of_album"
         android:id="@+id/scrobbles_of_album" />
+    <item android:title="@string/scrobbles_of_day"
+          android:id="@+id/scrobbles_of_day"/>
 </menu>

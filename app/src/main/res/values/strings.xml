@@ -84,6 +84,7 @@
     <string name="scrobbles_of_artist">Scrobbles of this artist</string>
     <string name="scrobbles_of_track">Scrobbles of this track</string>
     <string name="scrobbles_of_album">Scrobbles of this album</string>
+    <string name="scrobbles_of_day">All scrobbles of this day</string>
 
     <string name="app_icon">App icon</string>
     <string name="avatar">Avatar</string>

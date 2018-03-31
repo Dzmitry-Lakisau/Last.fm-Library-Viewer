@@ -49,6 +49,7 @@ public class ScrobblesOfArtistFragment extends ScrobblesFragment {
         ActionBar actionBar = pActivity.getSupportActionBar();
         if (actionBar != null){
             actionBar.setTitle(artist);
+            actionBar.setSubtitle(null);
         }
     }
 }

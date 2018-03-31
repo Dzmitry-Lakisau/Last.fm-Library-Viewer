@@ -46,6 +46,8 @@ import by.d1makrat.library_fm.ui.fragment.tabTop.TabTopArtistsFragment;
 import by.d1makrat.library_fm.ui.fragment.tabTop.TabTopTracksFragment;
 import by.d1makrat.library_fm.utils.InputUtils;
 
+import static by.d1makrat.library_fm.Constants.RECENT_SCROBBLES_FRAGMENT_TAG;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, GetUserInfoCallback, CheckNewVersionCallback {
 
     private static final String TAB_TOP_ALBUMS_FRAGMENT_TAG = "TabTopAlbumsFragment";
@@ -55,7 +57,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String START_FRAGMENT_TAG = "StartFragment";
     private static final String SEARCH_ARTIST_FRAGMENT_TAG = "SearchArtistFragment";
     private static final String MANUAL_SCROBBLE_FRAGMENT_TAG = "ManualScrobbleFragment";
-    private static final String RECENT_SCROBBLES_FRAGMENT_TAG = "RecentScrobblesFragment";
 
     private static final String ADMOB_APP_ID = "ca-app-pub-2835136610089326~9892994294";
 

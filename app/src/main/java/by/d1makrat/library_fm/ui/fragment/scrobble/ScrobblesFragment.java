@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
@@ -31,6 +33,7 @@ import by.d1makrat.library_fm.utils.DateUtils;
 import static by.d1makrat.library_fm.Constants.DATE_LONG_DEFAUT_VALUE;
 import static by.d1makrat.library_fm.Constants.FILTER_DIALOG_FROM_BUNDLE_KEY;
 import static by.d1makrat.library_fm.Constants.FILTER_DIALOG_TO_BUNDLE_KEY;
+import static by.d1makrat.library_fm.Constants.RECENT_SCROBBLES_FRAGMENT_TAG;
 
 public abstract class ScrobblesFragment extends ItemsFragment<Scrobble> implements FilterDialogFragment.FilterDialogListener, GetItemsCallback<Scrobble> {
 
@@ -136,6 +139,30 @@ public abstract class ScrobblesFragment extends ItemsFragment<Scrobble> implemen
                 return true;
             case R.id.scrobbles_of_album:
                 replaceFragment(listItemPressed.getArtist(), null, listItemPressed.getAlbum());
+                return true;
+            case R.id.scrobbles_of_day:
+                if (this instanceof RecentScrobblesFragment) {
+                    onFinishFilterDialog(DateUtils.getStartTimestampOfDay(listItemPressed.getRawDate()), DateUtils.getEndTimestampOfDay(listItemPressed.getRawDate()));
+                }
+                else {
+                    Bundle bundle = new Bundle();
+                    Fragment fragment = new RecentScrobblesFragment();
+
+                    bundle.putLong(FILTER_DIALOG_FROM_BUNDLE_KEY, DateUtils.getStartTimestampOfDay(listItemPressed.getRawDate()));
+                    bundle.putLong(FILTER_DIALOG_TO_BUNDLE_KEY, DateUtils.getEndTimestampOfDay(listItemPressed.getRawDate()));
+
+                    fragment.setArguments(bundle);
+
+                    FragmentActivity activity = getActivity();
+                    if (activity != null) {
+                        activity.getSupportFragmentManager().beginTransaction()
+                                .setCustomAnimations(R.anim.appear_from_right, R.anim.disappear_to_left,
+                                        R.anim.appear_from_left, R.anim.disappear_to_right)
+                                .replace(R.id.content_main, fragment, RECENT_SCROBBLES_FRAGMENT_TAG)
+                                .addToBackStack(null)
+                                .commit();
+                    }
+                }
                 return true;
             default:
                 return super.onContextItemSelected(pMenuItem);
