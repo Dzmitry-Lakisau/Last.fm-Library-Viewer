@@ -22,6 +22,7 @@ android {
 
     buildTypes {
         debug {
+            applicationIdSuffix ".debug"
             minifyEnabled false
             manifestPlaceholders = [crash_reporting_enabled:false]
         }
