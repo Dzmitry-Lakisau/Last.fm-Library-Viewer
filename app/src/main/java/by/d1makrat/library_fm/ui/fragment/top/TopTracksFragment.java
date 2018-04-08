@@ -63,7 +63,7 @@ public class TopTracksFragment extends TopItemsFragment<TopTrack> {
 
     @Override
     protected TopTracksAdapter createAdapter(LayoutInflater pLayoutInflater) {
-        return new TopTracksAdapter(pLayoutInflater, ContextCompat.getDrawable(AppContext.getInstance(), R.drawable.ic_person_black_24dp_large));
+        return new TopTracksAdapter(pLayoutInflater, ContextCompat.getDrawable(AppContext.getInstance(), R.drawable.img_vinyl));
     }
 
     @Override
