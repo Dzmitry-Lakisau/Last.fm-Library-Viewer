@@ -60,7 +60,7 @@ public class TopAlbumsAdapter extends ItemsAdapter<TopAlbum> {
             rankTextView.setText(topAlbum.getRank());
 
             String imageUri = topAlbum.getImageUri();
-            Malevich.INSTANCE.load(imageUri).instead(pPlaceholderDrawable).into(albumartImgView);
+            Malevich.INSTANCE.load(null).instead(pPlaceholderDrawable).into(albumartImgView);
         }
     }
 }

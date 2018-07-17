@@ -57,7 +57,7 @@ public class TopArtistsAdapter extends ItemsAdapter<TopArtist> {
             rankTextView.setText(topArtist.getRank());
 
             String imageUri = topArtist.getImageUri();
-            Malevich.INSTANCE.load(imageUri).instead(pPlaceholderDrawable).into(albumartImgView);
+            Malevich.INSTANCE.load(null).instead(pPlaceholderDrawable).into(albumartImgView);
         }
     }
 }
