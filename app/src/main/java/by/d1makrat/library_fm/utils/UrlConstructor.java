@@ -9,7 +9,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -65,7 +65,7 @@ public class UrlConstructor {
     }
 
     @NonNull
-    private String generateApiSignature(TreeMap<String, String> params) {
+    private String generateApiSignature(Map<String, String> params) {
         StringBuilder stringBuilder = new StringBuilder();
         for (Map.Entry<String, String> e : params.entrySet()) {
             stringBuilder.append(e.getKey()).append(e.getValue());
@@ -88,7 +88,7 @@ public class UrlConstructor {
 
     public URL constructRecentScrobblesApiRequestUrl(int pPage, Long pFrom, Long pTo) throws MalformedURLException {//URL MUST be encoded. hash is not.
 
-        Map<String, String> requestParams = new TreeMap<>();
+        Map<String, String> requestParams = new HashMap<>();
 
         requestParams.put(APIKEY_KEY, BuildConfig.API_KEY);
         requestParams.put(SESSIONKEY_KEY, mSessionKey);
@@ -104,7 +104,7 @@ public class UrlConstructor {
 
     public URL constructScrobblesOfArtistApiRequestUrl(String pArtist, int pPage, Long pFrom, Long pTo) throws MalformedURLException {
 
-        Map<String, String> requestParams = new TreeMap<>();
+        Map<String, String> requestParams = new HashMap<>();
 
         requestParams.put(APIKEY_KEY, BuildConfig.API_KEY);
         requestParams.put(SESSIONKEY_KEY, mSessionKey);
@@ -126,7 +126,7 @@ public class UrlConstructor {
 
     public URL constructGetSessionKeyApiRequestUrl(String pUsername, String pPassword) throws MalformedURLException {
 
-        Map<String, String> requestParams = new LinkedHashMap<>();
+        Map<String, String> requestParams = new HashMap<>();
 
         requestParams.put(METHOD_KEY, METHOD_GET_MOBILE_SESSION_VALUE);
         requestParams.put(APIKEY_KEY, BuildConfig.API_KEY);
@@ -138,7 +138,7 @@ public class UrlConstructor {
 
     public URL constructGetUserInfoApiRequestUrl(@Nullable String pUsername) throws MalformedURLException {
 
-        Map<String, String> requestParams = new TreeMap<>();
+        Map<String, String> requestParams = new HashMap<>();
 
         requestParams.put(APIKEY_KEY, BuildConfig.API_KEY);
         requestParams.put(METHOD_KEY, METHOD_GET_USER_INFO);
@@ -150,7 +150,7 @@ public class UrlConstructor {
 
     public URL constructTopAlbumsApiRequestUrl(@NonNull String pPeriod, int pPage) throws MalformedURLException {
 
-        Map<String, String> requestParams = new TreeMap<>();
+        Map<String, String> requestParams = new HashMap<>();
 
         requestParams.put(APIKEY_KEY, BuildConfig.API_KEY);
         requestParams.put(USER_KEY, mUsername);
@@ -164,7 +164,7 @@ public class UrlConstructor {
 
     public URL constructTopArtistsApiRequestUrl(@NonNull String pPeriod, int pPage) throws MalformedURLException {
 
-        Map<String, String> requestParams = new TreeMap<>();
+        Map<String, String> requestParams = new HashMap<>();
 
         requestParams.put(APIKEY_KEY, BuildConfig.API_KEY);
         requestParams.put(USER_KEY, mUsername);
@@ -178,7 +178,7 @@ public class UrlConstructor {
 
     public URL constructTopTracksApiRequestUrl(@NonNull String pPeriod, int pPage) throws MalformedURLException {
 
-        Map<String, String> requestParams = new TreeMap<>();
+        Map<String, String> requestParams = new HashMap<>();
 
         requestParams.put(APIKEY_KEY, BuildConfig.API_KEY);
         requestParams.put(USER_KEY, mUsername);
@@ -192,7 +192,7 @@ public class UrlConstructor {
 
     public URL constructSearchArtistApiRequestUrl(@NonNull String pSearchQuery, int pPage) throws MalformedURLException {
 
-        Map<String, String> requestParams = new TreeMap<>();
+        Map<String, String> requestParams = new HashMap<>();
 
         requestParams.put(APIKEY_KEY, BuildConfig.API_KEY);
         requestParams.put(ARTIST_KEY, pSearchQuery);
@@ -206,7 +206,7 @@ public class UrlConstructor {
     public URL constructSendScrobbleApiRequestUrl(@NonNull String pTrack, @NonNull String pArtist, String pAlbum, String pTrackNumber,
                                                   @NonNull String pTrackDuration, @NonNull String pTimestamp) throws MalformedURLException {
 
-        Map<String, String> requestParams = new TreeMap<>();
+        Map<String, String> requestParams = new HashMap<>();
 
         requestParams.put(APIKEY_KEY, BuildConfig.API_KEY);
         requestParams.put(SESSIONKEY_KEY, mSessionKey);
