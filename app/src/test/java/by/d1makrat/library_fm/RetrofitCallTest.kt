@@ -1,24 +1,43 @@
 package by.d1makrat.library_fm
 
+import by.d1makrat.library_fm.Constants.API_BASE_URL
 import by.d1makrat.library_fm.Constants.DATE_PERIODS_FOR_API
 import by.d1makrat.library_fm.https.LastFmRestApiService
-import junit.framework.Assert.assertTrue
+import by.d1makrat.library_fm.json.*
+import by.d1makrat.library_fm.json.model.ArtistsJsonModel
+import by.d1makrat.library_fm.json.model.ScrobblesJsonModel
+import by.d1makrat.library_fm.model.*
+import com.google.gson.GsonBuilder
+import org.junit.Assert.assertTrue
+import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Test
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 
 class RetrofitCallTest {
 
     private val countOfObjectInResponse = 10
-    private val user = "D1MAkrat"
+    private val user: String = "D1MAkrat"
 
     private lateinit var mLastFmRestApiService: LastFmRestApiService
+
 
     @Before
     fun setUp(){
         val retrofit = Retrofit.Builder()
-                .baseUrl(Constants.API_BASE_URL)
+                .baseUrl(API_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(GsonBuilder()
+                        .registerTypeAdapter(User::class.java, UserAdapter())
+                        .registerTypeAdapter(TopAlbums::class.java, TopAlbumsAdapter())
+                        .registerTypeAdapter(TopArtists::class.java, TopArtistsAdapter())
+                        .registerTypeAdapter(TopTracks::class.java, TopTracksAdapter())
+                        .registerTypeAdapter(ArtistsJsonModel::class.java, SearchArtistResultsAdapter())
+                        .registerTypeAdapter(ScrobblesJsonModel::class.java, ScrobblesAdapter())
+                        .create()))
+                .addConverterFactory(GsonConverterFactory.create(
+                        GsonBuilder().registerTypeAdapter(User::class.java, UserAdapter()).create()))
                 .build()
 
         mLastFmRestApiService = retrofit.create(LastFmRestApiService::class.java)
@@ -27,7 +46,7 @@ class RetrofitCallTest {
 
     @Test
     fun getRecentScrobbles(){
-        var count: Int? = null
+        var scrobbles: List<Scrobble>? = null
         val startOfPeriod: Long? = 1000000
         val endOfPeriod: Long? = 1532342959
 
@@ -37,12 +56,10 @@ class RetrofitCallTest {
             val response = call.execute()
 
             if (response.isSuccessful){
-                val json: String? = response.body()?.string()
-
-                count = json?.split("name")?.size?.minus(1)
+                scrobbles = response.body()?.getAll()
             }
 
-            assertTrue(count == countOfObjectInResponse)
+            assert(scrobbles?.size == countOfObjectInResponse)
 
         } catch (e: IOException) {
             e.printStackTrace()
@@ -51,7 +68,7 @@ class RetrofitCallTest {
 
     @Test
     fun getScrobblesOfArtist(){
-        var count: Int? = null
+        var scrobbles: List<Scrobble>? = null
         val artist = "Queen"
         val startOfPeriod: Long? = 1000000
         val endOfPeriod: Long? = 1532342959
@@ -62,12 +79,10 @@ class RetrofitCallTest {
             val response = call.execute()
 
             if (response.isSuccessful){
-                val json: String? = response.body()?.string()
-
-                count = json?.split("name")?.size?.minus(1)
+                scrobbles = response.body()?.getAll()
             }
 
-            assertTrue(count == countOfObjectInResponse)
+            assertTrue(scrobbles?.size == countOfObjectInResponse)
 
         } catch (e: IOException) {
             e.printStackTrace()
@@ -76,7 +91,7 @@ class RetrofitCallTest {
 
     @Test
     fun getTopAlbums(){
-        var count: Int? = null
+        var result: TopAlbums? = null
 
         val call = mLastFmRestApiService.getTopAlbums(user, DATE_PERIODS_FOR_API[4], 1, countOfObjectInResponse)
 
@@ -84,12 +99,10 @@ class RetrofitCallTest {
             val response = call.execute()
 
             if (response.isSuccessful){
-                val json: String? = response.body()?.string()
-
-                count = json?.split("playcount")?.size?.minus(1)
+                result = response.body()
             }
 
-            assertTrue(count == countOfObjectInResponse)
+            assert(result?.total == countOfObjectInResponse.toString())
 
         } catch (e: IOException) {
             e.printStackTrace()
@@ -98,7 +111,7 @@ class RetrofitCallTest {
 
     @Test
     fun getTopArtists(){
-        var count: Int? = null
+        var result: TopArtists? = null
 
         val call = mLastFmRestApiService.getTopArtists(user, DATE_PERIODS_FOR_API[4], 1, countOfObjectInResponse)
 
@@ -106,12 +119,10 @@ class RetrofitCallTest {
             val response = call.execute()
 
             if (response.isSuccessful){
-                val json: String? = response.body()?.string()
-
-                count = json?.split("playcount")?.size?.minus(1)
+                result = response.body()
             }
 
-            assertTrue(count == countOfObjectInResponse)
+            assert(result?.total == countOfObjectInResponse.toString())
 
         } catch (e: IOException) {
             e.printStackTrace()
@@ -120,7 +131,7 @@ class RetrofitCallTest {
 
     @Test
     fun getTopTracks(){
-        var count: Int? = null
+        var result: TopTracks? = null
 
         val call = mLastFmRestApiService.getTopTracks(user, DATE_PERIODS_FOR_API[4], 1, countOfObjectInResponse)
 
@@ -128,12 +139,10 @@ class RetrofitCallTest {
             val response = call.execute()
 
             if (response.isSuccessful){
-                val json: String? = response.body()?.string()
-
-                count = json?.split("playcount")?.size?.minus(1)
+                result = response.body()
             }
 
-            assertTrue(count == countOfObjectInResponse)
+            assert(result?.total == countOfObjectInResponse.toString())
 
         } catch (e: IOException) {
             e.printStackTrace()
@@ -142,7 +151,7 @@ class RetrofitCallTest {
 
     @Test
     fun getUserInfo(){
-        lateinit var json: String
+        var json: User? = null
 
         val call = mLastFmRestApiService.getUserInfo(user)
 
@@ -150,10 +159,10 @@ class RetrofitCallTest {
             val response = call.execute()
 
             if (response.isSuccessful){
-                json = response.body()!!.string()
+                json = response.body()
             }
 
-            assertTrue(json.contains(user))
+            assert(json?.username == user)
 
         } catch (e: IOException) {
             e.printStackTrace()
@@ -162,7 +171,7 @@ class RetrofitCallTest {
 
     @Test
     fun searchArtist() {
-        var count: Int? = null
+        var artists: List<Artist>? = null
         val query = "The"
 
         val call = mLastFmRestApiService.searchArtist(query, 1, countOfObjectInResponse)
@@ -171,15 +180,14 @@ class RetrofitCallTest {
             val response = call.execute()
 
             if (response.isSuccessful){
-                val json: String? = response.body()?.string()
-
-                count = json?.split("name")?.size?.minus(1)
+                artists = response.body()?.getAll()
             }
 
-            assertTrue(count == countOfObjectInResponse)
+            assertTrue(artists?.size == countOfObjectInResponse)
 
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             e.printStackTrace()
+            fail()
         }
     }
 }
