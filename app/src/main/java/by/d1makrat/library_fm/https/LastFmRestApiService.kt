@@ -3,6 +3,12 @@ package by.d1makrat.library_fm.https
 import android.support.annotation.NonNull
 import android.support.annotation.Nullable
 import by.d1makrat.library_fm.BuildConfig.API_KEY
+import by.d1makrat.library_fm.json.model.ArtistsJsonModel
+import by.d1makrat.library_fm.json.model.ScrobblesJsonModel
+import by.d1makrat.library_fm.model.TopAlbums
+import by.d1makrat.library_fm.model.TopArtists
+import by.d1makrat.library_fm.model.TopTracks
+import by.d1makrat.library_fm.model.User
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.GET
@@ -47,7 +53,7 @@ interface LastFmRestApiService {
                            @Nullable
                            @Query("from") startOfPeriod: Long?,
                            @Nullable
-                           @Query("to") endOfPeriod: Long?): Call<ResponseBody>
+                           @Query("to") endOfPeriod: Long?): Call<ScrobblesJsonModel>
 
     @GET("?api_key=$API_KEY&format=json&method=user.getArtistTracks")
     fun getScrobblesOfArtist(@NonNull
@@ -61,7 +67,7 @@ interface LastFmRestApiService {
                              @Nullable
                              @Query("startTimestamp") startOfPeriod: Long?,
                              @Nullable
-                             @Query("endTimestamp") endOfPeriod: Long?): Call<ResponseBody>
+                             @Query("endTimestamp") endOfPeriod: Long?): Call<ScrobblesJsonModel>
 
     @GET("?api_key=$API_KEY&format=json&method=user.getTopAlbums")
     fun getTopAlbums(@NonNull
@@ -71,7 +77,7 @@ interface LastFmRestApiService {
                      @NonNull
                      @Query("page") page: Int,
                      @NonNull
-                     @Query("limit") scrobblesPerRequest: Int): Call<ResponseBody>
+                     @Query("limit") scrobblesPerRequest: Int): Call<TopAlbums>
 
     @GET("?api_key=$API_KEY&format=json&method=user.getTopArtists")
     fun getTopArtists(@NonNull
@@ -81,7 +87,7 @@ interface LastFmRestApiService {
                      @NonNull
                      @Query("page") page: Int,
                      @NonNull
-                     @Query("limit") scrobblesPerRequest: Int): Call<ResponseBody>
+                     @Query("limit") scrobblesPerRequest: Int): Call<TopArtists>
 
     @GET("?api_key=$API_KEY&format=json&method=user.getTopTracks")
     fun getTopTracks(@NonNull
@@ -91,12 +97,12 @@ interface LastFmRestApiService {
                      @NonNull
                      @Query("page") page: Int,
                      @NonNull
-                     @Query("limit") scrobblesPerRequest: Int): Call<ResponseBody>
+                     @Query("limit") scrobblesPerRequest: Int): Call<TopTracks>
 
 
     @GET("?api_key=$API_KEY&format=json&method=user.getInfo")
     fun getUserInfo(@NonNull
-                    @Query("user") signature: String): Call<ResponseBody>
+                    @Query("user") signature: String): Call<User>
 
     @GET("?api_key=$API_KEY&format=json&method=artist.search")
     fun searchArtist(@NonNull
@@ -104,5 +110,5 @@ interface LastFmRestApiService {
                      @NonNull
                      @Query("page") page: Int,
                      @NonNull
-                     @Query("limit") artistsPerRequest: Int): Call<ResponseBody>
+                     @Query("limit") artistsPerRequest: Int): Call<ArtistsJsonModel>
 }
