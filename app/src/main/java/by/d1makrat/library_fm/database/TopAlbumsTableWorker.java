@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import by.d1makrat.library_fm.AppContext;
-import by.d1makrat.library_fm.model.TopAlbum;
+import by.d1makrat.library_fm.model.Album;
 
 import static by.d1makrat.library_fm.Constants.DatabaseConstants.COLUMN_ALBUM;
 import static by.d1makrat.library_fm.Constants.DatabaseConstants.COLUMN_ARTIST;
@@ -29,19 +29,19 @@ public class TopAlbumsTableWorker{
         mDatabaseHelper = pDatabaseHelper;
     }
 
-    public void bulkInsertTopAlbums(final List<TopAlbum> items, final String pPeriod) throws SQLException {
+    public void bulkInsertTopAlbums(final List<Album> items, final String pPeriod) throws SQLException {
         final SQLiteDatabase database = mDatabaseHelper.getWritableDatabase();
 
         database.beginTransaction();
 
         try {
-            for (TopAlbum item : items) {
+            for (Album item : items) {
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(COLUMN_RANK, item.getRank());
                 contentValues.put(COLUMN_ARTIST, item.getArtistName());
                 contentValues.put(COLUMN_ALBUM, item.getTitle());
                 contentValues.put(COLUMN_PLAYCOUNT, item.getPlaycount());
-                contentValues.put(COLUMN_IMAGEURI, item.getImageUri());
+                contentValues.put(COLUMN_IMAGEURI, item.getImageUrl());
                 contentValues.put(COLUMN_PERIOD, pPeriod);
 
                 database.insertWithOnConflict(DATABASE_TOP_ALBUMS_TABLE, EMPTY_STRING, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
@@ -55,9 +55,9 @@ public class TopAlbumsTableWorker{
 
     }
 
-    public List<TopAlbum> getTopAlbums(String pPeriod, int pPage) throws SQLException {
+    public List<Album> getTopAlbums(String pPeriod, int pPage) throws SQLException {
         final SQLiteDatabase database = mDatabaseHelper.getReadableDatabase();
-        List<TopAlbum> result = new ArrayList<>();
+        List<Album> result = new ArrayList<>();
         Cursor cursor = null;
 
         database.beginTransaction();
@@ -79,13 +79,8 @@ public class TopAlbumsTableWorker{
                         String playcount = cursor.getString(playcountColumn);
                         String imageUri = cursor.getString(imageUriColumn);
 
-                        TopAlbum topAlbum = new TopAlbum();
-                        topAlbum.setTitle(album);
-                        topAlbum.setArtistName(artist);
-                        topAlbum.setRank(rank);
-                        topAlbum.setPlaycount(playcount);
-                        topAlbum.setImageUri(imageUri);
-                        result.add(topAlbum);
+                        Album Album = new Album(album, artist, playcount, imageUri, rank);
+                        result.add(Album);
                     }
                     while (cursor.moveToNext() && result.size() < AppContext.getInstance().getLimit());
                 }

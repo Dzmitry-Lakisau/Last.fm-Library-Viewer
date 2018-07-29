@@ -9,7 +9,6 @@ import by.d1makrat.library_fm.database.DatabaseWorker;
 import by.d1makrat.library_fm.https.HttpsClient;
 import by.d1makrat.library_fm.https.RequestMethod;
 import by.d1makrat.library_fm.json.JsonParser;
-import by.d1makrat.library_fm.json.ScrobblesParser;
 import by.d1makrat.library_fm.model.Scrobble;
 import by.d1makrat.library_fm.utils.UrlConstructor;
 
@@ -55,16 +54,16 @@ public class ScrobblesOfTrackOperation implements IOperation<List<Scrobble>> {
                         throw new APIException(errorOrNot);
                     }
                     else {
-                        ScrobblesParser scrobblesParser = new ScrobblesParser(response);
-                        List<Scrobble> artistScrobbles = scrobblesParser.parse();
+//                        ScrobblesParser scrobblesParser = new ScrobblesParser(response);
+//                        List<Scrobble> artistScrobbles = scrobblesParser.parse();
 
-                        databaseWorker.getScrobblesTable().bulkInsertScrobbles(artistScrobbles);
-
-                        for (Scrobble scrobble : artistScrobbles) {
-                            if (scrobble.getTrackTitle().equals(track)) {
-                                trackScrobbles.add(scrobble);
-                            }
-                        }
+//                        databaseWorker.getScrobblesTable().bulkInsertScrobbles(artistScrobbles);
+//
+//                        for (Scrobble scrobble : artistScrobbles) {
+//                            if (scrobble.getTrackTitle().equals(track)) {
+//                                trackScrobbles.add(scrobble);
+//                            }
+//                        }
                     }
 
                     page++;

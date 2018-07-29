@@ -8,7 +8,6 @@ import by.d1makrat.library_fm.database.DatabaseWorker;
 import by.d1makrat.library_fm.https.HttpsClient;
 import by.d1makrat.library_fm.https.RequestMethod;
 import by.d1makrat.library_fm.json.JsonParser;
-import by.d1makrat.library_fm.json.ScrobblesParser;
 import by.d1makrat.library_fm.model.Scrobble;
 import by.d1makrat.library_fm.utils.UrlConstructor;
 
@@ -48,10 +47,10 @@ public class RecentScrobblesOperation implements IOperation<List<Scrobble>> {
                 if (!errorOrNot.equals(API_NO_ERROR)) {
                     throw new APIException(errorOrNot);
                 } else {
-                    ScrobblesParser scrobblesParser = new ScrobblesParser(response);
-                    scrobbles = scrobblesParser.parse();
-
-                    databaseWorker.getScrobblesTable().bulkInsertScrobbles(scrobbles);
+//                    ScrobblesParser scrobblesParser = new ScrobblesParser(response);
+                    scrobbles = null;// scrobblesParser.parse();
+//
+//                    databaseWorker.getScrobblesTable().bulkInsertScrobbles(scrobbles);
                 }
             } else {
                 scrobbles = databaseWorker.getScrobblesTable().getScrobbles(mPage, mFrom, mTo);

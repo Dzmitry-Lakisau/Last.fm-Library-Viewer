@@ -43,7 +43,7 @@ public class StartFragment extends Fragment {
         setUpActionBar((AppCompatActivity) getActivity());
 
         User user = AppContext.getInstance().getUser();
-        Malevich.INSTANCE.load(user.getAvatarUri()).onError(getResources().getDrawable(R.drawable.img_app_logo_large)).
+        Malevich.INSTANCE.load(user.getAvatarUrl()).onError(getResources().getDrawable(R.drawable.img_app_logo_large)).
                 into((ImageView) rootView.findViewById(R.id.user_avatar_start_screen));
 
         TextView textView = rootView.findViewById(R.id.hello_textView);

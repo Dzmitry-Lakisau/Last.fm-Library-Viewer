@@ -51,7 +51,7 @@ public class ScrobblesTableWorker {
                 contentValues.put(COLUMN_ARTIST, item.getArtist());
                 contentValues.put(COLUMN_ALBUM, item.getAlbum());
                 contentValues.put(COLUMN_DATE, item.getRawDate());
-                contentValues.put(COLUMN_IMAGEURI, item.getImageUri());
+                contentValues.put(COLUMN_IMAGEURI, item.getImageUrl());
 
                 database.insertWithOnConflict(DATABASE_SCROBBLES_TABLE, EMPTY_STRING, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
             }
@@ -97,7 +97,7 @@ public class ScrobblesTableWorker {
                         scrobble.setArtist(artist);
                         scrobble.setAlbum(album);
                         scrobble.setDate(unixDate);
-                        scrobble.setImageUri(imageUri);
+                        scrobble.setImageUrl(imageUri);
                         result.add(scrobble);
                     }
                     while (cursor.moveToNext() && result.size() < AppContext.getInstance().getLimit());
@@ -147,7 +147,7 @@ public class ScrobblesTableWorker {
                         scrobble.setArtist(artist);
                         scrobble.setAlbum(album);
                         scrobble.setDate(unixDate);
-                        scrobble.setImageUri(imageUri);
+                        scrobble.setImageUrl(imageUri);
                         result.add(scrobble);
                     }
                     while (cursor.moveToNext() && result.size() < AppContext.getInstance().getLimit());
@@ -197,7 +197,7 @@ public class ScrobblesTableWorker {
                         scrobble.setArtist(artist);
                         scrobble.setAlbum(album);
                         scrobble.setDate(unixDate);
-                        scrobble.setImageUri(imageUri);
+                        scrobble.setImageUrl(imageUri);
                         result.add(scrobble);
                     }
                     while (cursor.moveToNext());
@@ -247,7 +247,7 @@ public class ScrobblesTableWorker {
                         scrobble.setArtist(artist);
                         scrobble.setAlbum(album);
                         scrobble.setDate(unixDate);
-                        scrobble.setImageUri(imageUri);
+                        scrobble.setImageUrl(imageUri);
                         result.add(scrobble);
                     }
                     while (cursor.moveToNext());

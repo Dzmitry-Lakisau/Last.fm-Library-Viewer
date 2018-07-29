@@ -8,14 +8,13 @@ import by.d1makrat.library_fm.database.DatabaseWorker;
 import by.d1makrat.library_fm.https.HttpsClient;
 import by.d1makrat.library_fm.https.RequestMethod;
 import by.d1makrat.library_fm.json.JsonParser;
-import by.d1makrat.library_fm.json.TopsParser;
-import by.d1makrat.library_fm.model.TopArtist;
+import by.d1makrat.library_fm.model.Artist;
 import by.d1makrat.library_fm.operation.model.TopOperationResult;
 import by.d1makrat.library_fm.utils.UrlConstructor;
 
 import static by.d1makrat.library_fm.Constants.API_NO_ERROR;
 
-public class TopArtistsOperation implements IOperation<TopOperationResult<TopArtist>> {
+public class TopArtistsOperation implements IOperation<TopOperationResult<Artist>> {
 
     private final String period;
     private final int mPage;
@@ -26,9 +25,8 @@ public class TopArtistsOperation implements IOperation<TopOperationResult<TopArt
     }
 
     @Override
-    public TopOperationResult<TopArtist> perform() throws Exception {
-
-        List<TopArtist> topArtists;
+    public TopOperationResult<Artist> perform() throws Exception {
+        List<Artist> topArtists;
         String topArtistsCount;
         DatabaseWorker databaseWorker = new DatabaseWorker();
 
@@ -49,15 +47,15 @@ public class TopArtistsOperation implements IOperation<TopOperationResult<TopArt
                     throw new APIException(errorOrNot);
                 }
                 else{
-                    TopsParser topsParser = new TopsParser(response);
-                    topArtists = topsParser.parseUserTopArtists();
+                    //TopsParser topsParser = new TopsParser(response);
+                    topArtists = null;// topsParser.parseUserTopArtists();
 
                     if (mPage == 1) {
                         databaseWorker.deleteTopArtists(period);
                     }
                     databaseWorker.getTopArtistsTable().bulkInsertTopArtists(topArtists, period);
 
-                    topArtistsCount = topsParser.parseArtistsCount();
+                    topArtistsCount = null;// topsParser.parseArtistsCount();
                 }
             }
             else {

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import by.d1makrat.library_fm.AppContext;
-import by.d1makrat.library_fm.model.TopTrack;
+import by.d1makrat.library_fm.model.Track;
 
 import static by.d1makrat.library_fm.Constants.DatabaseConstants.COLUMN_ARTIST;
 import static by.d1makrat.library_fm.Constants.DatabaseConstants.COLUMN_IMAGEURI;
@@ -29,19 +29,19 @@ public class TopTracksTableWorker {
         mDatabaseHelper = pDatabaseHelper;
     }
 
-    public void bulkInsertTopTracks(final List<TopTrack> items, final String pPeriod) throws SQLException {
+    public void bulkInsertTopTracks(final List<Track> items, final String pPeriod) throws SQLException {
         final SQLiteDatabase database = mDatabaseHelper.getWritableDatabase();
 
         database.beginTransaction();
 
         try {
-            for (TopTrack item : items) {
+            for (Track item : items) {
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(COLUMN_RANK, item.getRank());
                 contentValues.put(COLUMN_TRACK, item.getTitle());
                 contentValues.put(COLUMN_ARTIST, item.getArtistName());
                 contentValues.put(COLUMN_PLAYCOUNT, item.getPlaycount());
-                contentValues.put(COLUMN_IMAGEURI, item.getImageUri());
+                contentValues.put(COLUMN_IMAGEURI, item.getImageUrl());
                 contentValues.put(COLUMN_PERIOD, pPeriod);
 
                 database.insertWithOnConflict(DATABASE_TOP_TRACKS_TABLE, EMPTY_STRING, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
@@ -55,9 +55,9 @@ public class TopTracksTableWorker {
 
     }
 
-    public List<TopTrack> getTopTracks(String pPeriod, int pPage) throws SQLException {
+    public List<Track> getTopTracks(String pPeriod, int pPage) throws SQLException {
         final SQLiteDatabase database = mDatabaseHelper.getReadableDatabase();
-        List<TopTrack> result = new ArrayList<>();
+        List<Track> result = new ArrayList<>();
         Cursor cursor = null;
 
         database.beginTransaction();
@@ -79,12 +79,7 @@ public class TopTracksTableWorker {
                         String playcount = cursor.getString(playcountColumn);
                         String imageUri = cursor.getString(imageUriColumn);
 
-                        TopTrack topTrack = new TopTrack();
-                        topTrack.setTitle(trackTitle);
-                        topTrack.setArtistName(artist);
-                        topTrack.setRank(rank);
-                        topTrack.setPlaycount(playcount);
-                        topTrack.setImageUri(imageUri);
+                        Track topTrack = new Track(trackTitle, artist, playcount, imageUri, rank);
                         result.add(topTrack);
                     }
                     while (cursor.moveToNext() && result.size() < AppContext.getInstance().getLimit());
