@@ -5,11 +5,7 @@ import android.support.annotation.Nullable
 import by.d1makrat.library_fm.BuildConfig.API_KEY
 import by.d1makrat.library_fm.json.model.ArtistsJsonModel
 import by.d1makrat.library_fm.json.model.ScrobblesJsonModel
-import by.d1makrat.library_fm.model.TopAlbums
-import by.d1makrat.library_fm.model.TopArtists
-import by.d1makrat.library_fm.model.TopTracks
-import by.d1makrat.library_fm.model.User
-import okhttp3.ResponseBody
+import by.d1makrat.library_fm.model.*
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -17,18 +13,14 @@ import retrofit2.http.Query
 
 interface LastFmRestApiService {
 
-    @POST("?api_key=$API_KEY&format=json&method=auth.getMobileSession")
+    @POST("?api_key=$API_KEY&method=auth.getMobileSession")
     fun getSessionKey(@NonNull
-                      @Query("api_sig") signature: String,
-                      @NonNull
                       @Query("username") username: String,
                       @NonNull
-                      @Query("password") password: String): Call<ResponseBody>
+                      @Query("password") password: String): Call<SessionKey>
 
-    @POST("?api_key=$API_KEY&format=json&method=track.scrobble")
+    @POST("?api_key=$API_KEY&method=track.scrobble")
     fun sendScrobble(@NonNull
-                     @Query("api_sig") signature: String,
-                     @NonNull
                      @Query("sk") sessionKey: String,
                      @NonNull
                      @Query("track") track: String,
@@ -41,9 +33,9 @@ interface LastFmRestApiService {
                      @Nullable
                      @Query("duration") trackDuration: Int?,
                      @NonNull
-                     @Query("timestamp") timestamp: Int): Call<ResponseBody>
+                     @Query("timestamp") timestamp: Int): Call<SendScrobbleResult>
 
-    @GET("?api_key=$API_KEY&format=json&method=user.getRecentTracks")
+    @GET("?api_key=$API_KEY&method=user.getRecentTracks")
     fun getRecentScrobbles(@NonNull
                            @Query("user") username: String,
                            @NonNull
@@ -55,7 +47,7 @@ interface LastFmRestApiService {
                            @Nullable
                            @Query("to") endOfPeriod: Long?): Call<ScrobblesJsonModel>
 
-    @GET("?api_key=$API_KEY&format=json&method=user.getArtistTracks")
+    @GET("?api_key=$API_KEY&method=user.getArtistTracks")
     fun getScrobblesOfArtist(@NonNull
                              @Query("user") username: String,
                              @NonNull
@@ -69,7 +61,7 @@ interface LastFmRestApiService {
                              @Nullable
                              @Query("endTimestamp") endOfPeriod: Long?): Call<ScrobblesJsonModel>
 
-    @GET("?api_key=$API_KEY&format=json&method=user.getTopAlbums")
+    @GET("?api_key=$API_KEY&method=user.getTopAlbums")
     fun getTopAlbums(@NonNull
                      @Query("user") username: String,
                      @NonNull
@@ -79,7 +71,7 @@ interface LastFmRestApiService {
                      @NonNull
                      @Query("limit") scrobblesPerRequest: Int): Call<TopAlbums>
 
-    @GET("?api_key=$API_KEY&format=json&method=user.getTopArtists")
+    @GET("?api_key=$API_KEY&method=user.getTopArtists")
     fun getTopArtists(@NonNull
                      @Query("user") username: String,
                      @NonNull
@@ -89,7 +81,7 @@ interface LastFmRestApiService {
                      @NonNull
                      @Query("limit") scrobblesPerRequest: Int): Call<TopArtists>
 
-    @GET("?api_key=$API_KEY&format=json&method=user.getTopTracks")
+    @GET("?api_key=$API_KEY&method=user.getTopTracks")
     fun getTopTracks(@NonNull
                      @Query("user") username: String,
                      @NonNull
@@ -100,11 +92,11 @@ interface LastFmRestApiService {
                      @Query("limit") scrobblesPerRequest: Int): Call<TopTracks>
 
 
-    @GET("?api_key=$API_KEY&format=json&method=user.getInfo")
+    @GET("?api_key=$API_KEY&method=user.getInfo")
     fun getUserInfo(@NonNull
                     @Query("user") signature: String): Call<User>
 
-    @GET("?api_key=$API_KEY&format=json&method=artist.search")
+    @GET("?api_key=$API_KEY&method=artist.search")
     fun searchArtist(@NonNull
                      @Query("artist") name: String,
                      @NonNull
