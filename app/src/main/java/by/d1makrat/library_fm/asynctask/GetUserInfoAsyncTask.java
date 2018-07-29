@@ -10,7 +10,6 @@ import by.d1makrat.library_fm.APIException;
 import by.d1makrat.library_fm.https.HttpsClient;
 import by.d1makrat.library_fm.https.RequestMethod;
 import by.d1makrat.library_fm.json.JsonParser;
-import by.d1makrat.library_fm.json.UserParser;
 import by.d1makrat.library_fm.model.User;
 import by.d1makrat.library_fm.utils.UrlConstructor;
 
@@ -44,8 +43,8 @@ public class GetUserInfoAsyncTask extends AsyncTask<Void, Void, User> {
                 throw new APIException(errorOrNot);
             }
             else {
-                UserParser userParser = new UserParser(response);
-                user = userParser.parse();
+                //UserParser userParser = new UserParser(response);
+                //user = userParser.parse();
             }
         } catch (Exception e) {
             e.printStackTrace();

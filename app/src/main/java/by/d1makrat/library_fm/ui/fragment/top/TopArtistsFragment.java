@@ -13,11 +13,11 @@ import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.adapter.list.TopArtistsAdapter;
 import by.d1makrat.library_fm.asynctask.GetTopItemsAsyncTask;
-import by.d1makrat.library_fm.model.TopArtist;
+import by.d1makrat.library_fm.model.Artist;
 import by.d1makrat.library_fm.operation.TopArtistsOperation;
 import by.d1makrat.library_fm.ui.CenteredToast;
 
-public class TopArtistsFragment extends TopItemsFragment<TopArtist> {
+public class TopArtistsFragment extends TopItemsFragment<Artist> {
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -64,7 +64,7 @@ public class TopArtistsFragment extends TopItemsFragment<TopArtist> {
     @Override
     public void performOperation() {
         TopArtistsOperation topArtistsOperation = new TopArtistsOperation(mPeriod, mPage);
-        GetTopItemsAsyncTask<TopArtist> getTopItemsAsyncTask = new GetTopItemsAsyncTask<>(this);
+        GetTopItemsAsyncTask<Artist> getTopItemsAsyncTask = new GetTopItemsAsyncTask<>(this);
         getTopItemsAsyncTask.execute(topArtistsOperation);
     }
 

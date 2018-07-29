@@ -8,14 +8,13 @@ import by.d1makrat.library_fm.database.DatabaseWorker;
 import by.d1makrat.library_fm.https.HttpsClient;
 import by.d1makrat.library_fm.https.RequestMethod;
 import by.d1makrat.library_fm.json.JsonParser;
-import by.d1makrat.library_fm.json.TopsParser;
-import by.d1makrat.library_fm.model.TopTrack;
+import by.d1makrat.library_fm.model.Track;
 import by.d1makrat.library_fm.operation.model.TopOperationResult;
 import by.d1makrat.library_fm.utils.UrlConstructor;
 
 import static by.d1makrat.library_fm.Constants.API_NO_ERROR;
 
-public class TopTracksOperation implements IOperation<TopOperationResult<TopTrack>> {
+public class TopTracksOperation implements IOperation<TopOperationResult<Track>> {
 
     private final String period;
     private final int mPage;
@@ -26,9 +25,9 @@ public class TopTracksOperation implements IOperation<TopOperationResult<TopTrac
     }
 
     @Override
-    public TopOperationResult<TopTrack> perform() throws Exception {
+    public TopOperationResult<Track> perform() throws Exception {
 
-        List<TopTrack> topTracks;
+        List<Track> topTracks;
         String topTracksCount;
         DatabaseWorker databaseWorker = new DatabaseWorker();
 
@@ -49,15 +48,15 @@ public class TopTracksOperation implements IOperation<TopOperationResult<TopTrac
                     throw new APIException(errorOrNot);
                 }
                 else{
-                    TopsParser topsParser = new TopsParser(response);
-                    topTracks = topsParser.parseUserTopTracks();
+                   // TopsParser topsParser = new TopsParser(response);
+                    topTracks = null;// topsParser.parseUserTopTracks();
 
                     if (mPage == 1) {
                         databaseWorker.deleteTopTracks(period);
                     }
                     databaseWorker.getTopTracksTable().bulkInsertTopTracks(topTracks, period);
 
-                    topTracksCount = topsParser.parseTracksCount();
+                    topTracksCount = null;// topsParser.parseTracksCount();
                 }
             }
             else {

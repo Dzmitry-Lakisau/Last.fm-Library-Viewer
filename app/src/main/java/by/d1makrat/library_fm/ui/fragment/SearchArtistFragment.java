@@ -53,7 +53,7 @@ public class SearchArtistFragment extends ItemsFragment<Artist> implements GetIt
 
     @Override
     protected void performOperation() {
-        SearchArtistOperation searchArtistOperation = new SearchArtistOperation(mSearchQuery, mPage);
+        SearchArtistOperation searchArtistOperation = new SearchArtistOperation(mSearchQuery, mPage, AppContext.getInstance().getRetrofitWebService());
         GetItemsAsyncTask<Artist> getItemsAsyncTask = new GetItemsAsyncTask<>(this);
         getItemsAsyncTask.execute(searchArtistOperation);
     }

@@ -11,9 +11,9 @@ import android.widget.TextView;
 import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.image_loader.Malevich;
-import by.d1makrat.library_fm.model.TopAlbum;
+import by.d1makrat.library_fm.model.Album;
 
-public class TopAlbumsAdapter extends ItemsAdapter<TopAlbum> {
+public class TopAlbumsAdapter extends ItemsAdapter<Album> {
 
     public TopAlbumsAdapter(LayoutInflater pLayoutInflater, Drawable pPlaceholderDrawable) {
         mLayoutInflater = pLayoutInflater;
@@ -52,14 +52,14 @@ public class TopAlbumsAdapter extends ItemsAdapter<TopAlbum> {
             albumartImgView = pView.findViewById(R.id.albumart);
         }
 
-        private void bind(TopAlbum topAlbum, Drawable pPlaceholderDrawable){
+        private void bind(Album topAlbum, Drawable pPlaceholderDrawable){
 
             albumTextView.setText(topAlbum.getTitle());
             artistTextView.setText(topAlbum.getArtistName());
             playcountTextView.setText(AppContext.getInstance().getString(R.string.top_scrobbles_count, topAlbum.getPlaycount()));
             rankTextView.setText(topAlbum.getRank());
 
-            String imageUri = topAlbum.getImageUri();
+            String imageUri = topAlbum.getImageUrl();
             Malevich.INSTANCE.load(null).instead(pPlaceholderDrawable).into(albumartImgView);
         }
     }

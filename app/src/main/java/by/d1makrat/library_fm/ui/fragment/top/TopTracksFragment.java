@@ -13,11 +13,11 @@ import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.adapter.list.TopTracksAdapter;
 import by.d1makrat.library_fm.asynctask.GetTopItemsAsyncTask;
-import by.d1makrat.library_fm.model.TopTrack;
+import by.d1makrat.library_fm.model.Track;
 import by.d1makrat.library_fm.operation.TopTracksOperation;
 import by.d1makrat.library_fm.ui.CenteredToast;
 
-public class TopTracksFragment extends TopItemsFragment<TopTrack> {
+public class TopTracksFragment extends TopItemsFragment<Track> {
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -35,7 +35,7 @@ public class TopTracksFragment extends TopItemsFragment<TopTrack> {
                     replaceFragment(mListAdapter.getSelectedItem().getArtistName(), null, null);
                     return true;
                 case MENU_SCROBBLES_OF_TRACK:
-                    TopTrack listItemPressed = mListAdapter.getSelectedItem();
+                    Track listItemPressed = mListAdapter.getSelectedItem();
                     replaceFragment(listItemPressed.getArtistName(), listItemPressed.getTitle(), null);
                     return true;
                 default:
@@ -69,7 +69,7 @@ public class TopTracksFragment extends TopItemsFragment<TopTrack> {
     @Override
     public void performOperation() {
         TopTracksOperation topTracksOperation = new TopTracksOperation(mPeriod, mPage);
-        GetTopItemsAsyncTask<TopTrack> getItemsAsyncTask = new GetTopItemsAsyncTask<>(this);
+        GetTopItemsAsyncTask<Track> getItemsAsyncTask = new GetTopItemsAsyncTask<>(this);
         getItemsAsyncTask.execute(topTracksOperation);
     }
 
