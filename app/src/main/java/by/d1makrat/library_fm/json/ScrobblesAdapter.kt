@@ -1,5 +1,6 @@
 package by.d1makrat.library_fm.json
 
+import by.d1makrat.library_fm.APIException
 import by.d1makrat.library_fm.Constants.*
 import by.d1makrat.library_fm.Constants.JsonConstants.*
 import by.d1makrat.library_fm.json.model.ScrobblesJsonModel
@@ -27,11 +28,14 @@ class ScrobblesAdapter : TypeAdapter<ScrobblesJsonModel>() {
     @Throws(JSONException::class)
     override fun read(jsonReader: JsonReader): ScrobblesJsonModel {
         val scrobbles = ScrobblesJsonModel()
-        val rootElement = mGson.getAdapter(JsonElement::class.java).read(jsonReader).asJsonObject
 
-        val scrobblesJsonArray = if (rootElement.asJsonObject.has(RECENT_TRACKS_KEY))
-            rootElement.asJsonObject.get(RECENT_TRACKS_KEY).asJsonObject.get(TRACK_KEY).asJsonArray
-        else rootElement.asJsonObject.get(ARTIST_TRACKS_KEY).asJsonObject.get(TRACK_KEY).asJsonArray
+        val rootObject = mGson.getAdapter(JsonElement::class.java).read(jsonReader).asJsonObject
+
+        if (rootObject.has("error")) throw APIException(rootObject.get("message").asString)
+
+        val scrobblesJsonArray = if (rootObject.has(RECENT_TRACKS_KEY))
+            rootObject.get(RECENT_TRACKS_KEY).asJsonObject.get(TRACK_KEY).asJsonArray
+        else rootObject.get(ARTIST_TRACKS_KEY).asJsonObject.get(TRACK_KEY).asJsonArray
 
         for (i in 0 until scrobblesJsonArray.size()) {
             val scrobbleJsonObject = scrobblesJsonArray.get(i).asJsonObject

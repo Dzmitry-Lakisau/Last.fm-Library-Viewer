@@ -11,7 +11,7 @@ public final class Constants {
     public static final String ALBUM_KEY = "album";
     public static final String ARTIST_KEY = "artist";
     public static final String TRACK_KEY = "track";
-    public static final String URL_KEY = "url";//
+    public static final String URL_KEY = "url";
     public static final String NAME_KEY = "name";
     public static final String DATE_KEY = "date";
     public static final String PLAYCOUNT_KEY = "playcount";
@@ -37,7 +37,9 @@ public final class Constants {
 
     public class JsonConstants {
         public static final String IMAGE_KEY = "image";
+        public static final String LISTENERS_KEY = "listeners";
         public static final String TEXT_KEY = "#text";
+        public static final String TOTAL_KEY = "total";
         public static final String ATTRIBUTE_KEY = "@attr";
     }
 

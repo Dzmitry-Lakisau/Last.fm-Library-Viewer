@@ -1,5 +1,6 @@
 package by.d1makrat.library_fm.json
 
+import by.d1makrat.library_fm.APIException
 import by.d1makrat.library_fm.Constants.*
 import by.d1makrat.library_fm.Constants.JsonConstants.IMAGE_KEY
 import by.d1makrat.library_fm.Constants.JsonConstants.TEXT_KEY
@@ -29,9 +30,11 @@ class UserAdapter : TypeAdapter<User>() {
     @Throws(JSONException::class)
     override fun read(jsonReader: JsonReader): User {
 
-        val jsonElement = mGson.getAdapter(JsonElement::class.java).read(jsonReader)
+        val rootObject = mGson.getAdapter(JsonElement::class.java).read(jsonReader).asJsonObject
 
-        val userJsonObject: JsonObject = jsonElement.asJsonObject.get(USER_KEY).asJsonObject
+        if (rootObject.has("error")) throw APIException(rootObject.get("message").asString)
+
+        val userJsonObject: JsonObject = rootObject.get(USER_KEY).asJsonObject
 
         val username = userJsonObject.get(NAME_KEY).toString()
         val playcount = userJsonObject.get(PLAYCOUNT_KEY).toString()

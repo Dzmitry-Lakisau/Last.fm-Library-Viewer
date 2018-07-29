@@ -1,5 +1,6 @@
 package by.d1makrat.library_fm.json
 
+import by.d1makrat.library_fm.APIException
 import by.d1makrat.library_fm.Constants.*
 import by.d1makrat.library_fm.Constants.JsonConstants.*
 import by.d1makrat.library_fm.json.model.ArtistsJsonModel
@@ -27,9 +28,11 @@ class SearchArtistResultsAdapter : TypeAdapter<ArtistsJsonModel>() {
     override fun read(jsonReader: JsonReader): ArtistsJsonModel {
         val artists = ArtistsJsonModel()
 
-        val rootElement = mGson.getAdapter(JsonElement::class.java).read(jsonReader).asJsonObject.get("results")
+        val rootObject = mGson.getAdapter(JsonElement::class.java).read(jsonReader).asJsonObject
 
-        val artistsJsonArray = rootElement.asJsonObject.get("artistmatches").asJsonObject.get(ARTIST_KEY).asJsonArray
+        if (rootObject.has("error")) throw APIException(rootObject.get("message").asString)
+
+        val artistsJsonArray = rootObject.get("results").asJsonObject.get("artistmatches").asJsonObject.get(ARTIST_KEY).asJsonArray
 
         for (i in 0 until artistsJsonArray.size()) {
             val artistJsonObject = artistsJsonArray.get(i).asJsonObject

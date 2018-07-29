@@ -1,5 +1,6 @@
 package by.d1makrat.library_fm.json
 
+import by.d1makrat.library_fm.APIException
 import by.d1makrat.library_fm.Constants.*
 import by.d1makrat.library_fm.Constants.JsonConstants.*
 import by.d1makrat.library_fm.model.TopTracks
@@ -29,9 +30,12 @@ class TopTracksAdapter : TypeAdapter<TopTracks>() {
 
         val tracks = ArrayList<Track>()
 
-        val rootElement = mGson.getAdapter(JsonElement::class.java).read(jsonReader).asJsonObject.get(TOPTRACKS_KEY)
-        val totalTracks = rootElement.asJsonObject.get(ATTRIBUTE_KEY).asJsonObject.get(TOTAL_KEY).asString
-        val tracksJsonArray = rootElement.asJsonObject.getAsJsonArray(TRACK_KEY)
+        val rootObject = mGson.getAdapter(JsonElement::class.java).read(jsonReader).asJsonObject
+
+        if (rootObject.has("error")) throw APIException(rootObject.get("message").asString)
+
+        val totalTracks = rootObject.get(TOPTRACKS_KEY).asJsonObject.get(ATTRIBUTE_KEY).asJsonObject.get(TOTAL_KEY).asString
+        val tracksJsonArray = rootObject.get(TOPTRACKS_KEY).asJsonObject.getAsJsonArray(TRACK_KEY)
 
         for (i in 0 until tracksJsonArray.size()) {
             val trackJsonObject = tracksJsonArray.get(i).asJsonObject
