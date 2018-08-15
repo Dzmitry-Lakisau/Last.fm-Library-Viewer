@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import by.d1makrat.library_fm.AppContext;
+import by.d1makrat.library_fm.BuildConfig;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.image_loader.Malevich;
 import by.d1makrat.library_fm.model.Artist;
@@ -53,8 +54,8 @@ public class SearchArtistsAdapter extends ItemsAdapter<Artist>{
             artistNameTextView.setText(artist.getName());
             playcountTextView.setText(AppContext.getInstance().getString(R.string.listeners_count, artist.getListenersCount()));
 
-            String imageUri = artist.getImageUri();
-            Malevich.INSTANCE.load(null).instead(pPlaceholderDrawable).into(artistImgView);
+            String imageUri = BuildConfig.DEBUG ? artist.getImageUri() : null;
+            Malevich.INSTANCE.load(imageUri).instead(pPlaceholderDrawable).into(artistImgView);
         }
     }
 }

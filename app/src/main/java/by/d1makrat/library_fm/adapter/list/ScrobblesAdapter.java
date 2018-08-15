@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import by.d1makrat.library_fm.BuildConfig;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.image_loader.Malevich;
 import by.d1makrat.library_fm.model.Scrobble;
@@ -63,8 +64,8 @@ public class ScrobblesAdapter extends ItemsAdapter<Scrobble> {
             albumTextView.setText(scrobble.getAlbum());
             timestampTextView.setText(scrobble.getFormattedDate());
 
-            String imageUri = scrobble.getImageUri();
-            Malevich.INSTANCE.load(null).instead(pPlaceholderDrawable).into(albumartImgView);
+            String imageUri = BuildConfig.DEBUG ? scrobble.getImageUri() : null;
+            Malevich.INSTANCE.load(imageUri).instead(pPlaceholderDrawable).into(albumartImgView);
         }
     }
 }
