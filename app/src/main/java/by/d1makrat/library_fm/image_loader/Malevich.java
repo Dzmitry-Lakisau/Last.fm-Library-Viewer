@@ -101,7 +101,7 @@ public enum Malevich {
                     Object tag = imageView.getTag();
                     if (tag != null && tag.equals(request.url)) {
                         imageView.setImageBitmap(imageResult.getBitmap());
-                        Log.d(TAG, "set image " + request.url + " for " + imageView.toString());
+                        Log.d(TAG, "set image " + request.url + " in " + imageView.toString());
                     }
                 }
             }
@@ -119,16 +119,19 @@ public enum Malevich {
         imageView.setImageDrawable(request.placeholderDrawable);
 
         if (request.url != null && !request.url.equals(EMPTY_STRING)) {
-            Log.d(TAG, "enqueue for " + request.url);
+            Log.d(TAG, "enqueue for " + request.url + " in " + request.target.get().toString());
             if (imageHasSize(request)) {
                 imageView.setTag(request.url);
                 queue.addFirst(request);
                 dispatchLoading();
-                Log.d(TAG, "dispatchLoading " + request.url);
+                Log.d(TAG, "dispatchLoading " + request.url + " in " + request.target.get().toString());
             } else {
                 deferImageRequest(request);
-                Log.d(TAG, "deferImageRequest " + request.url);
+                Log.d(TAG, "deferImageRequest " + request.url + " in " + request.target.get().toString());
             }
+        }
+        else if (request.onErrorDrawable != null){
+            imageView.setImageDrawable(request.onErrorDrawable);
         }
     }
 
