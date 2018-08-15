@@ -2,7 +2,7 @@ package by.d1makrat.library_fm.asynctask;
 
 import android.os.AsyncTask;
 
-import com.google.firebase.crash.FirebaseCrash;
+import com.crashlytics.android.Crashlytics;
 
 import java.net.URL;
 
@@ -49,7 +49,7 @@ public class GetUserInfoAsyncTask extends AsyncTask<Void, Void, User> {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            FirebaseCrash.report(e);
+            Crashlytics.logException(e);
             mException = e;
         }
 

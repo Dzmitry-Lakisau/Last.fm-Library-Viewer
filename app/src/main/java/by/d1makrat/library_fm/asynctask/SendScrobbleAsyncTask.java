@@ -2,7 +2,7 @@ package by.d1makrat.library_fm.asynctask;
 
 import android.os.AsyncTask;
 
-import com.google.firebase.crash.FirebaseCrash;
+import com.crashlytics.android.Crashlytics;
 
 import java.net.URL;
 
@@ -10,9 +10,9 @@ import by.d1makrat.library_fm.APIException;
 import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.https.HttpsClient;
-import by.d1makrat.library_fm.utils.UrlConstructor;
 import by.d1makrat.library_fm.https.RequestMethod;
 import by.d1makrat.library_fm.json.JsonParser;
+import by.d1makrat.library_fm.utils.UrlConstructor;
 
 import static by.d1makrat.library_fm.Constants.API_NO_ERROR;
 
@@ -50,7 +50,7 @@ public class SendScrobbleAsyncTask extends AsyncTask<String, Void, String> {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            FirebaseCrash.report(e);
+            Crashlytics.logException(e);
             mException = e;
         }
 

@@ -2,7 +2,7 @@ package by.d1makrat.library_fm.asynctask;
 
 import android.os.AsyncTask;
 
-import com.google.firebase.crash.FirebaseCrash;
+import com.crashlytics.android.Crashlytics;
 
 import java.net.URL;
 
@@ -47,7 +47,7 @@ public class GetSessionKeyAsyncTask extends AsyncTask<String, Void, String> {
                 sessionKey = jsonParser.parseSessionkey(response);
         } catch (Exception e) {
             e.printStackTrace();
-            FirebaseCrash.report(e);
+            Crashlytics.logException(e);
             mException = e;
         }
 

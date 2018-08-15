@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.firebase.crash.FirebaseCrash;
+import com.crashlytics.android.Crashlytics;
 
 import java.io.IOException;
 
@@ -69,7 +69,7 @@ public class PreferenceActivity extends Activity {
                     }
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
-                    FirebaseCrash.report(e);
+                    Crashlytics.logException(e);
                     CenteredToast.show(getApplicationContext(), R.string.limit_nonnumerical_input, Toast.LENGTH_SHORT);
                 }
             }
@@ -84,7 +84,7 @@ public class PreferenceActivity extends Activity {
                     CenteredToast.show(getApplicationContext(), R.string.OK, Toast.LENGTH_SHORT);
                 } catch (IOException e) {
                     e.printStackTrace();
-                    FirebaseCrash.report(e);
+                    Crashlytics.logException(e);
                     CenteredToast.show(getApplicationContext(), R.string.unable_to_clear_cache, Toast.LENGTH_SHORT);
                 }
             }
@@ -106,7 +106,7 @@ public class PreferenceActivity extends Activity {
                 }
                 catch (SQLException e){
                     e.printStackTrace();
-                    FirebaseCrash.report(e);
+                    Crashlytics.logException(e);
                     CenteredToast.show(getApplicationContext(), R.string.unable_to_drop_database, Toast.LENGTH_SHORT);
                 }
                 finally {

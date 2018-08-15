@@ -20,8 +20,8 @@ import android.view.ViewConfiguration;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.ads.MobileAds;
-import com.google.firebase.crash.FirebaseCrash;
 
 import java.lang.reflect.Field;
 
@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         } catch (Exception e) {
             e.printStackTrace();
-            FirebaseCrash.report(e);
+            Crashlytics.logException(e);
         }
     }
 
@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         } catch (Exception e) {
             e.printStackTrace();
-            FirebaseCrash.report(e);
+            Crashlytics.logException(e);
         }
     }
 

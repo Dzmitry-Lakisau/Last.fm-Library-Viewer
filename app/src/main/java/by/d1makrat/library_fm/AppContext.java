@@ -5,10 +5,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.gson.Gson;
 
 import by.d1makrat.library_fm.image_loader.Malevich;
 import by.d1makrat.library_fm.model.User;
+import io.fabric.sdk.android.Fabric;
 
 import static by.d1makrat.library_fm.Constants.SCROBBLES_PER_PAGE_KEY;
 import static by.d1makrat.library_fm.Constants.USER_KEY;
@@ -39,6 +42,14 @@ public class AppContext extends Application {
         super.onCreate();
 
         AppContext.initInstance(this);
+
+        Fabric.with(this,
+                new Crashlytics.Builder()
+                        .core(new CrashlyticsCore.Builder()
+                                .disabled(BuildConfig.DEBUG)
+                                .build())
+                        .build()
+        );
 
         Malevich.INSTANCE.setConfig(new Malevich.Config(this.getCacheDir()));
 
