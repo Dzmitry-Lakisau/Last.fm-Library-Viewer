@@ -41,8 +41,8 @@ public abstract class TopItemsFragment<T> extends ItemsFragment<T> implements Ge
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                if (!isLoading) {
-                    allIsLoaded = false;
+                if (!mListAdapter.isLoading()) {
+                    mListAdapter.allIsLoaded = false;
 
                     killTaskIfRunning(mGetItemsAsynctask);
 
@@ -78,8 +78,6 @@ public abstract class TopItemsFragment<T> extends ItemsFragment<T> implements Ge
 
     @Override
     public void onLoadingSuccessful(TopOperationResult<T> result) {
-        isLoading = false;
-
         mListAdapter.removeAllHeadersAndFooters();
 
         List<T> items = result.getItems();

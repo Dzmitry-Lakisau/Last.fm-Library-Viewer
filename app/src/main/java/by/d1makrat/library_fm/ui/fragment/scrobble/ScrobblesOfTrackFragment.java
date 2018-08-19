@@ -51,7 +51,7 @@ public class ScrobblesOfTrackFragment extends ScrobblesFragment {
 
     @Override
     protected void checkIfAllIsLoaded(int size) {
-        allIsLoaded = true;
+        mListAdapter.allIsLoaded = true;
         CenteredToast.show(getContext(), R.string.all_scrobbles_are_loaded, Toast.LENGTH_SHORT);
     }
 

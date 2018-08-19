@@ -73,8 +73,8 @@ public abstract class ScrobblesFragment extends ItemsFragment<Scrobble> implemen
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                    if (!isLoading) {
-                        allIsLoaded = false;
+                    if (!mListAdapter.isLoading()) {
+                        mListAdapter.allIsLoaded = false;
 
                         killTaskIfRunning(mGetItemsAsynctask);
 
@@ -86,7 +86,7 @@ public abstract class ScrobblesFragment extends ItemsFragment<Scrobble> implemen
                     }
                 return true;
             case R.id.action_filter:
-                if (!isLoading) {
+                if (!mListAdapter.isLoading()) {
                     if (getFragmentManager() != null) {
                         FilterDialogFragment dialogFragment = new FilterDialogFragment();
                         Bundle args = new Bundle();
@@ -172,7 +172,7 @@ public abstract class ScrobblesFragment extends ItemsFragment<Scrobble> implemen
     @Override
     public void onFinishFilterDialog(Long pFrom, Long pTo) {
 
-        allIsLoaded = false;
+        mListAdapter.allIsLoaded = false;
         mFrom = pFrom;
         mTo = pTo;
 
@@ -208,8 +208,6 @@ public abstract class ScrobblesFragment extends ItemsFragment<Scrobble> implemen
 
     @Override
     public void onLoadingSuccessful(List<Scrobble> items) {
-        isLoading = false;
-
         mListAdapter.removeAllHeadersAndFooters();
 
         int size = items.size();
@@ -229,7 +227,7 @@ public abstract class ScrobblesFragment extends ItemsFragment<Scrobble> implemen
 
     protected void checkIfAllIsLoaded(int size){
         if (size < AppContext.getInstance().getLimit()){
-            allIsLoaded = true;
+            mListAdapter.allIsLoaded = true;
             CenteredToast.show(getContext(), R.string.all_scrobbles_are_loaded, Toast.LENGTH_SHORT);
         }
     }

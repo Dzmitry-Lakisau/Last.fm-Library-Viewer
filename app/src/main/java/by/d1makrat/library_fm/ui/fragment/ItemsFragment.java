@@ -31,9 +31,6 @@ public abstract class ItemsFragment<T> extends Fragment{
 
     protected String mUrlForBrowser;
 
-    protected boolean isLoading = false;
-    protected boolean allIsLoaded = false;
-
     protected AsyncTask mGetItemsAsynctask;
     protected ItemsAdapter<T> mListAdapter;
     private LinearLayoutManager mLayoutManager;
@@ -56,9 +53,6 @@ public abstract class ItemsFragment<T> extends Fragment{
     }
 
     protected void loadItems() {
-
-        isLoading = true;
-
         if (mPage == 1) {
             mListAdapter.addHeader();
         }
@@ -73,6 +67,25 @@ public abstract class ItemsFragment<T> extends Fragment{
 
     private final RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
         @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+
+            if (mLayoutManager.findFirstVisibleItemPosition() == 0) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    int visibleItemCount = mLayoutManager.getChildCount();
+                    int totalItemCount = mLayoutManager.getItemCount();
+                    int firstVisibleItemPosition = mLayoutManager.findFirstVisibleItemPosition();
+                    if ((firstVisibleItemPosition + visibleItemCount) == totalItemCount && (totalItemCount > 0)) {
+                        if (!mListAdapter.allIsLoaded && !mListAdapter.isLoading()) {
+                            mPage++;
+                            loadItems();
+                        }
+                    }
+                }
+            }
+        }
+
+        @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
 
@@ -80,7 +93,7 @@ public abstract class ItemsFragment<T> extends Fragment{
             int totalItemCount = mLayoutManager.getItemCount();
             int firstVisibleItemPosition = mLayoutManager.findFirstVisibleItemPosition();
             if ((firstVisibleItemPosition + visibleItemCount) >= totalItemCount && (totalItemCount > 0)) {
-                if (!allIsLoaded && !isLoading){
+                if (!mListAdapter.allIsLoaded && !mListAdapter.isLoading()){
                     mPage++;
                     loadItems();
                 }
@@ -100,8 +113,6 @@ public abstract class ItemsFragment<T> extends Fragment{
     protected abstract void checkIfAllIsLoaded(int size);
 
     public void onException(Exception pException) {//TODO ? add footer with retry behavior
-        isLoading = false;
-
         mListAdapter.removeAllHeadersAndFooters();
 
         mPage--;

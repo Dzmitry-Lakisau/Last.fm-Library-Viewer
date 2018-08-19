@@ -20,6 +20,8 @@ public abstract class ItemsAdapter<T> extends RecyclerView.Adapter<RecyclerView.
     private static final int ERROR_HEADER = 3;
     private static final int EMPTY_HEADER = 4;
 
+    public boolean allIsLoaded = false;
+
     private boolean isFooterAdded = false;
     private boolean isHeaderAdded = false;
     private boolean isErrorHeaderAdded = false;
@@ -146,18 +148,9 @@ public abstract class ItemsAdapter<T> extends RecyclerView.Adapter<RecyclerView.
         }
     }
 
-    private void remove(T item) {
-        int position = mItems.indexOf(item);
-        if (position > -1) {
-            mItems.remove(position);
-            notifyItemRemoved(position);
-        }
-    }
-
     public void removeAll() {
-        while (getItemCount() > 0) {
-            remove(getItem(0));
-        }
+        mItems.clear();
+        notifyDataSetChanged();
         isHeaderAdded = false;
         isFooterAdded = false;
         isEmptyHeaderAdded = false;
@@ -235,6 +228,10 @@ public abstract class ItemsAdapter<T> extends RecyclerView.Adapter<RecyclerView.
 
     public boolean isEmpty(){
         return !(getItemViewType(0) == ITEM) || mItems.size() == 0;
+    }
+
+    public boolean isLoading(){
+        return isHeaderAdded || isFooterAdded;
     }
 
     private static class FooterViewHolder extends RecyclerView.ViewHolder {

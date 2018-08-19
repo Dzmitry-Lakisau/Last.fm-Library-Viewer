@@ -56,7 +56,7 @@ public class TopAlbumsFragment extends TopItemsFragment<TopAlbum> {
     @Override
     protected void checkIfAllIsLoaded(int size) {
         if (size < AppContext.getInstance().getLimit()){
-            allIsLoaded = true;
+            mListAdapter.allIsLoaded = true;
             CenteredToast.show(getContext(), R.string.all_albums_are_loaded, Toast.LENGTH_SHORT);
         }
     }

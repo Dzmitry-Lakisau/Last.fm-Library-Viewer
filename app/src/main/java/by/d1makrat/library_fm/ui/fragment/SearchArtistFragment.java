@@ -85,12 +85,12 @@ public class SearchArtistFragment extends ItemsFragment<Artist> implements GetIt
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isLoading) {
+                if (!mListAdapter.isLoading()) {
                     InputUtils.hideKeyboard(getActivity());
 
                     mListAdapter.removeAll();
 
-                    allIsLoaded = false;
+                    mListAdapter.allIsLoaded = false;
 
                     killTaskIfRunning(mGetItemsAsynctask);
 
@@ -150,8 +150,6 @@ public class SearchArtistFragment extends ItemsFragment<Artist> implements GetIt
 
     @Override
     public void onLoadingSuccessful(List<Artist> items) {
-        isLoading = false;
-
         mListAdapter.removeAllHeadersAndFooters();
 
         int size = items.size();
@@ -170,7 +168,7 @@ public class SearchArtistFragment extends ItemsFragment<Artist> implements GetIt
 
     protected void checkIfAllIsLoaded(int size){
         if (size < AppContext.getInstance().getLimit()){
-            allIsLoaded = true;
+            mListAdapter.allIsLoaded = true;
             CenteredToast.show(getContext(), R.string.all_artists_are_loaded, Toast.LENGTH_SHORT);
         }
     }
