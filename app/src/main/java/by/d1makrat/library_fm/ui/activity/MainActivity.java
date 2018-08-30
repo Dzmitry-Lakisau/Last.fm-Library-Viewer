@@ -230,7 +230,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onStop() {
         super.onStop();
 
-        AppContext.getInstance().saveSettings();
         unregisterReceiver(mNetworkStatusReceiver);
     }
 

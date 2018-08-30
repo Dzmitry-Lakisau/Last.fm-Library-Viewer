@@ -115,4 +115,11 @@ public class PreferenceActivity extends Activity {
             }
         });
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        AppContext.getInstance().saveSettings();
+    }
 }
