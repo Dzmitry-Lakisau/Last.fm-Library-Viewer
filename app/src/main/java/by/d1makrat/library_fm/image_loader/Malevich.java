@@ -101,8 +101,7 @@ public enum Malevich {
                     Object tag = imageView.getTag();
                     if (tag != null && tag.equals(request.url)) {
                         imageView.setImageBitmap(imageResult.getBitmap());
-                        Log.d(TAG, "set image " + request.url + " in " + imageView.toString());
-                    }
+                        }
                 }
             }
             else if (request.onErrorDrawable != null){
@@ -119,16 +118,13 @@ public enum Malevich {
         imageView.setImageDrawable(request.placeholderDrawable);
 
         if (request.url != null && !request.url.equals(EMPTY_STRING)) {
-            Log.d(TAG, "enqueue for " + request.url + " in " + request.target.get().toString());
             if (imageHasSize(request)) {
                 imageView.setTag(request.url);
                 queue.addFirst(request);
                 dispatchLoading();
-                Log.d(TAG, "dispatchLoading " + request.url + " in " + request.target.get().toString());
-            } else {
+                } else {
                 deferImageRequest(request);
-                Log.d(TAG, "deferImageRequest " + request.url + " in " + request.target.get().toString());
-            }
+                }
         }
         else if (request.onErrorDrawable != null){
             imageView.setImageDrawable(request.onErrorDrawable);
@@ -222,7 +218,6 @@ public enum Malevich {
                 halfWidth /= 2;
             }
         }
-        Log.d(TAG, "calculateSampleSize: " + inSampleSize);
         return inSampleSize;
     }
 
@@ -239,14 +234,12 @@ public enum Malevich {
             try {
 
                 ImageRequest request = queue.takeFirst();
-                Log.d(TAG, "doInBackground: " + request.url);
 
                 result = new ImageResult(request);
 
                 synchronized (lock) {
                     final Bitmap bitmap = lruCache.get(request.url);
                     if (bitmap != null) {
-                        Log.d(TAG, "doInBackground: from mem cache " + request.url);
                         result.setBitmap(bitmap);
                         return result;
                     }
@@ -259,7 +252,6 @@ public enum Malevich {
                         InputStream fileStream = new FileStreamProvider().get(file);
                         bitmap = getScaledBitmap(fileStream, request.width, request.height);
                         if (bitmap != null) {
-                            Log.d(TAG, "doInBackground: from disk cache " + request.url);
                             result.setBitmap(bitmap);
                             return result;
                         }
@@ -274,7 +266,6 @@ public enum Malevich {
                 bitmap = getScaledBitmap(inputStream, request.height, request.width);
 
                 if (bitmap != null) {
-                    Log.d(TAG, "doInBackground: from network " + request.url);
                     result.setBitmap(bitmap);
                     cacheBitmap(request, bitmap);
                 } else

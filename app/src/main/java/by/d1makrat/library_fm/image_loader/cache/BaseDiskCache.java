@@ -82,7 +82,6 @@ public class BaseDiskCache implements DiskCache {
             File file = new File(cacheDir, fileName);
             if (!file.exists()) {
                 boolean fileCreated = file.createNewFile();
-                Log.d("DiskCache", "get: file created :" + fileCreated);
             }
             return file;
         }
@@ -96,14 +95,12 @@ public class BaseDiskCache implements DiskCache {
         try {
             boolean savedSuccessfully = bitmap.compress(DEFAULT_COMPRESS_FORMAT, DEFAULT_COMPRESS_QUALITY, os);
             imageFile.setLastModified(System.currentTimeMillis());
-            Log.d("DiskCache", "save: file created :" + imageFile);
         } finally {
             IOUtils.closeStream(os);
         }
     }
 
     private void freeSpaceIfRequired() {
-        Log.d(TAG, "freeSpaceIfRequired() called");
         long currentCacheSize = getCurrentCacheSize();
         if (currentCacheSize > cacheSize) {
             File[] files = cacheDir.listFiles();
@@ -122,10 +119,8 @@ public class BaseDiskCache implements DiskCache {
                     currentCacheSize-= length;
                 }
                 i++;
-                Log.d(TAG, "freeSpaceIfRequired: after delete "+ currentCacheSize);
             } while (currentCacheSize > cacheSize);
         }
-        Log.d(TAG, "freeSpaceIfRequired() returned: " + currentCacheSize);
     }
 
     private long getCurrentCacheSize() {
