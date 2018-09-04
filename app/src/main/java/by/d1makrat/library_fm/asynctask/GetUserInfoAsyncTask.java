@@ -3,6 +3,7 @@ package by.d1makrat.library_fm.asynctask;
 import android.os.AsyncTask;
 
 import com.google.firebase.crash.FirebaseCrash;
+import com.google.gson.GsonBuilder;
 
 import java.net.URL;
 
@@ -10,6 +11,7 @@ import by.d1makrat.library_fm.APIException;
 import by.d1makrat.library_fm.https.HttpsClient;
 import by.d1makrat.library_fm.https.RequestMethod;
 import by.d1makrat.library_fm.json.JsonParser;
+import by.d1makrat.library_fm.json.UserAdapter;
 import by.d1makrat.library_fm.model.User;
 import by.d1makrat.library_fm.utils.UrlConstructor;
 
@@ -43,8 +45,9 @@ public class GetUserInfoAsyncTask extends AsyncTask<Void, Void, User> {
                 throw new APIException(errorOrNot);
             }
             else {
-                //UserParser userParser = new UserParser(response);
-                //user = userParser.parse();
+                GsonBuilder gsonBuilder = new GsonBuilder();
+                gsonBuilder.registerTypeAdapter(User.class, new UserAdapter());
+                user = gsonBuilder.create().fromJson(response, User.class);
             }
         } catch (Exception e) {
             e.printStackTrace();
