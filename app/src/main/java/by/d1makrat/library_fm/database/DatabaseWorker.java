@@ -121,10 +121,6 @@ public class DatabaseWorker {
         deleteRecordsFromTable(DATABASE_TOP_TRACKS_TABLE, pPeriod);
     }
 
-    public ScrobblesTableWorker getScrobblesTable() {
-        return new ScrobblesTableWorker(mDatabaseHelper);
-    }
-
     public TopAlbumsTableWorker getTopAlbumsTable(){
         return new TopAlbumsTableWorker(mDatabaseHelper);
     }

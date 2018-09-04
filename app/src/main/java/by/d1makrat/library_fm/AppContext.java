@@ -1,6 +1,7 @@
 package by.d1makrat.library_fm;
 
 import android.app.Application;
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -8,6 +9,7 @@ import android.preference.PreferenceManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import by.d1makrat.library_fm.database.AppDatabase;
 import by.d1makrat.library_fm.https.AdditionalParametersInterceptor;
 import by.d1makrat.library_fm.https.LastFmRestApiService;
 import by.d1makrat.library_fm.image_loader.Malevich;
@@ -46,6 +48,7 @@ public class AppContext extends Application {
     private User mUser;
     private String mSessionKey;
     private String mPerPage;
+    private AppDatabase appDatabase;
 
     private static void initInstance(Context pContext) {
         if (mInstance == null) {
@@ -64,6 +67,8 @@ public class AppContext extends Application {
         AppContext.initInstance(this);
 
         Malevich.INSTANCE.setConfig(new Malevich.Config(this.getCacheDir()));
+
+        appDatabase =  Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "Last.fmLibraryViewer.db").build();
 
         mRetrofitWebService = new Retrofit.Builder()
                 .baseUrl(API_BASE_URL)
@@ -143,5 +148,9 @@ public class AppContext extends Application {
 
     public LastFmRestApiService getRetrofitWebService(){
         return mRetrofitWebService;
+    }
+
+    public AppDatabase getAppDatabase(){
+        return appDatabase;
     }
 }
