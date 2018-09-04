@@ -47,7 +47,7 @@ public class StartFragment extends Fragment {
                 into((ImageView) rootView.findViewById(R.id.user_avatar_start_screen));
 
         TextView textView = rootView.findViewById(R.id.hello_textView);
-        textView.setText(getString(R.string.hello_message, user.getUsername(), user.getPlaycount(), user.getRegistered()));
+        textView.setText(getString(R.string.hello_message, user.getUsername(), user.getPlayCount(), user.getRegistered()));
         return rootView;
     }
 

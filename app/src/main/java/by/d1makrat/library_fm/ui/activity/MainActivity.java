@@ -212,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void setUserInfoInHeader(User pUser) {
         View headerView = ((NavigationView) findViewById(R.id.nav_view)).getHeaderView(0);
 
-        ((TextView) headerView.findViewById(R.id.user_registered)).setText(getString(R.string.navigation_drawer_header_message, pUser.getPlaycount(), pUser.getRegistered()));
+        ((TextView) headerView.findViewById(R.id.user_registered)).setText(getString(R.string.navigation_drawer_header_message, pUser.getPlayCount(), pUser.getRegistered()));
 
         ((TextView) headerView.findViewById(R.id.user_name)).setText(pUser.getUsername());
 

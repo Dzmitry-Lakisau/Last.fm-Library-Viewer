@@ -63,7 +63,7 @@ public class ScrobblesAdapter extends ItemsAdapter<Scrobble> {
             albumTextView.setText(scrobble.getAlbum());
             timestampTextView.setText(scrobble.getFormattedDate());
 
-            String imageUri = scrobble.getImageUrl();
+            String imageUri = scrobble.getImageUri();
             Malevich.INSTANCE.load(null).instead(pPlaceholderDrawable).into(albumartImgView);
         }
     }
