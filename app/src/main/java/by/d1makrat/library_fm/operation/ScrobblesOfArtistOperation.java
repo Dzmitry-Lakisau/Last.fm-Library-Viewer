@@ -1,13 +1,18 @@
 package by.d1makrat.library_fm.operation;
 
+import com.google.gson.GsonBuilder;
+
 import java.net.URL;
 import java.util.List;
 
 import by.d1makrat.library_fm.APIException;
+import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.database.DatabaseWorker;
 import by.d1makrat.library_fm.https.HttpsClient;
 import by.d1makrat.library_fm.https.RequestMethod;
 import by.d1makrat.library_fm.json.JsonParser;
+import by.d1makrat.library_fm.json.ScrobblesAdapter;
+import by.d1makrat.library_fm.json.model.ScrobblesJsonModel;
 import by.d1makrat.library_fm.model.Scrobble;
 import by.d1makrat.library_fm.utils.UrlConstructor;
 
@@ -50,14 +55,15 @@ public class ScrobblesOfArtistOperation implements IOperation<List<Scrobble>> {
                     throw new APIException(errorOrNot);
                 }
                 else {
-//                    ScrobblesParser scrobblesParser = new ScrobblesParser(response);
-                    artistScrobbles = null;// scrobblesParser.parse();
+                    GsonBuilder gsonBuilder = new GsonBuilder();
+                    gsonBuilder.registerTypeAdapter(ScrobblesJsonModel.class, new ScrobblesAdapter());
+                    artistScrobbles = gsonBuilder.create().fromJson(response, ScrobblesJsonModel.class).getAll();
 
-                    databaseWorker.getScrobblesTable().bulkInsertScrobbles(artistScrobbles);
+                    AppContext.getInstance().getAppDatabase().scrobblesDao().insert(artistScrobbles);
                 }
             }
             else {
-                artistScrobbles = databaseWorker.getScrobblesTable().getScrobblesOfArtist(artist, mPage, mFrom, mTo);
+                artistScrobbles = AppContext.getInstance().getAppDatabase().scrobblesDao().getScrobblesOfArtist(artist, mPage, AppContext.getInstance().getLimit());
             }
         } finally {
             databaseWorker.closeDatabase();
