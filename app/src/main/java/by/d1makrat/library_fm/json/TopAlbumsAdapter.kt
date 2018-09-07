@@ -44,15 +44,15 @@ class TopAlbumsAdapter : TypeAdapter<TopAlbums>() {
 
             val artistName = albumJsonObject.get(ARTIST_KEY).asJsonObject.get(NAME_KEY).asString
 
-            val playcount = albumJsonObject.get(PLAYCOUNT_KEY).asString
+            val playCount = albumJsonObject.get(PLAYCOUNT_KEY).asInt
 
             val jsonArray = albumJsonObject.get(IMAGE_KEY).asJsonArray
             var imageUrl = jsonArray.get(MAX_IMAGE_RESOLUTION_INDEX).asJsonObject.get(TEXT_KEY).asString
             imageUrl = if (imageUrl == EMPTY_STRING) null else imageUrl
 
-            val rank = albumJsonObject.get(ATTRIBUTE_KEY).asJsonObject.get(RANK_KEY).asString
+            val rank = albumJsonObject.get(ATTRIBUTE_KEY).asJsonObject.get(RANK_KEY).asInt
 
-            albums.add(Album(title, artistName, playcount, imageUrl, rank))
+            albums.add(Album(title, artistName, imageUrl, playCount, rank))
         }
 
         return TopAlbums(albums, totalAlbums)

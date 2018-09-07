@@ -56,10 +56,10 @@ public class TopAlbumsAdapter extends ItemsAdapter<Album> {
 
             albumTextView.setText(topAlbum.getTitle());
             artistTextView.setText(topAlbum.getArtistName());
-            playcountTextView.setText(AppContext.getInstance().getString(R.string.top_scrobbles_count, topAlbum.getPlaycount()));
-            rankTextView.setText(topAlbum.getRank());
+            playcountTextView.setText(AppContext.getInstance().getResources().getQuantityString(R.plurals.top_scrobbles_count, topAlbum.getPlayCount(), topAlbum.getPlayCount()));
+            rankTextView.setText(String.valueOf(topAlbum.getRank()));
 
-            String imageUri = topAlbum.getImageUrl();
+            String imageUri = topAlbum.getImageUri();
             Malevich.INSTANCE.load(null).instead(pPlaceholderDrawable).into(albumartImgView);
         }
     }
