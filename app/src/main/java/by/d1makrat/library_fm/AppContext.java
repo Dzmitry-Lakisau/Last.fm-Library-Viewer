@@ -68,7 +68,9 @@ public class AppContext extends Application {
 
         Malevich.INSTANCE.setConfig(new Malevich.Config(this.getCacheDir()));
 
-        appDatabase =  Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "Last.fmLibraryViewer.db").build();
+        appDatabase =  Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "Last.fmLibraryViewer.db")
+                .fallbackToDestructiveMigration()
+                .build();
 
         mRetrofitWebService = new Retrofit.Builder()
                 .baseUrl(API_BASE_URL)
