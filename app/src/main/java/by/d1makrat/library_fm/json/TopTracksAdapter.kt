@@ -44,13 +44,13 @@ class TopTracksAdapter : TypeAdapter<TopTracks>() {
 
             val artistName = trackJsonObject.get(ARTIST_KEY).asJsonObject.get(NAME_KEY).asString
 
-            val playCount = trackJsonObject.get(PLAYCOUNT_KEY).asString
+            val playCount = trackJsonObject.get(PLAYCOUNT_KEY).asInt
 
             val jsonArray = trackJsonObject.get(IMAGE_KEY).asJsonArray
             var imageUrl = jsonArray.get(MAX_IMAGE_RESOLUTION_INDEX).asJsonObject.get(TEXT_KEY).asString
             imageUrl = if (imageUrl == EMPTY_STRING) null else imageUrl
 
-            val rank = trackJsonObject.get(ATTRIBUTE_KEY).asJsonObject.get(RANK_KEY).asString
+            val rank = trackJsonObject.get(ATTRIBUTE_KEY).asJsonObject.get(RANK_KEY).asInt
 
             tracks.add(Track(title, artistName, playCount, imageUrl, rank))
         }

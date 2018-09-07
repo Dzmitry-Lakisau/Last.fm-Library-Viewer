@@ -56,10 +56,10 @@ public class TopTracksAdapter extends ItemsAdapter<Track> {
 
             trackTextView.setText(topTrack.getTitle());
             artistTextView.setText(topTrack.getArtistName());
-            playcountTextView.setText(AppContext.getInstance().getString(R.string.top_scrobbles_count, topTrack.getPlaycount()));
-            rankTextView.setText(topTrack.getRank());
+            playcountTextView.setText(AppContext.getInstance().getResources().getQuantityString(R.plurals.top_scrobbles_count, topTrack.getPlayCount(), topTrack.getPlayCount()));
+            rankTextView.setText(String.valueOf(topTrack.getRank()));
 
-            String imageUri = topTrack.getImageUrl();
+            String imageUri = topTrack.getImageUri();
             Malevich.INSTANCE.load(null).instead(pPlaceholderDrawable).into(albumartImgView);
         }
     }
