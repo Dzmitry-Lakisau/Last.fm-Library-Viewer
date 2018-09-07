@@ -15,7 +15,6 @@ import java.io.IOException;
 
 import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.R;
-import by.d1makrat.library_fm.database.DatabaseWorker;
 import by.d1makrat.library_fm.image_loader.Malevich;
 import by.d1makrat.library_fm.ui.CenteredToast;
 
@@ -93,14 +92,12 @@ public class PreferenceActivity extends Activity {
         findViewById(R.id.drop_database_textView).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatabaseWorker databaseWorker = new DatabaseWorker();
 
                 try {
-                    databaseWorker.openDatabase();
-                    databaseWorker.deleteScrobbles();
-                    databaseWorker.deleteTopAlbums(null);
-                    databaseWorker.deleteTopArtists(null);
-                    databaseWorker.deleteTopTracks(null);
+                    AppContext.getInstance().getAppDatabase().scrobblesDao().deleteAllScrobbles();
+                    AppContext.getInstance().getAppDatabase().topAlbumsDao().deleteAllAlbums();
+                    AppContext.getInstance().getAppDatabase().topArtistsDao().deleteAllArtists();
+                    AppContext.getInstance().getAppDatabase().topTracksDao().deleteAllTracks();
 
                     CenteredToast.show(getApplicationContext(), R.string.OK, Toast.LENGTH_SHORT);
                 }
@@ -108,9 +105,6 @@ public class PreferenceActivity extends Activity {
                     e.printStackTrace();
                     FirebaseCrash.report(e);
                     CenteredToast.show(getApplicationContext(), R.string.unable_to_drop_database, Toast.LENGTH_SHORT);
-                }
-                finally {
-                    databaseWorker.closeDatabase();
                 }
             }
         });
