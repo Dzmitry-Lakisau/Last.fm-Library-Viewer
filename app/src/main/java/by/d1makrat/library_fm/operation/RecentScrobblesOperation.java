@@ -7,15 +7,12 @@ import java.util.List;
 
 import by.d1makrat.library_fm.APIException;
 import by.d1makrat.library_fm.AppContext;
-import by.d1makrat.library_fm.database.DatabaseWorker;
 import by.d1makrat.library_fm.https.HttpsClient;
 import by.d1makrat.library_fm.https.RequestMethod;
 import by.d1makrat.library_fm.json.JsonParser;
 import by.d1makrat.library_fm.json.ScrobblesAdapter;
-import by.d1makrat.library_fm.json.UserAdapter;
 import by.d1makrat.library_fm.json.model.ScrobblesJsonModel;
 import by.d1makrat.library_fm.model.Scrobble;
-import by.d1makrat.library_fm.model.User;
 import by.d1makrat.library_fm.utils.UrlConstructor;
 
 import static by.d1makrat.library_fm.Constants.API_NO_ERROR;
@@ -36,35 +33,28 @@ public class RecentScrobblesOperation implements IOperation<List<Scrobble>> {
     public List<Scrobble> perform() throws Exception {
 
         List<Scrobble> scrobbles;
-        DatabaseWorker databaseWorker = new DatabaseWorker();
 
-        try {
-            databaseWorker.openDatabase();
+        if (HttpsClient.isNetworkAvailable()) {
+            UrlConstructor urlConstructor = new UrlConstructor();
+            URL apiRequestUrl = urlConstructor.constructRecentScrobblesApiRequestUrl(mPage, mFrom, mTo);
 
-            if (HttpsClient.isNetworkAvailable()) {
-                UrlConstructor urlConstructor = new UrlConstructor();
-                URL apiRequestUrl = urlConstructor.constructRecentScrobblesApiRequestUrl(mPage, mFrom, mTo);
+            HttpsClient httpsClient = new HttpsClient();
+            String response = httpsClient.request(apiRequestUrl, RequestMethod.GET);
 
-                HttpsClient httpsClient = new HttpsClient();
-                String response = httpsClient.request(apiRequestUrl, RequestMethod.GET);
+            JsonParser jsonParser = new JsonParser();
 
-                JsonParser jsonParser = new JsonParser();
-
-                String errorOrNot = jsonParser.checkForApiErrors(response);
-                if (!errorOrNot.equals(API_NO_ERROR)) {
-                    throw new APIException(errorOrNot);
-                } else {
-                    GsonBuilder gsonBuilder = new GsonBuilder();
-                    gsonBuilder.registerTypeAdapter(ScrobblesJsonModel.class, new ScrobblesAdapter());
-                    scrobbles = gsonBuilder.create().fromJson(response, ScrobblesJsonModel.class).getAll();
-
-                    AppContext.getInstance().getAppDatabase().scrobblesDao().insert(scrobbles);
-                }
+            String errorOrNot = jsonParser.checkForApiErrors(response);
+            if (!errorOrNot.equals(API_NO_ERROR)) {
+                throw new APIException(errorOrNot);
             } else {
-                scrobbles = AppContext.getInstance().getAppDatabase().scrobblesDao().getScrobbles(mPage, AppContext.getInstance().getLimit());
+                GsonBuilder gsonBuilder = new GsonBuilder();
+                gsonBuilder.registerTypeAdapter(ScrobblesJsonModel.class, new ScrobblesAdapter());
+                scrobbles = gsonBuilder.create().fromJson(response, ScrobblesJsonModel.class).getAll();
+
+                AppContext.getInstance().getAppDatabase().scrobblesDao().insert(scrobbles);
             }
-        } finally {
-            databaseWorker.closeDatabase();
+        } else {
+            scrobbles = AppContext.getInstance().getAppDatabase().scrobblesDao().getScrobbles(mPage, AppContext.getInstance().getLimit());
         }
 
         return scrobbles;
