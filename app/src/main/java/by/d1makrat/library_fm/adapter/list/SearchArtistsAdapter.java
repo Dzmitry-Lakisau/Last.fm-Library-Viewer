@@ -53,7 +53,7 @@ public class SearchArtistsAdapter extends ItemsAdapter<Artist>{
             artistNameTextView.setText(artist.getName());
             playcountTextView.setText(AppContext.getInstance().getString(R.string.listeners_count, artist.getListenersCount()));
 
-            String imageUri = artist.getImageUrl();
+            String imageUri = artist.getImageUri();
             Malevich.INSTANCE.load(null).instead(pPlaceholderDrawable).into(artistImgView);
         }
     }

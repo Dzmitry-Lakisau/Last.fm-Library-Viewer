@@ -42,9 +42,7 @@ class TopArtistsAdapter : TypeAdapter<TopArtists>() {
 
             val name = artistJsonObject.get(NAME_KEY).asString
 
-            val listenersCount = artistJsonObject.get(LISTENERS_KEY)?.asString
-
-            val playCount = artistJsonObject.get(PLAYCOUNT_KEY)?.asString
+            val playCount = artistJsonObject.get(PLAYCOUNT_KEY).asInt
 
             val url = artistJsonObject.get(URL_KEY).asString
 
@@ -52,9 +50,9 @@ class TopArtistsAdapter : TypeAdapter<TopArtists>() {
             var imageUrl = jsonArray.get(MAX_IMAGE_RESOLUTION_INDEX).asJsonObject.get(TEXT_KEY).asString
             imageUrl = if (imageUrl == EMPTY_STRING) null else imageUrl
 
-            val rank = artistJsonObject.get(ATTRIBUTE_KEY).asJsonObject.get(RANK_KEY)?.asString
+            val rank = artistJsonObject.get(ATTRIBUTE_KEY).asJsonObject.get(RANK_KEY).asInt
 
-            artists.add(Artist(name, listenersCount, playCount, url, imageUrl, rank))
+            artists.add(Artist(name, playCount, url, imageUrl, rank))
         }
 
         return TopArtists(artists, totalArtists)

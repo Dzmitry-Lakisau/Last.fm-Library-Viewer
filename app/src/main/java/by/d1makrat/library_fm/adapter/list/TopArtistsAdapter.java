@@ -53,10 +53,10 @@ public class TopArtistsAdapter extends ItemsAdapter<Artist> {
         private void bind(Artist topArtist, Drawable pPlaceholderDrawable){
 
             artistTextView.setText(topArtist.getName());
-            playcountTextView.setText(AppContext.getInstance().getString(R.string.top_scrobbles_count, topArtist.getPlayCount()));
-            rankTextView.setText(topArtist.getRank());
+            playcountTextView.setText(AppContext.getInstance().getResources().getQuantityString(R.plurals.top_scrobbles_count, topArtist.getPlayCount(), topArtist.getPlayCount()));
+            rankTextView.setText(String.valueOf(topArtist.getRank()));
 
-            String imageUri = topArtist.getImageUrl();
+            String imageUri = topArtist.getImageUri();
             Malevich.INSTANCE.load(null).instead(pPlaceholderDrawable).into(albumartImgView);
         }
     }

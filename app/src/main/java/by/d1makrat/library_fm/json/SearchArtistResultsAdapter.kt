@@ -39,7 +39,7 @@ class SearchArtistResultsAdapter : TypeAdapter<ArtistsJsonModel>() {
 
             val name = artistJsonObject.get(NAME_KEY).asString
 
-            val listeners = artistJsonObject.get(LISTENERS_KEY).asString
+            val listenersCount = artistJsonObject.get(LISTENERS_KEY).asInt
 
             val url = artistJsonObject.get(URL_KEY).asString
 
@@ -47,7 +47,7 @@ class SearchArtistResultsAdapter : TypeAdapter<ArtistsJsonModel>() {
             var imageUrl = jsonArray.get(MAX_IMAGE_RESOLUTION_INDEX).asJsonObject.get(TEXT_KEY).asString
             imageUrl = if (imageUrl == EMPTY_STRING) null else imageUrl
 
-            artists.add(Artist(name, listeners, null, url, imageUrl, null))
+            artists.add(Artist(name, listenersCount, url, imageUrl))
         }
 
         return artists
