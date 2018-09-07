@@ -8,4 +8,8 @@
         <item quantity="one">%d scrobble within %2$s - %3$s</item>
         <item quantity="other">%d scrobbles within %2$s - %3$s</item>
     </plurals>
+    <plurals name="top_scrobbles_count">
+        <item quantity="one">%d scrobble</item>
+        <item quantity="other">%d scrobbles</item>
+    </plurals>
 </resources>
