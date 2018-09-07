@@ -41,15 +41,13 @@ class ScrobblesAdapter : TypeAdapter<ScrobblesJsonModel>() {
             val scrobbleJsonObject = scrobblesJsonArray.get(i).asJsonObject
 
             if (!scrobbleJsonObject.has(ATTRIBUTE_KEY)) {//TODO parse and show scrobble that "now playing"
-                val scrobble = Scrobble()
+                val trackTitle = scrobbleJsonObject.get(NAME_KEY).asString
+                val artist = scrobbleJsonObject.get(ARTIST_KEY).asJsonObject.get(TEXT_KEY).asString
+                val album = scrobbleJsonObject.get(ALBUM_KEY).asJsonObject.get(TEXT_KEY).asString
+                val unixDate = scrobbleJsonObject.get(DATE_KEY).asJsonObject.get("uts").asLong
+                val imageUrl = scrobbleJsonObject.get(IMAGE_KEY).asJsonArray.get(MAX_IMAGE_RESOLUTION_INDEX).asJsonObject.get(TEXT_KEY).asString
 
-                scrobble.trackTitle = scrobbleJsonObject.get(NAME_KEY).asString
-                scrobble.artist = scrobbleJsonObject.get(ARTIST_KEY).asJsonObject.get(TEXT_KEY).asString
-                scrobble.album = scrobbleJsonObject.get(ALBUM_KEY).asJsonObject.get(TEXT_KEY).asString
-                scrobble.imageUri = scrobbleJsonObject.get(IMAGE_KEY).asJsonArray.get(MAX_IMAGE_RESOLUTION_INDEX).asJsonObject.get(TEXT_KEY).asString
-                scrobble.unixDate = scrobbleJsonObject.get(DATE_KEY).asJsonObject.get("uts").asLong
-
-                scrobbles.add(scrobble)
+                scrobbles.add(Scrobble(trackTitle, artist, album, unixDate, imageUrl))
             }
         }
 
