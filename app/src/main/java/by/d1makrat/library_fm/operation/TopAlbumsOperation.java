@@ -1,14 +1,18 @@
 package by.d1makrat.library_fm.operation;
 
+import com.google.gson.GsonBuilder;
+
 import java.net.URL;
 import java.util.List;
 
 import by.d1makrat.library_fm.APIException;
-import by.d1makrat.library_fm.database.DatabaseWorker;
+import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.https.HttpsClient;
 import by.d1makrat.library_fm.https.RequestMethod;
 import by.d1makrat.library_fm.json.JsonParser;
+import by.d1makrat.library_fm.json.TopAlbumsAdapter;
 import by.d1makrat.library_fm.model.Album;
+import by.d1makrat.library_fm.model.TopAlbums;
 import by.d1makrat.library_fm.operation.model.TopOperationResult;
 import by.d1makrat.library_fm.utils.UrlConstructor;
 
@@ -29,42 +33,38 @@ public class TopAlbumsOperation implements IOperation<TopOperationResult<Album>>
 
         List<Album> topAlbums;
         String topAlbumsCount;
-        DatabaseWorker databaseWorker = new DatabaseWorker();
 
-        try {
-            databaseWorker.openDatabase();
+        if (HttpsClient.isNetworkAvailable()) {
+            UrlConstructor urlConstructor = new UrlConstructor();
+            URL apiRequestUrl = urlConstructor.constructTopAlbumsApiRequestUrl(period, mPage);
 
-            if (HttpsClient.isNetworkAvailable()) {
-                UrlConstructor urlConstructor = new UrlConstructor();
-                URL apiRequestUrl = urlConstructor.constructTopAlbumsApiRequestUrl(period, mPage);
+            HttpsClient httpsClient = new HttpsClient();
+            String response = httpsClient.request(apiRequestUrl, RequestMethod.GET);
 
-                HttpsClient httpsClient = new HttpsClient();
-                String response = httpsClient.request(apiRequestUrl, RequestMethod.GET);
+            JsonParser jsonParser = new JsonParser();
+            String errorOrNot = jsonParser.checkForApiErrors(response);
 
-                JsonParser jsonParser = new JsonParser();
-                String errorOrNot = jsonParser.checkForApiErrors(response);
-
-                if (!errorOrNot.equals(API_NO_ERROR)) {
-                    throw new APIException(errorOrNot);
-                }
-                else{
-                    //TopsParser topsParser = new TopsParser(response);
-                    topAlbums = null;// topsParser.parseUserTopAlbums();
-
-                    if (mPage == 1) {
-                        databaseWorker.deleteTopAlbums(period);
-                    }
-                    databaseWorker.getTopAlbumsTable().bulkInsertTopAlbums(topAlbums, period);
-
-                    topAlbumsCount = null;// topsParser.parseAlbumsCount();
-                }
+            if (!errorOrNot.equals(API_NO_ERROR)) {
+                throw new APIException(errorOrNot);
             }
-            else {
-                topAlbums = databaseWorker.getTopAlbumsTable().getTopAlbums(period, mPage);
-                topAlbumsCount = databaseWorker.getTopAlbumsTable().getAlbumsCount(period);
+            else{
+                GsonBuilder gsonBuilder = new GsonBuilder();
+                gsonBuilder.registerTypeAdapter(TopAlbums.class, new TopAlbumsAdapter());
+                topAlbums = gsonBuilder.create().fromJson(response, TopAlbums.class).getAlbums();
+                topAlbumsCount = gsonBuilder.create().fromJson(response, TopAlbums.class).getTotal();
+
+                if (mPage == 1) {
+                    AppContext.getInstance().getAppDatabase().topAlbumsDao().deleteAlbums(period);
+                }
+                for (Album album : topAlbums) {
+                    album.setPeriod(period);
+                }
+                AppContext.getInstance().getAppDatabase().topAlbumsDao().insertAlbums(topAlbums);
             }
-        } finally {
-            databaseWorker.closeDatabase();
+        }
+        else {
+            topAlbums = AppContext.getInstance().getAppDatabase().topAlbumsDao().getAlbums(period, mPage, AppContext.getInstance().getLimit());
+            topAlbumsCount = AppContext.getInstance().getAppDatabase().topAlbumsDao().getAlbumsCount(period);
         }
 
         return new TopOperationResult<>(topAlbums, topAlbumsCount);
