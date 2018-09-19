@@ -27,9 +27,6 @@ public final class Constants {
     public static final String FILTER_DIALOG_FROM_BUNDLE_KEY = "from";
     public static final String FILTER_DIALOG_TO_BUNDLE_KEY = "to";
 
-    public static final String[] DATE_PRESETS_FOR_URL = {EMPTY_STRING, "?date_preset=LAST_7_DAYS", "?date_preset=LAST_30_DAYS", "?date_preset=LAST_90_DAYS", "?date_preset=LAST_180_DAYS", "?date_preset=LAST_365_DAYS"};
-    public static final String[] DATE_PERIODS_FOR_API = {"overall", "7day", "1month", "3month", "6month", "12month"};
-
     public static final String API_NO_ERROR = "No error";
     public static final int API_MAX_FOR_SCROBBLES_BY_ARTIST = 200;
 
