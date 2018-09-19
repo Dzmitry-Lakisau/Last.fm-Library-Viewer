@@ -1,7 +1,6 @@
 package by.d1makrat.library_fm
 
 import by.d1makrat.library_fm.Constants.API_BASE_URL
-import by.d1makrat.library_fm.Constants.DATE_PERIODS_FOR_API
 import by.d1makrat.library_fm.https.AdditionalParametersInterceptor
 import by.d1makrat.library_fm.https.LastFmRestApiService
 import by.d1makrat.library_fm.json.*
@@ -96,7 +95,7 @@ class RetrofitCallTest {
     fun getTopAlbums(){
         var result: TopAlbums? = null
 
-        val call = mLastFmRestApiService.getTopAlbums(user, DATE_PERIODS_FOR_API[4], 1, countOfObjectInResponse)
+        val call = mLastFmRestApiService.getTopAlbums(user, Period().getValueForApi(4), 1, countOfObjectInResponse)
 
         try {
             val response = call.execute()
@@ -116,7 +115,7 @@ class RetrofitCallTest {
     fun getTopArtists(){
         var result: TopArtists? = null
 
-        val call = mLastFmRestApiService.getTopArtists(user, DATE_PERIODS_FOR_API[4], 1, countOfObjectInResponse)
+        val call = mLastFmRestApiService.getTopArtists(user, Period().getValueForApi(4), 1, countOfObjectInResponse)
 
         try {
             val response = call.execute()
@@ -136,7 +135,7 @@ class RetrofitCallTest {
     fun getTopTracks(){
         var result: TopTracks? = null
 
-        val call = mLastFmRestApiService.getTopTracks(user, DATE_PERIODS_FOR_API[4], 1, countOfObjectInResponse)
+        val call = mLastFmRestApiService.getTopTracks(user, Period().getValueForApi(4), 1, countOfObjectInResponse)
 
         try {
             val response = call.execute()
