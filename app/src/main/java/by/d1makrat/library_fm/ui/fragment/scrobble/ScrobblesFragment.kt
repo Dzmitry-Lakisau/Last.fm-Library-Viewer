@@ -88,10 +88,6 @@ abstract class ScrobblesFragment: ItemsFragment<Scrobble, ScrobblesView<Scrobble
         }
     }
 
-    override fun openBrowser(uri: Uri) {
-        startActivity(Intent(Intent.ACTION_VIEW, uri))
-    }
-
     override fun createAdapter(layoutInflater: LayoutInflater): ItemsAdapter<Scrobble> {
         return ScrobblesAdapter(layoutInflater, ContextCompat.getDrawable(AppContext.getInstance(), R.drawable.img_vinyl))//TODO resourcecompat
     }

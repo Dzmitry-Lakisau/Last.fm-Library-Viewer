@@ -1,20 +1,21 @@
 package by.d1makrat.library_fm.operation;
 
+import com.google.gson.GsonBuilder;
+
 import java.net.URL;
-import java.util.List;
 
 import by.d1makrat.library_fm.APIException;
 import by.d1makrat.library_fm.database.DatabaseWorker;
 import by.d1makrat.library_fm.https.HttpsClient;
 import by.d1makrat.library_fm.https.RequestMethod;
 import by.d1makrat.library_fm.json.JsonParser;
-import by.d1makrat.library_fm.model.Album;
-import by.d1makrat.library_fm.operation.model.TopOperationResult;
+import by.d1makrat.library_fm.json.TopAlbumsAdapter;
+import by.d1makrat.library_fm.model.TopAlbums;
 import by.d1makrat.library_fm.utils.UrlConstructor;
 
 import static by.d1makrat.library_fm.Constants.API_NO_ERROR;
 
-public class TopAlbumsOperation implements IOperation<TopOperationResult<Album>> {
+public class TopAlbumsOperation implements IOperation<TopAlbums> {
 
     private final String period;
     private final int mPage;
@@ -25,10 +26,9 @@ public class TopAlbumsOperation implements IOperation<TopOperationResult<Album>>
     }
 
     @Override
-    public TopOperationResult<Album> perform() throws Exception {
+    public TopAlbums perform() throws Exception {
 
-        List<Album> topAlbums;
-        String topAlbumsCount;
+        TopAlbums topAlbums;
         DatabaseWorker databaseWorker = new DatabaseWorker();
 
         try {
@@ -48,25 +48,23 @@ public class TopAlbumsOperation implements IOperation<TopOperationResult<Album>>
                     throw new APIException(errorOrNot);
                 }
                 else{
-                    //TopsParser topsParser = new TopsParser(response);
-                    topAlbums = null;// topsParser.parseUserTopAlbums();
+                    GsonBuilder builder = new GsonBuilder();
+                    builder.registerTypeAdapter(TopAlbums.class, new TopAlbumsAdapter());
+                    topAlbums = builder.create().fromJson(response, TopAlbums.class);
 
                     if (mPage == 1) {
                         databaseWorker.deleteTopAlbums(period);
                     }
-                    databaseWorker.getTopAlbumsTable().bulkInsertTopAlbums(topAlbums, period);
-
-                    topAlbumsCount = null;// topsParser.parseAlbumsCount();
+                    databaseWorker.getTopAlbumsTable().bulkInsertTopAlbums(topAlbums.getAlbums(), period);
                 }
             }
             else {
-                topAlbums = databaseWorker.getTopAlbumsTable().getTopAlbums(period, mPage);
-                topAlbumsCount = databaseWorker.getTopAlbumsTable().getAlbumsCount(period);
+                topAlbums = new TopAlbums(databaseWorker.getTopAlbumsTable().getTopAlbums(period, mPage), databaseWorker.getTopAlbumsTable().getAlbumsCount(period));
             }
         } finally {
             databaseWorker.closeDatabase();
         }
 
-        return new TopOperationResult<>(topAlbums, topAlbumsCount);
+        return topAlbums;
     }
 }

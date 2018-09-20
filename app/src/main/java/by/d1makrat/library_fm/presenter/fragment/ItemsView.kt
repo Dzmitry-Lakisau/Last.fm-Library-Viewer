@@ -6,10 +6,11 @@ interface ItemsView<T> {
     fun clearList()
     fun populateList(items: List<T>?)
     fun removeAllHeadersAndFooters()
-    fun showEmptyHeader(message: String)
     fun showHeader()
     fun showFooter()
     fun showError(message: String?)
     fun showAllIsLoaded()
     fun openBrowser(uri: Uri)
+    fun getListItemsCount(): Int
+    fun hideListHead()
 }

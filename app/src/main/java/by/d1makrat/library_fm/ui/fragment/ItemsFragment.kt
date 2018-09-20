@@ -1,5 +1,7 @@
 package by.d1makrat.library_fm.ui.fragment
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -94,5 +96,9 @@ abstract class ItemsFragment<T, V: ItemsView<T>, P: ItemsPresenter<T, V>>: Fragm
 
     override fun removeAllHeadersAndFooters() {
         mListAdapter?.removeAllHeadersAndFooters()
+    }
+
+    override fun openBrowser(uri: Uri) {
+        startActivity(Intent(Intent.ACTION_VIEW, uri))
     }
 }
