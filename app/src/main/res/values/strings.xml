@@ -66,9 +66,9 @@
     <string name="listeners_count">%s listeners</string>
     <string name="search_fragment_no_result">Nothing found</string>
 
-    <string name="total_albums">Total listened albums: %s</string>
-    <string name="total_artists">Total listened artists: %s</string>
-    <string name="total_tracks">Total listened tracks: %s</string>
+    <string name="total_albums">Total listened albums: %d</string>
+    <string name="total_artists">Total listened artists: %d</string>
+    <string name="total_tracks">Total listened tracks: %d</string>
 
     <string name="set_scrobbles_per_request">Amount of scrobbles to process at once</string>
     <string name="clear_image_cache">Clear image cache</string>

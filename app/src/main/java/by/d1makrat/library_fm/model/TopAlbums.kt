@@ -1,3 +1,3 @@
 package by.d1makrat.library_fm.model
 
-data class TopAlbums(val albums: List<Album>, val totalCount: String)
+class TopAlbums(items: List<Album>, totalCount: Int): TopItems<Album>(items, totalCount)

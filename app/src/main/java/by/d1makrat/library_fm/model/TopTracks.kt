@@ -1,3 +1,3 @@
 package by.d1makrat.library_fm.model
 
-data class TopTracks(val tracks: List<Track>, val totalCount: String)
+class TopTracks(items: List<Track>, totalCount: Int): TopItems<Track>(items, totalCount)

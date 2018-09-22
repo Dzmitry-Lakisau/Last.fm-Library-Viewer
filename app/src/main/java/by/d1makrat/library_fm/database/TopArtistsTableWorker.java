@@ -93,7 +93,7 @@ public class TopArtistsTableWorker {
         return result;
     }
 
-    public String getArtistsCount(String pPeriod) throws SQLException {
+    public int getArtistsCount(String pPeriod) throws SQLException {
         final SQLiteDatabase database = mDatabaseHelper.getReadableDatabase();
         int count;
         Cursor cursor = null;
@@ -113,6 +113,6 @@ public class TopArtistsTableWorker {
             database.close();
         }
 
-        return String.valueOf(count);
+        return count;
     }
 }

@@ -34,7 +34,7 @@ class TopTracksAdapter : TypeAdapter<TopTracks>() {
 
         if (rootObject.has("error")) throw APIException(rootObject.get("message").asString)
 
-        val totalTracks = rootObject.get(TOPTRACKS_KEY).asJsonObject.get(ATTRIBUTE_KEY).asJsonObject.get(TOTAL_KEY).asString
+        val totalTracks = rootObject.get(TOPTRACKS_KEY).asJsonObject.get(ATTRIBUTE_KEY).asJsonObject.get(TOTAL_KEY).asInt
         val tracksJsonArray = rootObject.get(TOPTRACKS_KEY).asJsonObject.getAsJsonArray(TRACK_KEY)
 
         for (i in 0 until tracksJsonArray.size()) {

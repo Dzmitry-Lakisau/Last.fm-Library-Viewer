@@ -43,7 +43,7 @@ class TopAlbumsFragment: TopItemsFragment<Album>() {
         listHeadTextView?.visibility = View.INVISIBLE
     }
 
-    override fun showListHead(itemCount: String) {
+    override fun showListHead(itemCount: Int) {
         listHeadTextView?.text = getString(R.string.total_albums, itemCount)
         listHeadTextView?.visibility = View.VISIBLE
     }

@@ -97,7 +97,7 @@ public class TopAlbumsTableWorker{
         return result;
     }
 
-    public String getAlbumsCount(String pPeriod) throws SQLException {
+    public int getAlbumsCount(String pPeriod) throws SQLException {
         final SQLiteDatabase database = mDatabaseHelper.getReadableDatabase();
         int count;
         Cursor cursor = null;
@@ -117,6 +117,6 @@ public class TopAlbumsTableWorker{
             database.close();
         }
 
-        return String.valueOf(count);
+        return count;
     }
 }

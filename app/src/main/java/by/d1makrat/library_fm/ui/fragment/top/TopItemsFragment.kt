@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import by.d1makrat.library_fm.Constants.PERIOD_KEY
 import by.d1makrat.library_fm.R
-import by.d1makrat.library_fm.presenter.fragment.top.TopItemsView
 import by.d1makrat.library_fm.presenter.fragment.top.TopItemsPresenter
+import by.d1makrat.library_fm.presenter.fragment.top.TopItemsView
 import by.d1makrat.library_fm.ui.fragment.ItemsFragment
 
 abstract class TopItemsFragment<T>: ItemsFragment<T, TopItemsView<T>, TopItemsPresenter<T>>(), TopItemsView<T> {
@@ -39,7 +39,7 @@ abstract class TopItemsFragment<T>: ItemsFragment<T, TopItemsView<T>, TopItemsPr
         if (mListAdapter!!.isEmpty) {
             hideListHead()
         } else {
-            showListHead(mListAdapter?.itemCount.toString())
+            showListHead(mListAdapter?.itemCount!!)
         }
 
         return rootView

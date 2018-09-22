@@ -13,7 +13,6 @@ import by.d1makrat.library_fm.AppContext
 import by.d1makrat.library_fm.R
 import by.d1makrat.library_fm.adapter.list.ItemsAdapter
 import by.d1makrat.library_fm.adapter.list.TopArtistsAdapter
-import by.d1makrat.library_fm.model.Album
 import by.d1makrat.library_fm.model.Artist
 import by.d1makrat.library_fm.presenter.fragment.top.TopArtistsPresenter
 import by.d1makrat.library_fm.ui.CenteredToast
@@ -44,7 +43,7 @@ class TopArtistsFragment: TopItemsFragment<Artist>() {
         listHeadTextView?.visibility = View.INVISIBLE
     }
 
-    override fun showListHead(itemCount: String) {
+    override fun showListHead(itemCount: Int) {
         listHeadTextView?.text = getString(R.string.total_artists, itemCount)
         listHeadTextView?.visibility = View.VISIBLE
     }

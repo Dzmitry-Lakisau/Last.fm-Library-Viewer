@@ -13,7 +13,6 @@ import by.d1makrat.library_fm.AppContext
 import by.d1makrat.library_fm.R
 import by.d1makrat.library_fm.adapter.list.ItemsAdapter
 import by.d1makrat.library_fm.adapter.list.TopTracksAdapter
-import by.d1makrat.library_fm.model.Album
 import by.d1makrat.library_fm.model.Track
 import by.d1makrat.library_fm.presenter.fragment.top.TopTracksPresenter
 import by.d1makrat.library_fm.ui.CenteredToast
@@ -44,7 +43,7 @@ class TopTracksFragment: TopItemsFragment<Track>() {
         listHeadTextView?.visibility = View.INVISIBLE
     }
 
-    override fun showListHead(itemCount: String) {
+    override fun showListHead(itemCount: Int) {
         listHeadTextView?.text = getString(R.string.total_tracks, itemCount)
         listHeadTextView?.visibility = View.VISIBLE
     }

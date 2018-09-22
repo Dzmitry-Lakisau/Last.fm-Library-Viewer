@@ -34,7 +34,7 @@ class TopAlbumsAdapter : TypeAdapter<TopAlbums>() {
 
         if (rootObject.has("error")) throw APIException(rootObject.get("message").asString)
 
-        val totalAlbums = rootObject.get(TOPALBUMS_KEY).asJsonObject.get(ATTRIBUTE_KEY).asJsonObject.get(TOTAL_KEY).asString
+        val totalAlbums = rootObject.get(TOPALBUMS_KEY).asJsonObject.get(ATTRIBUTE_KEY).asJsonObject.get(TOTAL_KEY).asInt
         val albumsJsonArray = rootObject.get(TOPALBUMS_KEY).asJsonObject.getAsJsonArray(ALBUM_KEY)
 
         for (i in 0 until albumsJsonArray.size()) {
