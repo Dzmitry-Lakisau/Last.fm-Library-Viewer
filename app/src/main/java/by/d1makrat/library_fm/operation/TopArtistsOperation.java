@@ -3,7 +3,6 @@ package by.d1makrat.library_fm.operation;
 import com.google.gson.GsonBuilder;
 
 import java.net.URL;
-import java.util.List;
 
 import by.d1makrat.library_fm.APIException;
 import by.d1makrat.library_fm.database.DatabaseWorker;
@@ -13,12 +12,12 @@ import by.d1makrat.library_fm.json.JsonParser;
 import by.d1makrat.library_fm.json.TopArtistsAdapter;
 import by.d1makrat.library_fm.model.Artist;
 import by.d1makrat.library_fm.model.TopArtists;
-import by.d1makrat.library_fm.operation.model.TopOperationResult;
+import by.d1makrat.library_fm.model.TopItems;
 import by.d1makrat.library_fm.utils.UrlConstructor;
 
 import static by.d1makrat.library_fm.Constants.API_NO_ERROR;
 
-public class TopArtistsOperation implements IOperation<TopArtists> {
+public class TopArtistsOperation implements IOperation<TopItems<Artist>> {
 
     private final String period;
     private final int mPage;
@@ -57,7 +56,7 @@ public class TopArtistsOperation implements IOperation<TopArtists> {
                     if (mPage == 1) {
                         databaseWorker.deleteTopArtists(period);
                     }
-                    databaseWorker.getTopArtistsTable().bulkInsertTopArtists(topArtists.getArtists(), period);
+                    databaseWorker.getTopArtistsTable().bulkInsertTopArtists(topArtists.getItems(), period);
 
                 }
             }

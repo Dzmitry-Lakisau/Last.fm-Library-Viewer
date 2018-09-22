@@ -10,12 +10,14 @@ import by.d1makrat.library_fm.https.HttpsClient;
 import by.d1makrat.library_fm.https.RequestMethod;
 import by.d1makrat.library_fm.json.JsonParser;
 import by.d1makrat.library_fm.json.TopTracksAdapter;
+import by.d1makrat.library_fm.model.TopItems;
 import by.d1makrat.library_fm.model.TopTracks;
+import by.d1makrat.library_fm.model.Track;
 import by.d1makrat.library_fm.utils.UrlConstructor;
 
 import static by.d1makrat.library_fm.Constants.API_NO_ERROR;
 
-public class TopTracksOperation implements IOperation<TopTracks> {
+public class TopTracksOperation implements IOperation<TopItems<Track>> {
 
     private final String period;
     private final int mPage;
@@ -54,7 +56,7 @@ public class TopTracksOperation implements IOperation<TopTracks> {
                     if (mPage == 1) {
                         databaseWorker.deleteTopTracks(period);
                     }
-                    databaseWorker.getTopTracksTable().bulkInsertTopTracks(topTracks.getTracks(), period);
+                    databaseWorker.getTopTracksTable().bulkInsertTopTracks(topTracks.getItems(), period);
 
                 }
             }

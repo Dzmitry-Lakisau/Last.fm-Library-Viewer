@@ -30,12 +30,12 @@ abstract class ItemsPresenter<T, V: ItemsView<T>> {
         }
     }
 
-    fun onException(exception: Exception?) {//TODO ? add footer with retry behavior
+    fun onException(exception: Exception) {//TODO ? add footer with retry behavior
         isLoading = false
 
         mPage--
 
-        view?.showError(exception?.message)
+        view?.showError(exception.message)
     }
 
     fun loadItems() {
