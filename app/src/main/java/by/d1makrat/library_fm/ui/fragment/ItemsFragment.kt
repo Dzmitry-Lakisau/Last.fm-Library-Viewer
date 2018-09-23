@@ -13,7 +13,7 @@ import android.widget.Toast
 import by.d1makrat.library_fm.R
 import by.d1makrat.library_fm.adapter.list.ItemsAdapter
 import by.d1makrat.library_fm.presenter.fragment.ItemsPresenter
-import by.d1makrat.library_fm.presenter.fragment.ItemsView
+import by.d1makrat.library_fm.view.ItemsView
 import by.d1makrat.library_fm.ui.CenteredToast
 
 abstract class ItemsFragment<T, V: ItemsView<T>, P: ItemsPresenter<T, V>>: Fragment(), ItemsView<T> {

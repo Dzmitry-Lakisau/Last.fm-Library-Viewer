@@ -5,6 +5,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.*
 import android.widget.TextView
+import android.widget.Toast
 import by.d1makrat.library_fm.AppContext
 import by.d1makrat.library_fm.Constants
 import by.d1makrat.library_fm.R
@@ -12,12 +13,9 @@ import by.d1makrat.library_fm.adapter.list.ItemsAdapter
 import by.d1makrat.library_fm.adapter.list.ScrobblesAdapter
 import by.d1makrat.library_fm.model.Scrobble
 import by.d1makrat.library_fm.presenter.fragment.scrobble.ScrobblesPresenter
-import by.d1makrat.library_fm.ui.fragment.ItemsFragment
-import android.content.Intent
-import android.net.Uri
-import android.widget.Toast
-import by.d1makrat.library_fm.presenter.fragment.scrobble.ScrobblesView
+import by.d1makrat.library_fm.view.ScrobblesView
 import by.d1makrat.library_fm.ui.CenteredToast
+import by.d1makrat.library_fm.ui.fragment.ItemsFragment
 import by.d1makrat.library_fm.ui.fragment.dialog.FilterDialogFragment
 
 abstract class ScrobblesFragment: ItemsFragment<Scrobble, ScrobblesView<Scrobble>, ScrobblesPresenter>(), ScrobblesView<Scrobble>, FilterDialogFragment.FilterDialogListener {

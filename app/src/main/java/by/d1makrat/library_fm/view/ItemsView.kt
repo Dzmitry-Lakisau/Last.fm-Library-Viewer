@@ -1,4 +1,4 @@
-package by.d1makrat.library_fm.presenter.fragment
+package by.d1makrat.library_fm.view
 
 import android.net.Uri
 
@@ -12,5 +12,4 @@ interface ItemsView<T> {
     fun showAllIsLoaded()
     fun openBrowser(uri: Uri)
     fun getListItemsCount(): Int
-    fun hideListHead()
 }

@@ -1,6 +1,7 @@
 package by.d1makrat.library_fm.presenter.fragment
 
 import by.d1makrat.library_fm.AppContext
+import by.d1makrat.library_fm.view.ItemsView
 
 
 abstract class ItemsPresenter<T, V: ItemsView<T>> {
