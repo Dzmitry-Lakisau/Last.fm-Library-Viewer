@@ -14,8 +14,8 @@ android {
 
     defaultConfig {
         applicationId "by.d1makrat.library_fm"
-        versionCode 11
-        versionName "2.2.1"
+        versionCode 12
+        versionName "2.2.2"
         minSdkVersion 15
         targetSdkVersion 27
         buildConfigField("String", "API_KEY", API_KEY)

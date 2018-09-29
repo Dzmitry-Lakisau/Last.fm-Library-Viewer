@@ -18,11 +18,11 @@ import by.d1makrat.library_fm.ui.CenteredToast
 
 class TopTracksFragment : TopItemsFragment<TopTrack>() {
 
-    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo) {
+    override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
         super.onCreateContextMenu(menu, v, menuInfo)
 
-        menu.add(mPeriod.hashCode(), TopItemsFragment.MENU_SCROBBLES_OF_ARTIST, 0, R.string.scrobbles_of_artist)
-        menu.add(mPeriod.hashCode(), TopItemsFragment.MENU_SCROBBLES_OF_TRACK, 1, R.string.scrobbles_of_track)
+        menu?.add(mPeriod.hashCode(), TopItemsFragment.MENU_SCROBBLES_OF_ARTIST, 0, R.string.scrobbles_of_artist)
+        menu?.add(mPeriod.hashCode(), TopItemsFragment.MENU_SCROBBLES_OF_TRACK, 1, R.string.scrobbles_of_track)
     }
 
     override fun onContextItemSelected(item: MenuItem?): Boolean {
