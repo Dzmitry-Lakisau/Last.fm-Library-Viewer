@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
@@ -19,6 +18,7 @@ import by.d1makrat.library_fm.model.Artist
 import by.d1makrat.library_fm.presenter.fragment.SearchArtistPresenter
 import by.d1makrat.library_fm.view.fragment.SearchArtistView
 import by.d1makrat.library_fm.ui.CenteredToast
+import by.d1makrat.library_fm.ui.activity.MainActivity
 import by.d1makrat.library_fm.utils.InputUtils
 
 class SearchArtistFragment: ItemsFragment<Artist, SearchArtistView<Artist>, SearchArtistPresenter>(), SearchArtistView<Artist> {
@@ -37,7 +37,6 @@ class SearchArtistFragment: ItemsFragment<Artist, SearchArtistView<Artist>, Sear
         val rootView = inflater.inflate(R.layout.fragment_search, container, false)
 
         setUpRecyclerView(rootView)
-        setUpActionBar(activity as AppCompatActivity?)
 
         rootView.findViewById<Button>(R.id.search_button).setOnClickListener{presenter?.onSearchButtonPressed()}
 
@@ -66,10 +65,6 @@ class SearchArtistFragment: ItemsFragment<Artist, SearchArtistView<Artist>, Sear
 
     override fun showAllIsLoaded() {
         CenteredToast.show(activity,  R.string.all_artists_are_loaded, Toast.LENGTH_SHORT)
-    }
-
-    override fun setUpActionBar(activity: AppCompatActivity?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun createAdapter(layoutInflater: LayoutInflater): ItemsAdapter<Artist> {
@@ -104,7 +99,7 @@ class SearchArtistFragment: ItemsFragment<Artist, SearchArtistView<Artist>, Sear
     override fun onContextItemSelected(item: MenuItem?): Boolean {
         return when (item!!.itemId) {
             MENU_SCROBBLES_OF_ARTIST -> {
-                //TODO send to activity
+                (activity as MainActivity).showScrobblesOfArtistFragment(mListAdapter!!.selectedItem.name)
                 true
             }
             MENU_OPEN_IN_BROWSER -> {

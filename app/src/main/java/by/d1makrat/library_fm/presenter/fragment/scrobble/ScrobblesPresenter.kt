@@ -77,4 +77,12 @@ abstract class ScrobblesPresenter(var from: Long?, var to: Long?): ItemsPresente
     }
 
 
+    fun onScrobblesOfDayPressed(isRecentScrobblesFragment: Boolean, listItemPressed: Scrobble){
+        if (isRecentScrobblesFragment)
+            onFinishFilterDialog(DateUtils.getStartTimestampOfDay(listItemPressed.getRawDate()),
+                    DateUtils.getEndTimestampOfDay(listItemPressed.getRawDate()))
+        else
+            view?.showScrobblesOfDay(DateUtils.getStartTimestampOfDay(listItemPressed.getRawDate()),
+                DateUtils.getEndTimestampOfDay(listItemPressed.getRawDate()))
+    }
 }

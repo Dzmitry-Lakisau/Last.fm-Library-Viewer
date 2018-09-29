@@ -1,9 +1,7 @@
 package by.d1makrat.library_fm.ui.fragment.scrobble
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import by.d1makrat.library_fm.Constants.*
-import by.d1makrat.library_fm.R
 import by.d1makrat.library_fm.presenter.fragment.scrobble.RecentScrobblesPresenter
 
 class RecentScrobblesFragment : ScrobblesFragment() {
@@ -16,13 +14,5 @@ class RecentScrobblesFragment : ScrobblesFragment() {
 
         presenter = RecentScrobblesPresenter(mFrom, mTo)
         presenter?.loadItems()
-    }
-
-    override fun setUpActionBar(activity: AppCompatActivity?) {
-        val actionBar = activity?.supportActionBar
-        if (actionBar != null) {
-            actionBar.setTitle(R.string.scrobbles)
-            actionBar.subtitle = null
-        }
     }
 }

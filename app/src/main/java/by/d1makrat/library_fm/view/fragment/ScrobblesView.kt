@@ -5,4 +5,5 @@ interface ScrobblesView<T>: ItemsView<T> {
     fun showFilterDialog()
     fun showEmptyHeader(message: String)
     fun showListHead(message: String)
+    fun showScrobblesOfDay(startOfDay: Long, endOfDay: Long)
 }

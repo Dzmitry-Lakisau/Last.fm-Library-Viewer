@@ -2,19 +2,20 @@ package by.d1makrat.library_fm.ui.fragment.scrobble
 
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
 import android.view.*
 import android.widget.TextView
 import android.widget.Toast
 import by.d1makrat.library_fm.AppContext
 import by.d1makrat.library_fm.Constants
 import by.d1makrat.library_fm.R
+import by.d1makrat.library_fm.R.id.*
 import by.d1makrat.library_fm.adapter.list.ItemsAdapter
 import by.d1makrat.library_fm.adapter.list.ScrobblesAdapter
 import by.d1makrat.library_fm.model.Scrobble
 import by.d1makrat.library_fm.presenter.fragment.scrobble.ScrobblesPresenter
 import by.d1makrat.library_fm.view.fragment.ScrobblesView
 import by.d1makrat.library_fm.ui.CenteredToast
+import by.d1makrat.library_fm.ui.activity.MainActivity
 import by.d1makrat.library_fm.ui.fragment.ItemsFragment
 import by.d1makrat.library_fm.ui.fragment.dialog.FilterDialogFragment
 
@@ -36,7 +37,6 @@ abstract class ScrobblesFragment: ItemsFragment<Scrobble, ScrobblesView<Scrobble
         val rootView = inflater.inflate(R.layout.list_with_head, container, false)
 
         setUpRecyclerView(rootView)
-        setUpActionBar(activity as AppCompatActivity?)
 
         listHeadTextView = rootView.findViewById(R.id.list_head)
 
@@ -116,9 +116,32 @@ abstract class ScrobblesFragment: ItemsFragment<Scrobble, ScrobblesView<Scrobble
         activity?.menuInflater?.inflate(R.menu.menu_context, menu)
     }
 
-    override fun onContextItemSelected(item: MenuItem?): Boolean {
-        return super.onContextItemSelected(item)
+    override fun onContextItemSelected(item: MenuItem): Boolean {
 
-        //TODO send to activity
+        val listItemPressed: Scrobble = mListAdapter?.selectedItem!!
+
+        return when (item.itemId) {
+            scrobbles_of_artist -> {
+                (activity as MainActivity).showScrobblesOfArtistFragment(listItemPressed.Artist)
+                true
+            }
+            scrobbles_of_track -> {
+                (activity as MainActivity).showScrobblesOfTrackFragment(listItemPressed.Artist, listItemPressed.TrackTitle)
+                true
+            }
+            scrobbles_of_album -> {
+                (activity as MainActivity).showScrobblesOfAlbumFragment(listItemPressed.Artist, listItemPressed.Album!!)
+                true
+            }
+            scrobbles_of_day -> {
+                presenter?.onScrobblesOfDayPressed(this is RecentScrobblesFragment, listItemPressed)
+                true
+            }
+            else -> super.onContextItemSelected(item)
+        }
+    }
+
+    override fun showScrobblesOfDay(startOfDay: Long, endOfDay: Long) {
+        (activity as MainActivity).showScrobblesOfDay(startOfDay, endOfDay)
     }
 }

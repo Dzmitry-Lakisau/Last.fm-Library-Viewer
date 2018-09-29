@@ -1,7 +1,6 @@
 package by.d1makrat.library_fm.ui.fragment.scrobble
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.ContextMenu
 import android.view.View
 import by.d1makrat.library_fm.Constants
@@ -27,13 +26,5 @@ class ScrobblesOfTrackFragment: ScrobblesFragment() {
         super.onCreateContextMenu(menu, v, menuInfo)
 
         menu?.findItem(R.id.scrobbles_of_track)?.isVisible = false
-    }
-
-    override fun setUpActionBar(activity: AppCompatActivity?) {
-        val actionBar = activity!!.supportActionBar
-        if (actionBar != null) {
-            actionBar.title = artist
-            actionBar.subtitle = track
-        }
     }
 }

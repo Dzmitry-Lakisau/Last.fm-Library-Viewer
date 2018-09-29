@@ -3,7 +3,6 @@ package by.d1makrat.library_fm.ui.fragment.top
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
 import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -16,6 +15,7 @@ import by.d1makrat.library_fm.adapter.list.TopTracksAdapter
 import by.d1makrat.library_fm.model.Track
 import by.d1makrat.library_fm.presenter.fragment.top.TopTracksPresenter
 import by.d1makrat.library_fm.ui.CenteredToast
+import by.d1makrat.library_fm.ui.activity.MainActivity
 
 class TopTracksFragment: TopItemsFragment<Track>() {
 
@@ -35,8 +35,23 @@ class TopTracksFragment: TopItemsFragment<Track>() {
     }
 
     override fun onContextItemSelected(item: MenuItem?): Boolean {
-        return super.onContextItemSelected(item)
-        //TODO send to activity
+        return if (item?.groupId == mPeriod!!.hashCode()) {
+            when (item.itemId) {
+                MENU_SCROBBLES_OF_ARTIST -> {
+                    (activity as MainActivity).showScrobblesOfArtistFragment(mListAdapter!!.selectedItem.artistName)
+                    true
+                }
+                MENU_SCROBBLES_OF_TRACK -> {
+                    val listItemPressed = mListAdapter!!.selectedItem
+                    (activity as MainActivity).showScrobblesOfTrackFragment(listItemPressed.artistName, listItemPressed.title)
+                    true
+                }
+                else -> super.onContextItemSelected(item)
+            }
+        }
+        else {
+            super.onContextItemSelected(item)
+        }
     }
 
     override fun hideListHead() {
@@ -54,9 +69,5 @@ class TopTracksFragment: TopItemsFragment<Track>() {
 
     override fun showAllIsLoaded() {
         CenteredToast.show(context, R.string.all_tracks_are_loaded, Toast.LENGTH_SHORT)
-    }
-
-    override fun setUpActionBar(activity: AppCompatActivity?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

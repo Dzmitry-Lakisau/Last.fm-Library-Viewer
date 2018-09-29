@@ -1,7 +1,6 @@
 package by.d1makrat.library_fm.ui.fragment.top
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -32,7 +31,6 @@ abstract class TopItemsFragment<T>: ItemsFragment<T, TopItemsView<T>, TopItemsPr
         val rootView = inflater.inflate(R.layout.list_with_head, container, false)
 
         setUpRecyclerView(rootView)
-        setUpActionBar(activity as AppCompatActivity?)
 
         listHeadTextView = rootView.findViewById(R.id.list_head)
 
