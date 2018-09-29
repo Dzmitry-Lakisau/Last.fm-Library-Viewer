@@ -5,7 +5,7 @@ import android.widget.ImageView;
 
 import java.lang.ref.WeakReference;
 
-class ImageRequest {
+public class ImageRequest {
     final String url;
     final WeakReference<ImageView> target;
     final Drawable placeholderDrawable;
