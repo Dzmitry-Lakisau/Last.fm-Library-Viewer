@@ -1,4 +1,4 @@
-package by.d1makrat.library_fm.view
+package by.d1makrat.library_fm.view.fragment
 
 import android.net.Uri
 

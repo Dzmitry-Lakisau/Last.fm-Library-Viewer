@@ -5,7 +5,7 @@ import by.d1makrat.library_fm.asynctask.GetItemsAsyncTask
 import by.d1makrat.library_fm.asynctask.GetItemsCallback
 import by.d1makrat.library_fm.model.Artist
 import by.d1makrat.library_fm.operation.SearchArtistOperation
-import by.d1makrat.library_fm.view.SearchArtistView
+import by.d1makrat.library_fm.view.fragment.SearchArtistView
 
 class SearchArtistPresenter: ItemsPresenter<Artist, SearchArtistView<Artist>>(), GetItemsCallback<Artist> {
 

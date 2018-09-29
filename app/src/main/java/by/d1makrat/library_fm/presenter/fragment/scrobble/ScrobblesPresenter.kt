@@ -5,7 +5,7 @@ import by.d1makrat.library_fm.asynctask.GetItemsCallback
 import by.d1makrat.library_fm.model.Scrobble
 import by.d1makrat.library_fm.presenter.fragment.ItemsPresenter
 import by.d1makrat.library_fm.utils.DateUtils
-import by.d1makrat.library_fm.view.ScrobblesView
+import by.d1makrat.library_fm.view.fragment.ScrobblesView
 
 abstract class ScrobblesPresenter(var from: Long?, var to: Long?): ItemsPresenter<Scrobble, ScrobblesView<Scrobble>>(), GetItemsCallback<Scrobble> {
 

@@ -13,7 +13,7 @@ import by.d1makrat.library_fm.adapter.list.ItemsAdapter
 import by.d1makrat.library_fm.adapter.list.ScrobblesAdapter
 import by.d1makrat.library_fm.model.Scrobble
 import by.d1makrat.library_fm.presenter.fragment.scrobble.ScrobblesPresenter
-import by.d1makrat.library_fm.view.ScrobblesView
+import by.d1makrat.library_fm.view.fragment.ScrobblesView
 import by.d1makrat.library_fm.ui.CenteredToast
 import by.d1makrat.library_fm.ui.fragment.ItemsFragment
 import by.d1makrat.library_fm.ui.fragment.dialog.FilterDialogFragment

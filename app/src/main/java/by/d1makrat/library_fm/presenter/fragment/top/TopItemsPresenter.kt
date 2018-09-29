@@ -3,7 +3,7 @@ package by.d1makrat.library_fm.presenter.fragment.top
 import by.d1makrat.library_fm.asynctask.GetTopItemsCallback
 import by.d1makrat.library_fm.model.TopItems
 import by.d1makrat.library_fm.presenter.fragment.ItemsPresenter
-import by.d1makrat.library_fm.view.TopItemsView
+import by.d1makrat.library_fm.view.fragment.TopItemsView
 
 abstract class TopItemsPresenter<T>(val period: String): ItemsPresenter<T, TopItemsView<T>>(), GetTopItemsCallback<T> {
 

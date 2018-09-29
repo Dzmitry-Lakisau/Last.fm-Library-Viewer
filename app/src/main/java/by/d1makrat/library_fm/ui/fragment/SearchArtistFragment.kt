@@ -17,7 +17,7 @@ import by.d1makrat.library_fm.adapter.list.ItemsAdapter
 import by.d1makrat.library_fm.adapter.list.SearchArtistsAdapter
 import by.d1makrat.library_fm.model.Artist
 import by.d1makrat.library_fm.presenter.fragment.SearchArtistPresenter
-import by.d1makrat.library_fm.view.SearchArtistView
+import by.d1makrat.library_fm.view.fragment.SearchArtistView
 import by.d1makrat.library_fm.ui.CenteredToast
 import by.d1makrat.library_fm.utils.InputUtils
 
