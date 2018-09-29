@@ -33,7 +33,7 @@ abstract class ItemsFragment<T, V: ItemsView<T>, P: ItemsPresenter<T, V>>: Fragm
 //        presenter = createPresenter()
     }
 
-    override fun showError(message: String?) {
+    override fun showError(message: String) {
         mListAdapter?.removeAllHeadersAndFooters()
 
         if (mListAdapter?.isEmpty!!) {
@@ -90,7 +90,7 @@ abstract class ItemsFragment<T, V: ItemsView<T>, P: ItemsPresenter<T, V>>: Fragm
         mListAdapter?.removeAll()
     }
 
-    override fun populateList(items: List<T>?) {
+    override fun populateList(items: List<T>) {
         mListAdapter?.addAll(items)
     }
 
