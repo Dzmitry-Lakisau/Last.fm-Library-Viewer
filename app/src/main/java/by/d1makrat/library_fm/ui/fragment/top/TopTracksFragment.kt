@@ -1,6 +1,5 @@
 package by.d1makrat.library_fm.ui.fragment.top
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.view.ContextMenu
@@ -19,7 +18,6 @@ import by.d1makrat.library_fm.ui.activity.MainActivity
 
 class TopTracksFragment: TopItemsFragment<Track>() {
 
-    @SuppressLint("MissingSuperCall")//TODO remove
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

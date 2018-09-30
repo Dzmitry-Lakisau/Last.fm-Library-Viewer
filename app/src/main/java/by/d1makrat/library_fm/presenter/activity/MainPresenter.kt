@@ -1,6 +1,5 @@
 package by.d1makrat.library_fm.presenter.activity
 
-import android.content.BroadcastReceiver
 import by.d1makrat.library_fm.AppContext
 import by.d1makrat.library_fm.BuildConfig
 import by.d1makrat.library_fm.asynctask.CheckNewVersionAsyncTask
@@ -10,15 +9,12 @@ import by.d1makrat.library_fm.asynctask.GetUserInfoCallback
 import by.d1makrat.library_fm.https.HttpsClient
 import by.d1makrat.library_fm.model.User
 import by.d1makrat.library_fm.view.activity.MainView
-import java.lang.Exception
 
 class MainPresenter:  GetUserInfoCallback, CheckNewVersionCallback {
 
-    protected var view: MainView? = null
+    private var view: MainView? = null
 
     private var user = AppContext.getInstance().user
-
-
 
     fun attachView(view: MainView){
         this.view = view
