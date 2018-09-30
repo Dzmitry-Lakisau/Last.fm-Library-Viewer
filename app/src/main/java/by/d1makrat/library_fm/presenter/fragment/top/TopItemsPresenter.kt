@@ -7,6 +7,8 @@ import by.d1makrat.library_fm.view.fragment.TopItemsView
 
 abstract class TopItemsPresenter<T>(val period: String): ItemsPresenter<T, TopItemsView<T>>(), GetTopItemsCallback<T> {
 
+    private var totalCount: Int = 0
+
     fun onRefresh() {
         if (!isLoading) {
             allIsLoaded = false
@@ -30,12 +32,22 @@ abstract class TopItemsPresenter<T>(val period: String): ItemsPresenter<T, TopIt
         when {
             size > 0 -> {
                 view?.populateList(result.items)
-                view?.showListHead(result.totalCount)
+                totalCount = result.totalCount
+                view?.showListHead(totalCount)
 
                 checkIfAllIsLoaded(size)
             }
             view?.getListItemsCount() == 0 -> view?.showEmptyHeader()
             else -> checkIfAllIsLoaded(size)
         }
+    }
+
+    fun onCreatingNewView(){
+        view?.hideListHead()
+        loadItems()
+    }
+
+    fun onShowingFromBackStack(){
+        view?.showListHead(totalCount)
     }
 }

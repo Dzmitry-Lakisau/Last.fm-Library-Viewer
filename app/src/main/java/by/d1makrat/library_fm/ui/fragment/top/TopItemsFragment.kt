@@ -30,14 +30,17 @@ abstract class TopItemsFragment<T>: ItemsFragment<T, TopItemsView<T>, TopItemsPr
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.list_with_head, container, false)
 
+        presenter?.attachView(this)
+
         setUpRecyclerView(rootView)
 
         listHeadTextView = rootView.findViewById(R.id.list_head)
 
         if (mListAdapter!!.isEmpty) {
-            hideListHead()
+            presenter?.onCreatingNewView()
+
         } else {
-            showListHead(mListAdapter?.itemCount!!)
+            presenter?.onShowingFromBackStack()
         }
 
         return rootView

@@ -38,18 +38,20 @@ class SearchArtistPresenter: ItemsPresenter<Artist, SearchArtistView<Artist>>(),
         getItemsAsyncTask.execute(searchArtistOperation)
     }
 
-    fun onOpenInBrowser(searchQuery: String) {
+    fun onOpenInBrowser() {
         view?.openBrowser(Uri.parse(mUrlForBrowser + searchQuery))
     }
 
-    fun onSearchButtonPressed() {
+    fun onSearchButtonPressed(searchQuery: String) {
+        this.searchQuery = searchQuery
+
         if (!isLoading) {
             view?.hideKeyboard()
             view?.clearList()
 
             allIsLoaded = false
 
-            mPage = 1
+            mPage = 0
             loadItems()
         }
     }

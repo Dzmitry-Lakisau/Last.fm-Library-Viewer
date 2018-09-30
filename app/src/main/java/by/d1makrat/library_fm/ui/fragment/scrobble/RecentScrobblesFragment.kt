@@ -13,6 +13,5 @@ class RecentScrobblesFragment : ScrobblesFragment() {
         mTo = arguments?.getLong(FILTER_DIALOG_TO_BUNDLE_KEY, DATE_LONG_DEFAUT_VALUE) ?: DATE_LONG_DEFAUT_VALUE
 
         presenter = RecentScrobblesPresenter(mFrom, mTo)
-        presenter?.loadItems()
     }
 }

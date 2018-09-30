@@ -20,7 +20,6 @@ class ScrobblesOfAlbumFragment : ScrobblesFragment() {
         album = arguments!!.getString(ALBUM_KEY)
 
         presenter = ScrobblesOfAlbumPresenter(artist!!, album!!, mFrom, mTo)
-        presenter?.loadItems()
     }
 
     override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {

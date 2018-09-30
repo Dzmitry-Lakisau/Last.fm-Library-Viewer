@@ -9,10 +9,6 @@ import by.d1makrat.library_fm.view.fragment.ScrobblesView
 
 abstract class ScrobblesPresenter(var from: Long?, var to: Long?): ItemsPresenter<Scrobble, ScrobblesView<Scrobble>>(), GetItemsCallback<Scrobble> {
 
-    fun showListHead(itemCount: Int) {
-        view?.showListHead(DateUtils.getMessageFromTimestamps(itemCount, from, to))
-    }
-
     fun onRefresh(){
         if (!isLoading) {
             allIsLoaded = false
@@ -44,12 +40,13 @@ abstract class ScrobblesPresenter(var from: Long?, var to: Long?): ItemsPresente
 
     override fun onLoadingSuccessful(items: List<Scrobble>) {
         view?.removeAllHeadersAndFooters()
+        isLoading = false
 
         val size = items.size
         when {
             size > 0 -> {
                 view?.populateList(items)
-                showListHead(view?.getListItemsCount()!!)
+                view?.showListHead(DateUtils.getMessageFromTimestamps(view?.getListItemsCount()!!, from, to))
 
                 checkIfAllIsLoaded(size)
             }
@@ -70,12 +67,20 @@ abstract class ScrobblesPresenter(var from: Long?, var to: Long?): ItemsPresente
         to = pTo
 
         view?.clearList()
-        showListHead(view?.getListItemsCount() as Int)
+        view?.hideListHead()
 
-        mPage = 1
+        mPage = 0
         loadItems()
     }
 
+    fun onCreatingNewView(){
+        view?.hideListHead()
+        loadItems()
+    }
+
+    fun onShowingFromBackStack(itemCount: Int){
+        view?.showListHead(DateUtils.getMessageFromTimestamps(itemCount, from, to))
+    }
 
     fun onScrobblesOfDayPressed(isRecentScrobblesFragment: Boolean, listItemPressed: Scrobble){
         if (isRecentScrobblesFragment)

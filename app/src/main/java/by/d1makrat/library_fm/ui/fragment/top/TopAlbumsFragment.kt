@@ -24,7 +24,6 @@ class TopAlbumsFragment: TopItemsFragment<Album>() {
         super.onCreate(savedInstanceState)
 
         presenter = TopAlbumsPresenter(mPeriod!!)
-        presenter?.loadItems()
     }
 
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {

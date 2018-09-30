@@ -24,7 +24,6 @@ class TopTracksFragment: TopItemsFragment<Track>() {
         super.onCreate(savedInstanceState)
 
         presenter = TopTracksPresenter(mPeriod!!)
-        presenter?.loadItems()
     }
 
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {

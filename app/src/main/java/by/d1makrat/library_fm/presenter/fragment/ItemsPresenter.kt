@@ -36,7 +36,7 @@ abstract class ItemsPresenter<T, V: ItemsView<T>> {
 
         mPage--
 
-        view?.showError(exception.message)
+        view?.showError(exception.message!!)
     }
 
     fun loadItems() {
@@ -50,6 +50,7 @@ abstract class ItemsPresenter<T, V: ItemsView<T>> {
                 view?.showFooter()
             }
 
+            isLoading = true
             performOperation()
         }
     }

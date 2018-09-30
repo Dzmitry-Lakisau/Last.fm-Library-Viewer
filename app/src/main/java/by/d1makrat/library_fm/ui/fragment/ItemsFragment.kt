@@ -21,7 +21,7 @@ abstract class ItemsFragment<T, V: ItemsView<T>, P: ItemsPresenter<T, V>>: Fragm
 
     protected var mListAdapter: ItemsAdapter<T>? = null
 
-    private var mLayoutManager: LinearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+//    private var mLayoutManager: LinearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,14 +46,13 @@ abstract class ItemsFragment<T, V: ItemsView<T>, P: ItemsPresenter<T, V>>: Fragm
 
 //    protected abstract fun createPresenter(): ItemsPresenter<T>
 
-    //protected abstract fun setUpActionBar(activity: AppCompatActivity?)
+//    protected abstract fun setUpActionBar(activity: AppCompatActivity?)
 
     protected fun setUpRecyclerView(pRootView: View) {
 
         val mRecyclerView: RecyclerView = pRootView.findViewById(R.id.rv)
 
-//        mLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        mRecyclerView.layoutManager = mLayoutManager
+        mRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         mRecyclerView.adapter = mListAdapter
         mRecyclerView.addOnScrollListener(recyclerViewOnScrollListener)
         registerForContextMenu(mRecyclerView)
@@ -65,12 +64,12 @@ abstract class ItemsFragment<T, V: ItemsView<T>, P: ItemsPresenter<T, V>>: Fragm
     }
 
     private val recyclerViewOnScrollListener = object : RecyclerView.OnScrollListener() {
-        override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
 
-            val visibleItemCount = mLayoutManager.childCount
-            val totalItemCount = mLayoutManager.itemCount
-            val firstVisibleItemPosition = mLayoutManager.findFirstVisibleItemPosition()
+            val visibleItemCount = recyclerView.layoutManager.childCount
+            val totalItemCount = recyclerView.layoutManager.itemCount
+            val firstVisibleItemPosition = (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
             if (firstVisibleItemPosition + visibleItemCount >= totalItemCount && totalItemCount > 0) {
                 presenter?.loadItems()
             }

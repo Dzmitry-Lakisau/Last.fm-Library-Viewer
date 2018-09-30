@@ -7,8 +7,6 @@ import android.support.v4.content.ContextCompat
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import by.d1makrat.library_fm.AppContext
 import by.d1makrat.library_fm.R
@@ -16,10 +14,12 @@ import by.d1makrat.library_fm.adapter.list.ItemsAdapter
 import by.d1makrat.library_fm.adapter.list.SearchArtistsAdapter
 import by.d1makrat.library_fm.model.Artist
 import by.d1makrat.library_fm.presenter.fragment.SearchArtistPresenter
-import by.d1makrat.library_fm.view.fragment.SearchArtistView
 import by.d1makrat.library_fm.ui.CenteredToast
 import by.d1makrat.library_fm.ui.activity.MainActivity
 import by.d1makrat.library_fm.utils.InputUtils
+import by.d1makrat.library_fm.view.fragment.SearchArtistView
+import kotlinx.android.synthetic.main.fragment_search.*
+import kotlinx.android.synthetic.main.fragment_search.view.*
 
 class SearchArtistFragment: ItemsFragment<Artist, SearchArtistView<Artist>, SearchArtistPresenter>(), SearchArtistView<Artist> {
 
@@ -30,21 +30,21 @@ class SearchArtistFragment: ItemsFragment<Artist, SearchArtistView<Artist>, Sear
         super.onCreate(savedInstanceState)
 
         presenter = SearchArtistPresenter()
-        presenter?.loadItems()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_search, container, false)
 
+        presenter?.attachView(this)
+
         setUpRecyclerView(rootView)
 
-        rootView.findViewById<Button>(R.id.search_button).setOnClickListener{presenter?.onSearchButtonPressed()}
+        rootView.search_button.setOnClickListener{presenter?.onSearchButtonPressed(search_field.text.toString())}
 
-        rootView.findViewById<EditText>(R.id.search_field).addTextChangedListener(object : TextWatcher {
+        rootView.search_field.addTextChangedListener(object : TextWatcher {
 
-            override fun afterTextChanged(s: Editable) {
-                rootView.findViewById<Button>(R.id.search_button).isEnabled = s.isNotEmpty()
-                presenter?.searchQuery = s.toString()
+            override fun afterTextChanged(editText: Editable) {
+                rootView.search_button.isEnabled = editText.isNotEmpty()
             }
 
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -60,7 +60,7 @@ class SearchArtistFragment: ItemsFragment<Artist, SearchArtistView<Artist>, Sear
     }
 
     override fun getListItemsCount(): Int {
-        return mListAdapter?.itemCount!!
+        return mListAdapter?.itemCount ?: 0
     }
 
     override fun showAllIsLoaded() {
@@ -81,7 +81,7 @@ class SearchArtistFragment: ItemsFragment<Artist, SearchArtistView<Artist>, Sear
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.open_in_browser -> {
-                presenter?.onOpenInBrowser(R.id.search_field.toString())
+                presenter?.onOpenInBrowser()
                 true
             }
             else -> super.onOptionsItemSelected(item)

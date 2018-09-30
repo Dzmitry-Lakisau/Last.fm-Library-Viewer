@@ -24,7 +24,6 @@ class TopArtistsFragment: TopItemsFragment<Artist>() {
         super.onCreate(savedInstanceState)
 
         presenter = TopArtistsPresenter(mPeriod!!)
-        presenter?.loadItems()
     }
 
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {

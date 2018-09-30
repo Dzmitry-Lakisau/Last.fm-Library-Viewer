@@ -36,17 +36,17 @@ abstract class ScrobblesFragment: ItemsFragment<Scrobble, ScrobblesView<Scrobble
 
         val rootView = inflater.inflate(R.layout.list_with_head, container, false)
 
+        presenter?.attachView(this)
+
         setUpRecyclerView(rootView)
 
         listHeadTextView = rootView.findViewById(R.id.list_head)
 
         if (mListAdapter!!.isEmpty) {
-            hideListHead()
+            presenter?.onCreatingNewView()
         } else {
-            presenter?.showListHead(mListAdapter?.itemCount as Int)
+            presenter?.onShowingFromBackStack(mListAdapter?.itemCount as Int)
         }
-
-        presenter?.attachView(this)
 
         return rootView
     }
