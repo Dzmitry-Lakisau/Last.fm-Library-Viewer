@@ -1,5 +1,7 @@
 package by.d1makrat.library_fm.operation;
 
+import com.google.gson.GsonBuilder;
+
 import java.net.URL;
 import java.util.List;
 
@@ -8,6 +10,8 @@ import by.d1makrat.library_fm.database.DatabaseWorker;
 import by.d1makrat.library_fm.https.HttpsClient;
 import by.d1makrat.library_fm.https.RequestMethod;
 import by.d1makrat.library_fm.json.JsonParser;
+import by.d1makrat.library_fm.json.ScrobblesAdapter;
+import by.d1makrat.library_fm.json.model.ScrobblesJsonModel;
 import by.d1makrat.library_fm.model.Scrobble;
 import by.d1makrat.library_fm.utils.UrlConstructor;
 
@@ -50,8 +54,9 @@ public class ScrobblesOfArtistOperation implements IOperation<List<Scrobble>> {
                     throw new APIException(errorOrNot);
                 }
                 else {
-//                    ScrobblesParser scrobblesParser = new ScrobblesParser(response);
-                    artistScrobbles = null;// scrobblesParser.parse();
+                    GsonBuilder builder = new GsonBuilder();
+                    builder.registerTypeAdapter(ScrobblesJsonModel.class, new ScrobblesAdapter());
+                    artistScrobbles = builder.create().fromJson(response, ScrobblesJsonModel.class).getAll();
 
                     databaseWorker.getScrobblesTable().bulkInsertScrobbles(artistScrobbles);
                 }
