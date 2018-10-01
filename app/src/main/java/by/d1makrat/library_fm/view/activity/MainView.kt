@@ -9,5 +9,6 @@ interface MainView {
     fun showScrobblesOfTrackFragment(artist: String, track: String)
     fun showScrobblesOfAlbumFragment(artist: String, album: String)
     fun showScrobblesOfDay(startOfDay: Long, endOfDay: Long)
+    fun showAboutDialog()
     fun showUpdateDialog()
 }

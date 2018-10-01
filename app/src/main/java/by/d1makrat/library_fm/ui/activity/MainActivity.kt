@@ -28,6 +28,7 @@ import by.d1makrat.library_fm.presenter.activity.MainPresenter
 import by.d1makrat.library_fm.ui.fragment.ManualScrobbleFragment
 import by.d1makrat.library_fm.ui.fragment.SearchArtistFragment
 import by.d1makrat.library_fm.ui.fragment.StartFragment
+import by.d1makrat.library_fm.ui.fragment.dialog.AboutDialogFragment
 import by.d1makrat.library_fm.ui.fragment.dialog.UpdateDialogFragment
 import by.d1makrat.library_fm.ui.fragment.scrobble.RecentScrobblesFragment
 import by.d1makrat.library_fm.ui.fragment.scrobble.ScrobblesOfAlbumFragment
@@ -43,6 +44,7 @@ import com.google.firebase.crash.FirebaseCrash
 
 class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, MainView {
 
+    private val ABOUT_DIALOG_FRAGMENT_TAG = "AboutDialogFragment"
     private val TAB_TOP_ALBUMS_FRAGMENT_TAG = "Top Albums"
     private val TAB_TOP_TRACKS_FRAGMENT_TAG = "Top Tracks"
     private val TAB_TOP_ARTISTS_FRAGMENT_TAG = "Top Artists"
@@ -70,6 +72,7 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
                     .addToBackStack(START_FRAGMENT_TAG)
                     .commit()
         }
+        setUpActionBar(getString(app_name))
     }
 
     override fun onStart() {
@@ -244,6 +247,11 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
         showFragment(RECENT_SCROBBLES_FRAGMENT_TAG, targetFragment)
 
         setUpActionBar(getString(R.string.scrobbles))
+    }
+
+    override fun showAboutDialog(){
+        val dialogFragment = AboutDialogFragment()
+        dialogFragment.show(supportFragmentManager, ABOUT_DIALOG_FRAGMENT_TAG)
     }
 
     private fun <T: Fragment> showFragment(tag: String, targetFragment: T){
