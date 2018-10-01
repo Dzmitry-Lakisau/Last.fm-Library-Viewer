@@ -29,7 +29,6 @@ import by.d1makrat.library_fm.ui.fragment.ManualScrobbleFragment
 import by.d1makrat.library_fm.ui.fragment.SearchArtistFragment
 import by.d1makrat.library_fm.ui.fragment.StartFragment
 import by.d1makrat.library_fm.ui.fragment.dialog.AboutDialogFragment
-import by.d1makrat.library_fm.ui.fragment.dialog.UpdateDialogFragment
 import by.d1makrat.library_fm.ui.fragment.scrobble.RecentScrobblesFragment
 import by.d1makrat.library_fm.ui.fragment.scrobble.ScrobblesOfAlbumFragment
 import by.d1makrat.library_fm.ui.fragment.scrobble.ScrobblesOfArtistFragment
@@ -48,7 +47,6 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
     private val TAB_TOP_ALBUMS_FRAGMENT_TAG = "Top Albums"
     private val TAB_TOP_TRACKS_FRAGMENT_TAG = "Top Tracks"
     private val TAB_TOP_ARTISTS_FRAGMENT_TAG = "Top Artists"
-    private val UPDATE_DIALOG_FRAGMENT_TAG = "UpdateDialogFragment"
     private val START_FRAGMENT_TAG = "StartFragment"
     private val SEARCH_ARTIST_FRAGMENT_TAG = "Search Artist"
     private val MANUAL_SCROBBLE_FRAGMENT_TAG = "Manual Scrobble"
@@ -183,11 +181,6 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
                 }
             }
         }
-    }
-
-    override fun showUpdateDialog() {
-        val dialogFragment = UpdateDialogFragment()
-        dialogFragment.show(supportFragmentManager, UPDATE_DIALOG_FRAGMENT_TAG)
     }
 
     override fun setUserInfoInHeader(user: User) {
