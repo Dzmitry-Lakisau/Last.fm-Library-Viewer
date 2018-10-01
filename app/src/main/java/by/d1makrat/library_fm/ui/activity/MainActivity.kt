@@ -47,7 +47,6 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
     private val TAB_TOP_ALBUMS_FRAGMENT_TAG = "Top Albums"
     private val TAB_TOP_TRACKS_FRAGMENT_TAG = "Top Tracks"
     private val TAB_TOP_ARTISTS_FRAGMENT_TAG = "Top Artists"
-    private val START_FRAGMENT_TAG = "StartFragment"
     private val SEARCH_ARTIST_FRAGMENT_TAG = "Search Artist"
     private val MANUAL_SCROBBLE_FRAGMENT_TAG = "Manual Scrobble"
 
@@ -66,8 +65,8 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
 
         if (supportFragmentManager.backStackEntryCount == 0) {
             supportFragmentManager.beginTransaction()
-                    .replace(R.id.content_main, StartFragment(), START_FRAGMENT_TAG)
-                    .addToBackStack(START_FRAGMENT_TAG)
+                    .replace(R.id.content_main, StartFragment(), getString(app_name))
+                    .addToBackStack(getString(app_name))
                     .commit()
         }
         setUpActionBar(getString(app_name))
