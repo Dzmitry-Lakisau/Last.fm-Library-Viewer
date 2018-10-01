@@ -60,6 +60,10 @@ abstract class TopItemsFragment<T>: ItemsFragment<T, TopItemsView<T>, TopItemsPr
                 presenter?.onRefresh()
                 true
             }
+            R.id.open_in_browser -> {
+                presenter?.onOpenInBrowser()
+                true
+            }
             else -> return super.onOptionsItemSelected(item)
         }
     }
