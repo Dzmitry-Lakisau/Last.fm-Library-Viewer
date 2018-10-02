@@ -8,10 +8,10 @@
                 android:padding="20dp">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/image_app_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/app_label"
+        android:layout_above="@+id/text_app_label"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp"
         android:adjustViewBounds="true"
@@ -21,16 +21,16 @@
         app:srcCompat="@drawable/img_app_logo_large"/>
 
     <TextView
-        android:id="@+id/app_label"
+        android:id="@+id/text_app_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/login"
+        android:layout_above="@+id/edit_username"
         android:layout_centerHorizontal="true"
         android:text="@string/app_name"
         android:textSize="25sp"/>
 
     <EditText
-        android:id="@+id/login"
+        android:id="@+id/edit_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -40,30 +40,30 @@
 
 
     <EditText
-        android:id="@+id/password"
+        android:id="@+id/edit_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/login"
+        android:layout_below="@+id/edit_username"
         android:hint="@string/password"
         android:inputType="textPassword"
         android:textColorHint="@color/dark_red"/>
 
     <Button
-        android:id="@+id/enter_button"
+        android:id="@+id/button_enter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/password"
+        android:layout_below="@id/edit_password"
         android:background="@drawable/button"
         android:enabled="false"
         android:text="@string/sign_in"/>
 
     <ProgressBar
-        android:id="@+id/progressBar2"
+        android:id="@+id/progressBar_login"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/login"
-        android:layout_alignBottom="@id/password"
+        android:layout_alignTop="@id/edit_username"
+        android:layout_alignBottom="@id/edit_password"
         android:visibility="invisible"/>
 
 
