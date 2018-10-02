@@ -3,37 +3,37 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/track"
+        android:id="@+id/edit_track"
         style="@style/EditTextStyle"
         android:layout_alignParentTop="true"
         android:hint="@string/track_hint"
         android:inputType="textCapWords"/>
 
     <EditText
-        android:id="@+id/artist"
+        android:id="@+id/edit_artist"
         style="@style/EditTextStyle"
-        android:layout_below="@id/track"
+        android:layout_below="@id/edit_track"
         android:hint="@string/artist_hint"
         android:inputType="textCapWords"/>
 
     <EditText
-        android:id="@+id/album"
+        android:id="@+id/edit_album"
         style="@style/EditTextStyle"
-        android:layout_below="@id/artist"
+        android:layout_below="@id/edit_artist"
         android:hint="@string/album_hint"
         android:inputType="textCapWords"/>
 
     <EditText
-        android:id="@+id/tracknumber"
+        android:id="@+id/edit_trackNumber"
         style="@style/EditTextStyle"
-        android:layout_below="@+id/album"
+        android:layout_below="@+id/edit_album"
         android:hint="@string/track_number_hint"
         android:inputType="number"/>
 
     <EditText
-        android:id="@+id/trackduration"
+        android:id="@+id/edit_trackDuration"
         style="@style/EditTextStyle"
-        android:layout_below="@+id/tracknumber"
+        android:layout_below="@+id/edit_trackNumber"
         android:hint="@string/duration_hint"
         android:inputType="time"/>
 
@@ -41,11 +41,11 @@
         android:id="@+id/button_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/track"
-        android:layout_alignStart="@id/track"
-        android:layout_toLeftOf="@id/progressBar"
-        android:layout_toStartOf="@id/progressBar"
-        android:layout_below="@id/trackduration"
+        android:layout_alignLeft="@id/edit_track"
+        android:layout_alignStart="@id/edit_track"
+        android:layout_toLeftOf="@id/progressBar_scrobble"
+        android:layout_toStartOf="@id/progressBar_scrobble"
+        android:layout_below="@id/edit_trackDuration"
         android:layout_marginTop="10dp"
         android:background="@drawable/button"
         android:text="@string/button_date" />
@@ -55,10 +55,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/button_date"
-        android:layout_alignRight="@id/trackduration"
-        android:layout_alignEnd="@id/trackduration"
-        android:layout_toRightOf="@id/progressBar"
-        android:layout_toEndOf="@id/progressBar"
+        android:layout_alignRight="@id/edit_trackDuration"
+        android:layout_alignEnd="@id/edit_trackDuration"
+        android:layout_toRightOf="@id/progressBar_scrobble"
+        android:layout_toEndOf="@id/progressBar_scrobble"
         android:background="@drawable/button"
         android:text="@string/button_time"/>
 
@@ -73,10 +73,12 @@
         android:layout_alignEnd="@id/button_date"
         android:layout_marginBottom="16dp"
         android:background="@drawable/button"
+        android:enabled="false"
         android:text="@string/button_scrobble"/>
 
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/progressBar_scrobble"
+        android:visibility="invisible"
         style="@android:style/Widget.DeviceDefault.ProgressBar.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
