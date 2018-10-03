@@ -1,5 +1,7 @@
 package by.d1makrat.library_fm.ui.fragment.scrobble
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.view.*
@@ -7,6 +9,7 @@ import android.widget.TextView
 import android.widget.Toast
 import by.d1makrat.library_fm.AppContext
 import by.d1makrat.library_fm.Constants
+import by.d1makrat.library_fm.Constants.*
 import by.d1makrat.library_fm.R
 import by.d1makrat.library_fm.R.id.*
 import by.d1makrat.library_fm.adapter.list.ItemsAdapter
@@ -19,9 +22,10 @@ import by.d1makrat.library_fm.ui.activity.MainActivity
 import by.d1makrat.library_fm.ui.fragment.ItemsFragment
 import by.d1makrat.library_fm.ui.fragment.dialog.FilterDialogFragment
 
-abstract class ScrobblesFragment: ItemsFragment<Scrobble, ScrobblesView<Scrobble>, ScrobblesPresenter>(), ScrobblesView<Scrobble>, FilterDialogFragment.FilterDialogListener {
+abstract class ScrobblesFragment: ItemsFragment<Scrobble, ScrobblesView<Scrobble>, ScrobblesPresenter>(), ScrobblesView<Scrobble> {
 
-    private val FILTER_DIALOG_KEY = "FilterDialogFragment"
+    private val FILTER_DIALOG_TAG = "FilterDialogFragment"
+    private val FILTER_DIALOG_REQUEST_CODE = 55
 
     override fun showAllIsLoaded() {
         CenteredToast.show(context, R.string.all_scrobbles_are_loaded, Toast.LENGTH_SHORT)
@@ -81,8 +85,22 @@ abstract class ScrobblesFragment: ItemsFragment<Scrobble, ScrobblesView<Scrobble
             args.putLong(Constants.FILTER_DIALOG_FROM_BUNDLE_KEY, mFrom!!)
             args.putLong(Constants.FILTER_DIALOG_TO_BUNDLE_KEY, mTo!!)
             dialogFragment.arguments = args
-            dialogFragment.setTargetFragment(this, 0)
-            dialogFragment.show(fragmentManager, FILTER_DIALOG_KEY)
+            dialogFragment.setTargetFragment(this, FILTER_DIALOG_REQUEST_CODE)
+            dialogFragment.show(fragmentManager, FILTER_DIALOG_TAG)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                FILTER_DIALOG_REQUEST_CODE -> {
+                    mFrom = data?.getLongExtra(FILTER_DIALOG_FROM_BUNDLE_KEY, DATE_LONG_DEFAUT_VALUE)
+                    mTo = data?.getLongExtra(FILTER_DIALOG_TO_BUNDLE_KEY, DATE_LONG_DEFAUT_VALUE)
+                    presenter?.onFinishFilterDialog(mFrom, mTo)
+                }
+            }
         }
     }
 
@@ -105,10 +123,6 @@ abstract class ScrobblesFragment: ItemsFragment<Scrobble, ScrobblesView<Scrobble
 
     override fun getListItemsCount(): Int {
         return mListAdapter?.itemCount ?: 0
-    }
-
-    override fun onFinishFilterDialog(pFrom: Long?, pTo: Long?) {
-        presenter?.onFinishFilterDialog(pFrom, pTo)
     }
 
     override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
