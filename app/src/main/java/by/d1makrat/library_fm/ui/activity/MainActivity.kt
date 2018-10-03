@@ -20,7 +20,7 @@ import android.widget.TextView
 import by.d1makrat.library_fm.Constants.*
 import by.d1makrat.library_fm.R
 import by.d1makrat.library_fm.R.anim.*
-import by.d1makrat.library_fm.R.string.*
+import by.d1makrat.library_fm.R.string.app_name
 import by.d1makrat.library_fm.broadcast_receiver.NetworkStateReceiver
 import by.d1makrat.library_fm.image_loader.Malevich
 import by.d1makrat.library_fm.model.User
@@ -40,6 +40,8 @@ import by.d1makrat.library_fm.utils.InputUtils
 import by.d1makrat.library_fm.view.activity.MainView
 import com.google.android.gms.ads.MobileAds
 import com.google.firebase.crash.FirebaseCrash
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.view.*
 
 class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, MainView {
 
@@ -64,12 +66,8 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
         createView()
 
         if (supportFragmentManager.backStackEntryCount == 0) {
-            supportFragmentManager.beginTransaction()
-                    .replace(R.id.content_main, StartFragment(), getString(app_name))
-                    .addToBackStack(getString(app_name))
-                    .commit()
+            showNewFragment(getString(app_name), StartFragment(), false)
         }
-        setUpActionBar(getString(app_name))
     }
 
     override fun onStart() {
@@ -118,35 +116,28 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
 
-//        if (supportActionBar != null) supportActionBar!!.setSubtitle(null)
         (findViewById<View>(R.id.drawer_layout) as DrawerLayout).closeDrawer(GravityCompat.START)
 
         presenter.onNavigationItemSelected()
 
         when (item.itemId) {
             R.id.scrobbles -> {
-                showFragment(RECENT_SCROBBLES_FRAGMENT_TAG, RecentScrobblesFragment())
-                setUpActionBar(getString(R.string.scrobbles))
+                showNewFragment(RECENT_SCROBBLES_FRAGMENT_TAG, RecentScrobblesFragment(), true)
             }
             R.id.top_tracks -> {
-                showFragment(TAB_TOP_TRACKS_FRAGMENT_TAG, TabTopTracksFragment())
-                setUpActionBar(getString(top_tracks))
+                showNewFragment(TAB_TOP_TRACKS_FRAGMENT_TAG, TabTopTracksFragment(), true)
             }
             R.id.top_artists -> {
-                showFragment(TAB_TOP_ARTISTS_FRAGMENT_TAG, TabTopArtistsFragment())
-                setUpActionBar(getString(top_artists))
+                showNewFragment(TAB_TOP_ARTISTS_FRAGMENT_TAG, TabTopArtistsFragment(),true)
             }
             R.id.top_albums -> {
-                showFragment(TAB_TOP_ALBUMS_FRAGMENT_TAG, TabTopAlbumsFragment())
-                setUpActionBar(getString(top_albums))
+                showNewFragment(TAB_TOP_ALBUMS_FRAGMENT_TAG, TabTopAlbumsFragment(),true)
             }
             R.id.search -> {
-                showFragment(SEARCH_ARTIST_FRAGMENT_TAG, SearchArtistFragment())
-                setUpActionBar(getString(search_artist))
+                showNewFragment(SEARCH_ARTIST_FRAGMENT_TAG, SearchArtistFragment(), true)
             }
             R.id.manual_scrobble -> {
-                showFragment(MANUAL_SCROBBLE_FRAGMENT_TAG, ManualScrobbleFragment())
-                setUpActionBar(getString(R.string.manual_scrobble))
+                showNewFragment(MANUAL_SCROBBLE_FRAGMENT_TAG, ManualScrobbleFragment(), true)
             }
             R.id.settings -> startActivity(Intent(this, PreferenceActivity::class.java))
             R.id.logout -> {
@@ -155,6 +146,8 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
                 finish()
             }
         }
+
+        item.isChecked = true
 
         return true
     }
@@ -170,12 +163,8 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
                     val fragment = supportFragmentManager.findFragmentByTag(
                             supportFragmentManager.getBackStackEntryAt(supportFragmentManager.backStackEntryCount - 2).name
                     )
-                    when (fragment) {
-                        is ScrobblesOfAlbumFragment -> setUpActionBar(fragment.arguments?.getString(ARTIST_KEY)!!, fragment.arguments?.getString(ALBUM_KEY)!!)
-                        is ScrobblesOfArtistFragment -> setUpActionBar(fragment.arguments?.getString(ARTIST_KEY)!!)
-                        is ScrobblesOfTrackFragment -> setUpActionBar(fragment.arguments?.getString(ARTIST_KEY)!!, fragment.arguments?.getString(TRACK_KEY)!!)
-                        else -> setUpActionBar(fragment.tag!!)
-                    }
+                    setUpTitle(fragment)
+                    setUpNavigationItemChecked(fragment)
                     super.onBackPressed()
                 }
             }
@@ -193,9 +182,45 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
         Malevich.INSTANCE.load(user.avatarUrl).onError(ContextCompat.getDrawable(this, R.drawable.img_app_logo_large)).into(avatarInHeader)
     }
 
-    override fun setUpActionBar(title: String, subtitle: String?) {
-        supportActionBar?.title = title
-        supportActionBar?.subtitle = subtitle
+    override fun setUpTitle(fragment: Fragment?) {
+        when (fragment) {
+            is ScrobblesOfAlbumFragment -> {
+                supportActionBar?.title = fragment.arguments?.getString(ARTIST_KEY)!!
+                supportActionBar?.subtitle = fragment.arguments?.getString(ALBUM_KEY)!!
+            }
+            is ScrobblesOfArtistFragment -> {
+                supportActionBar?.title = fragment.arguments?.getString(ARTIST_KEY)!!
+                supportActionBar?.subtitle = null
+            }
+            is ScrobblesOfTrackFragment -> {
+                supportActionBar?.title = fragment.arguments?.getString(ARTIST_KEY)!!
+                supportActionBar?.subtitle = fragment.arguments?.getString(TRACK_KEY)!!
+            }
+            else -> {
+                supportActionBar?.title = fragment?.tag
+                supportActionBar?.subtitle = null
+            }
+        }
+    }
+
+    override fun setUpNavigationItemChecked(fragment: Fragment?){
+        val navigationView = drawer_layout.nav_view
+        when (fragment) {
+            is TabTopAlbumsFragment -> navigationView.setCheckedItem(R.id.top_albums)
+            is TabTopArtistsFragment -> navigationView.setCheckedItem(R.id.top_artists)
+            is TabTopTracksFragment -> navigationView.setCheckedItem(R.id.top_tracks)
+            is SearchArtistFragment -> navigationView.setCheckedItem(R.id.search)
+            is ManualScrobbleFragment -> navigationView.setCheckedItem(R.id.manual_scrobble)
+            is StartFragment -> {
+                val navMenu = navigationView.menu
+                for (i in 0 until navMenu.size()) {
+                    navMenu.getItem(i).isChecked = false
+                }
+            }
+            else -> {
+                navigationView.setCheckedItem(R.id.scrobbles)
+            }
+        }
     }
 
     override fun showScrobblesOfArtistFragment(artist: String){
@@ -203,9 +228,7 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
         val bundle = Bundle()
         bundle.putString(ARTIST_KEY, artist)
         targetFragment.arguments = bundle
-        showFragment(SCROBBLES_OF_ARTIST_TAG, targetFragment)
-
-        setUpActionBar(artist)
+        showNewFragment(SCROBBLES_OF_ARTIST_TAG, targetFragment, true)
     }
 
     override fun showScrobblesOfTrackFragment(artist: String, track: String) {
@@ -214,9 +237,7 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
         bundle.putString(ARTIST_KEY, artist)
         bundle.putString(TRACK_KEY, track)
         targetFragment.arguments = bundle
-        showFragment(SCROBBLES_OF_TRACK_TAG, targetFragment)
-
-        setUpActionBar(artist, track)
+        showNewFragment(SCROBBLES_OF_TRACK_TAG, targetFragment,true)
     }
 
     override fun showScrobblesOfAlbumFragment(artist: String, album: String) {
@@ -225,9 +246,7 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
         bundle.putString(ARTIST_KEY, artist)
         bundle.putString(ALBUM_KEY, album)
         targetFragment.arguments = bundle
-        showFragment(SCROBBLES_OF_ALBUM_TAG, targetFragment)
-
-        setUpActionBar(artist, album)
+        showNewFragment(SCROBBLES_OF_ALBUM_TAG, targetFragment, true)
     }
 
     override fun showScrobblesOfDay(startOfDay: Long, endOfDay: Long) {
@@ -236,9 +255,7 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
         bundle.putLong(FILTER_DIALOG_FROM_BUNDLE_KEY, startOfDay)
         bundle.putLong(FILTER_DIALOG_TO_BUNDLE_KEY, endOfDay)
         targetFragment.arguments = bundle
-        showFragment(RECENT_SCROBBLES_FRAGMENT_TAG, targetFragment)
-
-        setUpActionBar(getString(R.string.scrobbles))
+        showNewFragment(RECENT_SCROBBLES_FRAGMENT_TAG, targetFragment, true)
     }
 
     override fun showAboutDialog(){
@@ -246,24 +263,26 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
         dialogFragment.show(supportFragmentManager, ABOUT_DIALOG_FRAGMENT_TAG)
     }
 
-    private fun <T: Fragment> showFragment(tag: String, targetFragment: T){
-        val fragmentFromBackStack = supportFragmentManager.findFragmentByTag(tag)
+    private fun <T: Fragment> showNewFragment(tag: String, targetFragment: T, showAnimation: Boolean) {
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.content_main)
 
-        if (fragmentFromBackStack != null){
-            supportFragmentManager.beginTransaction()
-                    .setCustomAnimations(appear_from_right, disappear_to_left,
-                            appear_from_left, disappear_to_right)
-                    .replace(R.id.content_main, fragmentFromBackStack, tag)
-                    .addToBackStack(tag)
-                    .commit()
-        }
-        else {
-            supportFragmentManager.beginTransaction()
-                    .setCustomAnimations(appear_from_right, disappear_to_left,
-                            appear_from_left, disappear_to_right)
-                    .replace(R.id.content_main, targetFragment, tag)
-                    .addToBackStack(tag)
-                    .commit()
+        if (currentFragment == null || currentFragment.tag != tag) {
+            if (showAnimation) {
+                supportFragmentManager.beginTransaction()
+                        .setCustomAnimations(appear_from_right, disappear_to_left,
+                                appear_from_left, disappear_to_right)
+                        .replace(R.id.content_main, targetFragment, tag)
+                        .addToBackStack(tag)
+                        .commit()
+            } else {
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.content_main, targetFragment, tag)
+                        .addToBackStack(tag)
+                        .commit()
+            }
+
+            setUpTitle(targetFragment)
+            setUpNavigationItemChecked(targetFragment)
         }
     }
 }
