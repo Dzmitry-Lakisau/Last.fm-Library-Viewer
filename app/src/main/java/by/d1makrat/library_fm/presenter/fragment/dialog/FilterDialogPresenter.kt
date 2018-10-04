@@ -1,6 +1,6 @@
 package by.d1makrat.library_fm.presenter.fragment.dialog
 
-import by.d1makrat.library_fm.Constants.DATE_LONG_DEFAUT_VALUE
+import by.d1makrat.library_fm.Constants.DATE_LONG_DEFAULT_VALUE
 import by.d1makrat.library_fm.view.fragment.FilterDialogFragmentView
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -23,10 +23,10 @@ class FilterDialogPresenter(private var startOfPeriod: Long, private var endOfPe
 
 
     init {
-        if (startOfPeriod > DATE_LONG_DEFAUT_VALUE) {
+        if (startOfPeriod > DATE_LONG_DEFAULT_VALUE) {
             startOfPeriodCalendar.timeInMillis = TimeUnit.SECONDS.toMillis(startOfPeriod)
         }
-        if (endOfPeriod > DATE_LONG_DEFAUT_VALUE) {
+        if (endOfPeriod > DATE_LONG_DEFAULT_VALUE) {
             endOfPeriodCalendar.timeInMillis = TimeUnit.SECONDS.toMillis(endOfPeriod)
         }
 
@@ -60,6 +60,6 @@ class FilterDialogPresenter(private var startOfPeriod: Long, private var endOfPe
     }
 
     fun onNeutralButtonClicked() {
-        view?.returnToTargetFragment(DATE_LONG_DEFAUT_VALUE, DATE_LONG_DEFAUT_VALUE)
+        view?.returnToTargetFragment(DATE_LONG_DEFAULT_VALUE, DATE_LONG_DEFAULT_VALUE)
     }
 }

@@ -25,7 +25,7 @@ class FilterDialogFragment : DialogFragment(), FilterDialogFragmentView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        presenter = FilterDialogPresenter(arguments?.getLong(FILTER_DIALOG_FROM_BUNDLE_KEY) ?: DATE_LONG_DEFAUT_VALUE, arguments?.getLong(FILTER_DIALOG_TO_BUNDLE_KEY) ?: DATE_LONG_DEFAUT_VALUE)
+        presenter = FilterDialogPresenter(arguments?.getLong(FILTER_DIALOG_FROM_BUNDLE_KEY) ?: DATE_LONG_DEFAULT_VALUE, arguments?.getLong(FILTER_DIALOG_TO_BUNDLE_KEY) ?: DATE_LONG_DEFAULT_VALUE)
 
     }
 

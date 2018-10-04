@@ -20,7 +20,7 @@ import static by.d1makrat.library_fm.BuildConfig.SECRET;
 import static by.d1makrat.library_fm.Constants.ALBUM_KEY;
 import static by.d1makrat.library_fm.Constants.API_MAX_FOR_SCROBBLES_BY_ARTIST;
 import static by.d1makrat.library_fm.Constants.ARTIST_KEY;
-import static by.d1makrat.library_fm.Constants.DATE_LONG_DEFAUT_VALUE;
+import static by.d1makrat.library_fm.Constants.DATE_LONG_DEFAULT_VALUE;
 import static by.d1makrat.library_fm.Constants.PERIOD_KEY;
 import static by.d1makrat.library_fm.Constants.TRACK_KEY;
 import static by.d1makrat.library_fm.Constants.USER_KEY;
@@ -96,8 +96,8 @@ public class UrlConstructor {
         requestParams.put(SCROBBLES_PER_PAGE_KEY, String.valueOf(mItemsPerRequest));
         requestParams.put(METHOD_KEY, METHOD_GET_RECENT_TRACKS_VALUE);
         requestParams.put(PAGE_KEY, String.valueOf(pPage));
-        if (!pFrom.equals(DATE_LONG_DEFAUT_VALUE)) requestParams.put(FROM_KEY, String.valueOf(pFrom));
-        if (!pTo.equals(DATE_LONG_DEFAUT_VALUE)) requestParams.put(TO_KEY, String.valueOf(pTo));
+        if (!pFrom.equals(DATE_LONG_DEFAULT_VALUE)) requestParams.put(FROM_KEY, String.valueOf(pFrom));
+        if (!pTo.equals(DATE_LONG_DEFAULT_VALUE)) requestParams.put(TO_KEY, String.valueOf(pTo));
 
         return appendParams(requestParams);
     }
@@ -118,8 +118,8 @@ public class UrlConstructor {
         requestParams.put(METHOD_KEY, METHOD_GET_ARTIST_TRACKS_VALUE);
         requestParams.put(ARTIST_KEY, pArtist);
         requestParams.put(PAGE_KEY, String.valueOf(pPage));
-        if (!pFrom.equals(DATE_LONG_DEFAUT_VALUE)) requestParams.put(START_TIMESTAMP_KEY, String.valueOf(pFrom));
-        if (!pTo.equals(DATE_LONG_DEFAUT_VALUE)) requestParams.put(END_TIMESTAMP_KEY, String.valueOf(pTo));
+        if (!pFrom.equals(DATE_LONG_DEFAULT_VALUE)) requestParams.put(START_TIMESTAMP_KEY, String.valueOf(pFrom));
+        if (!pTo.equals(DATE_LONG_DEFAULT_VALUE)) requestParams.put(END_TIMESTAMP_KEY, String.valueOf(pTo));
 
         return appendParams(requestParams);
     }

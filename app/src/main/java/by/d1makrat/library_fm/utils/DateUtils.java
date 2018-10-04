@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.R;
 
-import static by.d1makrat.library_fm.Constants.DATE_LONG_DEFAUT_VALUE;
+import static by.d1makrat.library_fm.Constants.DATE_LONG_DEFAULT_VALUE;
 
 public class DateUtils {
 
@@ -20,7 +20,7 @@ public class DateUtils {
 
     public static String getMessageFromTimestamps(int pScrobbleCount, Long pFrom, Long pTo) {
 
-        if (pFrom.equals(DATE_LONG_DEFAUT_VALUE) && pTo.equals(DATE_LONG_DEFAUT_VALUE)) {
+        if (pFrom.equals(DATE_LONG_DEFAULT_VALUE) && pTo.equals(DATE_LONG_DEFAULT_VALUE)) {
             if (pScrobbleCount > 0) {
                 return AppContext.getInstance().getResources().getQuantityString(R.plurals.scrobbles_count, pScrobbleCount, pScrobbleCount);
             }
@@ -47,7 +47,7 @@ public class DateUtils {
     @NonNull
     public static String getUrlFromTimestamps(String pUrlForBrowser, Long pFrom, Long pTo) {
 
-        if (pFrom.equals(DATE_LONG_DEFAUT_VALUE) && pTo.equals(DATE_LONG_DEFAUT_VALUE)) {
+        if (pFrom.equals(DATE_LONG_DEFAULT_VALUE) && pTo.equals(DATE_LONG_DEFAULT_VALUE)) {
             return pUrlForBrowser;
         } else {
             Date dateFrom = new Date(TimeUnit.SECONDS.toMillis(pFrom));

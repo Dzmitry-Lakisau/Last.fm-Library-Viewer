@@ -9,8 +9,8 @@ class RecentScrobblesFragment : ScrobblesFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        mFrom = arguments?.getLong(FILTER_DIALOG_FROM_BUNDLE_KEY, DATE_LONG_DEFAUT_VALUE) ?: DATE_LONG_DEFAUT_VALUE
-        mTo = arguments?.getLong(FILTER_DIALOG_TO_BUNDLE_KEY, DATE_LONG_DEFAUT_VALUE) ?: DATE_LONG_DEFAUT_VALUE
+        mFrom = arguments?.getLong(FILTER_DIALOG_FROM_BUNDLE_KEY, DATE_LONG_DEFAULT_VALUE) ?: DATE_LONG_DEFAULT_VALUE
+        mTo = arguments?.getLong(FILTER_DIALOG_TO_BUNDLE_KEY, DATE_LONG_DEFAULT_VALUE) ?: DATE_LONG_DEFAULT_VALUE
 
         presenter = RecentScrobblesPresenter(mFrom, mTo)
     }

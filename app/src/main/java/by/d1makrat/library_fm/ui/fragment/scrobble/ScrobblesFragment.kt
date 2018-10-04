@@ -8,7 +8,6 @@ import android.view.*
 import android.widget.TextView
 import android.widget.Toast
 import by.d1makrat.library_fm.AppContext
-import by.d1makrat.library_fm.Constants
 import by.d1makrat.library_fm.Constants.*
 import by.d1makrat.library_fm.R
 import by.d1makrat.library_fm.R.id.*
@@ -16,11 +15,11 @@ import by.d1makrat.library_fm.adapter.list.ItemsAdapter
 import by.d1makrat.library_fm.adapter.list.ScrobblesAdapter
 import by.d1makrat.library_fm.model.Scrobble
 import by.d1makrat.library_fm.presenter.fragment.scrobble.ScrobblesPresenter
-import by.d1makrat.library_fm.view.fragment.ScrobblesView
 import by.d1makrat.library_fm.ui.CenteredToast
 import by.d1makrat.library_fm.ui.activity.MainActivity
 import by.d1makrat.library_fm.ui.fragment.ItemsFragment
 import by.d1makrat.library_fm.ui.fragment.dialog.FilterDialogFragment
+import by.d1makrat.library_fm.view.fragment.ScrobblesView
 
 abstract class ScrobblesFragment: ItemsFragment<Scrobble, ScrobblesView<Scrobble>, ScrobblesPresenter>(), ScrobblesView<Scrobble> {
 
@@ -33,8 +32,8 @@ abstract class ScrobblesFragment: ItemsFragment<Scrobble, ScrobblesView<Scrobble
 
     private var listHeadTextView: TextView? = null
 
-    protected var mFrom: Long? = Constants.DATE_LONG_DEFAUT_VALUE
-    protected var mTo: Long? = Constants.DATE_LONG_DEFAUT_VALUE
+    protected var mFrom: Long? = DATE_LONG_DEFAULT_VALUE
+    protected var mTo: Long? = DATE_LONG_DEFAULT_VALUE
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -96,8 +95,8 @@ abstract class ScrobblesFragment: ItemsFragment<Scrobble, ScrobblesView<Scrobble
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 FILTER_DIALOG_REQUEST_CODE -> {
-                    mFrom = data?.getLongExtra(FILTER_DIALOG_FROM_BUNDLE_KEY, DATE_LONG_DEFAUT_VALUE)
-                    mTo = data?.getLongExtra(FILTER_DIALOG_TO_BUNDLE_KEY, DATE_LONG_DEFAUT_VALUE)
+                    mFrom = data?.getLongExtra(FILTER_DIALOG_FROM_BUNDLE_KEY, DATE_LONG_DEFAULT_VALUE)
+                    mTo = data?.getLongExtra(FILTER_DIALOG_TO_BUNDLE_KEY, DATE_LONG_DEFAULT_VALUE)
                     presenter?.onFinishFilterDialog(mFrom, mTo)
                 }
             }

@@ -13,7 +13,7 @@ import java.util.List;
 import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.model.Scrobble;
 
-import static by.d1makrat.library_fm.Constants.DATE_LONG_DEFAUT_VALUE;
+import static by.d1makrat.library_fm.Constants.DATE_LONG_DEFAULT_VALUE;
 import static by.d1makrat.library_fm.Constants.DatabaseConstants.COLUMN_ALBUM;
 import static by.d1makrat.library_fm.Constants.DatabaseConstants.COLUMN_ARTIST;
 import static by.d1makrat.library_fm.Constants.DatabaseConstants.COLUMN_DATE;
@@ -73,7 +73,7 @@ public class ScrobblesTableWorker {
         database.beginTransaction();
 
         try {
-            if (pFrom.equals(DATE_LONG_DEFAUT_VALUE) && pTo.equals(DATE_LONG_DEFAUT_VALUE))
+            if (pFrom.equals(DATE_LONG_DEFAULT_VALUE) && pTo.equals(DATE_LONG_DEFAULT_VALUE))
                 cursor = database.query(DATABASE_SCROBBLES_TABLE, null, DATE_INTERVAL_CONDITION, new String[]{String.valueOf(pFrom), String.valueOf(pTo)}, null, null, SORTING_DATE_DESCENDING);
             else
                 cursor = database.query(DATABASE_SCROBBLES_TABLE, null, null, null, null, null, SORTING_DATE_DESCENDING);
@@ -123,7 +123,7 @@ public class ScrobblesTableWorker {
         database.beginTransaction();
 
         try {
-            if (pFrom.equals(DATE_LONG_DEFAUT_VALUE) && pTo.equals(DATE_LONG_DEFAUT_VALUE))
+            if (pFrom.equals(DATE_LONG_DEFAULT_VALUE) && pTo.equals(DATE_LONG_DEFAULT_VALUE))
                 cursor = database.query(DATABASE_SCROBBLES_TABLE, null, ARTIST_EQUALS_AND_DATE_INTERVAL_CONDITION, new String[]{pArtist, String.valueOf(pFrom), String.valueOf(pTo)}, null, null, SORTING_DATE_DESCENDING);
             else
                 cursor = database.query(DATABASE_SCROBBLES_TABLE, null, ARTIST_EQUALS_CONDITION, new String[]{pArtist}, null, null, SORTING_DATE_DESCENDING);
@@ -173,7 +173,7 @@ public class ScrobblesTableWorker {
         database.beginTransaction();
 
         try {
-            if (pFrom.equals(DATE_LONG_DEFAUT_VALUE) && pTo.equals(DATE_LONG_DEFAUT_VALUE))
+            if (pFrom.equals(DATE_LONG_DEFAULT_VALUE) && pTo.equals(DATE_LONG_DEFAULT_VALUE))
                 cursor = database.query(DATABASE_SCROBBLES_TABLE, null, ARTIST_AND_TRACK_EQUALS_AND_DATE_INTERVAL_CONDITION, new String[]{pArtist, pTrack, String.valueOf(pFrom), String.valueOf(pTo)}, null, null, SORTING_DATE_DESCENDING);
             else
                 cursor = database.query(DATABASE_SCROBBLES_TABLE, null, ARTIST_AND_TRACK_EQUALS_CONDITION, new String[]{pArtist, pTrack}, null, null, SORTING_DATE_DESCENDING);
@@ -223,7 +223,7 @@ public class ScrobblesTableWorker {
         database.beginTransaction();
 
         try {
-            if (pFrom.equals(DATE_LONG_DEFAUT_VALUE) && pTo.equals(DATE_LONG_DEFAUT_VALUE))
+            if (pFrom.equals(DATE_LONG_DEFAULT_VALUE) && pTo.equals(DATE_LONG_DEFAULT_VALUE))
                 cursor = database.query(DATABASE_SCROBBLES_TABLE, null, ARTIST_AND_ALBUM_EQUALS_AND_DATE_INTERVAL_CONDITION, new String[]{pArtist, pAlbum, String.valueOf(pFrom), String.valueOf(pTo)}, null, null, SORTING_DATE_DESCENDING);
             else
                 cursor = database.query(DATABASE_SCROBBLES_TABLE, null, ARTIST_AND_ALBUM_EQUALS_CONDITION, new String[]{pArtist, pAlbum}, null, null, SORTING_DATE_DESCENDING);
