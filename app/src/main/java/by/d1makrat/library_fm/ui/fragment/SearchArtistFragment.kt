@@ -99,7 +99,7 @@ class SearchArtistFragment: ItemsFragment<Artist, SearchArtistView<Artist>, Sear
     override fun onContextItemSelected(item: MenuItem?): Boolean {
         return when (item!!.itemId) {
             MENU_SCROBBLES_OF_ARTIST -> {
-                (activity as MainActivity).showScrobblesOfArtistFragment(mListAdapter!!.selectedItem.name)
+                (activity as MainActivity).openScrobblesOfArtistFragment(mListAdapter!!.selectedItem.name)
                 true
             }
             MENU_OPEN_IN_BROWSER -> {

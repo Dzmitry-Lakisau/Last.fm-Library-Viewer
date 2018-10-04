@@ -34,7 +34,7 @@ class TopArtistsFragment: TopItemsFragment<Artist>() {
         return if (item?.groupId == mPeriod!!.hashCode()) {
             when (item.itemId) {
                 MENU_SCROBBLES_OF_ARTIST -> {
-                    (activity as MainActivity).showScrobblesOfArtistFragment(mListAdapter!!.selectedItem.name)
+                    (activity as MainActivity).openScrobblesOfArtistFragment(mListAdapter!!.selectedItem.name)
                     true
                 }
                 else -> super.onContextItemSelected(item)

@@ -32,8 +32,15 @@ abstract class ScrobblesFragment: ItemsFragment<Scrobble, ScrobblesView<Scrobble
 
     private var listHeadTextView: TextView? = null
 
-    protected var mFrom: Long? = DATE_LONG_DEFAULT_VALUE
-    protected var mTo: Long? = DATE_LONG_DEFAULT_VALUE
+    protected var mFrom: Long = DATE_LONG_DEFAULT_VALUE
+    protected var mTo: Long = DATE_LONG_DEFAULT_VALUE
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        mFrom = arguments?.getLong(FILTER_DIALOG_FROM_BUNDLE_KEY, DATE_LONG_DEFAULT_VALUE) ?: DATE_LONG_DEFAULT_VALUE
+        mTo = arguments?.getLong(FILTER_DIALOG_TO_BUNDLE_KEY, DATE_LONG_DEFAULT_VALUE) ?: DATE_LONG_DEFAULT_VALUE
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -77,16 +84,21 @@ abstract class ScrobblesFragment: ItemsFragment<Scrobble, ScrobblesView<Scrobble
          }
     }
 
+    override fun onStop() {
+        super.onStop()
+
+        arguments?.putLong(FILTER_DIALOG_FROM_BUNDLE_KEY, mFrom)
+        arguments?.putLong(FILTER_DIALOG_TO_BUNDLE_KEY, mTo)
+    }
+
     override fun showFilterDialog() {
-        if (fragmentManager != null) {
-            val dialogFragment = FilterDialogFragment()
-            val args = Bundle()
-            args.putLong(Constants.FILTER_DIALOG_FROM_BUNDLE_KEY, mFrom!!)
-            args.putLong(Constants.FILTER_DIALOG_TO_BUNDLE_KEY, mTo!!)
-            dialogFragment.arguments = args
-            dialogFragment.setTargetFragment(this, FILTER_DIALOG_REQUEST_CODE)
-            dialogFragment.show(fragmentManager, FILTER_DIALOG_TAG)
-        }
+        val dialogFragment = FilterDialogFragment()
+        val args = Bundle()
+        args.putLong(FILTER_DIALOG_FROM_BUNDLE_KEY, mFrom)
+        args.putLong(FILTER_DIALOG_TO_BUNDLE_KEY, mTo)
+        dialogFragment.arguments = args
+        dialogFragment.setTargetFragment(this, FILTER_DIALOG_REQUEST_CODE)
+        dialogFragment.show(fragmentManager, FILTER_DIALOG_TAG)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -95,8 +107,8 @@ abstract class ScrobblesFragment: ItemsFragment<Scrobble, ScrobblesView<Scrobble
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 FILTER_DIALOG_REQUEST_CODE -> {
-                    mFrom = data?.getLongExtra(FILTER_DIALOG_FROM_BUNDLE_KEY, DATE_LONG_DEFAULT_VALUE)
-                    mTo = data?.getLongExtra(FILTER_DIALOG_TO_BUNDLE_KEY, DATE_LONG_DEFAULT_VALUE)
+                    mFrom = data?.getLongExtra(FILTER_DIALOG_FROM_BUNDLE_KEY, DATE_LONG_DEFAULT_VALUE) ?: DATE_LONG_DEFAULT_VALUE
+                    mTo = data?.getLongExtra(FILTER_DIALOG_TO_BUNDLE_KEY, DATE_LONG_DEFAULT_VALUE) ?: DATE_LONG_DEFAULT_VALUE
                     presenter?.onFinishFilterDialog(mFrom, mTo)
                 }
             }
@@ -135,15 +147,15 @@ abstract class ScrobblesFragment: ItemsFragment<Scrobble, ScrobblesView<Scrobble
 
         return when (item.itemId) {
             scrobbles_of_artist -> {
-                (activity as MainActivity).showScrobblesOfArtistFragment(listItemPressed.Artist)
+                (activity as MainActivity).openScrobblesOfArtistFragment(listItemPressed.Artist)
                 true
             }
             scrobbles_of_track -> {
-                (activity as MainActivity).showScrobblesOfTrackFragment(listItemPressed.Artist, listItemPressed.TrackTitle)
+                (activity as MainActivity).openScrobblesOfTrackFragment(listItemPressed.Artist, listItemPressed.TrackTitle)
                 true
             }
             scrobbles_of_album -> {
-                (activity as MainActivity).showScrobblesOfAlbumFragment(listItemPressed.Artist, listItemPressed.Album!!)
+                (activity as MainActivity).openScrobblesOfAlbumFragment(listItemPressed.Artist, listItemPressed.Album!!)
                 true
             }
             scrobbles_of_day -> {
@@ -154,7 +166,7 @@ abstract class ScrobblesFragment: ItemsFragment<Scrobble, ScrobblesView<Scrobble
         }
     }
 
-    override fun showScrobblesOfDay(startOfDay: Long, endOfDay: Long) {
-        (activity as MainActivity).showScrobblesOfDay(startOfDay, endOfDay)
+    override fun openScrobblesFragment(startOfPeriod: Long, endOfPeriod: Long) {
+        (activity as MainActivity).openScrobblesFragment(startOfPeriod, endOfPeriod)
     }
 }

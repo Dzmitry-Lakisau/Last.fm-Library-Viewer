@@ -35,12 +35,12 @@ class TopAlbumsFragment: TopItemsFragment<Album>() {
         return if (item?.groupId == mPeriod!!.hashCode()) {
             when (item.itemId) {
                 MENU_SCROBBLES_OF_ARTIST -> {
-                    (activity as MainActivity).showScrobblesOfArtistFragment(mListAdapter!!.selectedItem.artistName)
+                    (activity as MainActivity).openScrobblesOfArtistFragment(mListAdapter!!.selectedItem.artistName)
                     true
                 }
                 MENU_SCROBBLES_OF_ALBUM -> {
                     val listItemPressed = mListAdapter!!.selectedItem
-                    (activity as MainActivity).showScrobblesOfAlbumFragment(listItemPressed.artistName, listItemPressed.title)
+                    (activity as MainActivity).openScrobblesOfAlbumFragment(listItemPressed.artistName, listItemPressed.title)
                     true
                 }
                 else -> super.onContextItemSelected(item)

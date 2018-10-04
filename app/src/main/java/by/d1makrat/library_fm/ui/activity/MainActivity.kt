@@ -68,6 +68,11 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
         if (supportFragmentManager.backStackEntryCount == 0) {
             showNewFragment(getString(app_name), StartFragment(), false)
         }
+        else {
+            val currentFragment = supportFragmentManager.fragments[0]
+            setUpTitle(currentFragment)
+            setUpNavigationItemChecked(currentFragment)
+        }
     }
 
     override fun onStart() {
@@ -122,7 +127,7 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
 
         when (item.itemId) {
             R.id.scrobbles -> {
-                showNewFragment(RECENT_SCROBBLES_FRAGMENT_TAG, RecentScrobblesFragment(), true)
+                openScrobblesFragment()
             }
             R.id.top_tracks -> {
                 showNewFragment(TAB_TOP_TRACKS_FRAGMENT_TAG, TabTopTracksFragment(), true)
@@ -223,7 +228,7 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
         }
     }
 
-    override fun showScrobblesOfArtistFragment(artist: String){
+    override fun openScrobblesOfArtistFragment(artist: String){
         val targetFragment = ScrobblesOfArtistFragment()
         val bundle = Bundle()
         bundle.putString(ARTIST_KEY, artist)
@@ -231,7 +236,7 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
         showNewFragment(SCROBBLES_OF_ARTIST_TAG, targetFragment, true)
     }
 
-    override fun showScrobblesOfTrackFragment(artist: String, track: String) {
+    override fun openScrobblesOfTrackFragment(artist: String, track: String) {
         val targetFragment = ScrobblesOfTrackFragment()
         val bundle = Bundle()
         bundle.putString(ARTIST_KEY, artist)
@@ -240,7 +245,7 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
         showNewFragment(SCROBBLES_OF_TRACK_TAG, targetFragment,true)
     }
 
-    override fun showScrobblesOfAlbumFragment(artist: String, album: String) {
+    override fun openScrobblesOfAlbumFragment(artist: String, album: String) {
         val targetFragment = ScrobblesOfAlbumFragment()
         val bundle = Bundle()
         bundle.putString(ARTIST_KEY, artist)
@@ -249,11 +254,11 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
         showNewFragment(SCROBBLES_OF_ALBUM_TAG, targetFragment, true)
     }
 
-    override fun showScrobblesOfDay(startOfDay: Long, endOfDay: Long) {
+    override fun openScrobblesFragment(startOfPeriod: Long, endOfPeriod: Long) {
         val targetFragment = RecentScrobblesFragment()
         val bundle = Bundle()
-        bundle.putLong(FILTER_DIALOG_FROM_BUNDLE_KEY, startOfDay)
-        bundle.putLong(FILTER_DIALOG_TO_BUNDLE_KEY, endOfDay)
+        bundle.putLong(FILTER_DIALOG_FROM_BUNDLE_KEY, startOfPeriod)
+        bundle.putLong(FILTER_DIALOG_TO_BUNDLE_KEY, endOfPeriod)
         targetFragment.arguments = bundle
         showNewFragment(RECENT_SCROBBLES_FRAGMENT_TAG, targetFragment, true)
     }
