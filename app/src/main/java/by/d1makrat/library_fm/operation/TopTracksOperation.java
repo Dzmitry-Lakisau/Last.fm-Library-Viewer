@@ -1,20 +1,23 @@
 package by.d1makrat.library_fm.operation;
 
+import com.google.gson.GsonBuilder;
+
 import java.net.URL;
-import java.util.List;
 
 import by.d1makrat.library_fm.APIException;
 import by.d1makrat.library_fm.database.DatabaseWorker;
 import by.d1makrat.library_fm.https.HttpsClient;
 import by.d1makrat.library_fm.https.RequestMethod;
 import by.d1makrat.library_fm.json.JsonParser;
+import by.d1makrat.library_fm.json.TopTracksAdapter;
+import by.d1makrat.library_fm.model.TopItems;
+import by.d1makrat.library_fm.model.TopTracks;
 import by.d1makrat.library_fm.model.Track;
-import by.d1makrat.library_fm.operation.model.TopOperationResult;
 import by.d1makrat.library_fm.utils.UrlConstructor;
 
 import static by.d1makrat.library_fm.Constants.API_NO_ERROR;
 
-public class TopTracksOperation implements IOperation<TopOperationResult<Track>> {
+public class TopTracksOperation implements IOperation<TopItems<Track>> {
 
     private final String period;
     private final int mPage;
@@ -25,10 +28,8 @@ public class TopTracksOperation implements IOperation<TopOperationResult<Track>>
     }
 
     @Override
-    public TopOperationResult<Track> perform() throws Exception {
-
-        List<Track> topTracks;
-        String topTracksCount;
+    public TopTracks perform() throws Exception {
+        TopTracks topTracks;
         DatabaseWorker databaseWorker = new DatabaseWorker();
 
         try {
@@ -48,26 +49,24 @@ public class TopTracksOperation implements IOperation<TopOperationResult<Track>>
                     throw new APIException(errorOrNot);
                 }
                 else{
-                   // TopsParser topsParser = new TopsParser(response);
-                    topTracks = null;// topsParser.parseUserTopTracks();
+                    GsonBuilder builder = new GsonBuilder();
+                    builder.registerTypeAdapter(TopTracks.class, new TopTracksAdapter());
+                    topTracks = builder.create().fromJson(response, TopTracks.class);
 
                     if (mPage == 1) {
                         databaseWorker.deleteTopTracks(period);
                     }
-                    databaseWorker.getTopTracksTable().bulkInsertTopTracks(topTracks, period);
+                    databaseWorker.getTopTracksTable().bulkInsertTopTracks(topTracks.getItems(), period);
 
-                    topTracksCount = null;// topsParser.parseTracksCount();
                 }
             }
             else {
-                topTracks = databaseWorker.getTopTracksTable().getTopTracks(period, mPage);
-
-                topTracksCount = databaseWorker.getTopTracksTable().getTracksCount(period);
+                topTracks = new TopTracks(databaseWorker.getTopTracksTable().getTopTracks(period, mPage), databaseWorker.getTopTracksTable().getTracksCount(period));
             }
         } finally {
             databaseWorker.closeDatabase();
         }
 
-        return new TopOperationResult<>(topTracks, topTracksCount);
+        return topTracks;
     }
 }

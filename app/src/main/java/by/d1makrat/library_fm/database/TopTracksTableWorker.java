@@ -97,7 +97,7 @@ public class TopTracksTableWorker {
         return result;
     }
 
-    public String getTracksCount(String pPeriod) throws SQLException {
+    public int getTracksCount(String pPeriod) throws SQLException {
         final SQLiteDatabase database = mDatabaseHelper.getReadableDatabase();
         int count;
         Cursor cursor = null;
@@ -117,6 +117,6 @@ public class TopTracksTableWorker {
             database.close();
         }
 
-        return String.valueOf(count);
+        return count;
     }
 }

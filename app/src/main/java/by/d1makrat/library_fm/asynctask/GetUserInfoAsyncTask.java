@@ -63,7 +63,5 @@ public class GetUserInfoAsyncTask extends AsyncTask<Void, Void, User> {
         if (mException == null) {
             mAsynctaskCallback.onUserInfoReceived(result);
         }
-        else
-            mAsynctaskCallback.onException(mException);
     }
 }

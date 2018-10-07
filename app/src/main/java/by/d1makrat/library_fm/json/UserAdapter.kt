@@ -36,11 +36,11 @@ class UserAdapter : TypeAdapter<User>() {
 
         val userJsonObject: JsonObject = rootObject.get(USER_KEY).asJsonObject
 
-        val username = userJsonObject.get(NAME_KEY).toString()
-        val playcount = userJsonObject.get(PLAYCOUNT_KEY).toString()
-        val registered = userJsonObject.getAsJsonObject(REGISTERED_KEY).get(UNIXTIME_KEY).toString()
-        val url = userJsonObject.get(URL_KEY).toString()
-        val avatarUrl = userJsonObject.getAsJsonArray(IMAGE_KEY).get(MAX_IMAGE_RESOLUTION_INDEX).asJsonObject.get(TEXT_KEY).toString()
+        val username = userJsonObject.get(NAME_KEY).asString
+        val playcount = userJsonObject.get(PLAYCOUNT_KEY).asString
+        val registered = userJsonObject.getAsJsonObject(REGISTERED_KEY).get(UNIXTIME_KEY).asString
+        val url = userJsonObject.get(URL_KEY).asString
+        val avatarUrl = userJsonObject.getAsJsonArray(IMAGE_KEY).get(MAX_IMAGE_RESOLUTION_INDEX).asJsonObject.get(TEXT_KEY).asString
 
         return User(username, playcount, registered, url, avatarUrl)
     }

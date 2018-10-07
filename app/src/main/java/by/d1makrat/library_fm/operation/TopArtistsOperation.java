@@ -1,20 +1,23 @@
 package by.d1makrat.library_fm.operation;
 
+import com.google.gson.GsonBuilder;
+
 import java.net.URL;
-import java.util.List;
 
 import by.d1makrat.library_fm.APIException;
 import by.d1makrat.library_fm.database.DatabaseWorker;
 import by.d1makrat.library_fm.https.HttpsClient;
 import by.d1makrat.library_fm.https.RequestMethod;
 import by.d1makrat.library_fm.json.JsonParser;
+import by.d1makrat.library_fm.json.TopArtistsAdapter;
 import by.d1makrat.library_fm.model.Artist;
-import by.d1makrat.library_fm.operation.model.TopOperationResult;
+import by.d1makrat.library_fm.model.TopArtists;
+import by.d1makrat.library_fm.model.TopItems;
 import by.d1makrat.library_fm.utils.UrlConstructor;
 
 import static by.d1makrat.library_fm.Constants.API_NO_ERROR;
 
-public class TopArtistsOperation implements IOperation<TopOperationResult<Artist>> {
+public class TopArtistsOperation implements IOperation<TopItems<Artist>> {
 
     private final String period;
     private final int mPage;
@@ -25,9 +28,8 @@ public class TopArtistsOperation implements IOperation<TopOperationResult<Artist
     }
 
     @Override
-    public TopOperationResult<Artist> perform() throws Exception {
-        List<Artist> topArtists;
-        String topArtistsCount;
+    public TopArtists perform() throws Exception {
+        TopArtists topArtists;
         DatabaseWorker databaseWorker = new DatabaseWorker();
 
         try {
@@ -47,25 +49,24 @@ public class TopArtistsOperation implements IOperation<TopOperationResult<Artist
                     throw new APIException(errorOrNot);
                 }
                 else{
-                    //TopsParser topsParser = new TopsParser(response);
-                    topArtists = null;// topsParser.parseUserTopArtists();
+                    GsonBuilder builder = new GsonBuilder();
+                    builder.registerTypeAdapter(TopArtists.class, new TopArtistsAdapter());
+                    topArtists = builder.create().fromJson(response, TopArtists.class);
 
                     if (mPage == 1) {
                         databaseWorker.deleteTopArtists(period);
                     }
-                    databaseWorker.getTopArtistsTable().bulkInsertTopArtists(topArtists, period);
+                    databaseWorker.getTopArtistsTable().bulkInsertTopArtists(topArtists.getItems(), period);
 
-                    topArtistsCount = null;// topsParser.parseArtistsCount();
                 }
             }
             else {
-                topArtists = databaseWorker.getTopArtistsTable().getTopArtists(period, mPage);
-                topArtistsCount = databaseWorker.getTopArtistsTable().getArtistsCount(period);
+                topArtists = new TopArtists(databaseWorker.getTopArtistsTable().getTopArtists(period, mPage), databaseWorker.getTopArtistsTable().getArtistsCount(period));
             }
         } finally {
             databaseWorker.closeDatabase();
         }
 
-        return new TopOperationResult<>(topArtists, topArtistsCount);
+        return topArtists;
     }
 }

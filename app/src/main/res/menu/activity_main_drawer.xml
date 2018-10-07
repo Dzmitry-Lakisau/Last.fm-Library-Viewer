@@ -3,20 +3,24 @@
 
     <item
         android:id="@+id/scrobbles"
+        android:checkable="true"
         android:icon="@drawable/ic_queue_music_black_24dp"
         android:title="@string/scrobbles" />
 
     <group android:id="@+id/group_tops">
         <item
             android:id="@+id/top_tracks"
+            android:checkable="true"
             android:icon="@drawable/ic_audiotrack_black_24dp"
             android:title="@string/top_tracks" />
         <item
             android:id="@+id/top_artists"
+            android:checkable="true"
             android:icon="@drawable/ic_person_black_24dp"
             android:title="@string/top_artists" />
         <item
             android:id="@+id/top_albums"
+            android:checkable="true"
             android:icon="@drawable/ic_album_black_24dp"
             android:title="@string/top_albums" />
     </group>
@@ -24,10 +28,12 @@
     <group android:id="@+id/group_other">
         <item
             android:id="@+id/search"
+            android:checkable="true"
             android:icon="@drawable/ic_search_black_24dp"
             android:title="@string/search_artist" />
         <item
             android:id="@+id/manual_scrobble"
+            android:checkable="true"
             android:icon="@drawable/ic_create_black_24dp"
             android:title="@string/manual_scrobble" />
     </group>

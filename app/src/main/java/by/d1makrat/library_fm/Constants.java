@@ -19,7 +19,7 @@ public final class Constants {
     public static final String RANK_KEY = "rank";
     public static final String PERIOD_KEY = "period";
     public static final String SCROBBLES_PER_PAGE_KEY = "scrobbles_per_page";
-    public static final String RECENT_SCROBBLES_FRAGMENT_TAG = "RecentScrobblesFragment";
+    public static final String RECENT_SCROBBLES_FRAGMENT_TAG = "Scrobbles";
     public static final String SCROBBLES_OF_ALBUM_TAG = "ScrobblesOfAlbumFragment";
     public static final String SCROBBLES_OF_ARTIST_TAG = "ScrobblesOfArtistFragment";
     public static final String SCROBBLES_OF_TRACK_TAG = "ScrobblesOfTrackFragment";
@@ -30,7 +30,7 @@ public final class Constants {
     public static final String API_NO_ERROR = "No error";
     public static final int API_MAX_FOR_SCROBBLES_BY_ARTIST = 200;
 
-    public static final Long DATE_LONG_DEFAUT_VALUE = -1L;
+    public static final Long DATE_LONG_DEFAULT_VALUE = -1L;
 
     public class JsonConstants {
         public static final String IMAGE_KEY = "image";
