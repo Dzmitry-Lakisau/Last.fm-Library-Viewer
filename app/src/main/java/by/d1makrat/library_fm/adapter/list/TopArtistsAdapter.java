@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import by.d1makrat.library_fm.AppContext;
+import by.d1makrat.library_fm.BuildConfig;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.image_loader.Malevich;
 import by.d1makrat.library_fm.model.Artist;
@@ -56,8 +57,8 @@ public class TopArtistsAdapter extends ItemsAdapter<Artist> {
             playcountTextView.setText(AppContext.getInstance().getString(R.string.top_scrobbles_count, topArtist.getPlayCount()));
             rankTextView.setText(topArtist.getRank());
 
-            String imageUri = topArtist.getImageUrl();
-            Malevich.INSTANCE.load(null).instead(pPlaceholderDrawable).into(albumartImgView);
+            String imageUri = BuildConfig.DEBUG ? topArtist.getImageUrl() : null;
+            Malevich.INSTANCE.load(imageUri).instead(pPlaceholderDrawable).into(albumartImgView);
         }
     }
 }

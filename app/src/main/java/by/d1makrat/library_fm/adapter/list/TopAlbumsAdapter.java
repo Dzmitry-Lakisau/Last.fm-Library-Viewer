@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import by.d1makrat.library_fm.AppContext;
+import by.d1makrat.library_fm.BuildConfig;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.image_loader.Malevich;
 import by.d1makrat.library_fm.model.Album;
@@ -59,8 +60,8 @@ public class TopAlbumsAdapter extends ItemsAdapter<Album> {
             playcountTextView.setText(AppContext.getInstance().getString(R.string.top_scrobbles_count, topAlbum.getPlaycount()));
             rankTextView.setText(topAlbum.getRank());
 
-            String imageUri = topAlbum.getImageUrl();
-            Malevich.INSTANCE.load(null).instead(pPlaceholderDrawable).into(albumartImgView);
+            String imageUri = BuildConfig.DEBUG ? topAlbum.getImageUrl() : null;
+            Malevich.INSTANCE.load(imageUri).instead(pPlaceholderDrawable).into(albumartImgView);
         }
     }
 }
