@@ -74,9 +74,9 @@ public class ScrobblesTableWorker {
 
         try {
             if (pFrom.equals(DATE_LONG_DEFAULT_VALUE) && pTo.equals(DATE_LONG_DEFAULT_VALUE))
-                cursor = database.query(DATABASE_SCROBBLES_TABLE, null, DATE_INTERVAL_CONDITION, new String[]{String.valueOf(pFrom), String.valueOf(pTo)}, null, null, SORTING_DATE_DESCENDING);
-            else
                 cursor = database.query(DATABASE_SCROBBLES_TABLE, null, null, null, null, null, SORTING_DATE_DESCENDING);
+            else
+                cursor = database.query(DATABASE_SCROBBLES_TABLE, null, DATE_INTERVAL_CONDITION, new String[]{String.valueOf(pFrom), String.valueOf(pTo)}, null, null, SORTING_DATE_DESCENDING);
 
             if (cursor != null) {
                 if (cursor.moveToPosition((pPage - 1) * AppContext.getInstance().getLimit())){
@@ -124,9 +124,10 @@ public class ScrobblesTableWorker {
 
         try {
             if (pFrom.equals(DATE_LONG_DEFAULT_VALUE) && pTo.equals(DATE_LONG_DEFAULT_VALUE))
-                cursor = database.query(DATABASE_SCROBBLES_TABLE, null, ARTIST_EQUALS_AND_DATE_INTERVAL_CONDITION, new String[]{pArtist, String.valueOf(pFrom), String.valueOf(pTo)}, null, null, SORTING_DATE_DESCENDING);
-            else
                 cursor = database.query(DATABASE_SCROBBLES_TABLE, null, ARTIST_EQUALS_CONDITION, new String[]{pArtist}, null, null, SORTING_DATE_DESCENDING);
+            else
+                cursor = database.query(DATABASE_SCROBBLES_TABLE, null, ARTIST_EQUALS_AND_DATE_INTERVAL_CONDITION, new String[]{pArtist, String.valueOf(pFrom), String.valueOf(pTo)}, null, null, SORTING_DATE_DESCENDING);
+
 
             if (cursor != null) {
                 if (cursor.moveToPosition((pPage - 1) * AppContext.getInstance().getLimit())){
@@ -174,9 +175,9 @@ public class ScrobblesTableWorker {
 
         try {
             if (pFrom.equals(DATE_LONG_DEFAULT_VALUE) && pTo.equals(DATE_LONG_DEFAULT_VALUE))
-                cursor = database.query(DATABASE_SCROBBLES_TABLE, null, ARTIST_AND_TRACK_EQUALS_AND_DATE_INTERVAL_CONDITION, new String[]{pArtist, pTrack, String.valueOf(pFrom), String.valueOf(pTo)}, null, null, SORTING_DATE_DESCENDING);
-            else
                 cursor = database.query(DATABASE_SCROBBLES_TABLE, null, ARTIST_AND_TRACK_EQUALS_CONDITION, new String[]{pArtist, pTrack}, null, null, SORTING_DATE_DESCENDING);
+            else
+                cursor = database.query(DATABASE_SCROBBLES_TABLE, null, ARTIST_AND_TRACK_EQUALS_AND_DATE_INTERVAL_CONDITION, new String[]{pArtist, pTrack, String.valueOf(pFrom), String.valueOf(pTo)}, null, null, SORTING_DATE_DESCENDING);
 
             if (cursor != null) {
                 if (cursor.moveToFirst()){
@@ -224,9 +225,10 @@ public class ScrobblesTableWorker {
 
         try {
             if (pFrom.equals(DATE_LONG_DEFAULT_VALUE) && pTo.equals(DATE_LONG_DEFAULT_VALUE))
-                cursor = database.query(DATABASE_SCROBBLES_TABLE, null, ARTIST_AND_ALBUM_EQUALS_AND_DATE_INTERVAL_CONDITION, new String[]{pArtist, pAlbum, String.valueOf(pFrom), String.valueOf(pTo)}, null, null, SORTING_DATE_DESCENDING);
-            else
                 cursor = database.query(DATABASE_SCROBBLES_TABLE, null, ARTIST_AND_ALBUM_EQUALS_CONDITION, new String[]{pArtist, pAlbum}, null, null, SORTING_DATE_DESCENDING);
+            else
+                cursor = database.query(DATABASE_SCROBBLES_TABLE, null, ARTIST_AND_ALBUM_EQUALS_AND_DATE_INTERVAL_CONDITION, new String[]{pArtist, pAlbum, String.valueOf(pFrom), String.valueOf(pTo)}, null, null, SORTING_DATE_DESCENDING);
+
 
             if (cursor != null) {
                 if (cursor.moveToFirst()){

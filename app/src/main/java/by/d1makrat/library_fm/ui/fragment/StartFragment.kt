@@ -8,7 +8,6 @@ import by.d1makrat.library_fm.R
 import by.d1makrat.library_fm.image_loader.Malevich
 import by.d1makrat.library_fm.ui.activity.MainActivity
 import com.google.android.gms.ads.AdRequest
-import kotlinx.android.synthetic.main.fragment_start.*
 import kotlinx.android.synthetic.main.fragment_start.view.*
 
 class StartFragment: Fragment() {
@@ -25,7 +24,7 @@ class StartFragment: Fragment() {
         rootView.adView.loadAd(AdRequest.Builder().build())
 
         val user = AppContext.getInstance().user
-        Malevich.INSTANCE.load(user.avatarUrl).onError(resources.getDrawable(R.drawable.img_app_logo_large)).into(user_avatar_start_screen)
+        Malevich.INSTANCE.load(user.avatarUrl).onError(resources.getDrawable(R.drawable.img_app_logo_large)).into(rootView.user_avatar_start_screen)
 
         rootView.hello_textView.text = getString(R.string.hello_message, user.username, user.playcount, user.registered)
 

@@ -54,6 +54,8 @@ public class RecentScrobblesOperation implements IOperation<List<Scrobble>> {
                     GsonBuilder builder = new GsonBuilder();
                     builder.registerTypeAdapter(ScrobblesJsonModel.class, new ScrobblesAdapter());
                     scrobbles = builder.create().fromJson(response, ScrobblesJsonModel.class).getAll();
+
+                    databaseWorker.getScrobblesTable().bulkInsertScrobbles(scrobbles);
                 }
             } else {
                 scrobbles = databaseWorker.getScrobblesTable().getScrobbles(mPage, mFrom, mTo);
