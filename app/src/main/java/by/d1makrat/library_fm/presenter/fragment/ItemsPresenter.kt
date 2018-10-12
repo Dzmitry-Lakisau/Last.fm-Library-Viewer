@@ -2,11 +2,12 @@ package by.d1makrat.library_fm.presenter.fragment
 
 import by.d1makrat.library_fm.AppContext
 import by.d1makrat.library_fm.view.fragment.ItemsView
-
+import io.reactivex.disposables.CompositeDisposable
 
 abstract class ItemsPresenter<T, V: ItemsView<T>> {
 
     protected var view: V? = null
+    protected val compositeDisposable = CompositeDisposable()
 
     protected var isLoading = false
     protected var allIsLoaded = false
@@ -16,6 +17,7 @@ abstract class ItemsPresenter<T, V: ItemsView<T>> {
 
     fun detachView(){
         view = null
+        compositeDisposable.clear()
     }
 
     fun attachView(view: V){
