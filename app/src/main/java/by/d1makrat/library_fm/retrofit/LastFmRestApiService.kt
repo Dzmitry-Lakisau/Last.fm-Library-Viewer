@@ -102,5 +102,5 @@ interface LastFmRestApiService {
                      @NonNull
                      @Query("page") page: Int,
                      @NonNull
-                     @Query("limit") artistsPerRequest: Int): Call<ArtistsJsonModel>
+                     @Query("limit") artistsPerRequest: Int): Single<ArtistsJsonModel>
 }

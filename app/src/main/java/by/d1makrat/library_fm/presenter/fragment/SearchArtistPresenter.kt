@@ -1,13 +1,13 @@
 package by.d1makrat.library_fm.presenter.fragment
 
 import android.net.Uri
-import by.d1makrat.library_fm.asynctask.GetItemsAsyncTask
-import by.d1makrat.library_fm.asynctask.GetItemsCallback
+import by.d1makrat.library_fm.AppContext
 import by.d1makrat.library_fm.model.Artist
-import by.d1makrat.library_fm.operation.SearchArtistOperation
 import by.d1makrat.library_fm.view.fragment.SearchArtistView
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
-class SearchArtistPresenter: ItemsPresenter<Artist, SearchArtistView<Artist>>(), GetItemsCallback<Artist> {
+class SearchArtistPresenter: ItemsPresenter<Artist, SearchArtistView<Artist>>() {
 
     private var searchQuery: String? = null
 
@@ -15,7 +15,7 @@ class SearchArtistPresenter: ItemsPresenter<Artist, SearchArtistView<Artist>>(),
         mUrlForBrowser = "https://www.last.fm/search/artists?q="
     }
 
-    override fun onLoadingSuccessful(result: List<Artist>) {
+    fun onLoadingSuccessful(result: List<Artist>) {
         isLoading = false
 
         view?.removeAllHeadersAndFooters()
@@ -33,9 +33,19 @@ class SearchArtistPresenter: ItemsPresenter<Artist, SearchArtistView<Artist>>(),
     }
 
     override fun performOperation() {
-        val searchArtistOperation = SearchArtistOperation(searchQuery, mPage)
-        val getItemsAsyncTask = GetItemsAsyncTask(this)
-        getItemsAsyncTask.execute(searchArtistOperation)
+        compositeDisposable.add(
+                AppContext.getInstance().retrofitWebService.searchArtist(searchQuery!!, mPage, AppContext.getInstance().limit)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                {
+                                    onLoadingSuccessful(it.getAll())
+                                },
+                                {
+                                    onException(Exception(it))
+                                }
+                        )
+        )
     }
 
     fun onOpenInBrowser() {
