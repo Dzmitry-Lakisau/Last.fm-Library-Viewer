@@ -34,7 +34,7 @@ interface LastFmRestApiService {
                      @Nullable
                      @Query("duration") trackDuration: String,
                      @NonNull
-                     @Query("timestamp") timestamp: Long): Call<SendScrobbleResult>
+                     @Query("timestamp") timestamp: Long): Single<SendScrobbleResult>
 
     @GET("?api_key=$API_KEY&method=user.getRecentTracks")
     fun getRecentScrobbles(@NonNull

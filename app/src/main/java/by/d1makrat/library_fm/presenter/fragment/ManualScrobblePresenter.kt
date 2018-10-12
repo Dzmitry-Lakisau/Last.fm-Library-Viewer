@@ -1,16 +1,19 @@
 package by.d1makrat.library_fm.presenter.fragment
 
 import android.text.TextUtils
-import by.d1makrat.library_fm.asynctask.SendScrobbleAsyncTask
-import by.d1makrat.library_fm.asynctask.SendScrobbleCallback
-import by.d1makrat.library_fm.https.HttpsClient
+import by.d1makrat.library_fm.AppContext
+import by.d1makrat.library_fm.utils.ConnectionChecker
 import by.d1makrat.library_fm.view.fragment.ManualScrobbleView
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class ManualScrobblePresenter: SendScrobbleCallback {
+class ManualScrobblePresenter {
 
     private var view: ManualScrobbleView? = null
+    private val compositeDisposable = CompositeDisposable()
 
     private var calendar = Calendar.getInstance()
     var year: Int = calendar.get(Calendar.YEAR)
@@ -25,9 +28,10 @@ class ManualScrobblePresenter: SendScrobbleCallback {
 
     fun detachView(){
         view = null
+        compositeDisposable.clear()
     }
 
-    override fun onException(exception: Exception) {
+    private fun onException(exception: Exception) {
         view?.hideProgressBar()
         view?.enableScrobbleButton()
         view?.showResult(exception.message!!)
@@ -38,8 +42,20 @@ class ManualScrobblePresenter: SendScrobbleCallback {
             if (TextUtils.isDigitsOnly(trackNumber) && TextUtils.isDigitsOnly(trackDuration)) {
                 view?.disableScrobbleButton()
                 view?.showProgressBar()
-                val sendScrobbleAsyncTask = SendScrobbleAsyncTask(this)
-                sendScrobbleAsyncTask.execute(track, artist, album, trackNumber, trackDuration, calculateUnixTime())
+
+                compositeDisposable.add(
+                        AppContext.getInstance().retrofitWebService.sendScrobble(AppContext.getInstance().sessionKey, track, artist, album, trackNumber, trackDuration, calculateUnixTime())
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(
+                                        {
+                                            onSendScrobbleResult(it.message)
+                                        },
+                                        {
+                                            onException(Exception(it))
+                                        }
+                                )
+                )
             } else
                 view?.showNonnumericalInputMessage()
         }
@@ -59,7 +75,7 @@ class ManualScrobblePresenter: SendScrobbleCallback {
         this.minute = minute
     }
 
-    override fun onSendScrobbleResult(result: String) {
+    private fun onSendScrobbleResult(result: String) {
         view?.hideProgressBar()
         view?.showResult(result)
     }
