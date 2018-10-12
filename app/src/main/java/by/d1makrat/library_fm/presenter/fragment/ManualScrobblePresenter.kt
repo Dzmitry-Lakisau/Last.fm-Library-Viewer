@@ -64,7 +64,7 @@ class ManualScrobblePresenter: SendScrobbleCallback {
         view?.showResult(result)
     }
 
-    private fun calculateUnixTime(): String {
+    private fun calculateUnixTime(): Long {
         calendar.set(Calendar.YEAR, year)
         calendar.set(Calendar.MONTH, month)
         calendar.set(Calendar.DAY_OF_MONTH, day)
@@ -72,6 +72,6 @@ class ManualScrobblePresenter: SendScrobbleCallback {
         calendar.set(Calendar.MINUTE, minute)
         calendar.set(Calendar.SECOND, 0)
 
-        return TimeUnit.MILLISECONDS.toSeconds(calendar.timeInMillis).toString()
+        return TimeUnit.MILLISECONDS.toSeconds(calendar.timeInMillis)
     }
 }
