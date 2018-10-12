@@ -61,7 +61,7 @@ abstract class ScrobblesPresenter(var from: Long?, var to: Long?): ItemsPresente
 //        }
     }
 
-    fun onFinishFilterDialog(pFrom: Long?, pTo: Long?) {
+    fun onFinishFilterDialog(pFrom: Long, pTo: Long) {
         allIsLoaded = false
         from = pFrom
         to = pTo

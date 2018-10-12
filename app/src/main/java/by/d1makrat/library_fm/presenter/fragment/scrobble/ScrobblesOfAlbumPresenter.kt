@@ -5,7 +5,7 @@ import by.d1makrat.library_fm.asynctask.GetItemsAsyncTask
 import by.d1makrat.library_fm.model.Scrobble
 import by.d1makrat.library_fm.operation.ScrobblesOfAlbumOperation
 
-class ScrobblesOfAlbumPresenter(val artist: String, val album: String, from: Long?, to: Long?): ScrobblesPresenter(from, to) {
+class ScrobblesOfAlbumPresenter(val artist: String, val album: String, from: Long, to: Long): ScrobblesPresenter(from, to) {
 
     init {
         mUrlForBrowser = AppContext.getInstance().user.url + "/library/music/" + artist + "/" + album
