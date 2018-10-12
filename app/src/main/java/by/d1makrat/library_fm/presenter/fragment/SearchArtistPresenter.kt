@@ -9,7 +9,7 @@ import by.d1makrat.library_fm.view.fragment.SearchArtistView
 
 class SearchArtistPresenter: ItemsPresenter<Artist, SearchArtistView<Artist>>(), GetItemsCallback<Artist> {
 
-    var searchQuery: String? = null
+    private var searchQuery: String? = null
 
     init {
         mUrlForBrowser = "https://www.last.fm/search/artists?q="
