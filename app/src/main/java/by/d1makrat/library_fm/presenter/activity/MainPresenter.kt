@@ -1,15 +1,17 @@
 package by.d1makrat.library_fm.presenter.activity
 
 import by.d1makrat.library_fm.AppContext
-import by.d1makrat.library_fm.asynctask.GetUserInfoAsyncTask
-import by.d1makrat.library_fm.asynctask.GetUserInfoCallback
-import by.d1makrat.library_fm.https.HttpsClient
+import by.d1makrat.library_fm.utils.ConnectionChecker
 import by.d1makrat.library_fm.model.User
 import by.d1makrat.library_fm.view.activity.MainView
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 
-class MainPresenter:  GetUserInfoCallback {
+class MainPresenter {
 
     private var view: MainView? = null
+    private val compositeDisposable = CompositeDisposable()
 
     private var user = AppContext.getInstance().user
 
@@ -21,12 +23,21 @@ class MainPresenter:  GetUserInfoCallback {
     fun detachView(){
         view = null
         AppContext.getInstance().saveSettings()
+        compositeDisposable.clear()
     }
 
     fun onNavigationItemSelected(){
-        if (HttpsClient.isNetworkAvailable()) {
-            val getUserInfoAsyncTask = GetUserInfoAsyncTask(this)
-            getUserInfoAsyncTask.execute()
+        if (ConnectionChecker.isNetworkAvailable()) {
+            compositeDisposable.add(
+                    AppContext.getInstance().retrofitWebService.getUserInfo(AppContext.getInstance().user.username)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(
+                                    {
+                                        onUserInfoReceived(it)
+                                    },
+                                    {})
+            )
         }
     }
 
@@ -35,7 +46,7 @@ class MainPresenter:  GetUserInfoCallback {
         AppContext.getInstance().sessionKey = null
     }
 
-    override fun onUserInfoReceived(user: User) {
+    private fun onUserInfoReceived(user: User) {
         AppContext.getInstance().user = user
         view?.setUserInfoInHeader(user)
     }
