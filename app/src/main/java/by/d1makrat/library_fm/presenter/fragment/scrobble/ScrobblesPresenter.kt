@@ -28,14 +28,7 @@ abstract class ScrobblesPresenter(var from: Long?, var to: Long?): ItemsPresente
     }
 
     fun onOpenInBrowser() {
-        view?.openBrowser(
-                if (from != null && to != null) {
-                    Uri.parse(DateUtils.getUrlFromTimestamps(mUrlForBrowser, from, to))
-                }
-                else {
-                    Uri.parse(mUrlForBrowser)
-                }
-        )
+        view?.openBrowser(Uri.parse(DateUtils.getUrlFromTimestamps(mUrlForBrowser, from, to)))
     }
 
     override fun onLoadingSuccessful(items: List<Scrobble>) {
