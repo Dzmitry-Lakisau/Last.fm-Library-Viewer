@@ -34,7 +34,7 @@ class ManualScrobblePresenter: SendScrobbleCallback {
     }
 
     fun onScrobbleButtonClick(track: String, artist: String, album: String, trackNumber: String, trackDuration: String){
-        if (HttpsClient.isNetworkAvailable()) {
+        if (ConnectionChecker.isNetworkAvailable()) {
             if (TextUtils.isDigitsOnly(trackNumber) && TextUtils.isDigitsOnly(trackDuration)) {
                 view?.disableScrobbleButton()
                 view?.showProgressBar()

@@ -1,4 +1,4 @@
-package by.d1makrat.library_fm.https
+package by.d1makrat.library_fm.retrofit
 
 import android.support.annotation.NonNull
 import android.support.annotation.Nullable
@@ -29,9 +29,9 @@ interface LastFmRestApiService {
                      @Nullable
                      @Query("album") album: String?,
                      @Nullable
-                     @Query("trackNumber") trackNumber: Int?,
+                     @Query("trackNumber") trackNumber: String?,
                      @Nullable
-                     @Query("duration") trackDuration: Int?,
+                     @Query("duration") trackDuration: String,
                      @NonNull
                      @Query("timestamp") timestamp: Long): Call<SendScrobbleResult>
 
@@ -93,8 +93,7 @@ interface LastFmRestApiService {
 
 
     @GET("?api_key=$API_KEY&method=user.getInfo")
-    fun getUserInfo(@NonNull
-                    @Query("user") signature: String): Call<User>
+    fun getUserInfo(@Query("user") username: String?): Call<User>
 
     @GET("?api_key=$API_KEY&method=artist.search")
     fun searchArtist(@NonNull

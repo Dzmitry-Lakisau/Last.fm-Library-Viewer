@@ -8,8 +8,8 @@ import android.preference.PreferenceManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import by.d1makrat.library_fm.https.AdditionalParametersInterceptor;
-import by.d1makrat.library_fm.https.LastFmRestApiService;
+import by.d1makrat.library_fm.retrofit.AdditionalParametersInterceptor;
+import by.d1makrat.library_fm.retrofit.LastFmRestApiService;
 import by.d1makrat.library_fm.image_loader.Malevich;
 import by.d1makrat.library_fm.json.ScrobblesAdapter;
 import by.d1makrat.library_fm.json.SearchArtistResultsAdapter;
