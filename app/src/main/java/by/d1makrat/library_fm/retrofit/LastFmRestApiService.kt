@@ -6,6 +6,7 @@ import by.d1makrat.library_fm.BuildConfig.API_KEY
 import by.d1makrat.library_fm.json.model.ArtistsJsonModel
 import by.d1makrat.library_fm.json.model.ScrobblesJsonModel
 import by.d1makrat.library_fm.model.*
+import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -93,7 +94,7 @@ interface LastFmRestApiService {
 
 
     @GET("?api_key=$API_KEY&method=user.getInfo")
-    fun getUserInfo(@Query("user") username: String?): Call<User>
+    fun getUserInfo(@Query("user") username: String?): Single<User>
 
     @GET("?api_key=$API_KEY&method=artist.search")
     fun searchArtist(@NonNull

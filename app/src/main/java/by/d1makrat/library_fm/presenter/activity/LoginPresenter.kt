@@ -1,18 +1,21 @@
 package by.d1makrat.library_fm.presenter.activity
 
 import by.d1makrat.library_fm.AppContext
-import by.d1makrat.library_fm.asynctask.GetSessionKeyAsyncTask
-import by.d1makrat.library_fm.asynctask.GetSessionKeyCallback
-import by.d1makrat.library_fm.asynctask.GetUserInfoAsyncTask
-import by.d1makrat.library_fm.asynctask.GetUserInfoCallback
-import by.d1makrat.library_fm.https.HttpsClient
+import by.d1makrat.library_fm.utils.ConnectionChecker
+import by.d1makrat.library_fm.json.SessionKeyAdapter
+import by.d1makrat.library_fm.model.SessionKey
 import by.d1makrat.library_fm.model.User
 import by.d1makrat.library_fm.view.activity.LoginView
-import java.lang.Exception
+import com.google.gson.GsonBuilder
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 
-class LoginPresenter:  GetSessionKeyCallback, GetUserInfoCallback {
+class LoginPresenter {
 
     private var view: LoginView? = null
+    private val compositeDisposable = CompositeDisposable()
 
     fun attachView(view: LoginView){
         this.view = view
@@ -20,6 +23,7 @@ class LoginPresenter:  GetSessionKeyCallback, GetUserInfoCallback {
 
     fun detachView(){
         view = null
+        compositeDisposable.clear()
     }
 
     fun onEnterInApp(){
@@ -30,9 +34,37 @@ class LoginPresenter:  GetSessionKeyCallback, GetUserInfoCallback {
     }
 
     fun onEnterButtonClick(username: String, password: String) {
-        if (HttpsClient.isNetworkAvailable()) {
-            val getSessionKeyAsyncTask = GetSessionKeyAsyncTask(this)
-            getSessionKeyAsyncTask.execute(username, password)
+        if (ConnectionChecker.isNetworkAvailable()) {
+            compositeDisposable.add(
+                    Single.create<SessionKey> { singleEmitter ->
+                        try {
+                            val response = AppContext.getInstance().retrofitWebService.getSessionKey(username, password).execute()
+
+                            if (response.isSuccessful){
+                                singleEmitter.onSuccess(response.body()!!)
+                            }
+                            else {
+                                GsonBuilder().registerTypeAdapter(SessionKey::class.java, SessionKeyAdapter())
+                                        .create().fromJson(response.errorBody()!!.string(), SessionKey::class.java)
+                            }
+                        }
+                        catch (e: Exception){
+                            if (!singleEmitter.isDisposed) {
+                                singleEmitter.onError(e)
+                            }
+                        }
+                    }
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(
+                                    {
+                                        onSessionKeyGranted(it.key, username)
+                                    },
+                                    {
+                                        onException(Exception(it))
+                                    }
+                            )
+            )
 
             view?.showProgressBar()
         }
@@ -41,23 +73,34 @@ class LoginPresenter:  GetSessionKeyCallback, GetUserInfoCallback {
         }
     }
 
-    override fun onSessionKeyGranted(sessionKey: String?) {
+    private fun onSessionKeyGranted(sessionKey: String, username: String) {
         AppContext.getInstance().sessionKey = sessionKey
         AppContext.getInstance().saveSettings()
 
-        val getUserInfoAsyncTask = GetUserInfoAsyncTask(this)
-        getUserInfoAsyncTask.execute()
+        compositeDisposable.add(
+                AppContext.getInstance().retrofitWebService.getUserInfo(username)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                {
+                                    onUserInfoReceived(it)
+                                },
+                                {
+                                    onException(Exception(it))
+                                }
+                        )
+        )
     }
 
-    override fun onException(exception: Exception) {
-        view?.hideProgressBar()
-        view?.showErrorMessage(exception.message!!)
-    }
-
-    override fun onUserInfoReceived(user: User?) {
+    private fun onUserInfoReceived(user: User) {
         AppContext.getInstance().user = user
         AppContext.getInstance().saveSettings()
 
         view?.startMainActivity()
+    }
+
+    private fun onException(exception: Exception) {
+        view?.hideProgressBar()
+        view?.showErrorMessage(exception.message!!)
     }
 }
