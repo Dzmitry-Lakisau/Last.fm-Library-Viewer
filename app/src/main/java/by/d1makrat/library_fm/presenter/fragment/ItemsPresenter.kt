@@ -43,6 +43,7 @@ abstract class ItemsPresenter<T, V: ItemsView<T>> {
         if (!isLoading && !allIsLoaded) {
             mPage++
 
+            view?.removeAllHeadersAndFooters()
             if (mPage == 1) {
                 view?.showHeader()
             }
