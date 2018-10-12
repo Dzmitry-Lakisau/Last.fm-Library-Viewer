@@ -1,9 +1,9 @@
 package by.d1makrat.library_fm;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.multidex.MultiDexApplication;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -35,7 +35,7 @@ import static by.d1makrat.library_fm.Constants.API_BASE_URL;
 import static by.d1makrat.library_fm.Constants.SCROBBLES_PER_PAGE_KEY;
 import static by.d1makrat.library_fm.Constants.USER_KEY;
 
-public class AppContext extends Application {
+public class AppContext extends MultiDexApplication {
 
     private static final String SESSIONKEY_KEY = "session_key";
     private static final String DEFAULT_LIMIT = "10";
