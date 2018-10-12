@@ -11,6 +11,7 @@ import java.util.List;
 
 import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.model.Artist;
+import by.d1makrat.library_fm.model.TopArtists;
 
 import static by.d1makrat.library_fm.Constants.DatabaseConstants.COLUMN_ARTIST;
 import static by.d1makrat.library_fm.Constants.DatabaseConstants.COLUMN_IMAGEURI;
@@ -28,7 +29,7 @@ public class TopArtistsTableWorker {
         mDatabaseHelper = pDatabaseHelper;
     }
 
-    public void bulkInsertTopArtists(final List<Artist> items, final String pPeriod) throws SQLException {
+    public void insertTopArtists(final List<Artist> items, final String pPeriod) throws SQLException {
         final SQLiteDatabase database = mDatabaseHelper.getWritableDatabase();
 
         database.beginTransaction();
@@ -48,71 +49,42 @@ public class TopArtistsTableWorker {
             database.setTransactionSuccessful();
         } finally {
             database.endTransaction();
-            database.close();
         }
-
     }
 
-    public List<Artist> getTopArtists(String pPeriod, int pPage) throws SQLException {
+    public TopArtists getTopArtists(String pPeriod, int pPage) throws SQLException {
         final SQLiteDatabase database = mDatabaseHelper.getReadableDatabase();
-        List<Artist> result = new ArrayList<>();
+        List<Artist> artists = new ArrayList<>();
+        int artistsCount;
         Cursor cursor = null;
-
-        database.beginTransaction();
 
         try {
             cursor = database.query(DATABASE_TOP_ARTISTS_TABLE, null, COLUMN_PERIOD + " = ?", new String[]{pPeriod}, null, null, COLUMN_RANK);
+            artistsCount = cursor.getCount();
 
-            if (cursor != null) {
-                if (cursor.moveToPosition((pPage - 1) * AppContext.getInstance().getLimit())){
+            if (cursor.moveToFirst()) {
+                if (cursor.moveToPosition((pPage - 1) * AppContext.getInstance().getLimit())) {
                     int rankColumn = cursor.getColumnIndexOrThrow(COLUMN_RANK);
                     int artistColumn = cursor.getColumnIndexOrThrow(COLUMN_ARTIST);
-                    int playcountColumn = cursor.getColumnIndexOrThrow(COLUMN_PLAYCOUNT);
+                    int playCountColumn = cursor.getColumnIndexOrThrow(COLUMN_PLAYCOUNT);
                     int imageUriColumn = cursor.getColumnIndexOrThrow(COLUMN_IMAGEURI);
                     do {
                         String rank = cursor.getString(rankColumn);
                         String artist = cursor.getString(artistColumn);
-                        String playcount = cursor.getString(playcountColumn);
+                        String playCount = cursor.getString(playCountColumn);
                         String imageUri = cursor.getString(imageUriColumn);
 
-                        Artist topArtist = new Artist(artist, null, playcount, "", imageUri, rank);//TODO remove url
-                        result.add(topArtist);
+                        Artist topArtist = new Artist(artist, null, playCount, "", imageUri, rank);//TODO remove url
+                        artists.add(topArtist);
                     }
-                    while (cursor.moveToNext() && result.size() < AppContext.getInstance().getLimit());
+                    while (cursor.moveToNext() && artists.size() < AppContext.getInstance().getLimit());
                 }
             }
-
-            database.setTransactionSuccessful();
         } finally {
-            if (cursor != null)
+            if (cursor != null && !cursor.isClosed())
                 cursor.close();
-            database.endTransaction();
-            database.close();
         }
 
-        return result;
-    }
-
-    public int getArtistsCount(String pPeriod) throws SQLException {
-        final SQLiteDatabase database = mDatabaseHelper.getReadableDatabase();
-        int count;
-        Cursor cursor = null;
-
-        database.beginTransaction();
-
-        try {
-            cursor = database.query(DATABASE_TOP_ARTISTS_TABLE, null, COLUMN_PERIOD + " = ?", new String[]{pPeriod}, null, null, COLUMN_RANK);
-
-            count = cursor.getCount();
-
-            database.setTransactionSuccessful();
-        } finally {
-            if (cursor != null)
-                cursor.close();
-            database.endTransaction();
-            database.close();
-        }
-
-        return count;
+        return new TopArtists(artists, artistsCount);
     }
 }

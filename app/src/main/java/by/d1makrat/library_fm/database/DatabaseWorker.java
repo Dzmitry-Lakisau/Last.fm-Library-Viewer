@@ -70,19 +70,15 @@ public class DatabaseWorker {
 
     private DatabaseHelper mDatabaseHelper;
 
-    public void openDatabase() {
+    public DatabaseWorker(){
         mDatabaseHelper = new DatabaseHelper(AppContext.getInstance().getApplicationContext(), DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public void closeDatabase() {
-        if (mDatabaseHelper != null) mDatabaseHelper.close();
-    }
-
     void createTables(SQLiteDatabase database) throws SQLException{
-        database.execSQL(DatabaseWorker.CREATE_SCROBBLES_TABLE_QUERY);
-        database.execSQL(DatabaseWorker.CREATE_TOP_TRACKS_TABLE_QUERY);
-        database.execSQL(DatabaseWorker.CREATE_TOP_ARTISTS_TABLE_QUERY);
-        database.execSQL(DatabaseWorker.CREATE_TOP_ALBUMS_TABLE_QUERY);
+        database.execSQL(CREATE_SCROBBLES_TABLE_QUERY);
+        database.execSQL(CREATE_TOP_TRACKS_TABLE_QUERY);
+        database.execSQL(CREATE_TOP_ARTISTS_TABLE_QUERY);
+        database.execSQL(CREATE_TOP_ALBUMS_TABLE_QUERY);
     }
 
     private void deleteRecordsFromTable(String pTableName, @Nullable String pPeriod) throws SQLException {
@@ -101,7 +97,6 @@ public class DatabaseWorker {
             database.setTransactionSuccessful();
         } finally {
             database.endTransaction();
-            database.close();
         }
     }
 

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import by.d1makrat.library_fm.AppContext;
+import by.d1makrat.library_fm.model.TopTracks;
 import by.d1makrat.library_fm.model.Track;
 
 import static by.d1makrat.library_fm.Constants.DatabaseConstants.COLUMN_ARTIST;
@@ -50,33 +51,31 @@ public class TopTracksTableWorker {
             database.setTransactionSuccessful();
         } finally {
             database.endTransaction();
-            database.close();
         }
-
     }
 
-    public List<Track> getTopTracks(String pPeriod, int pPage) throws SQLException {
+    public TopTracks getTopTracks(String pPeriod, int pPage) throws SQLException {
         final SQLiteDatabase database = mDatabaseHelper.getReadableDatabase();
         List<Track> result = new ArrayList<>();
+        int tracksCount;
         Cursor cursor = null;
-
-        database.beginTransaction();
 
         try {
             cursor = database.query(DATABASE_TOP_TRACKS_TABLE, null, COLUMN_PERIOD + " = ?", new String[]{pPeriod}, null, null, COLUMN_RANK);
+            tracksCount = cursor.getCount();
 
-            if (cursor != null) {
+            if (cursor.moveToFirst()) {
                 if (cursor.moveToPosition((pPage - 1) * AppContext.getInstance().getLimit())){
                     int rankColumn = cursor.getColumnIndexOrThrow(COLUMN_RANK);
                     int artistColumn = cursor.getColumnIndexOrThrow(COLUMN_ARTIST);
                     int trackTitleColumn = cursor.getColumnIndexOrThrow(COLUMN_TRACK);
-                    int playcountColumn = cursor.getColumnIndexOrThrow(COLUMN_PLAYCOUNT);
+                    int playCountColumn = cursor.getColumnIndexOrThrow(COLUMN_PLAYCOUNT);
                     int imageUriColumn = cursor.getColumnIndexOrThrow(COLUMN_IMAGEURI);
                     do {
                         String rank = cursor.getString(rankColumn);
                         String trackTitle = cursor.getString(trackTitleColumn);
                         String artist = cursor.getString(artistColumn);
-                        String playcount = cursor.getString(playcountColumn);
+                        String playcount = cursor.getString(playCountColumn);
                         String imageUri = cursor.getString(imageUriColumn);
 
                         Track topTrack = new Track(trackTitle, artist, playcount, imageUri, rank);
@@ -85,38 +84,11 @@ public class TopTracksTableWorker {
                     while (cursor.moveToNext() && result.size() < AppContext.getInstance().getLimit());
                 }
             }
-
-            database.setTransactionSuccessful();
         } finally {
-            if (cursor != null)
+            if (cursor != null && !cursor.isClosed())
                 cursor.close();
-            database.endTransaction();
-            database.close();
         }
 
-        return result;
-    }
-
-    public int getTracksCount(String pPeriod) throws SQLException {
-        final SQLiteDatabase database = mDatabaseHelper.getReadableDatabase();
-        int count;
-        Cursor cursor = null;
-
-        database.beginTransaction();
-
-        try {
-            cursor = database.query(DATABASE_TOP_TRACKS_TABLE, null, COLUMN_PERIOD + " = ?", new String[]{pPeriod}, null, null, COLUMN_RANK);
-
-            count = cursor.getCount();
-
-            database.setTransactionSuccessful();
-        } finally {
-            if (cursor != null)
-                cursor.close();
-            database.endTransaction();
-            database.close();
-        }
-
-        return count;
+        return new TopTracks(result, tracksCount);
     }
 }

@@ -57,7 +57,6 @@ class PreferencePresenter {
         val databaseWorker = DatabaseWorker()
 
         try {
-            databaseWorker.openDatabase()
             databaseWorker.deleteScrobbles()
             databaseWorker.deleteTopAlbums(null)
             databaseWorker.deleteTopArtists(null)
@@ -68,8 +67,6 @@ class PreferencePresenter {
             exception.printStackTrace()
             FirebaseCrash.report(exception)
             view?.showUnableToDropDatabaseMessage()
-        } finally {
-            databaseWorker.closeDatabase()
         }
     }
 }

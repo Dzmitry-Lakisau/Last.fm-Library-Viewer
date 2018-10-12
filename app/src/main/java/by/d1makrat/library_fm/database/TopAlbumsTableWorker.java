@@ -11,6 +11,7 @@ import java.util.List;
 
 import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.model.Album;
+import by.d1makrat.library_fm.model.TopAlbums;
 
 import static by.d1makrat.library_fm.Constants.DatabaseConstants.COLUMN_ALBUM;
 import static by.d1makrat.library_fm.Constants.DatabaseConstants.COLUMN_ARTIST;
@@ -29,7 +30,7 @@ public class TopAlbumsTableWorker{
         mDatabaseHelper = pDatabaseHelper;
     }
 
-    public void bulkInsertTopAlbums(final List<Album> items, final String pPeriod) throws SQLException {
+    public void insertTopAlbums(final List<Album> items, final String pPeriod) throws SQLException {
         final SQLiteDatabase database = mDatabaseHelper.getWritableDatabase();
 
         database.beginTransaction();
@@ -50,73 +51,44 @@ public class TopAlbumsTableWorker{
             database.setTransactionSuccessful();
         } finally {
             database.endTransaction();
-            database.close();
         }
-
     }
 
-    public List<Album> getTopAlbums(String pPeriod, int pPage) throws SQLException {
+    public TopAlbums getTopAlbums(String pPeriod, int pPage) throws SQLException {
         final SQLiteDatabase database = mDatabaseHelper.getReadableDatabase();
-        List<Album> result = new ArrayList<>();
+        List<Album> albums = new ArrayList<>();
+        int albumsCount;
         Cursor cursor = null;
-
-        database.beginTransaction();
 
         try {
             cursor = database.query(DATABASE_TOP_ALBUMS_TABLE, null, COLUMN_PERIOD + " = ?", new String[]{pPeriod}, null, null, COLUMN_RANK);
+            albumsCount = cursor.getCount();
 
-            if (cursor != null) {
+            if (cursor.moveToFirst()) {
                 if (cursor.moveToPosition((pPage - 1) * AppContext.getInstance().getLimit())){
                     int rankColumn = cursor.getColumnIndexOrThrow(COLUMN_RANK);
                     int artistColumn = cursor.getColumnIndexOrThrow(COLUMN_ARTIST);
                     int albumColumn = cursor.getColumnIndexOrThrow(COLUMN_ALBUM);
-                    int playcountColumn = cursor.getColumnIndexOrThrow(COLUMN_PLAYCOUNT);
+                    int playCountColumn = cursor.getColumnIndexOrThrow(COLUMN_PLAYCOUNT);
                     int imageUriColumn = cursor.getColumnIndexOrThrow(COLUMN_IMAGEURI);
                     do {
                         String rank = cursor.getString(rankColumn);
                         String artist = cursor.getString(artistColumn);
                         String album = cursor.getString(albumColumn);
-                        String playcount = cursor.getString(playcountColumn);
+                        String playCount = cursor.getString(playCountColumn);
                         String imageUri = cursor.getString(imageUriColumn);
 
-                        Album Album = new Album(album, artist, playcount, imageUri, rank);
-                        result.add(Album);
+                        Album Album = new Album(album, artist, playCount, imageUri, rank);
+                        albums.add(Album);
                     }
-                    while (cursor.moveToNext() && result.size() < AppContext.getInstance().getLimit());
+                    while (cursor.moveToNext() && albums.size() < AppContext.getInstance().getLimit());
                 }
             }
-
-            database.setTransactionSuccessful();
         } finally {
-            if (cursor != null)
+            if (cursor != null && !cursor.isClosed())
                 cursor.close();
-            database.endTransaction();
-            database.close();
         }
 
-        return result;
-    }
-
-    public int getAlbumsCount(String pPeriod) throws SQLException {
-        final SQLiteDatabase database = mDatabaseHelper.getReadableDatabase();
-        int count;
-        Cursor cursor = null;
-
-        database.beginTransaction();
-
-        try {
-            cursor = database.query(DATABASE_TOP_ALBUMS_TABLE, null, COLUMN_PERIOD + " = ?", new String[]{pPeriod}, null, null, COLUMN_RANK);
-
-            count = cursor.getCount();
-
-            database.setTransactionSuccessful();
-        } finally {
-            if (cursor != null)
-                cursor.close();
-            database.endTransaction();
-            database.close();
-        }
-
-        return count;
+        return new TopAlbums(albums, albumsCount);
     }
 }

@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +38,7 @@ public class ScrobblesTableWorker {
         mDatabaseHelper = pDatabaseHelper;
     }
 
-    public void bulkInsertScrobbles(final List<Scrobble> items) throws SQLException {
+    public void insertScrobbles(final List<Scrobble> items) throws SQLException {
         final SQLiteDatabase database = mDatabaseHelper.getWritableDatabase();
 
         database.beginTransaction();
@@ -59,18 +58,13 @@ public class ScrobblesTableWorker {
             database.setTransactionSuccessful();
         } finally {
             database.endTransaction();
-            database.close();
         }
-
     }
 
-    @Nullable
     public List<Scrobble> getScrobbles(int pPage, Long pFrom, Long pTo) throws SQLException {
         final SQLiteDatabase database = mDatabaseHelper.getReadableDatabase();
-        List<Scrobble> result = new ArrayList<>();
+        List<Scrobble> scrobbles = new ArrayList<>();
         Cursor cursor = null;
-
-        database.beginTransaction();
 
         try {
             if (pFrom.equals(DATE_LONG_DEFAULT_VALUE) && pTo.equals(DATE_LONG_DEFAULT_VALUE))
@@ -98,29 +92,23 @@ public class ScrobblesTableWorker {
                         scrobble.setAlbum(album);
                         scrobble.setDate(unixDate);
                         scrobble.setImageUrl(imageUri);
-                        result.add(scrobble);
+                        scrobbles.add(scrobble);
                     }
-                    while (cursor.moveToNext() && result.size() < AppContext.getInstance().getLimit());
+                    while (cursor.moveToNext() && scrobbles.size() < AppContext.getInstance().getLimit());
                 }
             }
-
-            database.setTransactionSuccessful();
         } finally {
             if (cursor != null)
                 cursor.close();
-            database.endTransaction();
-            database.close();
         }
 
-        return result;
+        return scrobbles;
     }
 
     public List<Scrobble> getScrobblesOfArtist(String pArtist, int pPage, Long pFrom, Long pTo) throws SQLException {
         final SQLiteDatabase database = mDatabaseHelper.getReadableDatabase();
-        List<Scrobble> result = new ArrayList<>();
+        List<Scrobble> scrobbles = new ArrayList<>();
         Cursor cursor = null;
-
-        database.beginTransaction();
 
         try {
             if (pFrom.equals(DATE_LONG_DEFAULT_VALUE) && pTo.equals(DATE_LONG_DEFAULT_VALUE))
@@ -149,29 +137,23 @@ public class ScrobblesTableWorker {
                         scrobble.setAlbum(album);
                         scrobble.setDate(unixDate);
                         scrobble.setImageUrl(imageUri);
-                        result.add(scrobble);
+                        scrobbles.add(scrobble);
                     }
-                    while (cursor.moveToNext() && result.size() < AppContext.getInstance().getLimit());
+                    while (cursor.moveToNext() && scrobbles.size() < AppContext.getInstance().getLimit());
                 }
             }
-
-            database.setTransactionSuccessful();
         } finally {
             if (cursor != null)
                 cursor.close();
-            database.endTransaction();
-            database.close();
         }
 
-        return result;
+        return scrobbles;
     }
 
     public List<Scrobble> getScrobblesOfTrack(String pArtist, String pTrack, Long pFrom, Long pTo) throws SQLException {
         final SQLiteDatabase database = mDatabaseHelper.getReadableDatabase();
-        List<Scrobble> result = new ArrayList<>();
+        List<Scrobble> scrobbles = new ArrayList<>();
         Cursor cursor = null;
-
-        database.beginTransaction();
 
         try {
             if (pFrom.equals(DATE_LONG_DEFAULT_VALUE) && pTo.equals(DATE_LONG_DEFAULT_VALUE))
@@ -199,36 +181,29 @@ public class ScrobblesTableWorker {
                         scrobble.setAlbum(album);
                         scrobble.setDate(unixDate);
                         scrobble.setImageUrl(imageUri);
-                        result.add(scrobble);
+                        scrobbles.add(scrobble);
                     }
                     while (cursor.moveToNext());
                 }
             }
-
-            database.setTransactionSuccessful();
         } finally {
             if (cursor != null)
                 cursor.close();
-            database.endTransaction();
-            database.close();
         }
 
-        return result;
+        return scrobbles;
     }
 
     public List<Scrobble> getScrobblesOfAlbum(String pArtist, String pAlbum, Long pFrom, Long pTo) throws SQLException {
         final SQLiteDatabase database = mDatabaseHelper.getReadableDatabase();
-        List<Scrobble> result = new ArrayList<>();
+        List<Scrobble> scrobbles = new ArrayList<>();
         Cursor cursor = null;
-
-        database.beginTransaction();
 
         try {
             if (pFrom.equals(DATE_LONG_DEFAULT_VALUE) && pTo.equals(DATE_LONG_DEFAULT_VALUE))
                 cursor = database.query(DATABASE_SCROBBLES_TABLE, null, ARTIST_AND_ALBUM_EQUALS_CONDITION, new String[]{pArtist, pAlbum}, null, null, SORTING_DATE_DESCENDING);
             else
                 cursor = database.query(DATABASE_SCROBBLES_TABLE, null, ARTIST_AND_ALBUM_EQUALS_AND_DATE_INTERVAL_CONDITION, new String[]{pArtist, pAlbum, String.valueOf(pFrom), String.valueOf(pTo)}, null, null, SORTING_DATE_DESCENDING);
-
 
             if (cursor != null) {
                 if (cursor.moveToFirst()){
@@ -250,20 +225,16 @@ public class ScrobblesTableWorker {
                         scrobble.setAlbum(album);
                         scrobble.setDate(unixDate);
                         scrobble.setImageUrl(imageUri);
-                        result.add(scrobble);
+                        scrobbles.add(scrobble);
                     }
                     while (cursor.moveToNext());
                 }
             }
-
-            database.setTransactionSuccessful();
         } finally {
             if (cursor != null)
                 cursor.close();
-            database.endTransaction();
-            database.close();
         }
 
-        return result;
+        return scrobbles;
     }
 }
