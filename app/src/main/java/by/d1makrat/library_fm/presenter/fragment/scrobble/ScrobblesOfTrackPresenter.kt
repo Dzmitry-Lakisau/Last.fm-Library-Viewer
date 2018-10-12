@@ -8,7 +8,7 @@ import by.d1makrat.library_fm.operation.ScrobblesOfTrackOperation
 class ScrobblesOfTrackPresenter(val artist: String, val track: String, from: Long, to: Long): ScrobblesPresenter(from, to) {
 
     init {
-        mUrlForBrowser = AppContext.getInstance().user.url + "/library/music/" + artist + "/" + track
+        mUrlForBrowser = AppContext.getInstance().user.url + "/library/music/" + artist + "/_/" + track
     }
 
     override fun performOperation() {
