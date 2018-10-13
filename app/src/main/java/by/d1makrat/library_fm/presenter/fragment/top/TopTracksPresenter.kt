@@ -1,10 +1,10 @@
 package by.d1makrat.library_fm.presenter.fragment.top
 
 import by.d1makrat.library_fm.AppContext
-import by.d1makrat.library_fm.asynctask.GetTopItemsAsyncTask
 import by.d1makrat.library_fm.model.Period
 import by.d1makrat.library_fm.model.Track
-import by.d1makrat.library_fm.operation.TopTracksOperation
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 class TopTracksPresenter(period: String): TopItemsPresenter<Track>(period) {
     init {
@@ -12,8 +12,18 @@ class TopTracksPresenter(period: String): TopItemsPresenter<Track>(period) {
     }
 
     override fun performOperation() {
-        val topTracksOperation = TopTracksOperation(period, mPage)
-        val getTopTracksAsyncTask = GetTopItemsAsyncTask(this)
-        getTopTracksAsyncTask.execute(topTracksOperation)
+        compositeDisposable.add(
+                repository.getTopTracks(period, mPage)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                {
+                                    onLoadingSuccessful(it)
+                                },
+                                {
+                                    onException(Exception(it))
+                                }
+                        )
+        )
     }
 }
