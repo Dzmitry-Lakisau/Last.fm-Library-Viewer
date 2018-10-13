@@ -7,7 +7,9 @@ import android.support.multidex.MultiDexApplication;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
+import by.d1makrat.library_fm.database.DatabaseWorker;
 import by.d1makrat.library_fm.retrofit.AdditionalParametersInterceptor;
 import by.d1makrat.library_fm.retrofit.LastFmRestApiService;
 import by.d1makrat.library_fm.image_loader.Malevich;
@@ -27,6 +29,7 @@ import by.d1makrat.library_fm.model.TopAlbums;
 import by.d1makrat.library_fm.model.TopArtists;
 import by.d1makrat.library_fm.model.TopTracks;
 import by.d1makrat.library_fm.model.User;
+import by.d1makrat.library_fm.repository.Repository;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -42,6 +45,7 @@ public class AppContext extends MultiDexApplication {
     private static AppContext mInstance;
     private SharedPreferences mSharedPreferences;
     private LastFmRestApiService mRetrofitWebService;
+    public Repository repository;
 
     private User mUser;
     private String mSessionKey;
@@ -68,6 +72,7 @@ public class AppContext extends MultiDexApplication {
         mRetrofitWebService = new Retrofit.Builder()
                 .baseUrl(API_BASE_URL)
                 .client(new OkHttpClient().newBuilder().addInterceptor(new AdditionalParametersInterceptor()).build())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
                         .registerTypeAdapter(User.class, new UserAdapter())
                         .registerTypeAdapter(TopAlbums.class, new TopAlbumsAdapter())
@@ -80,6 +85,8 @@ public class AppContext extends MultiDexApplication {
                         .create()))
                 .build()
                 .create(LastFmRestApiService.class);
+
+        repository = new Repository(mRetrofitWebService, new DatabaseWorker());
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 //        mUsername = mSharedPreferences.getString(USERNAME_KEY, null);

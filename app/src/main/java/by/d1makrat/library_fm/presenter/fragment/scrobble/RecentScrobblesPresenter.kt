@@ -1,9 +1,8 @@
 package by.d1makrat.library_fm.presenter.fragment.scrobble
 
 import by.d1makrat.library_fm.AppContext
-import by.d1makrat.library_fm.asynctask.GetItemsAsyncTask
-import by.d1makrat.library_fm.model.Scrobble
-import by.d1makrat.library_fm.operation.RecentScrobblesOperation
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 class RecentScrobblesPresenter(from: Long, to: Long): ScrobblesPresenter(from, to) {
 
@@ -12,8 +11,18 @@ class RecentScrobblesPresenter(from: Long, to: Long): ScrobblesPresenter(from, t
     }
 
     override fun performOperation() {
-        val recentScrobblesOperation = RecentScrobblesOperation(mPage, from, to)
-        val getItemsAsyncTask = GetItemsAsyncTask<Scrobble>(this)
-        getItemsAsyncTask.execute(recentScrobblesOperation)
+        compositeDisposable.add(
+                repository.getScrobbles(mPage, from, to)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        {
+                            onLoadingSuccessful(it)
+                        },
+                        {
+                            onException(Exception(it))
+                        }
+                )
+        )
     }
 }

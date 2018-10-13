@@ -1,6 +1,7 @@
 package by.d1makrat.library_fm.presenter.fragment
 
 import by.d1makrat.library_fm.AppContext
+import by.d1makrat.library_fm.repository.Repository
 import by.d1makrat.library_fm.view.fragment.ItemsView
 import io.reactivex.disposables.CompositeDisposable
 
@@ -8,6 +9,7 @@ abstract class ItemsPresenter<T, V: ItemsView<T>> {
 
     protected var view: V? = null
     protected val compositeDisposable = CompositeDisposable()
+    protected val repository: Repository = AppContext.getInstance().repository
 
     protected var isLoading = false
     protected var allIsLoaded = false

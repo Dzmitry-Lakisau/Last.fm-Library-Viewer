@@ -1,13 +1,11 @@
 package by.d1makrat.library_fm.presenter.fragment.top
 
 import android.net.Uri
-import by.d1makrat.library_fm.asynctask.GetTopItemsCallback
-import by.d1makrat.library_fm.model.Period
 import by.d1makrat.library_fm.model.TopItems
 import by.d1makrat.library_fm.presenter.fragment.ItemsPresenter
 import by.d1makrat.library_fm.view.fragment.TopItemsView
 
-abstract class TopItemsPresenter<T>(val period: String): ItemsPresenter<T, TopItemsView<T>>(), GetTopItemsCallback<T> {
+abstract class TopItemsPresenter<T>(val period: String): ItemsPresenter<T, TopItemsView<T>>() {
 
     private var totalCount: Int = 0
 
@@ -24,8 +22,7 @@ abstract class TopItemsPresenter<T>(val period: String): ItemsPresenter<T, TopIt
         }
     }
 
-
-    override fun onLoadingSuccessful(result: TopItems<T>) {
+    fun onLoadingSuccessful(result: TopItems<T>) {
         isLoading = false
 
         view?.removeAllHeadersAndFooters()

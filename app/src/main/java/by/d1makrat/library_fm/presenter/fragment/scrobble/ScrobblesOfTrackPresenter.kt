@@ -1,9 +1,8 @@
 package by.d1makrat.library_fm.presenter.fragment.scrobble
 
 import by.d1makrat.library_fm.AppContext
-import by.d1makrat.library_fm.asynctask.GetItemsAsyncTask
-import by.d1makrat.library_fm.model.Scrobble
-import by.d1makrat.library_fm.operation.ScrobblesOfTrackOperation
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 class ScrobblesOfTrackPresenter(val artist: String, val track: String, from: Long, to: Long): ScrobblesPresenter(from, to) {
 
@@ -12,9 +11,19 @@ class ScrobblesOfTrackPresenter(val artist: String, val track: String, from: Lon
     }
 
     override fun performOperation() {
-        val scrobblesOfTrackOperation = ScrobblesOfTrackOperation(artist, track, from, to)
-        val getItemsAsyncTask = GetItemsAsyncTask<Scrobble>(this)
-        getItemsAsyncTask.execute(scrobblesOfTrackOperation)
+        compositeDisposable.add(
+                repository.getScrobblesOfTrack(artist, track, from, to)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                {
+                                    onLoadingSuccessful(it)
+                                },
+                                {
+                                    onException(Exception(it))
+                                }
+                        )
+        )
     }
 
     override fun checkIfAllIsLoaded(size: Int) {
