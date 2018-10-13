@@ -1,13 +1,12 @@
 package by.d1makrat.library_fm.presenter.fragment.scrobble
 
 import android.net.Uri
-import by.d1makrat.library_fm.asynctask.GetItemsCallback
 import by.d1makrat.library_fm.model.Scrobble
 import by.d1makrat.library_fm.presenter.fragment.ItemsPresenter
 import by.d1makrat.library_fm.utils.DateUtils
 import by.d1makrat.library_fm.view.fragment.ScrobblesView
 
-abstract class ScrobblesPresenter(var from: Long?, var to: Long?): ItemsPresenter<Scrobble, ScrobblesView<Scrobble>>(), GetItemsCallback<Scrobble> {
+abstract class ScrobblesPresenter(var from: Long, var to: Long): ItemsPresenter<Scrobble, ScrobblesView<Scrobble>>() {
 
     fun onRefresh(){
         if (!isLoading) {
@@ -31,7 +30,7 @@ abstract class ScrobblesPresenter(var from: Long?, var to: Long?): ItemsPresente
         view?.openBrowser(Uri.parse(DateUtils.getUrlFromTimestamps(mUrlForBrowser, from, to)))
     }
 
-    override fun onLoadingSuccessful(items: List<Scrobble>) {
+    fun onLoadingSuccessful(items: List<Scrobble>) {
         view?.removeAllHeadersAndFooters()
         isLoading = false
 
