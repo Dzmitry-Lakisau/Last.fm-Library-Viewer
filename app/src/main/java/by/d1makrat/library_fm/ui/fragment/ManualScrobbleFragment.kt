@@ -84,8 +84,7 @@ class ManualScrobbleFragment: Fragment(), ManualScrobbleView {
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
 
         override fun afterTextChanged(s: Editable) {
-            button_scrobble.isEnabled = edit_artist.text.toString().isNotEmpty() &&
-                    edit_track.text.toString().isNotEmpty() && edit_trackDuration.text.toString().isNotEmpty()
+            button_scrobble.isEnabled = didAllRequiredFieldsSet()
         }
     }
 
@@ -129,5 +128,11 @@ class ManualScrobbleFragment: Fragment(), ManualScrobbleView {
 
     override fun showResult(message: String) {
         CenteredToast.show(activity, message, Toast.LENGTH_SHORT)
+    }
+
+    override fun didAllRequiredFieldsSet(): Boolean {
+        return edit_artist.text.toString().isNotEmpty() &&
+                edit_track.text.toString().isNotEmpty() &&
+                edit_trackDuration.text.toString().isNotEmpty()
     }
 }

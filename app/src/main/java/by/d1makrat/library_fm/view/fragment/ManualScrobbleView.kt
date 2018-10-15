@@ -4,6 +4,7 @@ import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialo
 import com.codetroopers.betterpickers.radialtimepicker.RadialTimePickerDialogFragment
 
 interface ManualScrobbleView: CalendarDatePickerDialogFragment.OnDateSetListener, RadialTimePickerDialogFragment.OnTimeSetListener {
+    fun didAllRequiredFieldsSet(): Boolean
     fun disableScrobbleButton()
     fun enableScrobbleButton()
     fun hideProgressBar()

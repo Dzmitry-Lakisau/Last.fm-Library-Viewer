@@ -68,11 +68,17 @@ class ManualScrobblePresenter {
         this.year = year
         this.month = monthOfYear
         this.day = dayOfMonth
+
+        if (view?.didAllRequiredFieldsSet() == true)
+            view?.enableScrobbleButton()
     }
 
     fun onTimeSet(hourOfDay: Int, minute: Int) {
         this.hour = hourOfDay
         this.minute = minute
+
+        if (view?.didAllRequiredFieldsSet() == true)
+            view?.enableScrobbleButton()
     }
 
     private fun onSendScrobbleResult(result: String) {
