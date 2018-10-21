@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.multidex.MultiDexApplication;
 
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -30,6 +32,7 @@ import by.d1makrat.library_fm.model.TopArtists;
 import by.d1makrat.library_fm.model.TopTracks;
 import by.d1makrat.library_fm.model.User;
 import by.d1makrat.library_fm.repository.Repository;
+import io.fabric.sdk.android.Fabric;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -66,6 +69,14 @@ public class AppContext extends MultiDexApplication {
         super.onCreate();
 
         AppContext.initInstance(this);
+
+        Fabric.with(this,
+                new Crashlytics.Builder()
+                        .core(new CrashlyticsCore.Builder()
+                                .disabled(BuildConfig.DEBUG)
+                                .build())
+                        .build()
+        );
 
         Malevich.INSTANCE.setConfig(new Malevich.Config(this.getCacheDir()));
 

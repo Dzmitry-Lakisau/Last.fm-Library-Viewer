@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import by.d1makrat.library_fm.R
+import by.d1makrat.library_fm.R.string.*
 import by.d1makrat.library_fm.presenter.fragment.ManualScrobblePresenter
 import by.d1makrat.library_fm.ui.CenteredToast
 import by.d1makrat.library_fm.utils.InputUtils.hideKeyboard
@@ -126,7 +127,7 @@ class ManualScrobbleFragment: Fragment(), ManualScrobbleView {
         progressBar_scrobble.visibility = View.VISIBLE
     }
 
-    override fun showResult(message: String) {
+    override fun showErrorMessage(message: String) {
         CenteredToast.show(activity, message, Toast.LENGTH_SHORT)
     }
 
@@ -134,5 +135,29 @@ class ManualScrobbleFragment: Fragment(), ManualScrobbleView {
         return edit_artist.text.toString().isNotEmpty() &&
                 edit_track.text.toString().isNotEmpty() &&
                 edit_trackDuration.text.toString().isNotEmpty()
+    }
+
+    override fun showScrobbleAcceptedMessage() {
+        CenteredToast.show(activity, getString(manual_fragment_scrobble_accepted), Toast.LENGTH_SHORT)
+    }
+
+    override fun showScrobbleIgnoredMessage() {
+        CenteredToast.show(activity, getString(manual_fragment_ignored_message), Toast.LENGTH_LONG)
+    }
+
+    override fun showScrobblesLimitMessage() {
+        CenteredToast.show(activity, getString(manual_fragment_limit_exceeded), Toast.LENGTH_LONG)
+    }
+
+    override fun showTimestampOldMessage() {
+        CenteredToast.show(activity, getString(manual_fragment_timestamp_old), Toast.LENGTH_LONG)
+    }
+
+    override fun showTimestampNewMessage() {
+        CenteredToast.show(activity, getString(manual_fragment_timestamp_new), Toast.LENGTH_LONG)
+    }
+
+    override fun showTrackIgnoredMessage() {
+        CenteredToast.show(activity, getString(manual_fragment_track_ignored), Toast.LENGTH_LONG)
     }
 }

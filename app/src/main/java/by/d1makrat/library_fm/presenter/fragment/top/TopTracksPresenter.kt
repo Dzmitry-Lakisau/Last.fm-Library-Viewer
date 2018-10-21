@@ -21,7 +21,7 @@ class TopTracksPresenter(period: String): TopItemsPresenter<Track>(period) {
                                     onLoadingSuccessful(it)
                                 },
                                 {
-                                    onException(Exception(it))
+                                    onException(it)
                                 }
                         )
         )

@@ -5,6 +5,7 @@ import by.d1makrat.library_fm.utils.ConnectionChecker
 import by.d1makrat.library_fm.json.SessionKeyAdapter
 import by.d1makrat.library_fm.model.SessionKey
 import by.d1makrat.library_fm.model.User
+import by.d1makrat.library_fm.utils.ExceptionHandler
 import by.d1makrat.library_fm.view.activity.LoginView
 import com.google.gson.GsonBuilder
 import io.reactivex.Single
@@ -61,7 +62,7 @@ class LoginPresenter {
                                         onSessionKeyGranted(it.key, username)
                                     },
                                     {
-                                        onException(Exception(it))
+                                        onException(it)
                                     }
                             )
             )
@@ -86,7 +87,7 @@ class LoginPresenter {
                                     onUserInfoReceived(it)
                                 },
                                 {
-                                    onException(Exception(it))
+                                    onException(it)
                                 }
                         )
         )
@@ -99,8 +100,8 @@ class LoginPresenter {
         view?.startMainActivity()
     }
 
-    private fun onException(exception: Exception) {
+    private fun onException(exception: Throwable) {
         view?.hideProgressBar()
-        view?.showErrorMessage(exception.message!!)
+        view?.showErrorMessage(ExceptionHandler().sendExceptionAndGetReadableMessage(exception))
     }
 }

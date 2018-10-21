@@ -1,9 +1,13 @@
 package by.d1makrat.library_fm.presenter.fragment
 
 import android.text.TextUtils
+import by.d1makrat.library_fm.APIException
 import by.d1makrat.library_fm.AppContext
+import by.d1makrat.library_fm.model.SendScrobbleResult
 import by.d1makrat.library_fm.utils.ConnectionChecker
+import by.d1makrat.library_fm.utils.ExceptionHandler
 import by.d1makrat.library_fm.view.fragment.ManualScrobbleView
+import com.crashlytics.android.Crashlytics
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -31,10 +35,10 @@ class ManualScrobblePresenter {
         compositeDisposable.clear()
     }
 
-    private fun onException(exception: Exception) {
+    private fun onException(exception: Throwable) {
         view?.hideProgressBar()
         view?.enableScrobbleButton()
-        view?.showResult(exception.message!!)
+        view?.showErrorMessage(ExceptionHandler().sendExceptionAndGetReadableMessage(exception))
     }
 
     fun onScrobbleButtonClick(track: String, artist: String, album: String, trackNumber: String, trackDuration: String){
@@ -49,10 +53,10 @@ class ManualScrobblePresenter {
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(
                                         {
-                                            onSendScrobbleResult(it.message)
+                                            onSendScrobbleResult(it)
                                         },
                                         {
-                                            onException(Exception(it))
+                                            onException(it)
                                         }
                                 )
                 )
@@ -81,9 +85,37 @@ class ManualScrobblePresenter {
             view?.enableScrobbleButton()
     }
 
-    private fun onSendScrobbleResult(result: String) {
+    private fun onSendScrobbleResult(result: SendScrobbleResult) {
         view?.hideProgressBar()
-        view?.showResult(result)
+
+        when (result.code) {
+            0 -> view?.showScrobbleAcceptedMessage()
+            1 -> {
+                view?.enableScrobbleButton()
+                view?.showScrobbleIgnoredMessage()
+                Crashlytics.logException(APIException(result.message))
+            }
+            2 -> {
+                view?.enableScrobbleButton()
+                view?.showTrackIgnoredMessage()
+                Crashlytics.logException(APIException(result.message))
+            }
+            3 -> {
+                view?.enableScrobbleButton()
+                view?.showTimestampOldMessage()
+                Crashlytics.logException(APIException(result.message))
+            }
+            4 -> {
+                view?.enableScrobbleButton()
+                view?.showTimestampNewMessage()
+                Crashlytics.logException(APIException(result.message))
+            }
+            5 -> {
+                view?.enableScrobbleButton()
+                view?.showScrobblesLimitMessage()
+                Crashlytics.logException(APIException(result.message))
+            }
+        }
     }
 
     private fun calculateUnixTime(): Long {

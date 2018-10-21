@@ -20,7 +20,7 @@ class RecentScrobblesPresenter(from: Long, to: Long): ScrobblesPresenter(from, t
                             onLoadingSuccessful(it)
                         },
                         {
-                            onException(Exception(it))
+                            onException(it)
                         }
                 )
         )

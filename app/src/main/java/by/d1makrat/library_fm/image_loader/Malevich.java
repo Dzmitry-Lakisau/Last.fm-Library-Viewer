@@ -9,7 +9,7 @@ import android.util.Log;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
-import com.google.firebase.crash.FirebaseCrash;
+import com.crashlytics.android.Crashlytics;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -265,7 +265,7 @@ public enum Malevich {
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        FirebaseCrash.report(e);
+                        Crashlytics.logException(e);
                     }
                 }
 
@@ -283,7 +283,7 @@ public enum Malevich {
                 return result;
             } catch (Exception e) {
                 e.printStackTrace();
-                FirebaseCrash.report(e);
+                Crashlytics.logException(e);
                 if (result != null) {
                     result.setException(e);
                 }
@@ -309,7 +309,7 @@ public enum Malevich {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            FirebaseCrash.report(e);
+            Crashlytics.logException(e);
         }
     }
 }

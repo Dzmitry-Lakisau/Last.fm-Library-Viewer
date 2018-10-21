@@ -20,7 +20,7 @@ class ScrobblesOfArtistPresenter(val artist: String, from: Long, to: Long): Scro
                                     onLoadingSuccessful(it)
                                 },
                                 {
-                                    onException(Exception(it))
+                                    onException(it)
                                 }
                         )
         )

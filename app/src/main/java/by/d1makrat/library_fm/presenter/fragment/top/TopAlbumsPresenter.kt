@@ -21,7 +21,7 @@ class TopAlbumsPresenter(period: String): TopItemsPresenter<Album>(period) {
                                     onLoadingSuccessful(it)
                                 },
                                 {
-                                    onException(Exception(it))
+                                    onException(it)
                                 }
                         )
         )

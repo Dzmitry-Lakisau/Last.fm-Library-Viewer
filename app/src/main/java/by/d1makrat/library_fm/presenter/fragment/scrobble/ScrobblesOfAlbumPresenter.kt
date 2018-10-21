@@ -20,7 +20,7 @@ class ScrobblesOfAlbumPresenter(val artist: String, val album: String, from: Lon
                                     onLoadingSuccessful(it)
                                 },
                                 {
-                                    onException(Exception(it))
+                                    onException(it)
                                 }
                         )
         )

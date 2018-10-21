@@ -11,5 +11,11 @@ interface ManualScrobbleView: CalendarDatePickerDialogFragment.OnDateSetListener
     fun showNonnumericalInputMessage()
     fun showNoConnectionMessage()
     fun showProgressBar()
-    fun showResult(message: String)
+    fun showErrorMessage(message: String)
+    fun showScrobbleAcceptedMessage()
+    fun showScrobbleIgnoredMessage()
+    fun showScrobblesLimitMessage()
+    fun showTimestampOldMessage()
+    fun showTimestampNewMessage()
+    fun showTrackIgnoredMessage()
 }

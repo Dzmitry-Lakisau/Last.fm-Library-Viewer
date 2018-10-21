@@ -42,7 +42,7 @@ class SearchArtistPresenter: ItemsPresenter<Artist, SearchArtistView<Artist>>() 
                                     onLoadingSuccessful(it.getAll())
                                 },
                                 {
-                                    onException(Exception(it))
+                                    onException(it)
                                 }
                         )
         )

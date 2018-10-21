@@ -5,7 +5,7 @@ import by.d1makrat.library_fm.Constants.API_MAX_FOR_SCROBBLES_BY_ARTIST
 import by.d1makrat.library_fm.database.DatabaseWorker
 import by.d1makrat.library_fm.image_loader.Malevich
 import by.d1makrat.library_fm.view.activity.PreferenceView
-import com.google.firebase.crash.FirebaseCrash
+import com.crashlytics.android.Crashlytics
 import java.io.IOException
 import java.sql.SQLException
 
@@ -37,7 +37,7 @@ class PreferencePresenter {
             }
         } catch (exception: NumberFormatException){
             exception.printStackTrace()
-            FirebaseCrash.report(exception)
+            Crashlytics.logException(exception)
             view?.showNonnumericalInputMessage()
         }
     }
@@ -48,7 +48,7 @@ class PreferencePresenter {
             view?.showOK()
         } catch (exception: IOException) {
             exception.printStackTrace()
-            FirebaseCrash.report(exception)
+            Crashlytics.logException(exception)
             view?.showUnableToClearImageCache()
         }
     }
@@ -65,7 +65,7 @@ class PreferencePresenter {
             view?.showOK()
         } catch (exception: SQLException) {
             exception.printStackTrace()
-            FirebaseCrash.report(exception)
+            Crashlytics.logException(exception)
             view?.showUnableToDropDatabaseMessage()
         }
     }

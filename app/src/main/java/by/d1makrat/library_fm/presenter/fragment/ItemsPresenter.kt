@@ -2,6 +2,7 @@ package by.d1makrat.library_fm.presenter.fragment
 
 import by.d1makrat.library_fm.AppContext
 import by.d1makrat.library_fm.repository.Repository
+import by.d1makrat.library_fm.utils.ExceptionHandler
 import by.d1makrat.library_fm.view.fragment.ItemsView
 import io.reactivex.disposables.CompositeDisposable
 
@@ -35,12 +36,12 @@ abstract class ItemsPresenter<T, V: ItemsView<T>> {
         }
     }
 
-    fun onException(exception: Exception) {//TODO ? add footer with retry behavior
+    fun onException(exception: Throwable) {//TODO ? add footer with retry behavior
         isLoading = false
 
         mPage--
 
-        view?.showError(exception.message!!)
+        view?.showError(ExceptionHandler().sendExceptionAndGetReadableMessage(exception))
     }
 
     fun loadItems() {

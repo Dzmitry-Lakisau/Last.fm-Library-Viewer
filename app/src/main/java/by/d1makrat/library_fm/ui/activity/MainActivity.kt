@@ -38,8 +38,8 @@ import by.d1makrat.library_fm.ui.fragment.tabTop.TabTopArtistsFragment
 import by.d1makrat.library_fm.ui.fragment.tabTop.TabTopTracksFragment
 import by.d1makrat.library_fm.utils.InputUtils
 import by.d1makrat.library_fm.view.activity.MainView
+import com.crashlytics.android.Crashlytics
 import com.google.android.gms.ads.MobileAds
-import com.google.firebase.crash.FirebaseCrash
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.view.*
 
@@ -115,7 +115,7 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            FirebaseCrash.report(e)
+            Crashlytics.logException(e)
         }
     }
 
