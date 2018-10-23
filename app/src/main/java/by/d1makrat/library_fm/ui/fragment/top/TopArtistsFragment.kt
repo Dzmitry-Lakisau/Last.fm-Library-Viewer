@@ -55,7 +55,7 @@ class TopArtistsFragment: TopItemsFragment<Artist>() {
     }
 
     override fun createAdapter(layoutInflater: LayoutInflater): ItemsAdapter<Artist> {
-        return TopArtistsAdapter(layoutInflater, ContextCompat.getDrawable(AppContext.getInstance(), R.drawable.img_vinyl))
+        return TopArtistsAdapter(layoutInflater, ContextCompat.getDrawable(AppContext.getInstance(), R.drawable.ic_person_black_24dp_large))
     }
 
     override fun showAllIsLoaded() {
