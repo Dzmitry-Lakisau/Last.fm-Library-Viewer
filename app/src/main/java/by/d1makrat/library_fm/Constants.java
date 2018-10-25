@@ -24,13 +24,8 @@ public final class Constants {
     public static final String SCROBBLES_OF_ARTIST_TAG = "ScrobblesOfArtistFragment";
     public static final String SCROBBLES_OF_TRACK_TAG = "ScrobblesOfTrackFragment";
 
-    public static final String FILTER_DIALOG_FROM_BUNDLE_KEY = "from";
-    public static final String FILTER_DIALOG_TO_BUNDLE_KEY = "to";
-
     public static final String API_NO_ERROR = "No error";
     public static final int API_MAX_FOR_SCROBBLES_BY_ARTIST = 200;
-
-    public static final Long DATE_LONG_DEFAULT_VALUE = -1L;
 
     public class JsonConstants {
         public static final String IMAGE_KEY = "image";

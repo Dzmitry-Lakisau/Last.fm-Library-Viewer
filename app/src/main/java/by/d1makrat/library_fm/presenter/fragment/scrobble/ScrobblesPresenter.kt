@@ -1,12 +1,13 @@
 package by.d1makrat.library_fm.presenter.fragment.scrobble
 
 import android.net.Uri
+import by.d1makrat.library_fm.model.FilterRange
 import by.d1makrat.library_fm.model.Scrobble
 import by.d1makrat.library_fm.presenter.fragment.ItemsPresenter
 import by.d1makrat.library_fm.utils.DateUtils
 import by.d1makrat.library_fm.view.fragment.ScrobblesView
 
-abstract class ScrobblesPresenter(var from: Long, var to: Long): ItemsPresenter<Scrobble, ScrobblesView<Scrobble>>() {
+abstract class ScrobblesPresenter(var filterRange: FilterRange): ItemsPresenter<Scrobble, ScrobblesView<Scrobble>>() {
 
     fun onRefresh(){
         if (!isLoading) {
@@ -27,7 +28,7 @@ abstract class ScrobblesPresenter(var from: Long, var to: Long): ItemsPresenter<
     }
 
     fun onOpenInBrowser() {
-        view?.openBrowser(Uri.parse(DateUtils.getUrlFromTimestamps(mUrlForBrowser, from, to)))
+        view?.openBrowser(Uri.parse(DateUtils.getUrlFromTimestamps(mUrlForBrowser, filterRange)))
     }
 
     fun onLoadingSuccessful(items: List<Scrobble>) {
@@ -38,11 +39,11 @@ abstract class ScrobblesPresenter(var from: Long, var to: Long): ItemsPresenter<
         when {
             size > 0 -> {
                 view?.populateList(items)
-                view?.showListHead(DateUtils.getMessageFromTimestamps(view?.getListItemsCount()!!, from, to))
+                view?.showListHead(DateUtils.getMessageFromTimestamps(view?.getListItemsCount()!!, filterRange))
 
                 checkIfAllIsLoaded(size)
             }
-            view?.getListItemsCount() == 0 -> view?.showEmptyHeader(DateUtils.getMessageFromTimestamps(view?.getListItemsCount() as Int, from, to))
+            view?.getListItemsCount() == 0 -> view?.showEmptyHeader(DateUtils.getMessageFromTimestamps(view?.getListItemsCount() as Int, filterRange))
             else -> checkIfAllIsLoaded(size)
         }
 
@@ -53,10 +54,10 @@ abstract class ScrobblesPresenter(var from: Long, var to: Long): ItemsPresenter<
 //        }
     }
 
-    fun onFinishFilterDialog(pFrom: Long, pTo: Long) {
+    fun onFinishFilterDialog(filterRange: FilterRange) {
         allIsLoaded = false
-        from = pFrom
-        to = pTo
+        this.filterRange.startOfPeriod = filterRange.startOfPeriod
+        this.filterRange.endOfPeriod = filterRange.endOfPeriod
 
         view?.clearList()
         view?.hideListHead()
@@ -71,15 +72,13 @@ abstract class ScrobblesPresenter(var from: Long, var to: Long): ItemsPresenter<
     }
 
     fun onShowingFromBackStack(itemCount: Int){
-        view?.showListHead(DateUtils.getMessageFromTimestamps(itemCount, from, to))
+        view?.showListHead(DateUtils.getMessageFromTimestamps(itemCount, filterRange))
     }
 
     fun onScrobblesOfDayPressed(isRecentScrobblesFragment: Boolean, listItemPressed: Scrobble){
         if (isRecentScrobblesFragment)
-            onFinishFilterDialog(DateUtils.getStartTimestampOfDay(listItemPressed.getRawDate()),
-                    DateUtils.getEndTimestampOfDay(listItemPressed.getRawDate()))
+            onFinishFilterDialog(DateUtils.getTimeRangesOfDay(listItemPressed.getRawDate()))
         else
-            view?.openScrobblesFragment(DateUtils.getStartTimestampOfDay(listItemPressed.getRawDate()),
-                DateUtils.getEndTimestampOfDay(listItemPressed.getRawDate()))
+            view?.openScrobblesFragment(DateUtils.getTimeRangesOfDay(listItemPressed.getRawDate()))
     }
 }

@@ -1,7 +1,6 @@
 package by.d1makrat.library_fm.repository
 
 import by.d1makrat.library_fm.AppContext
-import by.d1makrat.library_fm.Constants.DATE_LONG_DEFAULT_VALUE
 import by.d1makrat.library_fm.database.DatabaseWorker
 import by.d1makrat.library_fm.model.Scrobble
 import by.d1makrat.library_fm.model.TopAlbums
@@ -13,14 +12,13 @@ import io.reactivex.Single
 
 class Repository(private val restApiWorker: LastFmRestApiService, private val databaseWorker: DatabaseWorker) {
 
-    fun getScrobbles(page: Int, from: Long, to: Long): Single<List<Scrobble>> {
+    fun getScrobbles(page: Int, from: Long?, to: Long?): Single<List<Scrobble>> {
         return Single.create { singleEmitter ->
             try {
                 lateinit var scrobbles: List<Scrobble>
 
                 if (ConnectionChecker.isNetworkAvailable()) {
-                    val response = restApiWorker.getRecentScrobbles(AppContext.getInstance().user.username, page, AppContext.getInstance().limit,
-                            if (from == DATE_LONG_DEFAULT_VALUE) null else from, if (to == DATE_LONG_DEFAULT_VALUE) null else to)
+                    val response = restApiWorker.getRecentScrobbles(AppContext.getInstance().user.username, page, AppContext.getInstance().limit, from, to)
                             .execute()
 
                     if (response.isSuccessful) {
@@ -42,12 +40,11 @@ class Repository(private val restApiWorker: LastFmRestApiService, private val da
         }
     }
 
-    fun getScrobblesOfArtist(artist: String, page: Int, from: Long, to: Long): Single<List<Scrobble>> {
+    fun getScrobblesOfArtist(artist: String, page: Int, from: Long?, to: Long?): Single<List<Scrobble>> {
         return Single.create { singleEmitter ->
             try {
                 if (ConnectionChecker.isNetworkAvailable()) {
-                    val response = restApiWorker.getScrobblesOfArtist(AppContext.getInstance().user.username, artist, page, AppContext.getInstance().limit,
-                            if (from == DATE_LONG_DEFAULT_VALUE) null else from, if (to == DATE_LONG_DEFAULT_VALUE) null else to)
+                    val response = restApiWorker.getScrobblesOfArtist(AppContext.getInstance().user.username, artist, page, AppContext.getInstance().limit, from, to)
                             .execute()
 
                     if (response.isSuccessful) {
@@ -66,14 +63,13 @@ class Repository(private val restApiWorker: LastFmRestApiService, private val da
         }
     }
 
-    fun getScrobblesOfAlbum(artist: String, album: String, from: Long, to: Long): Single<List<Scrobble>> {
+    fun getScrobblesOfAlbum(artist: String, album: String, from: Long?, to: Long?): Single<List<Scrobble>> {
         return Single.create { singleEmitter ->
             try {
                 if (ConnectionChecker.isNetworkAvailable()) {
                     var page = 1
                     do {
-                        val response = restApiWorker.getScrobblesOfArtist(AppContext.getInstance().user.username, artist, page, AppContext.getInstance().limit,
-                                if (from == DATE_LONG_DEFAULT_VALUE) null else from, if (to == DATE_LONG_DEFAULT_VALUE) null else to)
+                        val response = restApiWorker.getScrobblesOfArtist(AppContext.getInstance().user.username, artist, page, AppContext.getInstance().limit, from, to)
                                 .execute()
 
                         lateinit var artistScrobbles: List<Scrobble>
@@ -97,14 +93,13 @@ class Repository(private val restApiWorker: LastFmRestApiService, private val da
         }
     }
 
-    fun getScrobblesOfTrack(artist: String, track: String, from: Long, to: Long): Single<List<Scrobble>> {
+    fun getScrobblesOfTrack(artist: String, track: String, from: Long?, to: Long?): Single<List<Scrobble>> {
         return Single.create { singleEmitter ->
             try {
                 if (ConnectionChecker.isNetworkAvailable()) {
                     var page = 1
                     do {
-                        val response = restApiWorker.getScrobblesOfArtist(AppContext.getInstance().user.username, artist, page, AppContext.getInstance().limit,
-                                if (from == DATE_LONG_DEFAULT_VALUE) null else from, if (to == DATE_LONG_DEFAULT_VALUE) null else to)
+                        val response = restApiWorker.getScrobblesOfArtist(AppContext.getInstance().user.username, artist, page, AppContext.getInstance().limit, from, to)
                                 .execute()
 
                         lateinit var artistScrobbles: List<Scrobble>

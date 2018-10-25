@@ -1,10 +1,11 @@
 package by.d1makrat.library_fm.presenter.fragment.scrobble
 
 import by.d1makrat.library_fm.AppContext
+import by.d1makrat.library_fm.model.FilterRange
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class ScrobblesOfTrackPresenter(val artist: String, val track: String, from: Long, to: Long): ScrobblesPresenter(from, to) {
+class ScrobblesOfTrackPresenter(val artist: String, val track: String, filterRange: FilterRange): ScrobblesPresenter(filterRange) {
 
     init {
         mUrlForBrowser = AppContext.getInstance().user.url + "/library/music/" + artist + "/_/" + track
@@ -12,7 +13,7 @@ class ScrobblesOfTrackPresenter(val artist: String, val track: String, from: Lon
 
     override fun performOperation() {
         compositeDisposable.add(
-                repository.getScrobblesOfTrack(artist, track, from, to)
+                repository.getScrobblesOfTrack(artist, track, filterRange.startOfPeriod, filterRange.endOfPeriod)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(

@@ -23,6 +23,7 @@ import by.d1makrat.library_fm.R.anim.*
 import by.d1makrat.library_fm.R.string.app_name
 import by.d1makrat.library_fm.broadcast_receiver.NetworkStateReceiver
 import by.d1makrat.library_fm.image_loader.Malevich
+import by.d1makrat.library_fm.model.FilterRange
 import by.d1makrat.library_fm.model.User
 import by.d1makrat.library_fm.presenter.activity.MainPresenter
 import by.d1makrat.library_fm.ui.fragment.ManualScrobbleFragment
@@ -254,11 +255,10 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
         showNewFragment(SCROBBLES_OF_ALBUM_TAG, targetFragment, true)
     }
 
-    override fun openScrobblesFragment(startOfPeriod: Long, endOfPeriod: Long) {
+    override fun openScrobblesFragment(filterRange: FilterRange) {
         val targetFragment = RecentScrobblesFragment()
         val bundle = Bundle()
-        bundle.putLong(FILTER_DIALOG_FROM_BUNDLE_KEY, startOfPeriod)
-        bundle.putLong(FILTER_DIALOG_TO_BUNDLE_KEY, endOfPeriod)
+        bundle.putParcelable(FilterRange::class.java.simpleName, filterRange)
         targetFragment.arguments = bundle
         showNewFragment(RECENT_SCROBBLES_FRAGMENT_TAG, targetFragment, true)
     }

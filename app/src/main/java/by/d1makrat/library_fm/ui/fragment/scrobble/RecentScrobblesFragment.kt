@@ -8,6 +8,6 @@ class RecentScrobblesFragment : ScrobblesFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        presenter = RecentScrobblesPresenter(mFrom, mTo)
+        presenter = RecentScrobblesPresenter(filterRange)
     }
 }

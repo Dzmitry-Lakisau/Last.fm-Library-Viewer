@@ -16,7 +16,7 @@ class ScrobblesOfArtistFragment: ScrobblesFragment() {
 
         artist = arguments!!.getString(Constants.ARTIST_KEY)
 
-        presenter = ScrobblesOfArtistPresenter(artist!!, mFrom, mTo)
+        presenter = ScrobblesOfArtistPresenter(artist!!, filterRange)
     }
 
     override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {

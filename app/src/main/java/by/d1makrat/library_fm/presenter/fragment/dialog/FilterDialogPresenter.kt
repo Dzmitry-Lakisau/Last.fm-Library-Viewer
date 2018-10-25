@@ -1,11 +1,11 @@
 package by.d1makrat.library_fm.presenter.fragment.dialog
 
-import by.d1makrat.library_fm.Constants.DATE_LONG_DEFAULT_VALUE
+import by.d1makrat.library_fm.model.FilterRange
 import by.d1makrat.library_fm.view.fragment.FilterDialogFragmentView
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class FilterDialogPresenter(private var startOfPeriod: Long, private var endOfPeriod: Long) {
+class FilterDialogPresenter(private var filterRange: FilterRange) {
 
     private val DATE_LAST_FM_LAUNCHED = 1016582400L
 
@@ -18,16 +18,16 @@ class FilterDialogPresenter(private var startOfPeriod: Long, private var endOfPe
     var monthOfEnd: Int? = null
     var dayOfMonthOfEnd: Int? = null
 
-    private var startOfPeriodCalendar = Calendar.getInstance(TimeZone.getDefault())
-    private var endOfPeriodCalendar = Calendar.getInstance(TimeZone.getDefault())
+    private var startOfPeriodCalendar = Calendar.getInstance()
+    private var endOfPeriodCalendar = Calendar.getInstance()
 
 
     init {
-        if (startOfPeriod > DATE_LONG_DEFAULT_VALUE) {
-            startOfPeriodCalendar.timeInMillis = TimeUnit.SECONDS.toMillis(startOfPeriod)
+        if (filterRange.startOfPeriod != null) {
+            startOfPeriodCalendar.timeInMillis = TimeUnit.SECONDS.toMillis(filterRange.startOfPeriod!!)
         }
-        if (endOfPeriod > DATE_LONG_DEFAULT_VALUE) {
-            endOfPeriodCalendar.timeInMillis = TimeUnit.SECONDS.toMillis(endOfPeriod)
+        if (filterRange.endOfPeriod != null) {
+            endOfPeriodCalendar.timeInMillis = TimeUnit.SECONDS.toMillis(filterRange.endOfPeriod!!)
         }
 
         yearOfStart = startOfPeriodCalendar.get(Calendar.YEAR)
@@ -48,18 +48,18 @@ class FilterDialogPresenter(private var startOfPeriod: Long, private var endOfPe
 
     fun onPositiveButtonClicked(yearOfStart: Int, monthOfStart: Int, dayOfMonthOfStart: Int, yearOfEnd: Int, monthOfEnd: Int, dayOfMonthOfEnd: Int) {
         startOfPeriodCalendar.set(yearOfStart, monthOfStart, dayOfMonthOfStart, 0, 0, 0)
-        startOfPeriod = TimeUnit.MILLISECONDS.toSeconds(startOfPeriodCalendar.timeInMillis)
+        filterRange.startOfPeriod = TimeUnit.MILLISECONDS.toSeconds(startOfPeriodCalendar.timeInMillis)
 
         endOfPeriodCalendar.set(yearOfEnd, monthOfEnd, dayOfMonthOfEnd, 23, 59, 59)
-        endOfPeriod = TimeUnit.MILLISECONDS.toSeconds(endOfPeriodCalendar.timeInMillis)
+        filterRange.endOfPeriod = TimeUnit.MILLISECONDS.toSeconds(endOfPeriodCalendar.timeInMillis)
 
-        if (startOfPeriod > endOfPeriod || endOfPeriod < DATE_LAST_FM_LAUNCHED) {
+        if (filterRange.startOfPeriod!! > filterRange.endOfPeriod!! || filterRange.endOfPeriod!! < DATE_LAST_FM_LAUNCHED) {
             view?.showWrongInputMessage()
         } else
-            view?.returnToTargetFragment(startOfPeriod, endOfPeriod)
+            view?.returnToTargetFragment(filterRange)
     }
 
     fun onNeutralButtonClicked() {
-        view?.returnToTargetFragment(DATE_LONG_DEFAULT_VALUE, DATE_LONG_DEFAULT_VALUE)
+        view?.returnToTargetFragment(FilterRange(null , null))
     }
 }

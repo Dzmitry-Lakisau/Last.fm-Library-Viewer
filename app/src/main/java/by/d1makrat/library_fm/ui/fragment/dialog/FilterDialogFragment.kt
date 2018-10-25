@@ -11,8 +11,8 @@ import android.support.v7.app.AlertDialog
 import android.view.Gravity
 import android.widget.TextView
 import android.widget.Toast
-import by.d1makrat.library_fm.Constants.*
 import by.d1makrat.library_fm.R
+import by.d1makrat.library_fm.model.FilterRange
 import by.d1makrat.library_fm.presenter.fragment.dialog.FilterDialogPresenter
 import by.d1makrat.library_fm.ui.CenteredToast
 import by.d1makrat.library_fm.view.fragment.FilterDialogFragmentView
@@ -25,7 +25,7 @@ class FilterDialogFragment : DialogFragment(), FilterDialogFragmentView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        presenter = FilterDialogPresenter(arguments?.getLong(FILTER_DIALOG_FROM_BUNDLE_KEY) ?: DATE_LONG_DEFAULT_VALUE, arguments?.getLong(FILTER_DIALOG_TO_BUNDLE_KEY) ?: DATE_LONG_DEFAULT_VALUE)
+        presenter = FilterDialogPresenter(arguments?.getParcelable(FilterRange::class.java.simpleName) ?: FilterRange(null, null))
 
     }
 
@@ -81,10 +81,9 @@ class FilterDialogFragment : DialogFragment(), FilterDialogFragmentView {
         super.onStop()
     }
 
-    override fun returnToTargetFragment(startOfPeriod: Long, endOfPeriod: Long) {
+    override fun returnToTargetFragment(filterRange: FilterRange) {
         val intent = Intent()
-        intent.putExtra(FILTER_DIALOG_FROM_BUNDLE_KEY, startOfPeriod)
-        intent.putExtra(FILTER_DIALOG_TO_BUNDLE_KEY, endOfPeriod)
+        intent.putExtra(FilterRange::class.java.simpleName, filterRange)
         targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, intent)
     }
 
