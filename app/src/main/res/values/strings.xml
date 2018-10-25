@@ -58,7 +58,7 @@
     <string name="manual_fragment_limit_exceeded">Daily scrobble limit exceeded</string>
     <string name="manual_fragment_scrobble_accepted">Scrobble was accepted</string>
 
-    <string name="no_scrobbles_within_period">"No scrobbles\nwithin %1$s - %2$s"</string>
+    <string name="no_scrobbles_within_period">"No scrobbles within\n%1$s -\n%2$s"</string>
     <string name="no_scrobbles">No scrobbles.\nHave you already scrobbled?\n:)</string>
     <string name="no_items">Nothing in rankings.\nHave you already scrobbled?\n:)</string>
 

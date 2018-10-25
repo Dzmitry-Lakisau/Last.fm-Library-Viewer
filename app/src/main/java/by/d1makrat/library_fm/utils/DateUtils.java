@@ -16,6 +16,7 @@ public class DateUtils {
 
     private static final String FORMATTING_DATE_PATTERN_FOR_URL = "yyyy-MM-dd";
     private static final String FORMATTING_DATE_PATTERN_FOR_MESSAGE = "d MMM yyyy";
+    private static final String FORMATTING_DATE_PATTERN_FOR_MESSAGE_FOR_EMPTY = "d MMM yyyy, EEEE";
 
     public static String getMessageFromTimestamps(int pScrobbleCount, FilterRange filterRange) {
 
@@ -31,13 +32,14 @@ public class DateUtils {
             Date dateFrom = new Date(TimeUnit.SECONDS.toMillis(filterRange.getStartOfPeriod()));
             Date dateTo = new Date(TimeUnit.SECONDS.toMillis(filterRange.getEndOfPeriod()));
 
-            String stringFrom = new SimpleDateFormat(FORMATTING_DATE_PATTERN_FOR_MESSAGE, Locale.ENGLISH).format(dateFrom);
-            String stringTo = new SimpleDateFormat(FORMATTING_DATE_PATTERN_FOR_MESSAGE, Locale.ENGLISH).format(dateTo);
-
             if (pScrobbleCount > 0) {
+                String stringFrom = new SimpleDateFormat(FORMATTING_DATE_PATTERN_FOR_MESSAGE, Locale.ENGLISH).format(dateFrom);
+                String stringTo = new SimpleDateFormat(FORMATTING_DATE_PATTERN_FOR_MESSAGE, Locale.ENGLISH).format(dateTo);
                 return AppContext.getInstance().getResources().getQuantityString(R.plurals.scrobbles_count_within_period, pScrobbleCount, pScrobbleCount, stringFrom, stringTo);
             }
             else {
+                String stringFrom = new SimpleDateFormat(FORMATTING_DATE_PATTERN_FOR_MESSAGE_FOR_EMPTY, Locale.ENGLISH).format(dateFrom);
+                String stringTo = new SimpleDateFormat(FORMATTING_DATE_PATTERN_FOR_MESSAGE_FOR_EMPTY, Locale.ENGLISH).format(dateTo);
                 return AppContext.getInstance().getString(R.string.no_scrobbles_within_period, stringFrom, stringTo);
             }
         }
