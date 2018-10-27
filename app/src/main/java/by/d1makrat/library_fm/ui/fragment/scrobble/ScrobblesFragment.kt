@@ -142,15 +142,15 @@ abstract class ScrobblesFragment: ItemsFragment<Scrobble, ScrobblesView<Scrobble
 
         return when (item.itemId) {
             scrobbles_of_artist -> {
-                (activity as MainActivity).openScrobblesOfArtistFragment(listItemPressed.Artist)
+                (activity as MainActivity).openScrobblesOfArtistFragment(listItemPressed.artist)
                 true
             }
             scrobbles_of_track -> {
-                (activity as MainActivity).openScrobblesOfTrackFragment(listItemPressed.Artist, listItemPressed.TrackTitle)
+                (activity as MainActivity).openScrobblesOfTrackFragment(listItemPressed.artist, listItemPressed.trackTitle)
                 true
             }
             scrobbles_of_album -> {
-                (activity as MainActivity).openScrobblesOfAlbumFragment(listItemPressed.Artist, listItemPressed.Album!!)
+                (activity as MainActivity).openScrobblesOfAlbumFragment(listItemPressed.artist, listItemPressed.album!!)
                 true
             }
             scrobbles_of_day -> {

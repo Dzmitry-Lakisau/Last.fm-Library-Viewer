@@ -85,13 +85,7 @@ public class ScrobblesTableWorker {
                         long unixDate = cursor.getLong(unixDateColumn);
                         String imageUri = cursor.getString(imageUriColumn);
 
-                        Scrobble scrobble = new Scrobble();
-                        scrobble.setTrackTitle(trackTitle);
-                        scrobble.setArtist(artist);
-                        scrobble.setAlbum(album);
-                        scrobble.setDate(unixDate);
-                        scrobble.setImageUrl(imageUri);
-                        scrobbles.add(scrobble);
+                        scrobbles.add(new Scrobble(artist, trackTitle, album, imageUri, unixDate));
                     }
                     while (cursor.moveToNext() && scrobbles.size() < AppContext.getInstance().getLimit());
                 }
@@ -130,13 +124,7 @@ public class ScrobblesTableWorker {
                         long unixDate = cursor.getLong(unixDateColumn);
                         String imageUri = cursor.getString(imageUriColumn);
 
-                        Scrobble scrobble = new Scrobble();
-                        scrobble.setTrackTitle(trackTitle);
-                        scrobble.setArtist(artist);
-                        scrobble.setAlbum(album);
-                        scrobble.setDate(unixDate);
-                        scrobble.setImageUrl(imageUri);
-                        scrobbles.add(scrobble);
+                        scrobbles.add(new Scrobble(artist, trackTitle, album, imageUri, unixDate));
                     }
                     while (cursor.moveToNext() && scrobbles.size() < AppContext.getInstance().getLimit());
                 }
@@ -174,13 +162,7 @@ public class ScrobblesTableWorker {
                         long unixDate = cursor.getLong(unixDateColumn);
                         String imageUri = cursor.getString(imageUriColumn);
 
-                        Scrobble scrobble = new Scrobble();
-                        scrobble.setTrackTitle(trackTitle);
-                        scrobble.setArtist(artist);
-                        scrobble.setAlbum(album);
-                        scrobble.setDate(unixDate);
-                        scrobble.setImageUrl(imageUri);
-                        scrobbles.add(scrobble);
+                        scrobbles.add(new Scrobble(artist, trackTitle, album, imageUri, unixDate));
                     }
                     while (cursor.moveToNext());
                 }
@@ -218,13 +200,7 @@ public class ScrobblesTableWorker {
                         long unixDate = cursor.getLong(unixDateColumn);
                         String imageUri = cursor.getString(imageUriColumn);
 
-                        Scrobble scrobble = new Scrobble();
-                        scrobble.setTrackTitle(trackTitle);
-                        scrobble.setArtist(artist);
-                        scrobble.setAlbum(album);
-                        scrobble.setDate(unixDate);
-                        scrobble.setImageUrl(imageUri);
-                        scrobbles.add(scrobble);
+                        scrobbles.add(new Scrobble(artist, trackTitle, album, imageUri, unixDate));
                     }
                     while (cursor.moveToNext());
                 }
