@@ -52,6 +52,14 @@ class SearchArtistFragment: ItemsFragment<Artist, SearchArtistView<Artist>, Sear
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
         })
 
+        rootView.search_field.setOnKeyListener(View.OnKeyListener { _, keyCode: Int, event: KeyEvent ->
+            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                presenter?.onSearchButtonPressed(search_field.text.toString())
+                return@OnKeyListener true
+            }
+            false
+        })
+
         return rootView
     }
 
