@@ -2,21 +2,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/item_footer_height"
     android:background="@android:color/transparent"
     android:focusable="false"
     android:clickable="false">
 
 
     <ProgressBar
-        android:id="@+id/item_empty_header_message"
+        android:layout_centerInParent="true"
         style="@android:style/Widget.DeviceDefault.ProgressBar.Large"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="0dp"
         android:clickable="false"
         android:focusable="false"
-        android:padding="0dp"
-        />
+        android:padding="0dp" />
 
 </RelativeLayout>

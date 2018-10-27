@@ -103,7 +103,7 @@ public abstract class ItemsAdapter<T> extends RecyclerView.Adapter<RecyclerView.
     protected abstract RecyclerView.ViewHolder createItemViewHolder(ViewGroup parent);
 
     private RecyclerView.ViewHolder createFooterViewHolder(ViewGroup parent) {
-        View v = mLayoutInflater.inflate(R.layout.item_spinner, parent, false);
+        View v = mLayoutInflater.inflate(R.layout.item_footer, parent, false);
 
         return new FooterViewHolder(v);
     }
