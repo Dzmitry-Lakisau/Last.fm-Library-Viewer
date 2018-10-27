@@ -39,7 +39,7 @@ class SearchArtistResultsAdapter : TypeAdapter<ArtistsJsonModel>() {
 
             val name = artistJsonObject.get(NAME_KEY).asString
 
-            val listeners = artistJsonObject.get(LISTENERS_KEY).asString
+            val listeners = artistJsonObject.get(LISTENERS_KEY).asInt
 
             val url = artistJsonObject.get(URL_KEY).asString
 

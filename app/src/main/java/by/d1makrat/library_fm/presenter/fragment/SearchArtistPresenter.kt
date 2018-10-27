@@ -39,7 +39,7 @@ class SearchArtistPresenter: ItemsPresenter<Artist, SearchArtistView<Artist>>() 
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 {
-                                    onLoadingSuccessful(it.getAll())
+                                    onLoadingSuccessful(it.getAll().sortedByDescending { artist -> artist.listenersCount })
                                 },
                                 {
                                     onException(it)

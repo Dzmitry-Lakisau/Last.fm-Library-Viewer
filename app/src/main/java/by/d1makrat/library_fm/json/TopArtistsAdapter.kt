@@ -42,7 +42,7 @@ class TopArtistsAdapter : TypeAdapter<TopArtists>() {
 
             val name = artistJsonObject.get(NAME_KEY).asString
 
-            val listenersCount = artistJsonObject.get(LISTENERS_KEY)?.asString
+            val listenersCount = artistJsonObject.get(LISTENERS_KEY)?.asInt
 
             val playCount = artistJsonObject.get(PLAYCOUNT_KEY)?.asString
 
