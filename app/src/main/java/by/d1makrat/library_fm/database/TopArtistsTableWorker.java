@@ -74,7 +74,7 @@ public class TopArtistsTableWorker {
                         String playCount = cursor.getString(playCountColumn);
                         String imageUri = cursor.getString(imageUriColumn);
 
-                        Artist topArtist = new Artist(artist, null, playCount, "", imageUri, rank);//TODO remove url
+                        Artist topArtist = new Artist(artist, playCount, imageUri, rank);
                         artists.add(topArtist);
                     }
                     while (cursor.moveToNext() && artists.size() < AppContext.getInstance().getLimit());

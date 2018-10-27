@@ -47,7 +47,7 @@ class SearchArtistResultsAdapter : TypeAdapter<ArtistsJsonModel>() {
             var imageUrl = jsonArray.get(MAX_IMAGE_RESOLUTION_INDEX).asJsonObject.get(TEXT_KEY).asString
             imageUrl = if (imageUrl == EMPTY_STRING) null else imageUrl
 
-            artists.add(Artist(name, listeners, null, url, imageUrl, null))
+            artists.add(Artist(name, listeners, url, imageUrl))
         }
 
         return artists
