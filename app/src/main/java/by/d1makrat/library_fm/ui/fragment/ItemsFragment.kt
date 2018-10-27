@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.Toast
 import by.d1makrat.library_fm.R
 import by.d1makrat.library_fm.adapter.list.ItemsAdapter
+import by.d1makrat.library_fm.adapter.list.VerticalSpaceItemDecoration
 import by.d1makrat.library_fm.presenter.fragment.ItemsPresenter
 import by.d1makrat.library_fm.view.fragment.ItemsView
 import by.d1makrat.library_fm.ui.CenteredToast
@@ -21,15 +22,12 @@ abstract class ItemsFragment<T, V: ItemsView<T>, P: ItemsPresenter<T, V>>: Fragm
 
     protected var mListAdapter: ItemsAdapter<T>? = null
 
-//    private var mLayoutManager: LinearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setHasOptionsMenu(true)
 
         mListAdapter = createAdapter(layoutInflater)
-//        presenter = createPresenter()
     }
 
     override fun showError(message: String) {
@@ -44,15 +42,12 @@ abstract class ItemsFragment<T, V: ItemsView<T>, P: ItemsPresenter<T, V>>: Fragm
 
     protected abstract fun createAdapter(layoutInflater: LayoutInflater): ItemsAdapter<T>
 
-//    protected abstract fun createPresenter(): ItemsPresenter<T>
-
-//    protected abstract fun setUpActionBar(activity: AppCompatActivity?)
-
     protected fun setUpRecyclerView(pRootView: View) {
 
         val mRecyclerView: RecyclerView = pRootView.findViewById(R.id.rv)
 
         mRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        mRecyclerView.addItemDecoration(VerticalSpaceItemDecoration())
         mRecyclerView.adapter = mListAdapter
         mRecyclerView.addOnScrollListener(recyclerViewOnScrollListener)
         registerForContextMenu(mRecyclerView)
