@@ -38,21 +38,21 @@ public class SearchArtistsAdapter extends ItemsAdapter<Artist>{
     private static class ArtistViewHolder extends LongClickableViewHolder {
 
         private final TextView artistNameTextView;
-        private final TextView playcountTextView;
+        private final TextView listenersCountTextView;
         private final ImageView artistImgView;
 
         ArtistViewHolder(View pView, LongClickListener pLongClickListener) {
             super(pView, pLongClickListener);
 
             artistNameTextView = pView.findViewById(R.id.artistName_textView);
-            playcountTextView = pView.findViewById(R.id.playcount_textView);
+            listenersCountTextView = pView.findViewById(R.id.listenersCount_textView);
             artistImgView = pView.findViewById(R.id.artistImage_ImgView);
         }
 
         private void bind(Artist artist, Drawable pPlaceholderDrawable){
 
             artistNameTextView.setText(artist.getName());
-            playcountTextView.setText(AppContext.getInstance().getString(R.string.listeners_count, artist.getListenersCount()));
+            listenersCountTextView.setText(AppContext.getInstance().getString(R.string.listeners_count, artist.getListenersCount()));
 
             String imageUri = BuildConfig.DEBUG ? artist.getImageUrl() : null;
             Malevich.INSTANCE.load(imageUri).instead(pPlaceholderDrawable).into(artistImgView);

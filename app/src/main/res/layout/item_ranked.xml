@@ -6,6 +6,10 @@
                 android:layout_marginBottom="@dimen/item_margin"
                 android:layout_marginLeft="@dimen/item_margin"
                 android:layout_marginRight="@dimen/item_margin"
+                android:paddingEnd="@dimen/item_margin"
+                android:paddingRight="@dimen/item_margin"
+                android:paddingLeft="0dp"
+                android:paddingStart="0dp"
                 android:background="@color/light_red">
 
     <TextView
@@ -16,10 +20,10 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="@dimen/item_margin"
-        android:layout_marginRight="@dimen/item_margin"
+        android:layout_marginStart="@dimen/item_margin"
         android:gravity="end|center_vertical"
         android:includeFontPadding="false"
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:includeFontPadding="false"
@@ -28,11 +32,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/albumart"
-        android:layout_toEndOf="@+id/albumart"
+        android:layout_toRightOf="@+id/cover_ImgView"
+        android:layout_toEndOf="@+id/cover_ImgView"
         android:layout_toLeftOf="@id/rank"
-        android:layout_toStartOf="@id/rank"
-        />
+        android:layout_toStartOf="@id/rank" />
 
     <TextView
         android:includeFontPadding="false"
@@ -41,32 +44,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        android:layout_below="@+id/primaryField_textView"
-        android:layout_alignLeft="@+id/primaryField_textView"
-        android:layout_alignStart="@id/primaryField_textView"
-        android:layout_marginRight="@dimen/item_margin"
-        android:layout_marginEnd="@dimen/item_margin"
-        />
+        android:layout_below="@id/primaryField_textView"
+        android:layout_alignLeft="@id/primaryField_textView"
+        android:layout_alignStart="@id/primaryField_textView" />
 
     <TextView
-
         android:includeFontPadding="false"
-        android:id="@+id/playcount_textView"
+        android:id="@+id/playCount_textView"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        android:layout_below="@+id/secondaryField_textView"
-        android:layout_alignLeft="@+id/secondaryField_textView"
-        android:layout_alignStart="@id/secondaryField_textView"
-        android:layout_marginRight="@dimen/item_margin"
-        android:layout_marginEnd="@dimen/item_margin"
-        />
+        android:layout_below="@id/secondaryField_textView"
+        android:layout_alignLeft="@id/secondaryField_textView"
+        android:layout_alignStart="@id/secondaryField_textView" />
 
     <ImageView
         android:layout_width="@dimen/item_image_size"
         android:layout_height="@dimen/item_image_size"
-        android:id="@+id/albumart"
+        android:id="@+id/cover_ImgView"
         android:layout_margin="@dimen/item_margin"
         android:contentDescription="@string/artist_photo" />
 </RelativeLayout>

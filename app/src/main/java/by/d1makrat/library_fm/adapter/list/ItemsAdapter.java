@@ -1,6 +1,7 @@
 package by.d1makrat.library_fm.adapter.list;
 
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,16 +55,14 @@ public abstract class ItemsAdapter<T> extends RecyclerView.Adapter<RecyclerView.
         else return ITEM;
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        RecyclerView.ViewHolder viewHolder = null;
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        RecyclerView.ViewHolder viewHolder;
 
         switch (viewType) {
             case HEADER:
                 viewHolder = createHeaderViewHolder(parent);
-                break;
-            case ITEM:
-                viewHolder = createItemViewHolder(parent);
                 break;
             case FOOTER:
                 viewHolder = createFooterViewHolder(parent);
@@ -75,6 +74,7 @@ public abstract class ItemsAdapter<T> extends RecyclerView.Adapter<RecyclerView.
                 viewHolder = createEmptyHeaderViewHolder(parent);
                 break;
             default:
+                viewHolder = createItemViewHolder(parent);
                 break;
         }
 
@@ -82,7 +82,7 @@ public abstract class ItemsAdapter<T> extends RecyclerView.Adapter<RecyclerView.
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
 
         switch (getItemViewType(position)) {
             case ITEM:
@@ -95,7 +95,7 @@ public abstract class ItemsAdapter<T> extends RecyclerView.Adapter<RecyclerView.
     }
 
     private RecyclerView.ViewHolder createHeaderViewHolder(ViewGroup parent) {
-        View v = mLayoutInflater.inflate(R.layout.item_spinner_full, parent, false);
+        View v = mLayoutInflater.inflate(R.layout.item_header, parent, false);
 
         return new HeaderViewHolder(v);
     }

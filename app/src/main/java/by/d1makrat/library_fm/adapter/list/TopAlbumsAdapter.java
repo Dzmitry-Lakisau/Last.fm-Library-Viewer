@@ -39,29 +39,29 @@ public class TopAlbumsAdapter extends ItemsAdapter<Album> {
 
         private final TextView albumTextView;
         private final TextView artistTextView;
-        private final TextView playcountTextView;
+        private final TextView playCountTextView;
         private final TextView rankTextView;
-        private final ImageView albumartImgView;
+        private final ImageView coverImgView;
 
         TopAlbumViewHolder(View pView, LongClickListener pLongClickListener) {
             super(pView, pLongClickListener);
 
             albumTextView = pView.findViewById(R.id.primaryField_textView);
             artistTextView = pView.findViewById(R.id.secondaryField_textView);
-            playcountTextView = pView.findViewById(R.id.playcount_textView);
+            playCountTextView = pView.findViewById(R.id.playCount_textView);
             rankTextView = pView.findViewById(R.id.rank);
-            albumartImgView = pView.findViewById(R.id.albumart);
+            coverImgView = pView.findViewById(R.id.cover_ImgView);
         }
 
         private void bind(Album topAlbum, Drawable pPlaceholderDrawable){
 
             albumTextView.setText(topAlbum.getTitle());
             artistTextView.setText(topAlbum.getArtistName());
-            playcountTextView.setText(AppContext.getInstance().getString(R.string.top_scrobbles_count, topAlbum.getPlaycount()));
+            playCountTextView.setText(AppContext.getInstance().getString(R.string.top_scrobbles_count, topAlbum.getPlaycount()));
             rankTextView.setText(topAlbum.getRank());
 
             String imageUri = BuildConfig.DEBUG ? topAlbum.getImageUrl() : null;
-            Malevich.INSTANCE.load(imageUri).instead(pPlaceholderDrawable).into(albumartImgView);
+            Malevich.INSTANCE.load(imageUri).instead(pPlaceholderDrawable).into(coverImgView);
         }
     }
 }

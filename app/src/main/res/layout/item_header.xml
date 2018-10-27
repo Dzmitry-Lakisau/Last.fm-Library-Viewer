@@ -9,7 +9,6 @@
 
 
     <ProgressBar
-        android:id="@+id/item_empty_header_message"
         android:layout_centerInParent="true"
         style="@android:style/Widget.DeviceDefault.ProgressBar.Large"
         android:layout_width="wrap_content"

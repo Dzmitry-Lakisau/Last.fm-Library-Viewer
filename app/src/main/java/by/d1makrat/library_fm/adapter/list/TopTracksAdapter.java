@@ -39,29 +39,29 @@ public class TopTracksAdapter extends ItemsAdapter<Track> {
 
         private final TextView trackTextView;
         private final TextView artistTextView;
-        private final TextView playcountTextView;
+        private final TextView playCountTextView;
         private final TextView rankTextView;
-        private final ImageView albumartImgView;
+        private final ImageView coverImgView;
 
         TopTrackViewHolder(View pView, LongClickListener pLongClickListener) {
             super(pView, pLongClickListener);
 
             trackTextView = pView.findViewById(R.id.primaryField_textView);
             artistTextView = pView.findViewById(R.id.secondaryField_textView);
-            playcountTextView = pView.findViewById(R.id.playcount_textView);
+            playCountTextView = pView.findViewById(R.id.playCount_textView);
             rankTextView = pView.findViewById(R.id.rank);
-            albumartImgView = pView.findViewById(R.id.albumart);
+            coverImgView = pView.findViewById(R.id.cover_ImgView);
         }
 
         private void bind(Track topTrack, Drawable pPlaceholderDrawable){
 
             trackTextView.setText(topTrack.getTitle());
             artistTextView.setText(topTrack.getArtistName());
-            playcountTextView.setText(AppContext.getInstance().getString(R.string.top_scrobbles_count, topTrack.getPlaycount()));
+            playCountTextView.setText(AppContext.getInstance().getString(R.string.top_scrobbles_count, topTrack.getPlaycount()));
             rankTextView.setText(topTrack.getRank());
 
             String imageUri = BuildConfig.DEBUG ? topTrack.getImageUrl() : null;
-            Malevich.INSTANCE.load(imageUri).instead(pPlaceholderDrawable).into(albumartImgView);
+            Malevich.INSTANCE.load(imageUri).instead(pPlaceholderDrawable).into(coverImgView);
         }
     }
 }
