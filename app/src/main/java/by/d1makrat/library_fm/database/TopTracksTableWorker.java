@@ -41,7 +41,7 @@ public class TopTracksTableWorker {
                 contentValues.put(COLUMN_RANK, item.getRank());
                 contentValues.put(COLUMN_TRACK, item.getTitle());
                 contentValues.put(COLUMN_ARTIST, item.getArtistName());
-                contentValues.put(COLUMN_PLAYCOUNT, item.getPlaycount());
+                contentValues.put(COLUMN_PLAYCOUNT, item.getPlayCount());
                 contentValues.put(COLUMN_IMAGEURI, item.getImageUrl());
                 contentValues.put(COLUMN_PERIOD, pPeriod);
 
@@ -75,10 +75,10 @@ public class TopTracksTableWorker {
                         String rank = cursor.getString(rankColumn);
                         String trackTitle = cursor.getString(trackTitleColumn);
                         String artist = cursor.getString(artistColumn);
-                        String playcount = cursor.getString(playCountColumn);
+                        int playCount = cursor.getInt(playCountColumn);
                         String imageUri = cursor.getString(imageUriColumn);
 
-                        Track topTrack = new Track(trackTitle, artist, playcount, imageUri, rank);
+                        Track topTrack = new Track(trackTitle, artist, playCount, imageUri, rank);
                         result.add(topTrack);
                     }
                     while (cursor.moveToNext() && result.size() < AppContext.getInstance().getLimit());

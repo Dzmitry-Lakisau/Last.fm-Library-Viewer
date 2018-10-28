@@ -44,7 +44,7 @@ class TopAlbumsAdapter : TypeAdapter<TopAlbums>() {
 
             val artistName = albumJsonObject.get(ARTIST_KEY).asJsonObject.get(NAME_KEY).asString
 
-            val playcount = albumJsonObject.get(PLAYCOUNT_KEY).asString
+            val playCount = albumJsonObject.get(PLAYCOUNT_KEY).asInt
 
             val jsonArray = albumJsonObject.get(IMAGE_KEY).asJsonArray
             var imageUrl = jsonArray.get(MAX_IMAGE_RESOLUTION_INDEX).asJsonObject.get(TEXT_KEY).asString
@@ -52,7 +52,7 @@ class TopAlbumsAdapter : TypeAdapter<TopAlbums>() {
 
             val rank = albumJsonObject.get(ATTRIBUTE_KEY).asJsonObject.get(RANK_KEY).asString
 
-            albums.add(Album(title, artistName, playcount, imageUrl, rank))
+            albums.add(Album(title, artistName, playCount, imageUrl, rank))
         }
 
         return TopAlbums(albums, totalAlbums)

@@ -71,10 +71,10 @@ public class TopArtistsTableWorker {
                     do {
                         String rank = cursor.getString(rankColumn);
                         String artist = cursor.getString(artistColumn);
-                        String playCount = cursor.getString(playCountColumn);
+                        int playCount = cursor.getInt(playCountColumn);
                         String imageUri = cursor.getString(imageUriColumn);
 
-                        Artist topArtist = new Artist(artist, playCount, imageUri, rank);
+                        Artist topArtist = new Artist(artist, imageUri, playCount, rank);
                         artists.add(topArtist);
                     }
                     while (cursor.moveToNext() && artists.size() < AppContext.getInstance().getLimit());

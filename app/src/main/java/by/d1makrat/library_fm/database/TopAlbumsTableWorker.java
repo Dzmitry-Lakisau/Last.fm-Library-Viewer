@@ -41,7 +41,7 @@ public class TopAlbumsTableWorker{
                 contentValues.put(COLUMN_RANK, item.getRank());
                 contentValues.put(COLUMN_ARTIST, item.getArtistName());
                 contentValues.put(COLUMN_ALBUM, item.getTitle());
-                contentValues.put(COLUMN_PLAYCOUNT, item.getPlaycount());
+                contentValues.put(COLUMN_PLAYCOUNT, item.getPlayCount());
                 contentValues.put(COLUMN_IMAGEURI, item.getImageUrl());
                 contentValues.put(COLUMN_PERIOD, pPeriod);
 
@@ -75,7 +75,7 @@ public class TopAlbumsTableWorker{
                         String rank = cursor.getString(rankColumn);
                         String artist = cursor.getString(artistColumn);
                         String album = cursor.getString(albumColumn);
-                        String playCount = cursor.getString(playCountColumn);
+                        int playCount = cursor.getInt(playCountColumn);
                         String imageUri = cursor.getString(imageUriColumn);
 
                         Album Album = new Album(album, artist, playCount, imageUri, rank);
