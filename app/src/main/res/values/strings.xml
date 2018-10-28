@@ -62,8 +62,6 @@
     <string name="no_scrobbles">No scrobbles.\nHave you already scrobbled?\n:)</string>
     <string name="no_items">Nothing in rankings.\nHave you already scrobbled?\n:)</string>
 
-    <string name="top_scrobbles_count">"%s scrobbles"</string>
-    <string name="listeners_count">%d listeners</string>
     <string name="search_fragment_no_result">Nothing found</string>
 
     <string name="total_albums">Total listened albums: %d</string>

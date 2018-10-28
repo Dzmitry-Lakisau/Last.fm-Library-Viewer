@@ -52,7 +52,7 @@ public class SearchArtistsAdapter extends ItemsAdapter<Artist>{
         private void bind(Artist artist, Drawable pPlaceholderDrawable){
 
             artistNameTextView.setText(artist.getName());
-            listenersCountTextView.setText(AppContext.getInstance().getString(R.string.listeners_count, artist.getListenersCount()));
+            listenersCountTextView.setText(AppContext.getInstance().getResources().getQuantityString(R.plurals.listeners_count, artist.getListenersCount(), artist.getListenersCount()));
 
             String imageUri = BuildConfig.DEBUG ? artist.getImageUrl() : null;
             Malevich.INSTANCE.load(imageUri).instead(pPlaceholderDrawable).into(artistImgView);

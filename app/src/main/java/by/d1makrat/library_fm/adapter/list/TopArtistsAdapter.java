@@ -54,7 +54,7 @@ public class TopArtistsAdapter extends ItemsAdapter<Artist> {
         private void bind(Artist topArtist, Drawable pPlaceholderDrawable){
 
             artistTextView.setText(topArtist.getName());
-            playCountTextView.setText(AppContext.getInstance().getString(R.string.top_scrobbles_count, topArtist.getPlayCount()));
+            playCountTextView.setText(AppContext.getInstance().getResources().getQuantityString(R.plurals.scrobbles_count, topArtist.getPlayCount(), topArtist.getPlayCount()));
             rankTextView.setText(topArtist.getRank());
 
             String imageUri = BuildConfig.DEBUG ? topArtist.getImageUrl() : null;
