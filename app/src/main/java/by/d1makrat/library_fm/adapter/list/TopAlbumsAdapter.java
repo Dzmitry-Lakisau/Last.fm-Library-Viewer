@@ -30,6 +30,14 @@ public class TopAlbumsAdapter extends ItemsAdapter<Album> {
     }
 
     @Override
+    protected RecyclerView.ViewHolder createItemWithOffsetViewHolder(ViewGroup parent) {
+
+        View view = mLayoutInflater.inflate(R.layout.item_with_offset_ranked, parent, false);
+
+        return new TopAlbumViewHolder(view, this);
+    }
+
+    @Override
     protected void bindItemViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         final TopAlbumViewHolder holder = (TopAlbumViewHolder) viewHolder;
         holder.bind(getItem(position), mPlaceholderDrawable);
