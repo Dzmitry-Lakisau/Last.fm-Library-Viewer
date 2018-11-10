@@ -54,7 +54,7 @@ abstract class ScrobblesPresenter(var filterRange: FilterRange): ItemsPresenter<
 //        }
     }
 
-    fun onFinishFilterDialog(filterRange: FilterRange) {
+    fun onFilterDialogFinished(filterRange: FilterRange) {
         allIsLoaded = false
         this.filterRange.startOfPeriod = filterRange.startOfPeriod
         this.filterRange.endOfPeriod = filterRange.endOfPeriod
@@ -77,7 +77,7 @@ abstract class ScrobblesPresenter(var filterRange: FilterRange): ItemsPresenter<
 
     fun onScrobblesOfDayPressed(isRecentScrobblesFragment: Boolean, listItemPressed: Scrobble){
         if (isRecentScrobblesFragment)
-            onFinishFilterDialog(DateUtils.getTimeRangesOfDay(listItemPressed.getRawDate()))
+            onFilterDialogFinished(DateUtils.getTimeRangesOfDay(listItemPressed.getRawDate()))
         else
             view?.openScrobblesFragment(DateUtils.getTimeRangesOfDay(listItemPressed.getRawDate()))
     }

@@ -104,7 +104,7 @@ abstract class ScrobblesFragment: ItemsFragment<Scrobble, ScrobblesView<Scrobble
             when (requestCode) {
                 FILTER_DIALOG_REQUEST_CODE -> {
                     filterRange = data?.getParcelableExtra(FilterRange::class.java.simpleName) ?: FilterRange(null, null)
-                    presenter?.onFinishFilterDialog(filterRange)
+                    presenter?.onFilterDialogFinished(filterRange)
                 }
             }
         }
