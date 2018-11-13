@@ -2,6 +2,7 @@ package by.d1makrat.library_fm.ui.fragment
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.view.*
 import by.d1makrat.library_fm.AppContext
 import by.d1makrat.library_fm.R
@@ -24,7 +25,7 @@ class StartFragment: Fragment() {
         rootView.adView.loadAd(AdRequest.Builder().build())
 
         val user = AppContext.getInstance().user
-        Malevich.INSTANCE.load(user.avatarUrl).onError(resources.getDrawable(R.drawable.img_app_logo_large)).into(rootView.user_avatar_start_screen)
+        Malevich.INSTANCE.load(user.avatarUrl).onError(ContextCompat.getDrawable(AppContext.getInstance(), R.drawable.img_app_logo_large)).into(rootView.user_avatar_start_screen)
 
         rootView.hello_textView.text = getString(R.string.hello_message, user.username, user.playcount, user.registered)
 

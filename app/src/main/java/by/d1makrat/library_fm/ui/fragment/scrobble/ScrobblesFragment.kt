@@ -111,7 +111,7 @@ abstract class ScrobblesFragment: ItemsFragment<Scrobble, ScrobblesView<Scrobble
     }
 
     override fun createAdapter(layoutInflater: LayoutInflater): ItemsAdapter<Scrobble> {
-        return ScrobblesAdapter(layoutInflater, ContextCompat.getDrawable(AppContext.getInstance(), R.drawable.img_vinyl))//TODO resourcecompat
+        return ScrobblesAdapter(layoutInflater, ContextCompat.getDrawable(AppContext.getInstance(), R.drawable.img_vinyl))
     }
 
     override fun hideListHead() {
