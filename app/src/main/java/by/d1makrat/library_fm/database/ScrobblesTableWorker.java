@@ -51,7 +51,7 @@ public class ScrobblesTableWorker {
                 contentValues.put(COLUMN_DATE, item.getRawDate());
                 contentValues.put(COLUMN_IMAGEURI, item.getImageUrl());
 
-                database.insertWithOnConflict(DATABASE_SCROBBLES_TABLE, EMPTY_STRING, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
+                database.insertWithOnConflict(DATABASE_SCROBBLES_TABLE, EMPTY_STRING, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
             }
 
             database.setTransactionSuccessful();
