@@ -23,16 +23,16 @@ import static by.d1makrat.library_fm.Constants.DatabaseConstants.DATABASE_TOP_TR
 public class DatabaseWorker {
 
     private static final String DATABASE_NAME = "Last.fmLibraryViewer.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     private static final String CREATE_SCROBBLES_TABLE_QUERY =
             "CREATE TABLE IF NOT EXISTS " + DATABASE_SCROBBLES_TABLE + "(" +
                     COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    COLUMN_TRACK + " TEXT, " +
-                    COLUMN_ARTIST + " TEXT, " +
-                    COLUMN_ALBUM + " TEXT, " +
+                    COLUMN_TRACK + " TEXT COLLATE NOCASE, " +
+                    COLUMN_ARTIST + " TEXT COLLATE NOCASE, " +
+                    COLUMN_ALBUM + " TEXT COLLATE NOCASE, " +
                     COLUMN_DATE + " INT UNSIGNED, " +
-                    COLUMN_IMAGEURI + " TEXT, " +
+                    COLUMN_IMAGEURI + " TEXT COLLATE NOCASE, " +
                     "CONSTRAINT uniqueScrobble UNIQUE (" + COLUMN_TRACK + ", " +  COLUMN_ARTIST + ", " + COLUMN_DATE +
                     "));";
     private static final String CREATE_TOP_ALBUMS_TABLE_QUERY =
@@ -70,19 +70,22 @@ public class DatabaseWorker {
 
     private DatabaseHelper mDatabaseHelper;
 
-    public void openDatabase() {
+    public DatabaseWorker(){
         mDatabaseHelper = new DatabaseHelper(AppContext.getInstance().getApplicationContext(), DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public void closeDatabase() {
-        if (mDatabaseHelper != null) mDatabaseHelper.close();
-    }
+    void createTables(SQLiteDatabase database) throws SQLException {
+        database.beginTransaction();
+        try {
+            database.execSQL(CREATE_SCROBBLES_TABLE_QUERY);
+            database.execSQL(CREATE_TOP_TRACKS_TABLE_QUERY);
+            database.execSQL(CREATE_TOP_ARTISTS_TABLE_QUERY);
+            database.execSQL(CREATE_TOP_ALBUMS_TABLE_QUERY);
 
-    void createTables(SQLiteDatabase database) throws SQLException{
-        database.execSQL(DatabaseWorker.CREATE_SCROBBLES_TABLE_QUERY);
-        database.execSQL(DatabaseWorker.CREATE_TOP_TRACKS_TABLE_QUERY);
-        database.execSQL(DatabaseWorker.CREATE_TOP_ARTISTS_TABLE_QUERY);
-        database.execSQL(DatabaseWorker.CREATE_TOP_ALBUMS_TABLE_QUERY);
+            database.setTransactionSuccessful();
+        } finally {
+            database.endTransaction();
+        }
     }
 
     private void deleteRecordsFromTable(String pTableName, @Nullable String pPeriod) throws SQLException {
@@ -101,7 +104,6 @@ public class DatabaseWorker {
             database.setTransactionSuccessful();
         } finally {
             database.endTransaction();
-            database.close();
         }
     }
 
@@ -135,5 +137,47 @@ public class DatabaseWorker {
 
     public TopTracksTableWorker getTopTracksTable(){
         return new TopTracksTableWorker(mDatabaseHelper);
+    }
+
+    void upgradeScrobblesTable(SQLiteDatabase database) throws SQLException {
+        final String TEMP_TABLE = "Scrobbles_temp";
+        final String CREATE_SECOND_SCROBBLES_TABLE_WITH_COLLATE_NOCASE_QUERY =
+                "CREATE TABLE IF NOT EXISTS " + TEMP_TABLE + "(" +
+                        COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        COLUMN_TRACK + " TEXT COLLATE NOCASE, " +
+                        COLUMN_ARTIST + " TEXT COLLATE NOCASE, " +
+                        COLUMN_ALBUM + " TEXT COLLATE NOCASE, " +
+                        COLUMN_DATE + " INT UNSIGNED, " +
+                        COLUMN_IMAGEURI + " TEXT COLLATE NOCASE, " +
+                        "CONSTRAINT uniqueScrobble UNIQUE (" + COLUMN_TRACK + ", " +  COLUMN_ARTIST + ", " + COLUMN_DATE +
+                        "));";
+        final String COPY_ROWS_INTO_TEMP_TABLE = "INSERT OR REPLACE INTO " + TEMP_TABLE + " SELECT _id, track, artist, album, date, imageUri FROM " + DATABASE_SCROBBLES_TABLE;
+        final String DROP_FIRST_SCROBBLES_TABLE = "DROP TABLE " + DATABASE_SCROBBLES_TABLE;
+        String CREATE_FIRST_SCROBBLES_TABLE_WITH_COLLATE_NOCASE_QUERY =
+                "CREATE TABLE IF NOT EXISTS " + DATABASE_SCROBBLES_TABLE + "(" +
+                        COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        COLUMN_TRACK + " TEXT COLLATE NOCASE, " +
+                        COLUMN_ARTIST + " TEXT COLLATE NOCASE, " +
+                        COLUMN_ALBUM + " TEXT COLLATE NOCASE, " +
+                        COLUMN_DATE + " INT UNSIGNED, " +
+                        COLUMN_IMAGEURI + " TEXT COLLATE NOCASE, " +
+                        "CONSTRAINT uniqueScrobble UNIQUE (" + COLUMN_TRACK + ", " +  COLUMN_ARTIST + ", " + COLUMN_DATE +
+                        "));";
+        String COPY_ROWS_INTO_SCROBBLES_TABLE = "INSERT OR REPLACE INTO " + DATABASE_SCROBBLES_TABLE + " SELECT _id, track, artist, album, date, imageUri FROM " + TEMP_TABLE;
+        String DROP_SECOND_SCROBBLES_TABLE = "DROP TABLE " + TEMP_TABLE;
+
+        database.beginTransaction();
+        try {
+            database.execSQL(CREATE_SECOND_SCROBBLES_TABLE_WITH_COLLATE_NOCASE_QUERY);
+            database.execSQL(COPY_ROWS_INTO_TEMP_TABLE);
+            database.execSQL(DROP_FIRST_SCROBBLES_TABLE);
+            database.execSQL(CREATE_FIRST_SCROBBLES_TABLE_WITH_COLLATE_NOCASE_QUERY);
+            database.execSQL(COPY_ROWS_INTO_SCROBBLES_TABLE);
+            database.execSQL(DROP_SECOND_SCROBBLES_TABLE);
+
+            database.setTransactionSuccessful();
+        } finally {
+            database.endTransaction();
+        }
     }
 }

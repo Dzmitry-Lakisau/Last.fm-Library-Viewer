@@ -30,6 +30,14 @@ public class SearchArtistsAdapter extends ItemsAdapter<Artist>{
     }
 
     @Override
+    protected RecyclerView.ViewHolder createItemWithOffsetViewHolder(ViewGroup parent) {
+
+        View view = mLayoutInflater.inflate(R.layout.item_with_offset_artist, parent, false);
+
+        return new ArtistViewHolder(view, this);
+    }
+
+    @Override
     protected void bindItemViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         final ArtistViewHolder holder = (ArtistViewHolder) viewHolder;
         holder.bind(getItem(position), mPlaceholderDrawable);
@@ -38,23 +46,23 @@ public class SearchArtistsAdapter extends ItemsAdapter<Artist>{
     private static class ArtistViewHolder extends LongClickableViewHolder {
 
         private final TextView artistNameTextView;
-        private final TextView playcountTextView;
+        private final TextView listenersCountTextView;
         private final ImageView artistImgView;
 
         ArtistViewHolder(View pView, LongClickListener pLongClickListener) {
             super(pView, pLongClickListener);
 
             artistNameTextView = pView.findViewById(R.id.artistName_textView);
-            playcountTextView = pView.findViewById(R.id.playcount_textView);
+            listenersCountTextView = pView.findViewById(R.id.listenersCount_textView);
             artistImgView = pView.findViewById(R.id.artistImage_ImgView);
         }
 
         private void bind(Artist artist, Drawable pPlaceholderDrawable){
 
             artistNameTextView.setText(artist.getName());
-            playcountTextView.setText(AppContext.getInstance().getString(R.string.listeners_count, artist.getListenersCount()));
+            listenersCountTextView.setText(AppContext.getInstance().getResources().getQuantityString(R.plurals.listeners_count, artist.getListenersCount(), artist.getListenersCount()));
 
-            String imageUri = BuildConfig.DEBUG ? artist.getImageUri() : null;
+            String imageUri = BuildConfig.DEBUG ? artist.getImageUrl() : null;
             Malevich.INSTANCE.load(imageUri).instead(pPlaceholderDrawable).into(artistImgView);
         }
     }

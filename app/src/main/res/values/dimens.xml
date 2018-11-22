@@ -9,8 +9,10 @@
     <dimen name="nav_header_height">176dp</dimen>
 
     <dimen name="filter_dialog_title_text_size">14sp</dimen>
+
     <dimen name="item_margin">4dp</dimen>
     <dimen name="item_image_size">75dp</dimen>
+    <dimen name="item_footer_height">87dp</dimen>
 
     <dimen name="avatar_size">300dp</dimen>
 

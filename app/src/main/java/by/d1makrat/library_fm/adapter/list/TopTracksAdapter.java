@@ -12,9 +12,9 @@ import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.BuildConfig;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.image_loader.Malevich;
-import by.d1makrat.library_fm.model.TopTrack;
+import by.d1makrat.library_fm.model.Track;
 
-public class TopTracksAdapter extends ItemsAdapter<TopTrack> {
+public class TopTracksAdapter extends ItemsAdapter<Track> {
 
     public TopTracksAdapter(LayoutInflater pLayoutInflater, Drawable pPlaceholderDrawable) {
         mLayoutInflater = pLayoutInflater;
@@ -30,6 +30,14 @@ public class TopTracksAdapter extends ItemsAdapter<TopTrack> {
     }
 
     @Override
+    protected RecyclerView.ViewHolder createItemWithOffsetViewHolder(ViewGroup parent) {
+
+        View view = mLayoutInflater.inflate(R.layout.item_with_offset_ranked, parent, false);
+
+        return new TopTrackViewHolder(view, this);
+    }
+
+    @Override
     protected void bindItemViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         final TopTrackViewHolder holder = (TopTrackViewHolder) viewHolder;
         holder.bind(getItem(position), mPlaceholderDrawable);
@@ -39,29 +47,29 @@ public class TopTracksAdapter extends ItemsAdapter<TopTrack> {
 
         private final TextView trackTextView;
         private final TextView artistTextView;
-        private final TextView playcountTextView;
+        private final TextView playCountTextView;
         private final TextView rankTextView;
-        private final ImageView albumartImgView;
+        private final ImageView coverImgView;
 
         TopTrackViewHolder(View pView, LongClickListener pLongClickListener) {
             super(pView, pLongClickListener);
 
             trackTextView = pView.findViewById(R.id.primaryField_textView);
             artistTextView = pView.findViewById(R.id.secondaryField_textView);
-            playcountTextView = pView.findViewById(R.id.playcount_textView);
+            playCountTextView = pView.findViewById(R.id.playCount_textView);
             rankTextView = pView.findViewById(R.id.rank);
-            albumartImgView = pView.findViewById(R.id.albumart);
+            coverImgView = pView.findViewById(R.id.cover_ImgView);
         }
 
-        private void bind(TopTrack topTrack, Drawable pPlaceholderDrawable){
+        private void bind(Track topTrack, Drawable pPlaceholderDrawable){
 
             trackTextView.setText(topTrack.getTitle());
             artistTextView.setText(topTrack.getArtistName());
-            playcountTextView.setText(AppContext.getInstance().getString(R.string.top_scrobbles_count, topTrack.getPlaycount()));
+            playCountTextView.setText(AppContext.getInstance().getResources().getQuantityString(R.plurals.scrobbles_count, topTrack.getPlayCount(), topTrack.getPlayCount()));
             rankTextView.setText(topTrack.getRank());
 
-            String imageUri = BuildConfig.DEBUG ? topTrack.getImageUri() : null;
-            Malevich.INSTANCE.load(imageUri).instead(pPlaceholderDrawable).into(albumartImgView);
+            String imageUri = BuildConfig.DEBUG ? topTrack.getImageUrl() : null;
+            Malevich.INSTANCE.load(imageUri).instead(pPlaceholderDrawable).into(coverImgView);
         }
     }
 }

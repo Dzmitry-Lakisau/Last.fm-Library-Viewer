@@ -1,27 +1,54 @@
 package by.d1makrat.library_fm;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.multidex.MultiDexApplication;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
+import by.d1makrat.library_fm.database.DatabaseWorker;
+import by.d1makrat.library_fm.retrofit.AdditionalParametersInterceptor;
+import by.d1makrat.library_fm.retrofit.LastFmRestApiService;
 import by.d1makrat.library_fm.image_loader.Malevich;
+import by.d1makrat.library_fm.json.ScrobblesAdapter;
+import by.d1makrat.library_fm.json.SearchArtistResultsAdapter;
+import by.d1makrat.library_fm.json.SendScrobbleResultAdapter;
+import by.d1makrat.library_fm.json.SessionKeyAdapter;
+import by.d1makrat.library_fm.json.TopAlbumsAdapter;
+import by.d1makrat.library_fm.json.TopArtistsAdapter;
+import by.d1makrat.library_fm.json.TopTracksAdapter;
+import by.d1makrat.library_fm.json.UserAdapter;
+import by.d1makrat.library_fm.json.model.ArtistsJsonModel;
+import by.d1makrat.library_fm.json.model.ScrobblesJsonModel;
+import by.d1makrat.library_fm.model.SendScrobbleResult;
+import by.d1makrat.library_fm.model.SessionKey;
+import by.d1makrat.library_fm.model.TopAlbums;
+import by.d1makrat.library_fm.model.TopArtists;
+import by.d1makrat.library_fm.model.TopTracks;
 import by.d1makrat.library_fm.model.User;
+import by.d1makrat.library_fm.repository.Repository;
 import io.fabric.sdk.android.Fabric;
+import okhttp3.OkHttpClient;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
+import static by.d1makrat.library_fm.Constants.API_BASE_URL;
 import static by.d1makrat.library_fm.Constants.SCROBBLES_PER_PAGE_KEY;
 import static by.d1makrat.library_fm.Constants.USER_KEY;
 
-public class AppContext extends Application {
+public class AppContext extends MultiDexApplication {
 
     private static final String SESSIONKEY_KEY = "session_key";
     private static final String DEFAULT_LIMIT = "10";
     private static AppContext mInstance;
     private SharedPreferences mSharedPreferences;
+    private LastFmRestApiService mRetrofitWebService;
+    public Repository repository;
 
     private User mUser;
     private String mSessionKey;
@@ -52,6 +79,25 @@ public class AppContext extends Application {
         );
 
         Malevich.INSTANCE.setConfig(new Malevich.Config(this.getCacheDir()));
+
+        mRetrofitWebService = new Retrofit.Builder()
+                .baseUrl(API_BASE_URL)
+                .client(new OkHttpClient().newBuilder().addInterceptor(new AdditionalParametersInterceptor()).build())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
+                        .registerTypeAdapter(User.class, new UserAdapter())
+                        .registerTypeAdapter(TopAlbums.class, new TopAlbumsAdapter())
+                        .registerTypeAdapter(TopArtists.class, new TopArtistsAdapter())
+                        .registerTypeAdapter(TopTracks.class, new TopTracksAdapter())
+                        .registerTypeAdapter(ArtistsJsonModel.class, new SearchArtistResultsAdapter())
+                        .registerTypeAdapter(ScrobblesJsonModel.class, new ScrobblesAdapter())
+                        .registerTypeAdapter(SessionKey.class, new SessionKeyAdapter())
+                        .registerTypeAdapter(SendScrobbleResult.class, new SendScrobbleResultAdapter())
+                        .create()))
+                .build()
+                .create(LastFmRestApiService.class);
+
+        repository = new Repository(mRetrofitWebService, new DatabaseWorker());
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 //        mUsername = mSharedPreferences.getString(USERNAME_KEY, null);
@@ -111,5 +157,9 @@ public class AppContext extends Application {
 
     public void setLimit(String pPerPage) {
         mPerPage = pPerPage;
+    }
+
+    public LastFmRestApiService getRetrofitWebService(){
+        return mRetrofitWebService;
     }
 }

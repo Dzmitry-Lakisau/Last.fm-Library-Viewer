@@ -15,20 +15,23 @@ import by.d1makrat.library_fm.model.Scrobble;
 
 public class ScrobblesAdapter extends ItemsAdapter<Scrobble> {
 
-//    private final View.OnLongClickListener mLongClickListener;
-
     public ScrobblesAdapter(LayoutInflater pLayoutInflater, Drawable pPlaceholderDrawable) {
-        super();
         mLayoutInflater = pLayoutInflater;
         mPlaceholderDrawable = pPlaceholderDrawable;
-//        mLongClickListener = pLongClickListener;
-//        mLongClickListener = (LongClickListener) this;
     }
 
     @Override
     protected RecyclerView.ViewHolder createItemViewHolder(ViewGroup parent) {
 
         View view = mLayoutInflater.inflate(R.layout.item_scrobble, parent, false);
+
+        return new ScrobbleViewHolder(view, this);
+    }
+
+    @Override
+    protected RecyclerView.ViewHolder createItemWithOffsetViewHolder(ViewGroup parent) {
+
+        View view = mLayoutInflater.inflate(R.layout.item_with_offset_scrobble, parent, false);
 
         return new ScrobbleViewHolder(view, this);
     }
@@ -45,7 +48,7 @@ public class ScrobblesAdapter extends ItemsAdapter<Scrobble> {
         private final TextView artistTextView;
         private final TextView albumTextView;
         private final TextView timestampTextView;
-        private final ImageView albumartImgView;
+        private final ImageView coverImgView;
 
         ScrobbleViewHolder(View pView, LongClickListener pLongClickListener) {
             super(pView, pLongClickListener);
@@ -54,7 +57,7 @@ public class ScrobblesAdapter extends ItemsAdapter<Scrobble> {
             artistTextView = pView.findViewById(R.id.artist);
             albumTextView = pView.findViewById(R.id.album);
             timestampTextView = pView.findViewById(R.id.timestamp);
-            albumartImgView = pView.findViewById(R.id.albumart);
+            coverImgView = pView.findViewById(R.id.cover_ImgView);
         }
 
         private void bind(Scrobble scrobble, Drawable pPlaceholderDrawable){
@@ -64,8 +67,8 @@ public class ScrobblesAdapter extends ItemsAdapter<Scrobble> {
             albumTextView.setText(scrobble.getAlbum());
             timestampTextView.setText(scrobble.getFormattedDate());
 
-            String imageUri = BuildConfig.DEBUG ? scrobble.getImageUri() : null;
-            Malevich.INSTANCE.load(imageUri).instead(pPlaceholderDrawable).into(albumartImgView);
+            String imageUri = BuildConfig.DEBUG ? scrobble.getImageUrl() : null;
+            Malevich.INSTANCE.load(imageUri).instead(pPlaceholderDrawable).into(coverImgView);
         }
     }
 }

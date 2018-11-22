@@ -1,40 +1,46 @@
 package by.d1makrat.library_fm.ui.fragment.top
 
+import android.os.Bundle
 import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
 import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-
 import by.d1makrat.library_fm.AppContext
 import by.d1makrat.library_fm.R
+import by.d1makrat.library_fm.adapter.list.ItemsAdapter
 import by.d1makrat.library_fm.adapter.list.TopTracksAdapter
-import by.d1makrat.library_fm.asynctask.GetTopItemsAsyncTask
-import by.d1makrat.library_fm.model.TopTrack
-import by.d1makrat.library_fm.operation.TopTracksOperation
+import by.d1makrat.library_fm.model.Track
+import by.d1makrat.library_fm.presenter.fragment.top.TopTracksPresenter
 import by.d1makrat.library_fm.ui.CenteredToast
+import by.d1makrat.library_fm.ui.activity.MainActivity
 
-class TopTracksFragment : TopItemsFragment<TopTrack>() {
+class TopTracksFragment: TopItemsFragment<Track>() {
 
-    override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        presenter = TopTracksPresenter(mPeriod!!)
+    }
+
+    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
         super.onCreateContextMenu(menu, v, menuInfo)
 
-        menu?.add(mPeriod.hashCode(), TopItemsFragment.MENU_SCROBBLES_OF_ARTIST, 0, R.string.scrobbles_of_artist)
-        menu?.add(mPeriod.hashCode(), TopItemsFragment.MENU_SCROBBLES_OF_TRACK, 1, R.string.scrobbles_of_track)
+        menu.add(mPeriod!!.hashCode(), MENU_SCROBBLES_OF_ARTIST, 0, R.string.scrobbles_of_artist)
+        menu.add(mPeriod!!.hashCode(), MENU_SCROBBLES_OF_TRACK, 1, R.string.scrobbles_of_track)
     }
 
     override fun onContextItemSelected(item: MenuItem?): Boolean {
-        return if (item?.groupId == mPeriod.hashCode()) {
+        return if (item?.groupId == mPeriod!!.hashCode()) {
             when (item.itemId) {
-                TopItemsFragment.MENU_SCROBBLES_OF_ARTIST -> {
-                    replaceFragment(mListAdapter.selectedItem.artistName, null, null)
+                MENU_SCROBBLES_OF_ARTIST -> {
+                    (activity as MainActivity).openScrobblesOfArtistFragment(mListAdapter!!.selectedItem.artistName)
                     true
                 }
-                TopItemsFragment.MENU_SCROBBLES_OF_TRACK -> {
-                    val listItemPressed = mListAdapter.selectedItem
-                    replaceFragment(listItemPressed.artistName, listItemPressed.title, null)
+                MENU_SCROBBLES_OF_TRACK -> {
+                    val listItemPressed = mListAdapter!!.selectedItem
+                    (activity as MainActivity).openScrobblesOfTrackFragment(listItemPressed.artistName, listItemPressed.title)
                     true
                 }
                 else -> super.onContextItemSelected(item)
@@ -45,31 +51,20 @@ class TopTracksFragment : TopItemsFragment<TopTrack>() {
         }
     }
 
-    override fun setUpListHead(pItemsCount: String?, pVisibility: Int) {
-        listHeadTextView?.visibility = pVisibility
-        if (pVisibility == View.VISIBLE) {
-            listHeadTextView?.text = getString(R.string.total_tracks, pItemsCount)
-        }
+    override fun hideListHead() {
+        listHeadTextView?.visibility = View.INVISIBLE
     }
 
-    override fun checkIfAllIsLoaded(size: Int) {
-        if (size < AppContext.getInstance().limit) {
-            mListAdapter.allIsLoaded = true
-            CenteredToast.show(context, R.string.all_tracks_are_loaded, Toast.LENGTH_SHORT)
-        }
+    override fun showListHead(itemCount: Int) {
+        listHeadTextView?.text = getString(R.string.total_tracks, itemCount)
+        listHeadTextView?.visibility = View.VISIBLE
     }
 
-    override fun createAdapter(pLayoutInflater: LayoutInflater): TopTracksAdapter {
-        return TopTracksAdapter(pLayoutInflater, ContextCompat.getDrawable(AppContext.getInstance(), R.drawable.img_vinyl))
+    override fun createAdapter(layoutInflater: LayoutInflater): ItemsAdapter<Track> {
+        return TopTracksAdapter(layoutInflater, ContextCompat.getDrawable(AppContext.getInstance(), R.drawable.img_vinyl))
     }
 
-    public override fun performOperation() {
-        val topTracksOperation = TopTracksOperation(mPeriod, mPage)
-        val getItemsAsyncTask = GetTopItemsAsyncTask(this)
-        getItemsAsyncTask.execute(topTracksOperation)
-    }
-
-    override fun setUpActionBar(pActivity: AppCompatActivity) {
-        pActivity.supportActionBar?.setTitle(R.string.top_tracks)
+    override fun showAllIsLoaded() {
+        CenteredToast.show(context, R.string.all_tracks_are_loaded, Toast.LENGTH_SHORT)
     }
 }

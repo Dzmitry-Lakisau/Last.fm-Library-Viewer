@@ -12,9 +12,9 @@ import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.BuildConfig;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.image_loader.Malevich;
-import by.d1makrat.library_fm.model.TopArtist;
+import by.d1makrat.library_fm.model.Artist;
 
-public class TopArtistsAdapter extends ItemsAdapter<TopArtist> {
+public class TopArtistsAdapter extends ItemsAdapter<Artist> {
 
     public TopArtistsAdapter(LayoutInflater pLayoutInflater, Drawable pPlaceholderDrawable) {
         mLayoutInflater = pLayoutInflater;
@@ -30,6 +30,14 @@ public class TopArtistsAdapter extends ItemsAdapter<TopArtist> {
     }
 
     @Override
+    protected RecyclerView.ViewHolder createItemWithOffsetViewHolder(ViewGroup parent) {
+
+        View view = mLayoutInflater.inflate(R.layout.item_with_offset_ranked, parent, false);
+
+        return new TopArtistViewHolder(view, this);
+    }
+
+    @Override
     protected void bindItemViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         final TopArtistViewHolder holder = (TopArtistViewHolder) viewHolder;
         holder.bind(getItem(position), mPlaceholderDrawable);
@@ -38,27 +46,27 @@ public class TopArtistsAdapter extends ItemsAdapter<TopArtist> {
     private static class TopArtistViewHolder extends LongClickableViewHolder {
 
         private final TextView artistTextView;
-        private final TextView playcountTextView;
+        private final TextView playCountTextView;
         private final TextView rankTextView;
-        private final ImageView albumartImgView;
+        private final ImageView coverImgView;
 
         TopArtistViewHolder(View pView, LongClickListener pLongClickListener) {
             super(pView, pLongClickListener);
 
             artistTextView = pView.findViewById(R.id.primaryField_textView);
-            playcountTextView = pView.findViewById(R.id.playcount_textView);
+            playCountTextView = pView.findViewById(R.id.playCount_textView);
             rankTextView = pView.findViewById(R.id.rank);
-            albumartImgView = pView.findViewById(R.id.albumart);
+            coverImgView = pView.findViewById(R.id.cover_ImgView);
         }
 
-        private void bind(TopArtist topArtist, Drawable pPlaceholderDrawable){
+        private void bind(Artist topArtist, Drawable pPlaceholderDrawable){
 
             artistTextView.setText(topArtist.getName());
-            playcountTextView.setText(AppContext.getInstance().getString(R.string.top_scrobbles_count, topArtist.getPlaycount()));
+            playCountTextView.setText(AppContext.getInstance().getResources().getQuantityString(R.plurals.scrobbles_count, topArtist.getPlayCount(), topArtist.getPlayCount()));
             rankTextView.setText(topArtist.getRank());
 
-            String imageUri = BuildConfig.DEBUG ? topArtist.getImageUri() : null;
-            Malevich.INSTANCE.load(imageUri).instead(pPlaceholderDrawable).into(albumartImgView);
+            String imageUri = BuildConfig.DEBUG ? topArtist.getImageUrl() : null;
+            Malevich.INSTANCE.load(imageUri).instead(pPlaceholderDrawable).into(coverImgView);
         }
     }
 }

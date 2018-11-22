@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <plurals name="listeners_count">
+        <item quantity="one">%d listener</item>
+        <item quantity="other">%d listeners</item>
+    </plurals>
     <plurals name="scrobbles_count">
         <item quantity="one">%d scrobble</item>
         <item quantity="other">%d scrobbles</item>

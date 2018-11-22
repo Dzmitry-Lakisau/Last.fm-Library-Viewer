@@ -58,17 +58,15 @@
     <string name="manual_fragment_limit_exceeded">Daily scrobble limit exceeded</string>
     <string name="manual_fragment_scrobble_accepted">Scrobble was accepted</string>
 
-    <string name="no_scrobbles_within_period">"No scrobbles\nwithin %1$s - %2$s"</string>
+    <string name="no_scrobbles_within_period">"No scrobbles within\n%1$s -\n%2$s"</string>
     <string name="no_scrobbles">No scrobbles.\nHave you already scrobbled?\n:)</string>
     <string name="no_items">Nothing in rankings.\nHave you already scrobbled?\n:)</string>
 
-    <string name="top_scrobbles_count">"%s scrobbles"</string>
-    <string name="listeners_count">%s listeners</string>
     <string name="search_fragment_no_result">Nothing found</string>
 
-    <string name="total_albums">Total listened albums: %s</string>
-    <string name="total_artists">Total listened artists: %s</string>
-    <string name="total_tracks">Total listened tracks: %s</string>
+    <string name="total_albums">Total listened albums: %d</string>
+    <string name="total_artists">Total listened artists: %d</string>
+    <string name="total_tracks">Total listened tracks: %d</string>
 
     <string name="set_scrobbles_per_request">Amount of scrobbles to process at once</string>
     <string name="clear_image_cache">Clear image cache</string>

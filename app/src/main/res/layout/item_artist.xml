@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/item_margin"
-                android:layout_marginBottom="0dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="@dimen/item_margin"
                 android:layout_marginLeft="@dimen/item_margin"
                 android:layout_marginRight="@dimen/item_margin"
+                android:paddingEnd="@dimen/item_margin"
+                android:paddingRight="@dimen/item_margin"
+                android:paddingLeft="0dp"
+                android:paddingStart="0dp"
                 android:background="@color/light_red">
 
     <TextView
@@ -14,32 +19,28 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/albumart"
-        android:layout_toRightOf="@+id/artistImage_ImgView"
-        android:layout_toEndOf="@+id/artistImage_ImgView"
+        android:layout_toRightOf="@id/artistImage_ImgView"
+        android:layout_toEndOf="@id/artistImage_ImgView"
         android:background="@android:color/transparent"
-        android:layout_marginRight="@dimen/item_margin"
-        android:layout_marginEnd="@dimen/item_margin" />
+        tools:text="Artist name" />
 
     <TextView
         android:includeFontPadding="false"
-        android:id="@+id/playcount_textView"
+        android:id="@+id/listenersCount_textView"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        android:layout_below="@+id/artistName_textView"
-        android:layout_alignLeft="@+id/artistName_textView"
+        android:layout_below="@id/artistName_textView"
+        android:layout_alignLeft="@id/artistName_textView"
         android:layout_alignStart="@id/artistName_textView"
-        android:layout_marginRight="@dimen/item_margin"
-        android:layout_marginEnd="@dimen/item_margin"
-        />
+        tools:text="listeners count" />
 
     <ImageView
         android:layout_width="@dimen/item_image_size"
         android:layout_height="@dimen/item_image_size"
         android:id="@+id/artistImage_ImgView"
-        android:layout_below="@id/rank"
         android:layout_margin="@dimen/item_margin"
-        android:contentDescription="@string/artist_photo" />
+        android:contentDescription="@string/artist_photo"
+        tools:background="@drawable/ic_person_black_24dp_large" />
 </RelativeLayout>

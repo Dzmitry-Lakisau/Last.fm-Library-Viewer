@@ -1,6 +1,7 @@
 package by.d1makrat.library_fm.adapter.list;
 
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,8 +20,7 @@ public abstract class ItemsAdapter<T> extends RecyclerView.Adapter<RecyclerView.
     private static final int FOOTER = 2;
     private static final int ERROR_HEADER = 3;
     private static final int EMPTY_HEADER = 4;
-
-    public boolean allIsLoaded = false;
+    private static final int ITEM_WITH_TOP_OFFSET = -1;
 
     private boolean isFooterAdded = false;
     private boolean isHeaderAdded = false;
@@ -53,19 +53,20 @@ public abstract class ItemsAdapter<T> extends RecyclerView.Adapter<RecyclerView.
         else if (position == 0 && isEmptyHeaderAdded){
             return EMPTY_HEADER;
         }
+        else if (position == 0) {
+            return ITEM_WITH_TOP_OFFSET;
+        }
         else return ITEM;
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        RecyclerView.ViewHolder viewHolder = null;
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        RecyclerView.ViewHolder viewHolder;
 
         switch (viewType) {
             case HEADER:
                 viewHolder = createHeaderViewHolder(parent);
-                break;
-            case ITEM:
-                viewHolder = createItemViewHolder(parent);
                 break;
             case FOOTER:
                 viewHolder = createFooterViewHolder(parent);
@@ -76,7 +77,11 @@ public abstract class ItemsAdapter<T> extends RecyclerView.Adapter<RecyclerView.
             case EMPTY_HEADER:
                 viewHolder = createEmptyHeaderViewHolder(parent);
                 break;
+            case ITEM_WITH_TOP_OFFSET:
+                viewHolder = createItemWithOffsetViewHolder(parent);
+                break;
             default:
+                viewHolder = createItemViewHolder(parent);
                 break;
         }
 
@@ -84,10 +89,11 @@ public abstract class ItemsAdapter<T> extends RecyclerView.Adapter<RecyclerView.
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
 
         switch (getItemViewType(position)) {
             case ITEM:
+            case ITEM_WITH_TOP_OFFSET:
                 bindItemViewHolder(viewHolder, position);
                 break;
             case EMPTY_HEADER:
@@ -97,15 +103,17 @@ public abstract class ItemsAdapter<T> extends RecyclerView.Adapter<RecyclerView.
     }
 
     private RecyclerView.ViewHolder createHeaderViewHolder(ViewGroup parent) {
-        View v = mLayoutInflater.inflate(R.layout.item_spinner_full, parent, false);
+        View v = mLayoutInflater.inflate(R.layout.item_header, parent, false);
 
         return new HeaderViewHolder(v);
     }
 
     protected abstract RecyclerView.ViewHolder createItemViewHolder(ViewGroup parent);
 
+    protected abstract RecyclerView.ViewHolder createItemWithOffsetViewHolder(ViewGroup parent);
+
     private RecyclerView.ViewHolder createFooterViewHolder(ViewGroup parent) {
-        View v = mLayoutInflater.inflate(R.layout.item_spinner, parent, false);
+        View v = mLayoutInflater.inflate(R.layout.item_footer, parent, false);
 
         return new FooterViewHolder(v);
     }
@@ -149,8 +157,10 @@ public abstract class ItemsAdapter<T> extends RecyclerView.Adapter<RecyclerView.
     }
 
     public void removeAll() {
+        int itemCount = getItemCount();
         mItems.clear();
-        notifyDataSetChanged();
+        notifyItemRangeRemoved(0, itemCount);
+
         isHeaderAdded = false;
         isFooterAdded = false;
         isEmptyHeaderAdded = false;
@@ -227,11 +237,7 @@ public abstract class ItemsAdapter<T> extends RecyclerView.Adapter<RecyclerView.
     }
 
     public boolean isEmpty(){
-        return !(getItemViewType(0) == ITEM) || mItems.size() == 0;
-    }
-
-    public boolean isLoading(){
-        return isHeaderAdded || isFooterAdded;
+        return !(getItemViewType(0) == ITEM_WITH_TOP_OFFSET) || mItems.size() == 0;
     }
 
     private static class FooterViewHolder extends RecyclerView.ViewHolder {
