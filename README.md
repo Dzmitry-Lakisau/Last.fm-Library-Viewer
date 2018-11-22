@@ -7,10 +7,28 @@ Also it has Manual Scrobble function in case something went wrong during listeni
 
 It has not scrobbling from players function!
 
-![Alt text](https://lh3.googleusercontent.com/35bRlFPLmMEWPDovuFJ7bg3phUNlxzjIkBGwggshOxUhPJqjzf7n97vt9Rx5l3htA1k=h900 "")
-![Alt text](https://lh3.googleusercontent.com/6RZfS_jp5NhGfYvfEjb_VxBkf9aVpSlOnY1Q70ItIHgSTZTIefuTIVwAHgnZ_mVPX6Ec=h900 "")
-![Alt text](https://lh3.googleusercontent.com/2WGMApOs4-CwaHNUrnFg5fbBOVJD9zpe2cADCOPTIrT2Wnrb2q0ctcfMPU4yw2TKPg=h900 "")
-![Alt text](https://lh3.googleusercontent.com/UZottjLqvvlmmftIuVA5HVkhYYJ2rSj0rab6czL51T7Y4_V88is-p3pt0rYlkR_xgPY=h900 "")
-![Alt text](https://lh3.googleusercontent.com/DXoPasauGmhSeOGZARNQ-P4OFai2QAv89Q_EQQo_XOiQ3lvW7TBIedg_TVaVz9Y05w=h900 "")
-![Alt text](https://lh3.googleusercontent.com/UFTPOaf7XguCk9X0kD-Ja3paQzGDZkxGL1yYPdCP3vWjHeWYekWzvzj9YxeFckm39g=h900 "")
-![Alt text](https://lh3.googleusercontent.com/U6MEqatq5e3f4OksnYKRitdHJAY1SEhrJuxiJpEblDtt7Q6vmV_NdEZ7PxnLcScixE8=h900 "")
+#### Main menu - list of functions
+
+![Alt text](https://lh3.googleusercontent.com/sFxVaLp2DhQye8cS59I1au2xjm3yz6KpLx_pnw-BEK1Oz1UFqN5pakmqTRFk5ijQINw=h900 "")
+
+#### App allows to manually scrobble
+
+![Alt text](https://lh3.googleusercontent.com/5duYT3aRUt6msPjylg22nTGymsjVBVO53LfHTSfWGhK6ZfvQQQfJ1Rbyv5_edIKsTE4=h900 "")
+
+#### List of total scrobbles allows to go to scrobbles of artist, of track, of album, and of day
+
+![Alt text](https://lh3.googleusercontent.com/hKvXlXzUQ1equRdM-zDbhW-tOudqngeBPN-TDGuwsh240Uhi8tZBpD4nWka6hKeu3w=h900 "")
+![Alt text](https://lh3.googleusercontent.com/cXwI5SQHtJ54CZOWTRjPCOUv4nAw4MC6X_z7l2nbWl8I6LqdiqZyLbRpQxzDmrHJUh8=h900 "")
+
+#### App allows to choose date period for which show scrobbles of artist, of track, of album
+
+![Alt text](https://lh3.googleusercontent.com/K9RHd2tQLampAjmjb_nnjnCnUZg3_Yy7h5g3StfsKgXtWxTwvxOVy6aZ2eSbEj_A3w=h900 "")
+![Alt text](https://lh3.googleusercontent.com/RcxfQcz3GZa_Ts0-e35ggawBzmVtALHZnvS66JYj9dDYmsD5pw7osWt03zKxEgIpyUo=h900 "")
+
+#### Scrobbles of Charusha for 10 June 2017 - 22 November 2018
+
+![Alt text](https://lh3.googleusercontent.com/QH0akoCINR6tjX730Ah7w5LVDKp7eXHdFzNexEq0SkbqnOHwqJg5Em61YgizNCsHiPo=h900 "")
+
+#### Tops show items for six periods with info about total listened artists, tracks, albums for this period
+
+![Alt text](https://lh3.googleusercontent.com/437_iZ_FoMwmyCvHWLNhctMDuWvYdQzKsTKV0K4cXjnUljNbLHAwPTrW5qILW8FKkgQ=h900 "")
