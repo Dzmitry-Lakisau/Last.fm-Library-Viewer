@@ -2,18 +2,20 @@ package by.d1makrat.library_fm.presenter.activity
 
 import by.d1makrat.library_fm.AppContext
 import by.d1makrat.library_fm.Constants.API_MAX_FOR_SCROBBLES_BY_ARTIST
-import by.d1makrat.library_fm.database.DatabaseWorker
 import by.d1makrat.library_fm.image_loader.Malevich
 import by.d1makrat.library_fm.view.activity.PreferenceView
 import com.crashlytics.android.Crashlytics
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import java.io.IOException
-import java.sql.SQLException
 
 class PreferencePresenter {
 
     private val MAX_ITEMS_PER_REQUEST = 1000
 
     private var view: PreferenceView? = null
+    private val compositeDisposable = CompositeDisposable()
 
     fun attachView(view: PreferenceView){
         this.view = view
@@ -21,6 +23,7 @@ class PreferencePresenter {
 
     fun detachView(){
         view = null
+        compositeDisposable.clear()
     }
 
     fun onSetLimitButtonClicked(input: String) {
@@ -54,19 +57,18 @@ class PreferencePresenter {
     }
 
     fun onDropDatabaseButtonClicked() {
-        val databaseWorker = DatabaseWorker()
-
-        try {
-            databaseWorker.deleteScrobbles()
-            databaseWorker.deleteTopAlbums(null)
-            databaseWorker.deleteTopArtists(null)
-            databaseWorker.deleteTopTracks(null)
-
-            view?.showOK()
-        } catch (exception: SQLException) {
-            exception.printStackTrace()
-            Crashlytics.logException(exception)
-            view?.showUnableToDropDatabaseMessage()
-        }
+        compositeDisposable.add(
+                AppContext.getInstance().repository.clearDatabase()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                {
+                                    view?.showOK()
+                                },
+                                {
+                                    view?.showUnableToDropDatabaseMessage()
+                                }
+                        )
+        )
     }
 }

@@ -1,8 +1,8 @@
 package by.d1makrat.library_fm.presenter.activity
 
 import by.d1makrat.library_fm.AppContext
-import by.d1makrat.library_fm.utils.ConnectionChecker
 import by.d1makrat.library_fm.model.User
+import by.d1makrat.library_fm.utils.ConnectionChecker
 import by.d1makrat.library_fm.view.activity.MainView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -44,6 +44,13 @@ class MainPresenter {
     fun onLogout(){
         AppContext.getInstance().user = null
         AppContext.getInstance().sessionKey = null
+
+        compositeDisposable.add(
+                AppContext.getInstance().repository.clearDatabase()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe()
+        )
     }
 
     private fun onUserInfoReceived(user: User) {
