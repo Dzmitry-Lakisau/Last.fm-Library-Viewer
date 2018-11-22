@@ -1,16 +1,33 @@
 package by.d1makrat.library_fm.repository
 
 import by.d1makrat.library_fm.AppContext
-import by.d1makrat.library_fm.database.DatabaseWorker
+import by.d1makrat.library_fm.database.DatabaseHelper
 import by.d1makrat.library_fm.model.Scrobble
 import by.d1makrat.library_fm.model.TopAlbums
 import by.d1makrat.library_fm.model.TopArtists
 import by.d1makrat.library_fm.model.TopTracks
 import by.d1makrat.library_fm.retrofit.LastFmRestApiService
 import by.d1makrat.library_fm.utils.ConnectionChecker
+import io.reactivex.Completable
 import io.reactivex.Single
 
-class Repository(private val restApiWorker: LastFmRestApiService, private val databaseWorker: DatabaseWorker) {
+class Repository(private val restApiWorker: LastFmRestApiService, private val databaseHelper: DatabaseHelper) {
+
+    fun clearDatabase(): Completable {
+        return Completable.create{completableEmitter ->
+            try {
+                databaseHelper.deleteScrobbles()
+                databaseHelper.deleteTopAlbums()
+                databaseHelper.deleteTopArtists()
+                databaseHelper.deleteTopTracks()
+
+                completableEmitter.onComplete()
+            }
+            catch (e: Exception) {
+                completableEmitter.onError(e)
+            }
+        }
+    }
 
     fun getScrobbles(page: Int, from: Long?, to: Long?): Single<List<Scrobble>> {
         return Single.create { singleEmitter ->
@@ -23,11 +40,11 @@ class Repository(private val restApiWorker: LastFmRestApiService, private val da
 
                     if (response.isSuccessful) {
                         scrobbles = response.body()!!.getAll()
-                        databaseWorker.scrobblesTable.insertScrobbles(scrobbles)
+                        databaseHelper.insertScrobbles(scrobbles)
                     }
                 }
                 else {
-                    scrobbles = databaseWorker.scrobblesTable.getScrobbles(page, from, to)
+                    scrobbles = databaseHelper.getScrobbles(page, from, to)
                 }
 
                 singleEmitter.onSuccess(scrobbles)
@@ -49,11 +66,11 @@ class Repository(private val restApiWorker: LastFmRestApiService, private val da
 
                     if (response.isSuccessful) {
                         val artistScrobbles = response.body()!!.getAll()
-                        databaseWorker.scrobblesTable.insertScrobbles(artistScrobbles)
+                        databaseHelper.insertScrobbles(artistScrobbles)
                     }
                 }
 
-                singleEmitter.onSuccess(databaseWorker.scrobblesTable.getScrobblesOfArtist(artist, page, from, to))
+                singleEmitter.onSuccess(databaseHelper.getScrobblesOfArtist(artist, page, from, to))
             }
             catch (e: Exception){
                 if (!singleEmitter.isDisposed) {
@@ -75,7 +92,7 @@ class Repository(private val restApiWorker: LastFmRestApiService, private val da
                         lateinit var artistScrobbles: List<Scrobble>
                         if (response.isSuccessful) {
                             artistScrobbles = response.body()!!.getAll()
-                            databaseWorker.scrobblesTable.insertScrobbles(artistScrobbles)
+                            databaseHelper.insertScrobbles(artistScrobbles)
                         }
 
                         page++
@@ -83,7 +100,7 @@ class Repository(private val restApiWorker: LastFmRestApiService, private val da
                     while (artistScrobbles.isNotEmpty())
                 }
 
-                singleEmitter.onSuccess(databaseWorker.scrobblesTable.getScrobblesOfAlbum(artist, album, from, to))
+                singleEmitter.onSuccess(databaseHelper.getScrobblesOfAlbum(artist, album, from, to))
             }
             catch (e: Exception){
                 if (!singleEmitter.isDisposed) {
@@ -105,7 +122,7 @@ class Repository(private val restApiWorker: LastFmRestApiService, private val da
                         lateinit var artistScrobbles: List<Scrobble>
                         if (response.isSuccessful) {
                             artistScrobbles = response.body()!!.getAll()
-                            databaseWorker.scrobblesTable.insertScrobbles(artistScrobbles)
+                            databaseHelper.insertScrobbles(artistScrobbles)
                         }
 
                         page++
@@ -113,7 +130,7 @@ class Repository(private val restApiWorker: LastFmRestApiService, private val da
                     while (artistScrobbles.isNotEmpty())
                 }
 
-                singleEmitter.onSuccess(databaseWorker.scrobblesTable.getScrobblesOfTrack(artist, track, from, to))
+                singleEmitter.onSuccess(databaseHelper.getScrobblesOfTrack(artist, track, from, to))
             }
             catch (e: Exception){
                 if (!singleEmitter.isDisposed) {
@@ -135,12 +152,12 @@ class Repository(private val restApiWorker: LastFmRestApiService, private val da
                     if (response.isSuccessful) {
                         topAlbums = response.body()!!
                         if (page == 1) {
-                            databaseWorker.deleteTopAlbums(period)
+                            databaseHelper.deleteTopAlbums(period)
                         }
-                        databaseWorker.topAlbumsTable.insertTopAlbums(topAlbums.items, period)
+                        databaseHelper.insertTopAlbums(topAlbums.items, period)
                     }
                 } else {
-                    topAlbums = databaseWorker.topAlbumsTable.getTopAlbums(period, page)
+                    topAlbums = databaseHelper.getTopAlbums(period, page)
                 }
 
                 singleEmitter.onSuccess(topAlbums)
@@ -165,12 +182,12 @@ class Repository(private val restApiWorker: LastFmRestApiService, private val da
                     if (response.isSuccessful) {
                         topArtists = response.body()!!
                         if (page == 1) {
-                            databaseWorker.deleteTopArtists(period)
+                            databaseHelper.deleteTopArtists(period)
                         }
-                        databaseWorker.topArtistsTable.insertTopArtists(topArtists.items, period)
+                        databaseHelper.insertTopArtists(topArtists.items, period)
                     }
                 } else {
-                    topArtists = databaseWorker.topArtistsTable.getTopArtists(period, page)
+                    topArtists = databaseHelper.getTopArtists(period, page)
                 }
 
                 singleEmitter.onSuccess(topArtists)
@@ -195,12 +212,12 @@ class Repository(private val restApiWorker: LastFmRestApiService, private val da
                     if (response.isSuccessful) {
                         topTracks = response.body()!!
                         if (page == 1) {
-                            databaseWorker.deleteTopTracks(period)
+                            databaseHelper.deleteTopTracks(period)
                         }
-                        databaseWorker.topTracksTable.bulkInsertTopTracks(topTracks.items, period)
+                        databaseHelper.insertTopTracks(topTracks.items, period)
                     }
                 } else {
-                    topTracks = databaseWorker.topTracksTable.getTopTracks(period, page)
+                    topTracks = databaseHelper.getTopTracks(period, page)
                 }
 
                 singleEmitter.onSuccess(topTracks)

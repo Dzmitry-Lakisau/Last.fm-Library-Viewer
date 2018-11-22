@@ -11,9 +11,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
-import by.d1makrat.library_fm.database.DatabaseWorker;
-import by.d1makrat.library_fm.retrofit.AdditionalParametersInterceptor;
-import by.d1makrat.library_fm.retrofit.LastFmRestApiService;
+import by.d1makrat.library_fm.database.DatabaseHelper;
 import by.d1makrat.library_fm.image_loader.Malevich;
 import by.d1makrat.library_fm.json.ScrobblesAdapter;
 import by.d1makrat.library_fm.json.SearchArtistResultsAdapter;
@@ -32,6 +30,8 @@ import by.d1makrat.library_fm.model.TopArtists;
 import by.d1makrat.library_fm.model.TopTracks;
 import by.d1makrat.library_fm.model.User;
 import by.d1makrat.library_fm.repository.Repository;
+import by.d1makrat.library_fm.retrofit.AdditionalParametersInterceptor;
+import by.d1makrat.library_fm.retrofit.LastFmRestApiService;
 import io.fabric.sdk.android.Fabric;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -45,7 +45,7 @@ public class AppContext extends MultiDexApplication {
 
     private static final String SESSIONKEY_KEY = "session_key";
     private static final String DEFAULT_LIMIT = "10";
-    private static AppContext mInstance;
+    private static AppContext sInstance;
     private SharedPreferences mSharedPreferences;
     private LastFmRestApiService mRetrofitWebService;
     public Repository repository;
@@ -55,13 +55,13 @@ public class AppContext extends MultiDexApplication {
     private String mPerPage;
 
     private static void initInstance(Context pContext) {
-        if (mInstance == null) {
-            mInstance = (AppContext) pContext;
+        if (sInstance == null) {
+            sInstance = (AppContext) pContext;
         }
     }
 
     public static AppContext getInstance() {
-        return mInstance;
+        return sInstance;
     }
 
     @Override
@@ -97,7 +97,7 @@ public class AppContext extends MultiDexApplication {
                 .build()
                 .create(LastFmRestApiService.class);
 
-        repository = new Repository(mRetrofitWebService, new DatabaseWorker());
+        repository = new Repository(mRetrofitWebService, new DatabaseHelper(AppContext.getInstance()));
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 //        mUsername = mSharedPreferences.getString(USERNAME_KEY, null);
