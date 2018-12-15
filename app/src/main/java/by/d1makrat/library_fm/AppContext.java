@@ -38,13 +38,14 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import static by.d1makrat.library_fm.Constants.API_BASE_URL;
-import static by.d1makrat.library_fm.Constants.SCROBBLES_PER_PAGE_KEY;
 import static by.d1makrat.library_fm.Constants.USER_KEY;
 
 public class AppContext extends MultiDexApplication {
 
+    private static final String SCROBBLES_PER_PAGE_KEY = "scrobbles_per_page";
     private static final String SESSIONKEY_KEY = "session_key";
     private static final String DEFAULT_LIMIT = "10";
+
     private static AppContext sInstance;
     private SharedPreferences mSharedPreferences;
     private LastFmRestApiService mRetrofitWebService;
@@ -100,7 +101,6 @@ public class AppContext extends MultiDexApplication {
         repository = new Repository(mRetrofitWebService, new DatabaseHelper(AppContext.getInstance()));
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-//        mUsername = mSharedPreferences.getString(USERNAME_KEY, null);
         mSessionKey = mSharedPreferences.getString(SESSIONKEY_KEY, null);
         mPerPage = mSharedPreferences.getString(SCROBBLES_PER_PAGE_KEY, DEFAULT_LIMIT);
 
@@ -125,7 +125,6 @@ public class AppContext extends MultiDexApplication {
 
     public void saveSettings(){
         SharedPreferences.Editor editor = mSharedPreferences.edit();
-//        editor.putString(USERNAME_KEY, mUsername);
         editor.putString(SESSIONKEY_KEY, mSessionKey);
         editor.putString(SCROBBLES_PER_PAGE_KEY, mPerPage);
 
