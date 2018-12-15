@@ -15,8 +15,8 @@ android {
 
     defaultConfig {
         applicationId "by.d1makrat.library_fm"
-        versionCode 13
-        versionName "3.0.0"
+        versionCode 14
+        versionName "3.0.1"
         minSdkVersion 15
         targetSdkVersion 27
         multiDexEnabled true
