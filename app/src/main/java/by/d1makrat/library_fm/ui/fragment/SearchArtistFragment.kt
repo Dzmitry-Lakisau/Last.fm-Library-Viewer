@@ -9,6 +9,7 @@ import android.text.TextWatcher
 import android.view.*
 import android.widget.Toast
 import by.d1makrat.library_fm.AppContext
+import by.d1makrat.library_fm.Constants.ARTIST_KEY
 import by.d1makrat.library_fm.R
 import by.d1makrat.library_fm.adapter.list.ItemsAdapter
 import by.d1makrat.library_fm.adapter.list.SearchArtistsAdapter
@@ -30,6 +31,11 @@ class SearchArtistFragment: ItemsFragment<Artist, SearchArtistView<Artist>, Sear
         super.onCreate(savedInstanceState)
 
         presenter = SearchArtistPresenter()
+
+        val artist = savedInstanceState?.getString(ARTIST_KEY)
+        if (artist != null){
+            presenter!!.onSearchButtonPressed(artist)
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -61,6 +67,12 @@ class SearchArtistFragment: ItemsFragment<Artist, SearchArtistView<Artist>, Sear
         })
 
         return rootView
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putString(ARTIST_KEY, search_field.text.toString())
     }
 
     override fun showEmptyHeader() {
