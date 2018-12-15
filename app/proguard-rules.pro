@@ -25,3 +25,5 @@
 #-renamesourcefileattribute SourceFile
 
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+
+-keep class by.d1makrat.library_fm.model.User { *; }
