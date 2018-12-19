@@ -1,7 +1,6 @@
 package by.d1makrat.library_fm.presenter.activity
 
 import by.d1makrat.library_fm.AppContext
-import by.d1makrat.library_fm.Constants.API_MAX_FOR_SCROBBLES_BY_ARTIST
 import by.d1makrat.library_fm.image_loader.Malevich
 import by.d1makrat.library_fm.view.activity.PreferenceView
 import com.crashlytics.android.Crashlytics
@@ -13,6 +12,7 @@ import java.io.IOException
 class PreferencePresenter {
 
     private val MAX_ITEMS_PER_REQUEST = 1000
+    private val MAX_FOR_SCROBBLES_BY_ARTIST = 200
 
     private var view: PreferenceView? = null
     private val compositeDisposable = CompositeDisposable()
@@ -30,7 +30,7 @@ class PreferencePresenter {
         try {
             val limit = input.toInt()
             if (limit in 1..MAX_ITEMS_PER_REQUEST) {
-                if (limit > API_MAX_FOR_SCROBBLES_BY_ARTIST) {
+                if (limit > MAX_FOR_SCROBBLES_BY_ARTIST) {
                     view?.showLimitMoreThan200Message()
                 }
                 AppContext.getInstance().setLimit(limit.toString())

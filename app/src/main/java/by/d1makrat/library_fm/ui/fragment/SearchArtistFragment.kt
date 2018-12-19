@@ -72,7 +72,7 @@ class SearchArtistFragment: ItemsFragment<Artist, SearchArtistView<Artist>, Sear
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        outState.putString(ARTIST_KEY, search_field.text.toString())
+        outState.putString(ARTIST_KEY, presenter?.searchQuery)
     }
 
     override fun showEmptyHeader() {

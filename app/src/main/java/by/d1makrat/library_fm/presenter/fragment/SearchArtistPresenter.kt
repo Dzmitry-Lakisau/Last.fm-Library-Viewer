@@ -9,7 +9,8 @@ import io.reactivex.schedulers.Schedulers
 
 class SearchArtistPresenter: ItemsPresenter<Artist, SearchArtistView<Artist>>() {
 
-    private var searchQuery: String? = null
+    var searchQuery: String? = null
+        private set
 
     init {
         mUrlForBrowser = "https://www.last.fm/search/artists?q="
