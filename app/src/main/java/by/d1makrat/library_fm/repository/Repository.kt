@@ -13,6 +13,8 @@ import io.reactivex.Single
 
 class Repository(private val restApiWorker: LastFmRestApiService, private val databaseHelper: DatabaseHelper) {
 
+    private val API_MAX_FOR_SCROBBLES_BY_ARTIST = 200
+
     fun clearDatabase(): Completable {
         return Completable.create{completableEmitter ->
             try {
@@ -61,7 +63,9 @@ class Repository(private val restApiWorker: LastFmRestApiService, private val da
         return Single.create { singleEmitter ->
             try {
                 if (ConnectionChecker.isNetworkAvailable()) {
-                    val response = restApiWorker.getScrobblesOfArtist(AppContext.getInstance().user.username, artist, page, AppContext.getInstance().limit, from, to)
+                    val response = restApiWorker.getScrobblesOfArtist(AppContext.getInstance().user.username, artist, page,
+                            if (AppContext.getInstance().limit>API_MAX_FOR_SCROBBLES_BY_ARTIST) API_MAX_FOR_SCROBBLES_BY_ARTIST else AppContext.getInstance().limit,
+                            from, to)
                             .execute()
 
                     if (response.isSuccessful) {
@@ -86,7 +90,9 @@ class Repository(private val restApiWorker: LastFmRestApiService, private val da
                 if (ConnectionChecker.isNetworkAvailable()) {
                     var page = 1
                     do {
-                        val response = restApiWorker.getScrobblesOfArtist(AppContext.getInstance().user.username, artist, page, AppContext.getInstance().limit, from, to)
+                        val response = restApiWorker.getScrobblesOfArtist(AppContext.getInstance().user.username, artist, page,
+                                if (AppContext.getInstance().limit>API_MAX_FOR_SCROBBLES_BY_ARTIST) API_MAX_FOR_SCROBBLES_BY_ARTIST else AppContext.getInstance().limit,
+                                from, to)
                                 .execute()
 
                         lateinit var artistScrobbles: List<Scrobble>
@@ -116,7 +122,9 @@ class Repository(private val restApiWorker: LastFmRestApiService, private val da
                 if (ConnectionChecker.isNetworkAvailable()) {
                     var page = 1
                     do {
-                        val response = restApiWorker.getScrobblesOfArtist(AppContext.getInstance().user.username, artist, page, AppContext.getInstance().limit, from, to)
+                        val response = restApiWorker.getScrobblesOfArtist(AppContext.getInstance().user.username, artist, page,
+                                if (AppContext.getInstance().limit>API_MAX_FOR_SCROBBLES_BY_ARTIST) API_MAX_FOR_SCROBBLES_BY_ARTIST else AppContext.getInstance().limit,
+                                from, to)
                                 .execute()
 
                         lateinit var artistScrobbles: List<Scrobble>
