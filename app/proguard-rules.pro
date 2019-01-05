@@ -25,3 +25,8 @@
 #-renamesourcefileattribute SourceFile
 
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+
+#Keep user fields name for SharedPreferences
+-keepclassmembers class by.d1makrat.library_fm.model.User {
+    <fields>;
+}
