@@ -21,6 +21,7 @@ import by.d1makrat.library_fm.json.TopAlbumsAdapter;
 import by.d1makrat.library_fm.json.TopArtistsAdapter;
 import by.d1makrat.library_fm.json.TopTracksAdapter;
 import by.d1makrat.library_fm.json.UserAdapter;
+import by.d1makrat.library_fm.json.UserSharedPreferencesAdapter;
 import by.d1makrat.library_fm.json.model.ArtistsJsonModel;
 import by.d1makrat.library_fm.json.model.ScrobblesJsonModel;
 import by.d1makrat.library_fm.model.SendScrobbleResult;
@@ -103,10 +104,9 @@ public class AppContext extends MultiDexApplication {
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         mSessionKey = mSharedPreferences.getString(SESSIONKEY_KEY, null);
         mPerPage = mSharedPreferences.getString(SCROBBLES_PER_PAGE_KEY, DEFAULT_LIMIT);
+        String userSharedPreferences = mSharedPreferences.getString(USER_KEY, null);
 
-        Gson gson = new Gson();
-        String json = mSharedPreferences.getString(USER_KEY, null);
-        mUser = gson.fromJson(json, User.class);
+        mUser = new GsonBuilder().registerTypeAdapter(User.class, new UserSharedPreferencesAdapter()).create().fromJson(userSharedPreferences, User.class);
     }
 
     @Override

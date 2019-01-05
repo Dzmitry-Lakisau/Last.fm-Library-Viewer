@@ -26,4 +26,7 @@
 
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 
--keep class by.d1makrat.library_fm.model.User { *; }
+#Keep user fields name for SharedPreferences
+-keepclassmembers class by.d1makrat.library_fm.model.User {
+    <fields>;
+}
