@@ -2,7 +2,7 @@ package by.d1makrat.library_fm.json.model
 
 import by.d1makrat.library_fm.model.Scrobble
 
-open class ScrobblesJsonModel {
+class ScrobblesJsonModel {
 
     private var scrobbles = ArrayList<Scrobble>()
 
