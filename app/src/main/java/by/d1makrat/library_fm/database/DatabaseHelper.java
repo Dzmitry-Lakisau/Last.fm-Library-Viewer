@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
 
-import java.sql.SQLWarning;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -226,7 +225,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 cursor = database.query(DATABASE_SCROBBLES_TABLE, null, DATE_INTERVAL_CONDITION, new String[]{String.valueOf(pFrom), String.valueOf(pTo)}, null, null, SORTING_DATE_DESCENDING);
 
             if (cursor != null) {
-                if (cursor.moveToPosition((pPage - 1) * AppContext.getInstance().getLimit())){
+                if (cursor.moveToPosition((pPage - 1) * settings.getPageSize())){
                     int trackTitleColumn = cursor.getColumnIndexOrThrow(COLUMN_TRACK);
                     int artistColumn = cursor.getColumnIndexOrThrow(COLUMN_ARTIST);
                     int albumColumn = cursor.getColumnIndexOrThrow(COLUMN_ALBUM);
@@ -241,7 +240,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
                         scrobbles.add(new Scrobble(artist, trackTitle, album, imageUri, unixDate));
                     }
-                    while (cursor.moveToNext() && scrobbles.size() < AppContext.getInstance().getLimit());
+                    while (cursor.moveToNext() && scrobbles.size() < settings.getPageSize());
                 }
             }
         } finally {
@@ -265,7 +264,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
             if (cursor != null) {
-                if (cursor.moveToPosition((pPage - 1) * AppContext.getInstance().getLimit())){
+                if (cursor.moveToPosition((pPage - 1) * settings.getPageSize())){
                     int trackTitleColumn = cursor.getColumnIndexOrThrow(COLUMN_TRACK);
                     int artistColumn = cursor.getColumnIndexOrThrow(COLUMN_ARTIST);
                     int albumColumn = cursor.getColumnIndexOrThrow(COLUMN_ALBUM);
@@ -280,7 +279,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
                         scrobbles.add(new Scrobble(artist, trackTitle, album, imageUri, unixDate));
                     }
-                    while (cursor.moveToNext() && scrobbles.size() < AppContext.getInstance().getLimit());
+                    while (cursor.moveToNext() && scrobbles.size() < settings.getPageSize());
                 }
             }
         } finally {
@@ -406,7 +405,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             albumsCount = cursor.getCount();
 
             if (cursor.moveToFirst()) {
-                if (cursor.moveToPosition((pPage - 1) * AppContext.getInstance().getLimit())){
+                if (cursor.moveToPosition((pPage - 1) * settings.getPageSize())){
                     int rankColumn = cursor.getColumnIndexOrThrow(COLUMN_RANK);
                     int artistColumn = cursor.getColumnIndexOrThrow(COLUMN_ARTIST);
                     int albumColumn = cursor.getColumnIndexOrThrow(COLUMN_ALBUM);
@@ -422,7 +421,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         Album Album = new Album(album, artist, playCount, imageUri, rank);
                         albums.add(Album);
                     }
-                    while (cursor.moveToNext() && albums.size() < AppContext.getInstance().getLimit());
+                    while (cursor.moveToNext() && albums.size() < settings.getPageSize());
                 }
             }
         } finally {
@@ -475,7 +474,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             artistsCount = cursor.getCount();
 
             if (cursor.moveToFirst()) {
-                if (cursor.moveToPosition((pPage - 1) * AppContext.getInstance().getLimit())) {
+                if (cursor.moveToPosition((pPage - 1) * settings.getPageSize())) {
                     int rankColumn = cursor.getColumnIndexOrThrow(COLUMN_RANK);
                     int artistColumn = cursor.getColumnIndexOrThrow(COLUMN_ARTIST);
                     int playCountColumn = cursor.getColumnIndexOrThrow(COLUMN_PLAYCOUNT);
@@ -489,7 +488,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         Artist topArtist = new Artist(artist, imageUri, playCount, rank);
                         artists.add(topArtist);
                     }
-                    while (cursor.moveToNext() && artists.size() < AppContext.getInstance().getLimit());
+                    while (cursor.moveToNext() && artists.size() < settings.getPageSize());
                 }
             }
         } finally {
@@ -543,7 +542,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             tracksCount = cursor.getCount();
 
             if (cursor.moveToFirst()) {
-                if (cursor.moveToPosition((pPage - 1) * AppContext.getInstance().getLimit())){
+                if (cursor.moveToPosition((pPage - 1) * settings.getPageSize())){
                     int rankColumn = cursor.getColumnIndexOrThrow(COLUMN_RANK);
                     int artistColumn = cursor.getColumnIndexOrThrow(COLUMN_ARTIST);
                     int trackTitleColumn = cursor.getColumnIndexOrThrow(COLUMN_TRACK);
@@ -559,7 +558,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         Track topTrack = new Track(trackTitle, artist, playCount, imageUri, rank);
                         result.add(topTrack);
                     }
-                    while (cursor.moveToNext() && result.size() < AppContext.getInstance().getLimit());
+                    while (cursor.moveToNext() && result.size() < settings.getPageSize());
                 }
             }
         } finally {

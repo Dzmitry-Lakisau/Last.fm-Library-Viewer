@@ -24,7 +24,7 @@ class PreferenceActivity : Activity(), PreferenceView {
 
         presenter.attachView(this)
 
-        set_limit_editText.hint = AppContext.getInstance().limit.toString()
+        set_limit_editText.hint = settings.pageSize.toString()
 
         set_limit_editText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
@@ -62,7 +62,7 @@ class PreferenceActivity : Activity(), PreferenceView {
 
         CenteredToast.show(applicationContext, R.string.limit_has_been_set, Toast.LENGTH_SHORT)
 
-        set_limit_editText.hint = AppContext.getInstance().limit.toString()
+        set_limit_editText.hint = settings.pageSize.toString()
     }
 
     override fun showLimitMustBeBetween() {

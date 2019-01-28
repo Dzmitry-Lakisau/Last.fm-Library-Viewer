@@ -33,7 +33,7 @@ class PreferencePresenter {
                 if (limit > MAX_FOR_SCROBBLES_BY_ARTIST) {
                     view?.showLimitMoreThan200Message()
                 }
-                AppContext.getInstance().setLimit(limit.toString())
+                settings.pageSize = limit
                 view?.showLimitSetOKMessage()
             } else {
                 view?.showLimitMustBeBetween()

@@ -1,10 +1,11 @@
 package by.d1makrat.library_fm.presenter.activity
 
 import by.d1makrat.library_fm.AppContext
-import by.d1makrat.library_fm.utils.ConnectionChecker
+import by.d1makrat.library_fm.Settings
 import by.d1makrat.library_fm.json.SessionKeyAdapter
 import by.d1makrat.library_fm.model.SessionKey
 import by.d1makrat.library_fm.model.User
+import by.d1makrat.library_fm.utils.ConnectionChecker
 import by.d1makrat.library_fm.utils.ExceptionHandler
 import by.d1makrat.library_fm.view.activity.LoginView
 import com.google.gson.GsonBuilder
@@ -25,10 +26,12 @@ class LoginPresenter {
     fun detachView(){
         view = null
         compositeDisposable.clear()
+
+        settings.save()
     }
 
     fun onEnterInApp(){
-        if (AppContext.getInstance().sessionKey != null && AppContext.getInstance().user != null)
+        if (settings.sessionKey.key != null)
             view?.startMainActivity()
         else
             view?.createListeners()
@@ -59,7 +62,7 @@ class LoginPresenter {
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(
                                     {
-                                        onSessionKeyGranted(it.key, username)
+                                        onSessionKeyGranted(it.key!!, username)
                                     },
                                     {
                                         onException(it)
@@ -75,8 +78,7 @@ class LoginPresenter {
     }
 
     private fun onSessionKeyGranted(sessionKey: String, username: String) {
-        AppContext.getInstance().sessionKey = sessionKey
-        AppContext.getInstance().saveSettings()
+        settings.sessionKey.key = sessionKey
 
         compositeDisposable.add(
                 AppContext.getInstance().retrofitWebService.getUserInfo(username)
@@ -94,8 +96,7 @@ class LoginPresenter {
     }
 
     private fun onUserInfoReceived(user: User) {
-        AppContext.getInstance().user = user
-        AppContext.getInstance().saveSettings()
+        this.user = user//TODO save user
 
         view?.startMainActivity()
     }

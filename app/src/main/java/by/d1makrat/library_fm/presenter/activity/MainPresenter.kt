@@ -22,8 +22,9 @@ class MainPresenter {
 
     fun detachView(){
         view = null
-        AppContext.getInstance().saveSettings()
         compositeDisposable.clear()
+
+        settings.save()
     }
 
     fun onNavigationItemSelected(){
@@ -42,8 +43,8 @@ class MainPresenter {
     }
 
     fun onLogout(){
-        AppContext.getInstance().user = null
-        AppContext.getInstance().sessionKey = null
+        this.user = null
+        settings.sessionKey.key = null
 
         compositeDisposable.add(
                 AppContext.getInstance().repository.clearDatabase()
@@ -54,7 +55,7 @@ class MainPresenter {
     }
 
     private fun onUserInfoReceived(user: User) {
-        AppContext.getInstance().user = user
+        this.user = user
         view?.setUserInfoInHeader(user)
     }
 }

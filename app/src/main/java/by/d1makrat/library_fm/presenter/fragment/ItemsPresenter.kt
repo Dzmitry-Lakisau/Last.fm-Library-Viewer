@@ -30,7 +30,7 @@ abstract class ItemsPresenter<T, V: ItemsView<T>> {
     protected abstract fun performOperation()
 
     open fun checkIfAllIsLoaded(size: Int) {
-        if (size < AppContext.getInstance().limit){
+        if (size < settings.pageSize){
             allIsLoaded = true
             view?.showAllIsLoaded()
         }
