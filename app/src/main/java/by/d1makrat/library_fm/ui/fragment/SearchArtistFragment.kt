@@ -8,7 +8,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
 import android.widget.Toast
-import by.d1makrat.library_fm.AppContext
 import by.d1makrat.library_fm.Constants.ARTIST_KEY
 import by.d1makrat.library_fm.R
 import by.d1makrat.library_fm.adapter.list.ItemsAdapter
@@ -88,7 +87,7 @@ class SearchArtistFragment: ItemsFragment<Artist, SearchArtistView<Artist>, Sear
     }
 
     override fun createAdapter(layoutInflater: LayoutInflater): ItemsAdapter<Artist> {
-        return SearchArtistsAdapter(layoutInflater, ContextCompat.getDrawable(AppContext.getInstance(), R.drawable.ic_person_black_24dp_large))
+        return SearchArtistsAdapter(layoutInflater, ContextCompat.getDrawable(activity!!.applicationContext, R.drawable.ic_person_black_24dp_large))
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

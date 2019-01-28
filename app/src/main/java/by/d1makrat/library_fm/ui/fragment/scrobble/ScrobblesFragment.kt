@@ -7,7 +7,6 @@ import android.support.v4.content.ContextCompat
 import android.view.*
 import android.widget.TextView
 import android.widget.Toast
-import by.d1makrat.library_fm.AppContext
 import by.d1makrat.library_fm.R
 import by.d1makrat.library_fm.R.id.*
 import by.d1makrat.library_fm.adapter.list.ItemsAdapter
@@ -111,7 +110,7 @@ abstract class ScrobblesFragment: ItemsFragment<Scrobble, ScrobblesView<Scrobble
     }
 
     override fun createAdapter(layoutInflater: LayoutInflater): ItemsAdapter<Scrobble> {
-        return ScrobblesAdapter(layoutInflater, ContextCompat.getDrawable(AppContext.getInstance(), R.drawable.img_vinyl))
+        return ScrobblesAdapter(layoutInflater, ContextCompat.getDrawable(activity!!.applicationContext, R.drawable.img_vinyl))
     }
 
     override fun hideListHead() {
