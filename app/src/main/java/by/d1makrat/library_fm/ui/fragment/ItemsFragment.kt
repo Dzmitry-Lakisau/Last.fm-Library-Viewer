@@ -90,6 +90,9 @@ abstract class ItemsFragment<T, V: ItemsView<T>, P: ItemsPresenter<T, V>>: Fragm
     }
 
     override fun openBrowser(uri: Uri) {
-        startActivity(Intent(Intent.ACTION_VIEW, uri))
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        if (intent.resolveActivity(activity?.packageManager) != null) {
+            startActivity(Intent(Intent.ACTION_VIEW, uri))
+        }
     }
 }
