@@ -11,7 +11,9 @@ class RecentScrobblesPresenter(filterRange: FilterRange): ScrobblesPresenter(fil
         mUrlForBrowser = AppContext.getInstance().user.url + "/library"
     }
 
-    override fun performOperation() {
+    override fun startLoading() {
+        isLoading = true
+
         compositeDisposable.add(
                 repository.getScrobbles(mPage, filterRange.startOfPeriod, filterRange.endOfPeriod)
                 .subscribeOn(Schedulers.io())

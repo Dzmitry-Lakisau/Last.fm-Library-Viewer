@@ -11,7 +11,9 @@ class TopArtistsPresenter(period: String): TopItemsPresenter<Artist>(period) {
         mUrlForBrowser = AppContext.getInstance().user.url + "/library/artists" + Period().getSuffixForUrl(period)
     }
 
-    override fun performOperation() {
+    override fun startLoading() {
+        isLoading = true
+
         compositeDisposable.add(
                 repository.getTopArtists(period, mPage)
                         .subscribeOn(Schedulers.io())

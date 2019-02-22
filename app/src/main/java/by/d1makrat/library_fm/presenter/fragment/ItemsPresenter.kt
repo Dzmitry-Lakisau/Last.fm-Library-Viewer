@@ -14,7 +14,7 @@ abstract class ItemsPresenter<T, V: ItemsView<T>> {
 
     protected var isLoading = false
     protected var allIsLoaded = false
-    protected var mPage = 0//1
+    protected var mPage = 1
 
     protected var mUrlForBrowser: String? = null
 
@@ -27,7 +27,7 @@ abstract class ItemsPresenter<T, V: ItemsView<T>> {
         this.view = view
     }
 
-    protected abstract fun performOperation()
+    protected abstract fun startLoading()
 
     open fun checkIfAllIsLoaded(size: Int) {
         if (size < AppContext.getInstance().limit){
@@ -44,20 +44,33 @@ abstract class ItemsPresenter<T, V: ItemsView<T>> {
         view?.showError(ExceptionHandler().sendExceptionAndGetReadableMessage(exception))
     }
 
-    fun loadItems() {
+    fun loadFirstPage() {
+        if (!isLoading && !allIsLoaded){
+            mPage = 1
+            allIsLoaded = false
+
+            view?.clearList()
+            view?.removeAllHeadersAndFooters()
+            view?.showHeader()
+
+            startLoading()
+        }
+    }
+
+    fun loadNextPage() {
         if (!isLoading && !allIsLoaded) {
             mPage++
 
             view?.removeAllHeadersAndFooters()
-            if (mPage == 1) {
-                view?.showHeader()
-            }
-            else {
-                view?.showFooter()
-            }
+            view?.showFooter()
 
-            isLoading = true
-            performOperation()
+            startLoading()
         }
+    }
+
+    fun stopLoading(){
+        isLoading = false
+        allIsLoaded = false
+        compositeDisposable.clear()
     }
 }

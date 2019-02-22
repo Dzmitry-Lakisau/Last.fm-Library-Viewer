@@ -63,8 +63,11 @@ abstract class ItemsFragment<T, V: ItemsView<T>, P: ItemsPresenter<T, V>>: Fragm
             val visibleItemCount = recyclerView.layoutManager.childCount
             val totalItemCount = recyclerView.layoutManager.itemCount
             val firstVisibleItemPosition = (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-            if (firstVisibleItemPosition + visibleItemCount >= totalItemCount && totalItemCount > 0) {
-                presenter?.loadItems()
+            if (firstVisibleItemPosition + visibleItemCount >= totalItemCount) {
+                if (firstVisibleItemPosition == 0){
+                    presenter?.loadFirstPage()
+                }
+                else presenter?.loadNextPage()
             }
         }
     }

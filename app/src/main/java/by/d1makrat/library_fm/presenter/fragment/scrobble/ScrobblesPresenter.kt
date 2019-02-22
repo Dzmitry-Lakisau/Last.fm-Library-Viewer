@@ -10,21 +10,14 @@ import by.d1makrat.library_fm.view.fragment.ScrobblesView
 abstract class ScrobblesPresenter(var filterRange: FilterRange): ItemsPresenter<Scrobble, ScrobblesView<Scrobble>>() {
 
     fun onRefresh(){
-        if (!isLoading) {
-            allIsLoaded = false
+        view?.hideListHead()
 
-            view?.clearList()
-            view?.hideListHead()
-
-            mPage = 0
-            loadItems()
-        }
+        stopLoading()
+        loadFirstPage()
     }
 
     fun onFilter(){
-        if (!isLoading) {
-            view?.showFilterDialog()
-        }
+        view?.showFilterDialog()
     }
 
     fun onOpenInBrowser() {
@@ -55,20 +48,19 @@ abstract class ScrobblesPresenter(var filterRange: FilterRange): ItemsPresenter<
     }
 
     fun onFilterDialogFinished(filterRange: FilterRange) {
-        allIsLoaded = false
         this.filterRange.startOfPeriod = filterRange.startOfPeriod
         this.filterRange.endOfPeriod = filterRange.endOfPeriod
 
-        view?.clearList()
         view?.hideListHead()
 
-        mPage = 0
-        loadItems()
+        stopLoading()
+        loadFirstPage()
     }
 
     fun onCreatingNewView(){
         view?.hideListHead()
-        loadItems()
+
+        loadFirstPage()
     }
 
     fun onShowingFromBackStack(itemCount: Int){

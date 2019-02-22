@@ -10,16 +10,10 @@ abstract class TopItemsPresenter<T>(val period: String): ItemsPresenter<T, TopIt
     private var totalCount: Int = 0
 
     fun onRefresh() {
-        if (!isLoading) {
-            allIsLoaded = false
+        view?.hideListHead()
 
-
-            view?.clearList()
-            view?.hideListHead()
-
-            mPage = 0
-            loadItems()
-        }
+        stopLoading()
+        loadFirstPage()
     }
 
     fun onLoadingSuccessful(result: TopItems<T>) {
@@ -43,7 +37,7 @@ abstract class TopItemsPresenter<T>(val period: String): ItemsPresenter<T, TopIt
 
     fun onCreatingNewView(){
         view?.hideListHead()
-        loadItems()
+        loadFirstPage()
     }
 
     fun onShowingFromBackStack(){

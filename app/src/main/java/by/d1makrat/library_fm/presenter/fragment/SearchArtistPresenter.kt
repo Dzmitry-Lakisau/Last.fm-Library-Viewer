@@ -33,7 +33,9 @@ class SearchArtistPresenter: ItemsPresenter<Artist, SearchArtistView<Artist>>() 
         }
     }
 
-    override fun performOperation() {
+    override fun startLoading() {
+        isLoading = true
+
         compositeDisposable.add(
                 AppContext.getInstance().retrofitWebService.searchArtist(searchQuery!!, mPage, AppContext.getInstance().limit)
                         .subscribeOn(Schedulers.io())
@@ -56,14 +58,9 @@ class SearchArtistPresenter: ItemsPresenter<Artist, SearchArtistView<Artist>>() 
     fun onSearchButtonPressed(searchQuery: String) {
         this.searchQuery = searchQuery
 
-        if (!isLoading) {
-            view?.hideKeyboard()
-            view?.clearList()
+        view?.hideKeyboard()
 
-            allIsLoaded = false
-
-            mPage = 0
-            loadItems()
-        }
+        stopLoading()
+        loadFirstPage()
     }
 }

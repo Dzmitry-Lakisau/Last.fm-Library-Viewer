@@ -11,7 +11,9 @@ class TopTracksPresenter(period: String): TopItemsPresenter<Track>(period) {
         mUrlForBrowser = AppContext.getInstance().user.url + "/library/tracks" + Period().getSuffixForUrl(period)
     }
 
-    override fun performOperation() {
+    override fun startLoading() {
+        isLoading = true
+
         compositeDisposable.add(
                 repository.getTopTracks(period, mPage)
                         .subscribeOn(Schedulers.io())

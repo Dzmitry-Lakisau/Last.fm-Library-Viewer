@@ -11,7 +11,9 @@ class ScrobblesOfArtistPresenter(val artist: String, filterRange: FilterRange): 
         mUrlForBrowser = AppContext.getInstance().user.url + "/library/music/" + artist
     }
 
-    override fun performOperation() {
+    override fun startLoading() {
+        isLoading = true
+
         compositeDisposable.add(
                 repository.getScrobblesOfArtist(artist, mPage, filterRange.startOfPeriod, filterRange.endOfPeriod)
                         .subscribeOn(Schedulers.io())
