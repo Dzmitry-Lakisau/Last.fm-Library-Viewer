@@ -31,14 +31,14 @@ abstract class ScrobblesPresenter(var filterRange: FilterRange): ItemsPresenter<
         view?.openBrowser(Uri.parse(DateUtils.getUrlFromTimestamps(mUrlForBrowser, filterRange)))
     }
 
-    fun onLoadingSuccessful(items: List<Scrobble>) {
+    fun onLoadingSuccessful(scrobbles: List<Scrobble>) {
         view?.removeAllHeadersAndFooters()
         isLoading = false
 
-        val size = items.size
+        val size = scrobbles.size
         when {
             size > 0 -> {
-                view?.populateList(items)
+                view?.populateList(scrobbles)
                 view?.showListHead(DateUtils.getMessageFromTimestamps(view?.getListItemsCount()!!, filterRange))
 
                 checkIfAllIsLoaded(size)
