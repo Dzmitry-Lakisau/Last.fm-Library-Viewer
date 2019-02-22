@@ -17,7 +17,7 @@ class ExceptionHandler {
                 is JsonSyntaxException -> "Bad formatted data in response"
                 is SocketTimeoutException -> "Bad connection"
                 is UnknownHostException -> "Server is down or unreachable"
-                else -> exception.message!!
+                else -> "Error occurred"
             }
         }
     }
