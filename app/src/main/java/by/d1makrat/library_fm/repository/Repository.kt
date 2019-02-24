@@ -10,6 +10,7 @@ import by.d1makrat.library_fm.retrofit.LastFmRestApiService
 import by.d1makrat.library_fm.utils.ConnectionChecker
 import io.reactivex.Completable
 import io.reactivex.Single
+import java.net.ConnectException
 
 class Repository(private val restApiWorker: LastFmRestApiService, private val databaseHelper: DatabaseHelper) {
 
@@ -44,6 +45,7 @@ class Repository(private val restApiWorker: LastFmRestApiService, private val da
                         scrobbles = response.body()!!.getAll()
                         databaseHelper.insertScrobbles(scrobbles)
                     }
+                    else throw ConnectException("Server responded with ${response.raw().code()} code")
                 }
                 else {
                     scrobbles = databaseHelper.getScrobbles(page, from, to)
@@ -72,6 +74,7 @@ class Repository(private val restApiWorker: LastFmRestApiService, private val da
                         val artistScrobbles = response.body()!!.getAll()
                         databaseHelper.insertScrobbles(artistScrobbles)
                     }
+                    else throw ConnectException("Server responded with ${response.raw().code()} code")
                 }
 
                 singleEmitter.onSuccess(databaseHelper.getScrobblesOfArtist(artist, page, from, to))
@@ -100,6 +103,7 @@ class Repository(private val restApiWorker: LastFmRestApiService, private val da
                             artistScrobbles = response.body()!!.getAll()
                             databaseHelper.insertScrobbles(artistScrobbles)
                         }
+                        else throw ConnectException("Server responded with ${response.raw().code()} code")
 
                         page++
                     }
@@ -132,6 +136,7 @@ class Repository(private val restApiWorker: LastFmRestApiService, private val da
                             artistScrobbles = response.body()!!.getAll()
                             databaseHelper.insertScrobbles(artistScrobbles)
                         }
+                        else throw ConnectException("Server responded with ${response.raw().code()} code")
 
                         page++
                     }
@@ -164,6 +169,7 @@ class Repository(private val restApiWorker: LastFmRestApiService, private val da
                         }
                         databaseHelper.insertTopAlbums(topAlbums.items, period)
                     }
+                    else throw ConnectException("Server responded with ${response.raw().code()} code")
                 } else {
                     topAlbums = databaseHelper.getTopAlbums(period, page)
                 }
@@ -194,6 +200,7 @@ class Repository(private val restApiWorker: LastFmRestApiService, private val da
                         }
                         databaseHelper.insertTopArtists(topArtists.items, period)
                     }
+                    else throw ConnectException("Server responded with ${response.raw().code()} code")
                 } else {
                     topArtists = databaseHelper.getTopArtists(period, page)
                 }
@@ -224,6 +231,7 @@ class Repository(private val restApiWorker: LastFmRestApiService, private val da
                         }
                         databaseHelper.insertTopTracks(topTracks.items, period)
                     }
+                    else throw ConnectException("Server responded with ${response.raw().code()} code")
                 } else {
                     topTracks = databaseHelper.getTopTracks(period, page)
                 }
