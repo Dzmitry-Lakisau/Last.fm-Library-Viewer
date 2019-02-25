@@ -106,7 +106,8 @@ public class AppContext extends MultiDexApplication {
         mPerPage = mSharedPreferences.getString(SCROBBLES_PER_PAGE_KEY, DEFAULT_LIMIT);
         String userSharedPreferences = mSharedPreferences.getString(USER_KEY, null);
 
-        mUser = new GsonBuilder().registerTypeAdapter(User.class, new UserSharedPreferencesAdapter()).create().fromJson(userSharedPreferences, User.class);
+        mUser = new GsonBuilder().registerTypeAdapter(User.class, new UserSharedPreferencesAdapter().nullSafe())
+                .create().fromJson(userSharedPreferences, User.class);
     }
 
     @Override

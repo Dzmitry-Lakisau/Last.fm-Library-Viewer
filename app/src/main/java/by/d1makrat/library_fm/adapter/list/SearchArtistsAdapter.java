@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.BuildConfig;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.image_loader.Malevich;
@@ -60,7 +59,7 @@ public class SearchArtistsAdapter extends ItemsAdapter<Artist>{
         private void bind(Artist artist, Drawable pPlaceholderDrawable){
 
             artistNameTextView.setText(artist.getName());
-            listenersCountTextView.setText(AppContext.getInstance().getResources().getQuantityString(R.plurals.listeners_count, artist.getListenersCount(), artist.getListenersCount()));
+            listenersCountTextView.setText(listenersCountTextView.getContext().getResources().getQuantityString(R.plurals.listeners_count, artist.getListenersCount(), artist.getListenersCount()));
 
             String imageUri = BuildConfig.DEBUG ? artist.getImageUrl() : null;
             Malevich.INSTANCE.load(imageUri).instead(pPlaceholderDrawable).into(artistImgView);
