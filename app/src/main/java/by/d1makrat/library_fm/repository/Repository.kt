@@ -120,30 +120,28 @@ class Repository(private val restApiWorker: LastFmRestApiService, private val da
         }
     }
 
-    fun getScrobblesOfTrack(artist: String, track: String, from: Long?, to: Long?): Single<List<Scrobble>> {
+    fun getScrobblesOfTrack(artist: String, track: String, page: Int, startOfPeriod: Long?, endOfPeriod: Long?): Single<List<Scrobble>> {
         return Single.create { singleEmitter ->
             try {
+                lateinit var scrobbles: List<Scrobble>
+
                 if (ConnectionChecker.isNetworkAvailable()) {
-                    var page = 1
-                    do {
-                        val response = restApiWorker.getScrobblesOfArtist(AppContext.getInstance().user.username, artist, page,
-                                if (AppContext.getInstance().limit>API_MAX_FOR_SCROBBLES_BY_ARTIST) API_MAX_FOR_SCROBBLES_BY_ARTIST else AppContext.getInstance().limit,
-                                from, to)
-                                .execute()
+                    val response = restApiWorker.getScrobblesOfTrack(AppContext.getInstance().user.username, artist, track, page,
+                            if (AppContext.getInstance().limit>API_MAX_FOR_SCROBBLES_BY_ARTIST) API_MAX_FOR_SCROBBLES_BY_ARTIST else AppContext.getInstance().limit,
+                            startOfPeriod, endOfPeriod)
+                            .execute()
 
-                        lateinit var artistScrobbles: List<Scrobble>
-                        if (response.isSuccessful) {
-                            artistScrobbles = response.body()!!.getAll()
-                            databaseHelper.insertScrobbles(artistScrobbles)
-                        }
-                        else throw ConnectException("Server responded with ${response.raw().code()} code")
-
-                        page++
+                    if (response.isSuccessful) {
+                            scrobbles = response.body()!!.getAll()
+                            databaseHelper.insertScrobbles(scrobbles)
                     }
-                    while (artistScrobbles.isNotEmpty())
+                    else throw ConnectException("Server responded with ${response.raw().code()} code")
+                }
+                else {
+                    scrobbles = databaseHelper.getScrobblesOfTrack(artist, track, page, startOfPeriod, endOfPeriod)
                 }
 
-                singleEmitter.onSuccess(databaseHelper.getScrobblesOfTrack(artist, track, from, to))
+                singleEmitter.onSuccess(scrobbles)
             }
             catch (e: Exception){
                 if (!singleEmitter.isDisposed) {

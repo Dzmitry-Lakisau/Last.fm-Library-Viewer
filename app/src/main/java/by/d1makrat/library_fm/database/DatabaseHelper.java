@@ -291,7 +291,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return scrobbles;
     }
 
-    public List<Scrobble> getScrobblesOfTrack(String pArtist, String pTrack, Long pFrom, Long pTo) throws SQLException {
+    public List<Scrobble> getScrobblesOfTrack(String pArtist, String pTrack, int pPage, Long pFrom, Long pTo) throws SQLException {
         final SQLiteDatabase database = getReadableDatabase();
         List<Scrobble> scrobbles = new ArrayList<>();
         Cursor cursor = null;
@@ -303,7 +303,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 cursor = database.query(DATABASE_SCROBBLES_TABLE, null, ARTIST_AND_TRACK_EQUALS_AND_DATE_INTERVAL_CONDITION, new String[]{pArtist, pTrack, String.valueOf(pFrom), String.valueOf(pTo)}, null, null, SORTING_DATE_DESCENDING);
 
             if (cursor != null) {
-                if (cursor.moveToFirst()){
+                if (cursor.moveToPosition((pPage - 1) * AppContext.getInstance().getLimit())){
                     int trackTitleColumn = cursor.getColumnIndexOrThrow(COLUMN_TRACK);
                     int artistColumn = cursor.getColumnIndexOrThrow(COLUMN_ARTIST);
                     int albumColumn = cursor.getColumnIndexOrThrow(COLUMN_ALBUM);
@@ -318,7 +318,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
                         scrobbles.add(new Scrobble(artist, trackTitle, album, imageUri, unixDate));
                     }
-                    while (cursor.moveToNext());
+                    while (cursor.moveToNext() && scrobbles.size() < AppContext.getInstance().getLimit());
                 }
             }
         } finally {

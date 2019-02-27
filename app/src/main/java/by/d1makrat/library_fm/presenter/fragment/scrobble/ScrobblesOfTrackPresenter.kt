@@ -15,7 +15,7 @@ class ScrobblesOfTrackPresenter(val artist: String, val track: String, filterRan
         isLoading = true
 
         compositeDisposable.add(
-                repository.getScrobblesOfTrack(artist, track, filterRange.startOfPeriod, filterRange.endOfPeriod)
+                repository.getScrobblesOfTrack(artist, track, mPage, filterRange.startOfPeriod, filterRange.endOfPeriod)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
@@ -27,10 +27,5 @@ class ScrobblesOfTrackPresenter(val artist: String, val track: String, filterRan
                                 }
                         )
         )
-    }
-
-    override fun checkIfAllIsLoaded(size: Int) {
-        allIsLoaded = true
-        view?.showAllIsLoaded()
     }
 }

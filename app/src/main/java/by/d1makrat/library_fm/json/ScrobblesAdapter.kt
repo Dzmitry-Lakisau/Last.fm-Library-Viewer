@@ -16,6 +16,7 @@ class ScrobblesAdapter : TypeAdapter<ScrobblesJsonModel>() {
 
     private val RECENT_TRACKS_KEY = "recenttracks"
     private val ARTIST_TRACKS_KEY = "artisttracks"
+    private val TRACK_SCROBBLES_KEY = "trackscrobbles"
     private val MAX_IMAGE_RESOLUTION_INDEX = 3
 
     private val mGson = Gson()
@@ -33,9 +34,11 @@ class ScrobblesAdapter : TypeAdapter<ScrobblesJsonModel>() {
 
         if (rootObject.has("error")) throw APIException(rootObject.get("message").asString)
 
-        val scrobblesJsonArray = if (rootObject.has(RECENT_TRACKS_KEY))
-            rootObject.get(RECENT_TRACKS_KEY).asJsonObject.get(TRACK_KEY).asJsonArray
-        else rootObject.get(ARTIST_TRACKS_KEY).asJsonObject.get(TRACK_KEY).asJsonArray
+        val scrobblesJsonArray = when {
+            rootObject.has(RECENT_TRACKS_KEY) -> rootObject.get(RECENT_TRACKS_KEY).asJsonObject.get(TRACK_KEY).asJsonArray
+            rootObject.has(TRACK_SCROBBLES_KEY) -> rootObject.get(TRACK_SCROBBLES_KEY).asJsonObject.get(TRACK_KEY).asJsonArray
+            else -> rootObject.get(ARTIST_TRACKS_KEY).asJsonObject.get(TRACK_KEY).asJsonArray
+        }
 
         for (i in 0 until scrobblesJsonArray.size()) {
             val scrobbleJsonObject = scrobblesJsonArray.get(i).asJsonObject
