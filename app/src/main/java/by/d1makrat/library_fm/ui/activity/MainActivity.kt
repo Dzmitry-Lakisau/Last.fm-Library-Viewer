@@ -131,19 +131,19 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
                 openScrobblesFragment()
             }
             R.id.top_tracks -> {
-                showNewFragment(TAB_TOP_TRACKS_FRAGMENT_TAG, TabTopTracksFragment(), true)
+                showNewFragment(TAB_TOP_TRACKS_FRAGMENT_TAG, TabTopTracksFragment())
             }
             R.id.top_artists -> {
-                showNewFragment(TAB_TOP_ARTISTS_FRAGMENT_TAG, TabTopArtistsFragment(),true)
+                showNewFragment(TAB_TOP_ARTISTS_FRAGMENT_TAG, TabTopArtistsFragment())
             }
             R.id.top_albums -> {
-                showNewFragment(TAB_TOP_ALBUMS_FRAGMENT_TAG, TabTopAlbumsFragment(),true)
+                showNewFragment(TAB_TOP_ALBUMS_FRAGMENT_TAG, TabTopAlbumsFragment())
             }
             R.id.search -> {
-                showNewFragment(SEARCH_ARTIST_FRAGMENT_TAG, SearchArtistFragment(), true)
+                showNewFragment(SEARCH_ARTIST_FRAGMENT_TAG, SearchArtistFragment())
             }
             R.id.manual_scrobble -> {
-                showNewFragment(MANUAL_SCROBBLE_FRAGMENT_TAG, ManualScrobbleFragment(), true)
+                showNewFragment(MANUAL_SCROBBLE_FRAGMENT_TAG, ManualScrobbleFragment())
             }
             R.id.settings -> startActivity(Intent(this, PreferenceActivity::class.java))
             R.id.logout -> {
@@ -234,7 +234,7 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
         val bundle = Bundle()
         bundle.putString(ARTIST_KEY, artist)
         targetFragment.arguments = bundle
-        showNewFragment(SCROBBLES_OF_ARTIST_TAG, targetFragment, true)
+        showNewFragment(SCROBBLES_OF_ARTIST_TAG, targetFragment)
     }
 
     override fun openScrobblesOfTrackFragment(artist: String, track: String) {
@@ -243,7 +243,7 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
         bundle.putString(ARTIST_KEY, artist)
         bundle.putString(TRACK_KEY, track)
         targetFragment.arguments = bundle
-        showNewFragment(SCROBBLES_OF_TRACK_TAG, targetFragment,true)
+        showNewFragment(SCROBBLES_OF_TRACK_TAG, targetFragment)
     }
 
     override fun openScrobblesOfAlbumFragment(artist: String, album: String) {
@@ -252,7 +252,7 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
         bundle.putString(ARTIST_KEY, artist)
         bundle.putString(ALBUM_KEY, album)
         targetFragment.arguments = bundle
-        showNewFragment(SCROBBLES_OF_ALBUM_TAG, targetFragment, true)
+        showNewFragment(SCROBBLES_OF_ALBUM_TAG, targetFragment)
     }
 
     override fun openScrobblesFragment(filterRange: FilterRange) {
@@ -260,7 +260,7 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
         val bundle = Bundle()
         bundle.putParcelable(FilterRange::class.java.simpleName, filterRange)
         targetFragment.arguments = bundle
-        showNewFragment(RECENT_SCROBBLES_FRAGMENT_TAG, targetFragment, true)
+        showNewFragment(RECENT_SCROBBLES_FRAGMENT_TAG, targetFragment)
     }
 
     override fun showAboutDialog(){
@@ -268,22 +268,15 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
         dialogFragment.show(supportFragmentManager, ABOUT_DIALOG_FRAGMENT_TAG)
     }
 
-    private fun <T: Fragment> showNewFragment(tag: String, targetFragment: T, showAnimation: Boolean) {
+    private fun <T: Fragment> showNewFragment(tag: String, targetFragment: T, showAnimation: Boolean = true) {
         val currentFragment = supportFragmentManager.findFragmentById(R.id.content_main)
 
         if (currentFragment == null || currentFragment.tag != tag) {
-            if (showAnimation) {
-                supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(appear_from_right, disappear_to_left,
-                                appear_from_left, disappear_to_right)
-                        .replace(R.id.content_main, targetFragment, tag)
-                        .addToBackStack(tag)
-                        .commit()
-            } else {
-                supportFragmentManager.beginTransaction()
-                        .replace(R.id.content_main, targetFragment, tag)
-                        .addToBackStack(tag)
-                        .commit()
+            supportFragmentManager.beginTransaction().apply {
+                if (showAnimation) setCustomAnimations(appear_from_right, disappear_to_left, appear_from_left, disappear_to_right)
+                replace(R.id.content_main, targetFragment, tag)
+                addToBackStack(tag)
+                commit()
             }
 
             setUpTitle(targetFragment)
