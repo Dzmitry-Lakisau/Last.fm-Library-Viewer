@@ -8,10 +8,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
+
 import by.d1makrat.library_fm.BuildConfig;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.image_loader.Malevich;
 import by.d1makrat.library_fm.model.Artist;
+
+import static by.d1makrat.library_fm.Constants.NUMBER_FORMATTING_PATTERN;
 
 public class TopArtistsAdapter extends ItemsAdapter<Artist> {
 
@@ -61,7 +65,8 @@ public class TopArtistsAdapter extends ItemsAdapter<Artist> {
         private void bind(Artist topArtist, Drawable pPlaceholderDrawable){
 
             artistTextView.setText(topArtist.getName());
-            playCountTextView.setText(playCountTextView.getContext().getResources().getQuantityString(R.plurals.scrobbles_count, topArtist.getPlayCount(), topArtist.getPlayCount()));
+            String formattedPlayCount = new DecimalFormat(NUMBER_FORMATTING_PATTERN).format(topArtist.getPlayCount());
+            playCountTextView.setText(playCountTextView.getContext().getResources().getQuantityString(R.plurals.scrobbles_count, topArtist.getPlayCount(), formattedPlayCount));
             rankTextView.setText(topArtist.getRank());
 
             String imageUri = BuildConfig.DEBUG ? topArtist.getImageUrl() : null;

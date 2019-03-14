@@ -8,10 +8,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
+
 import by.d1makrat.library_fm.BuildConfig;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.image_loader.Malevich;
 import by.d1makrat.library_fm.model.Artist;
+
+import static by.d1makrat.library_fm.Constants.NUMBER_FORMATTING_PATTERN;
 
 public class SearchArtistsAdapter extends ItemsAdapter<Artist>{
 
@@ -59,7 +63,8 @@ public class SearchArtistsAdapter extends ItemsAdapter<Artist>{
         private void bind(Artist artist, Drawable pPlaceholderDrawable){
 
             artistNameTextView.setText(artist.getName());
-            listenersCountTextView.setText(listenersCountTextView.getContext().getResources().getQuantityString(R.plurals.listeners_count, artist.getListenersCount(), artist.getListenersCount()));
+            String formattedListenersCount = new DecimalFormat(NUMBER_FORMATTING_PATTERN).format(artist.getListenersCount());
+            listenersCountTextView.setText(listenersCountTextView.getContext().getResources().getQuantityString(R.plurals.listeners_count, artist.getListenersCount(), formattedListenersCount));
 
             String imageUri = BuildConfig.DEBUG ? artist.getImageUrl() : null;
             Malevich.INSTANCE.load(imageUri).instead(pPlaceholderDrawable).into(artistImgView);

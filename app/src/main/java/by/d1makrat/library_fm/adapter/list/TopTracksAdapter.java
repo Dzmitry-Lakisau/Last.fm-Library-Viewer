@@ -8,10 +8,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
+
 import by.d1makrat.library_fm.BuildConfig;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.image_loader.Malevich;
 import by.d1makrat.library_fm.model.Track;
+
+import static by.d1makrat.library_fm.Constants.NUMBER_FORMATTING_PATTERN;
 
 public class TopTracksAdapter extends ItemsAdapter<Track> {
 
@@ -64,7 +68,8 @@ public class TopTracksAdapter extends ItemsAdapter<Track> {
 
             trackTextView.setText(topTrack.getTitle());
             artistTextView.setText(topTrack.getArtistName());
-            playCountTextView.setText(playCountTextView.getContext().getResources().getQuantityString(R.plurals.scrobbles_count, topTrack.getPlayCount(), topTrack.getPlayCount()));
+            String formattedPlayCount = new DecimalFormat(NUMBER_FORMATTING_PATTERN).format(topTrack.getPlayCount());
+            playCountTextView.setText(playCountTextView.getContext().getResources().getQuantityString(R.plurals.scrobbles_count, topTrack.getPlayCount(), formattedPlayCount));
             rankTextView.setText(topTrack.getRank());
 
             String imageUri = BuildConfig.DEBUG ? topTrack.getImageUrl() : null;

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.view.*
+import by.d1makrat.library_fm.AppContext
 import by.d1makrat.library_fm.R
 import by.d1makrat.library_fm.image_loader.Malevich
 import by.d1makrat.library_fm.ui.activity.MainActivity

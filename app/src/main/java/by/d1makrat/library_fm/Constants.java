@@ -46,4 +46,6 @@ public final class Constants {
         public static final String COLUMN_PLAYCOUNT = PLAYCOUNT_KEY;
         public static final String COLUMN_PERIOD = PERIOD_KEY;
     }
+
+    public static final String NUMBER_FORMATTING_PATTERN = "###,###,###";
 }

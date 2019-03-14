@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import by.d1makrat.library_fm.AppContext
+import by.d1makrat.library_fm.Constants.NUMBER_FORMATTING_PATTERN
 import by.d1makrat.library_fm.R
 import by.d1makrat.library_fm.adapter.list.ItemsAdapter
 import by.d1makrat.library_fm.adapter.list.TopAlbumsAdapter
@@ -15,6 +16,7 @@ import by.d1makrat.library_fm.model.Album
 import by.d1makrat.library_fm.presenter.fragment.top.TopAlbumsPresenter
 import by.d1makrat.library_fm.ui.CenteredToast
 import by.d1makrat.library_fm.ui.activity.MainActivity
+import java.text.DecimalFormat
 
 class TopAlbumsFragment: TopItemsFragment<Album>() {
 
@@ -56,7 +58,8 @@ class TopAlbumsFragment: TopItemsFragment<Album>() {
     }
 
     override fun showListHead(itemCount: Int) {
-        listHeadTextView?.text = getString(R.string.total_albums, itemCount)
+        val formattedItemCount = DecimalFormat(NUMBER_FORMATTING_PATTERN).format(itemCount)
+        listHeadTextView?.text = getString(R.string.total_albums, formattedItemCount)
         listHeadTextView?.visibility = View.VISIBLE
     }
 

@@ -2,6 +2,7 @@ package by.d1makrat.library_fm.utils;
 
 import android.support.annotation.NonNull;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -11,6 +12,8 @@ import java.util.concurrent.TimeUnit;
 import by.d1makrat.library_fm.AppContext;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.model.FilterRange;
+
+import static by.d1makrat.library_fm.Constants.NUMBER_FORMATTING_PATTERN;
 
 public class DateUtils {
 
@@ -22,7 +25,8 @@ public class DateUtils {
 
         if (filterRange.getStartOfPeriod() == null && filterRange.getEndOfPeriod() == null) {
             if (pScrobbleCount > 0) {
-                return AppContext.getInstance().getResources().getQuantityString(R.plurals.scrobbles_count, pScrobbleCount, pScrobbleCount);
+                String formattedScrobblesCount = new DecimalFormat(NUMBER_FORMATTING_PATTERN).format(pScrobbleCount);
+                return AppContext.getInstance().getResources().getQuantityString(R.plurals.scrobbles_count, pScrobbleCount, formattedScrobblesCount);
             }
             else {
                 return AppContext.getInstance().getString(R.string.no_scrobbles);

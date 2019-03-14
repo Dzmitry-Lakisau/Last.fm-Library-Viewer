@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plurals name="listeners_count">
-        <item quantity="one">%d listener</item>
-        <item quantity="other">%d listeners</item>
+        <item quantity="one">%s listener</item>
+        <item quantity="other">%s listeners</item>
     </plurals>
     <plurals name="scrobbles_count">
-        <item quantity="one">%d scrobble</item>
-        <item quantity="other">%d scrobbles</item>
+        <item quantity="one">%s scrobble</item>
+        <item quantity="other">%s scrobbles</item>
     </plurals>
     <plurals name="scrobbles_count_within_period">
         <item quantity="one">%d scrobble within %2$s - %3$s</item>
