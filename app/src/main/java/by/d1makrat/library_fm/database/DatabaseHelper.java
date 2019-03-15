@@ -252,7 +252,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return scrobbles;
     }
 
-    public List<Scrobble> getScrobblesOfArtist(String pArtist, int pPage, Long pFrom, Long pTo) throws SQLException {
+    public List<Scrobble> getScrobblesOfArtist(String pArtist, int pPage, int limit, Long pFrom, Long pTo) throws SQLException {
         final SQLiteDatabase database = getReadableDatabase();
         List<Scrobble> scrobbles = new ArrayList<>();
         Cursor cursor = null;
@@ -265,7 +265,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
             if (cursor != null) {
-                if (cursor.moveToPosition((pPage - 1) * AppContext.getInstance().getLimit())){
+                if (cursor.moveToPosition((pPage - 1) * limit)){
                     int trackTitleColumn = cursor.getColumnIndexOrThrow(COLUMN_TRACK);
                     int artistColumn = cursor.getColumnIndexOrThrow(COLUMN_ARTIST);
                     int albumColumn = cursor.getColumnIndexOrThrow(COLUMN_ALBUM);

@@ -8,6 +8,8 @@ public final class Constants {
 
     public static final String API_BASE_URL = "https://ws.audioscrobbler.com/2.0/";
 
+    public static final int MAX_FOR_SCROBBLES_BY_ARTIST = 200;
+
     public static final String ALBUM_KEY = "album";
     public static final String ARTIST_KEY = "artist";
     public static final String TRACK_KEY = "track";

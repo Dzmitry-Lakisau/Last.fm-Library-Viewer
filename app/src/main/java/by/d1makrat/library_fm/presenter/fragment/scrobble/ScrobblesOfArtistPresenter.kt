@@ -1,6 +1,7 @@
 package by.d1makrat.library_fm.presenter.fragment.scrobble
 
 import by.d1makrat.library_fm.AppContext
+import by.d1makrat.library_fm.Constants.MAX_FOR_SCROBBLES_BY_ARTIST
 import by.d1makrat.library_fm.model.FilterRange
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -27,5 +28,12 @@ class ScrobblesOfArtistPresenter(val artist: String, filterRange: FilterRange): 
                                 }
                         )
         )
+    }
+
+    override fun checkIfAllIsLoaded(size: Int) {
+        if (size < AppContext.getInstance().limit && size < MAX_FOR_SCROBBLES_BY_ARTIST){
+            allIsLoaded = true
+            view?.showAllIsLoaded()
+        }
     }
 }
