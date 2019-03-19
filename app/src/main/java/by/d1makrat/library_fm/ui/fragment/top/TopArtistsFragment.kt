@@ -53,7 +53,7 @@ class TopArtistsFragment: TopItemsFragment<Artist>() {
 
     override fun showListHead(itemCount: Int) {
         val formattedItemCount = DecimalFormat(Constants.NUMBER_FORMATTING_PATTERN).format(itemCount)
-        listHeadTextView?.text = getString(R.string.total_albums, formattedItemCount)
+        listHeadTextView?.text = getString(R.string.total_artists, formattedItemCount)
         listHeadTextView?.visibility = View.VISIBLE
     }
 
