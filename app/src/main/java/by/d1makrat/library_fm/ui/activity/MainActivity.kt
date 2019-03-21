@@ -192,7 +192,8 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
         when (fragment) {
             is ScrobblesOfAlbumFragment -> {
                 supportActionBar?.title = fragment.arguments?.getString(ARTIST_KEY)!!
-                supportActionBar?.subtitle = fragment.arguments?.getString(ALBUM_KEY)!!
+                val album = fragment.arguments?.getString(ALBUM_KEY)!!
+                supportActionBar?.subtitle = if (album.isNotEmpty()) album else getString(R.string.non_album_tracks_subtitle)
             }
             is ScrobblesOfArtistFragment -> {
                 supportActionBar?.title = fragment.arguments?.getString(ARTIST_KEY)!!
