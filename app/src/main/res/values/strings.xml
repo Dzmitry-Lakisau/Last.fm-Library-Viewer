@@ -1,17 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!--General-->
     <string name="app_name">Last.fm Library Viewer</string>
-    <string name="admob_ad_unit_id">ca-app-pub-2835136610089326/2369727491</string>
-    <string name="OK">OK</string>
-    <string name="about_app">About %s</string>
-    <string name="login">Last.fm Login</string>
-    <string name="password">Password</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancel</string>
     <string name="network_is_not_connected">Network is not connected</string>
+
+    <!--Login screen-->
+    <string name="hint_login">Last.fm Login</string>
+    <string name="hint_password">Password</string>
     <string name="sign_in">Sign in</string>
+
+    <!--Navigation Drawer menu-->
+    <string name="scrobbles">Scrobbles</string>
+    <string name="top_tracks">Top Tracks</string>
+    <string name="top_artists">Top Artists</string>
+    <string name="top_albums">Top Albums</string>
+    <string name="search_artist">Search Artist</string>
+    <string name="manual_scrobble">Manual Scrobble</string>
     <string name="settings">Settings</string>
     <string name="logout">Logout</string>
 
+    <!--Action Bar menu-->
+    <string name="action_filter">Filter</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="open_in_browser">Open web page</string>
+
+    <!--All is loaded messages-->
+    <string name="all_scrobbles_are_loaded">All scrobbles are loaded</string>
+    <string name="all_albums_are_loaded">All albums are loaded</string>
+    <string name="all_artists_are_loaded">All artists are loaded</string>
+    <string name="all_tracks_are_loaded">All tracks are loaded</string>
+
+    <!--Filter dialog-->
+    <string name="filter_dialog_title">Show scrobbles</string>
+    <string name="filter_dialog_from">From</string>
+    <string name="filter_dialog_to">To</string>
+    <string name="filter_dialog_accept">Filter</string>
+    <string name="filter_dialog_all">All</string>
+    <string name="filter_dialog_cancel">@string/dialog_cancel</string>
+    <string name="filter_dialog_wrong_input">Wrong dates</string>
+
+    <!--About dialog-->
+    <string name="about_dialog_title">About %s</string>
+    <string name="about_dialog_message">Developed by Dzmitry Lakisau\n\nFor tips, help, support or to report a bug, email laki.dimon@gmail.com \n\nThanks!</string>
+
+    <!--Update dialog-->
+    <string name="dialog_update_message">Update is available.\nGet it on Google Play!</string>
+
+    <!--Manual scrobble screen-->
     <string name="button_scrobble">Scrobble</string>
     <string name="button_time">Set Time</string>
     <string name="button_date">Set Date</string>
@@ -20,36 +58,6 @@
     <string name="album_hint">Album title</string>
     <string name="track_number_hint">Number</string>
     <string name="duration_hint">Duration in seconds</string>
-    <string name="action_filter">Filter</string>
-    <string name="action_refresh">Refresh</string>
-    <string name="open_in_browser">Open web page</string>
-    <string name="scrobbles">Scrobbles</string>
-    <string name="manual_scrobble">Manual Scrobble</string>
-    <string name="top_tracks">Top Tracks</string>
-    <string name="top_artists">Top Artists</string>
-    <string name="top_albums">Top Albums</string>
-    <string name="search_artist">Search Artist</string>
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-
-    <string name="all_scrobbles_are_loaded">All scrobbles are loaded</string>
-    <string name="all_albums_are_loaded">All albums are loaded</string>
-    <string name="all_artists_are_loaded">All artists are loaded</string>
-    <string name="all_tracks_are_loaded">All tracks are loaded</string>
-
-    <string name="offline_mode_message">Network is unavailable. App will show data from offline storage</string>
-    <string name="error_occurred">Error occurred</string>
-
-    <string name="filter_dialog_title">Show scrobbles</string>
-    <string name="filter_dialog_accept">Filter</string>
-    <string name="filter_dialog_all">All</string>
-    <string name="filter_dialog_cancel">Cancel</string>
-    <string name="filter_dialog_wrong_input">Wrong dates</string>
-
-    <string name="about_dialog_message">Developed by Dzmitry Lakisau\n\nFor tips, help, support or to report a bug, email laki.dimon@gmail.com \n\nThanks!</string>
-    <string name="dialog_update_message">Update is available.\nGet it on Google Play!</string>
-
     <string name="manual_fragment_nonnumerical_input">Nonnumerical input</string>
     <string name="manual_fragment_ignored_message">Scrobble was ignored. Probably because of timestamp was too old or new</string>
     <string name="manual_fragment_track_ignored">Track was ignored</string>
@@ -58,16 +66,16 @@
     <string name="manual_fragment_limit_exceeded">Daily scrobble limit exceeded</string>
     <string name="manual_fragment_scrobble_accepted">Scrobble was accepted</string>
 
-    <string name="no_scrobbles_within_period">"No scrobbles within\n%1$s -\n%2$s"</string>
-    <string name="no_scrobbles">No scrobbles.\nHave you already scrobbled?\n:)</string>
-    <string name="no_items">Nothing in rankings.\nHave you already scrobbled?\n:)</string>
-
-    <string name="search_fragment_no_result">Nothing found</string>
-
+    <!--Tops' heads-->
     <string name="total_albums">Total listened albums: %s</string>
     <string name="total_artists">Total listened artists: %s</string>
     <string name="total_tracks">Total listened tracks: %s</string>
 
+    <!--Search screen-->
+    <string name="search">Search</string>
+    <string name="search_no_results">Nothing found</string>
+
+    <!--Settings screen-->
     <string name="set_scrobbles_per_request">Amount of scrobbles to process at once</string>
     <string name="clear_image_cache">Clear image cache</string>
     <string name="drop_database">Delete data from offline database</string>
@@ -79,19 +87,31 @@
     <string name="unable_to_clear_cache">Unable to clear cache</string>
     <string name="unable_to_drop_database">Unable to delete data from database</string>
 
+    <!--Context menus-->
     <string name="scrobbles_of_artist">Scrobbles of this artist</string>
     <string name="scrobbles_of_track">Scrobbles of this track</string>
     <string name="scrobbles_of_album">Scrobbles of this album</string>
     <string name="scrobbles_of_day">All scrobbles of this day</string>
 
+    <!--Content description for accessibility-->
     <string name="app_icon">App icon</string>
     <string name="avatar">Avatar</string>
     <string name="artist_photo">Artist photo</string>
     <string name="album_cover">Album cover</string>
-    <string name="search">Search</string>
-    <string name="from">From</string>
-    <string name="equate_fields">Equate fields</string>
-    <string name="to">To</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!--Other-->
+    <string name="about_app">About %s</string>
     <string name="navigation_drawer_header_message">%1$s scrobbles since %2$s</string>
     <string name="hello_message">You are logged in as %1$s.\n%2$s scrobbles since %3$s.\nExplore your music!</string>
+    <string name="offline_mode_message">Network is unavailable. App will show data from offline storage</string>
+    <string name="error_occurred">Error occurred</string>
+    <string name="no_scrobbles_within_period">"No scrobbles within\n%1$s -\n%2$s"</string>
+    <string name="no_scrobbles">No scrobbles.\nHave you already scrobbled?\n:)</string>
+    <string name="empty_rankings">Nothing in rankings.\nHave you already scrobbled?\n:)</string>
+    <string name="non_album_tracks_subtitle">Non-album tracks</string>
+
+    <!--Technical-->
+    <string name="admob_ad_unit_id">ca-app-pub-2835136610089326/2369727491</string>
 </resources>

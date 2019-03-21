@@ -75,7 +75,7 @@ class SearchArtistFragment: ItemsFragment<Artist, SearchArtistView<Artist>, Sear
     }
 
     override fun showEmptyHeader() {
-        mListAdapter?.addEmptyHeader(getString(R.string.search_fragment_no_result))
+        mListAdapter?.addEmptyHeader(getString(R.string.search_no_results))
     }
 
     override fun getListItemsCount(): Int {

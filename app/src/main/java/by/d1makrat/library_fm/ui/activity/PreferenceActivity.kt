@@ -74,7 +74,7 @@ class PreferenceActivity : Activity(), PreferenceView {
     }
 
     override fun showOK() {
-        CenteredToast.show(applicationContext, R.string.OK, Toast.LENGTH_SHORT)
+        CenteredToast.show(applicationContext, R.string.dialog_ok, Toast.LENGTH_SHORT)
     }
 
     override fun showUnableToClearImageCache() {

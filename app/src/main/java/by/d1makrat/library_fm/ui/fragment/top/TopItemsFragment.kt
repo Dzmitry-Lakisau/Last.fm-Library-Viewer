@@ -47,7 +47,7 @@ abstract class TopItemsFragment<T>: ItemsFragment<T, TopItemsView<T>, TopItemsPr
     }
 
     override fun showEmptyHeader() {
-        mListAdapter?.addEmptyHeader(getString(R.string.no_items))
+        mListAdapter?.addEmptyHeader(getString(R.string.empty_rankings))
     }
 
     override fun getListItemsCount(): Int {
