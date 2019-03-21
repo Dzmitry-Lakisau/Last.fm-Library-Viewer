@@ -6,17 +6,13 @@ import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import by.d1makrat.library_fm.AppContext
-import by.d1makrat.library_fm.Constants
 import by.d1makrat.library_fm.R
 import by.d1makrat.library_fm.adapter.list.ItemsAdapter
 import by.d1makrat.library_fm.adapter.list.TopTracksAdapter
 import by.d1makrat.library_fm.model.Track
 import by.d1makrat.library_fm.presenter.fragment.top.TopTracksPresenter
-import by.d1makrat.library_fm.ui.CenteredToast
 import by.d1makrat.library_fm.ui.activity.MainActivity
-import java.text.DecimalFormat
 
 class TopTracksFragment: TopItemsFragment<Track>() {
 
@@ -24,6 +20,9 @@ class TopTracksFragment: TopItemsFragment<Track>() {
         super.onCreate(savedInstanceState)
 
         presenter = TopTracksPresenter(mPeriod!!)
+
+        listHeadMessage = getString(R.string.total_tracks)
+        allIsLoadedMessage = getString(R.string.all_tracks_are_loaded)
     }
 
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
@@ -35,13 +34,13 @@ class TopTracksFragment: TopItemsFragment<Track>() {
 
     override fun onContextItemSelected(item: MenuItem?): Boolean {
         return if (item?.groupId == mPeriod!!.hashCode()) {
+            val listItemPressed = mListAdapter!!.selectedItem
             when (item.itemId) {
                 MENU_SCROBBLES_OF_ARTIST -> {
-                    (activity as MainActivity).openScrobblesOfArtistFragment(mListAdapter!!.selectedItem.artistName)
+                    (activity as MainActivity).openScrobblesOfArtistFragment(listItemPressed.artistName)
                     true
                 }
                 MENU_SCROBBLES_OF_TRACK -> {
-                    val listItemPressed = mListAdapter!!.selectedItem
                     (activity as MainActivity).openScrobblesOfTrackFragment(listItemPressed.artistName, listItemPressed.title)
                     true
                 }
@@ -53,21 +52,7 @@ class TopTracksFragment: TopItemsFragment<Track>() {
         }
     }
 
-    override fun hideListHead() {
-        listHeadTextView?.visibility = View.INVISIBLE
-    }
-
-    override fun showListHead(itemCount: Int) {
-        val formattedItemCount = DecimalFormat(Constants.NUMBER_FORMATTING_PATTERN).format(itemCount)
-        listHeadTextView?.text = getString(R.string.total_tracks, formattedItemCount)
-        listHeadTextView?.visibility = View.VISIBLE
-    }
-
     override fun createAdapter(layoutInflater: LayoutInflater): ItemsAdapter<Track> {
         return TopTracksAdapter(layoutInflater, ContextCompat.getDrawable(AppContext.getInstance(), R.drawable.img_vinyl))
-    }
-
-    override fun showAllIsLoaded() {
-        CenteredToast.show(context, R.string.all_tracks_are_loaded, Toast.LENGTH_SHORT)
     }
 }

@@ -10,16 +10,10 @@ import by.d1makrat.library_fm.presenter.fragment.scrobble.ScrobblesOfAlbumPresen
 
 class ScrobblesOfAlbumFragment : ScrobblesFragment() {
 
-    private var artist: String? = null
-    private var album: String? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        artist = arguments!!.getString(ARTIST_KEY)
-        album = arguments!!.getString(ALBUM_KEY)
-
-        presenter = ScrobblesOfAlbumPresenter(artist!!, album!!, filterRange)
+        presenter = ScrobblesOfAlbumPresenter(arguments?.getString(ARTIST_KEY)!!, arguments?.getString(ALBUM_KEY)!!, filterRange)
     }
 
     override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
