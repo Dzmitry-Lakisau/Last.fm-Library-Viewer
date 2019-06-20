@@ -102,6 +102,6 @@ class LoginPresenter {
 
     private fun onException(exception: Throwable) {
         view?.hideProgressBar()
-        view?.showErrorMessage(ExceptionHandler().sendExceptionAndGetReadableMessage(exception))
+        view?.showErrorMessage(ExceptionHandler.sendExceptionAndGetReadableMessage(exception))
     }
 }

@@ -38,7 +38,7 @@ class ManualScrobblePresenter {
     private fun onException(exception: Throwable) {
         view?.hideProgressBar()
         view?.enableScrobbleButton()
-        view?.showErrorMessage(ExceptionHandler().sendExceptionAndGetReadableMessage(exception))
+        view?.showErrorMessage(ExceptionHandler.sendExceptionAndGetReadableMessage(exception))
     }
 
     fun onScrobbleButtonClick(track: String, artist: String, album: String, trackNumber: String, trackDuration: String){

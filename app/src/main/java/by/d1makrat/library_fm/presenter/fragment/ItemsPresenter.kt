@@ -41,7 +41,7 @@ abstract class ItemsPresenter<T, V: ItemsView<T>> {
 
         mPage--
 
-        view?.showError(ExceptionHandler().sendExceptionAndGetReadableMessage(exception))
+        view?.showError(ExceptionHandler.sendExceptionAndGetReadableMessage(exception))
     }
 
     fun loadFirstPage() {
