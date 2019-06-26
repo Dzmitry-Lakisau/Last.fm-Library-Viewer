@@ -17,6 +17,7 @@ class TopArtistsAdapter : TypeAdapter<TopArtists>() {
 
     private val TOPARTISTS_KEY = "topartists"
     private val MAX_IMAGE_RESOLUTION_INDEX = 3
+    private val STAR_IMAGE_URL = "https://lastfm-img2.akamaized.net/i/u/300x300/2a96cbd8b46e442fc41c2b86b821562f.png"
 
     private val mGson = Gson()
 
@@ -50,7 +51,7 @@ class TopArtistsAdapter : TypeAdapter<TopArtists>() {
 
             val jsonArray = artistJsonObject.get(IMAGE_KEY).asJsonArray
             var imageUrl = jsonArray.get(MAX_IMAGE_RESOLUTION_INDEX).asJsonObject.get(TEXT_KEY).asString
-            imageUrl = if (imageUrl == EMPTY_STRING) null else imageUrl
+            if (imageUrl == EMPTY_STRING || imageUrl == STAR_IMAGE_URL) imageUrl = null
 
             val rank = artistJsonObject.get(ATTRIBUTE_KEY).asJsonObject.get(RANK_KEY)?.asString
 

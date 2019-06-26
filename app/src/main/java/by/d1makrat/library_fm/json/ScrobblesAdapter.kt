@@ -18,6 +18,7 @@ class ScrobblesAdapter : TypeAdapter<ScrobblesJsonModel>() {
     private val ARTIST_TRACKS_KEY = "artisttracks"
     private val TRACK_SCROBBLES_KEY = "trackscrobbles"
     private val MAX_IMAGE_RESOLUTION_INDEX = 3
+    private val STAR_IMAGE_URL = "https://lastfm-img2.akamaized.net/i/u/300x300/2a96cbd8b46e442fc41c2b86b821562f.png"
 
     private val mGson = Gson()
 
@@ -47,7 +48,8 @@ class ScrobblesAdapter : TypeAdapter<ScrobblesJsonModel>() {
                 val trackTitle = scrobbleJsonObject.get(NAME_KEY).asString
                 val artist = scrobbleJsonObject.get(ARTIST_KEY).asJsonObject.get(TEXT_KEY).asString
                 val album = scrobbleJsonObject.get(ALBUM_KEY).asJsonObject.get(TEXT_KEY).asString
-                val imageUri = scrobbleJsonObject.get(IMAGE_KEY).asJsonArray.get(MAX_IMAGE_RESOLUTION_INDEX).asJsonObject.get(TEXT_KEY).asString
+                var imageUri = scrobbleJsonObject.get(IMAGE_KEY).asJsonArray.get(MAX_IMAGE_RESOLUTION_INDEX).asJsonObject.get(TEXT_KEY).asString
+                if (imageUri == STAR_IMAGE_URL) imageUri = null
                 val unixDate = scrobbleJsonObject.get(DATE_KEY).asJsonObject.get("uts").asLong
 
                 scrobbles.add(Scrobble(artist, trackTitle, album, imageUri, unixDate))
