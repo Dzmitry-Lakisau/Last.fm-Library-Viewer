@@ -10,7 +10,7 @@ import org.apache.commons.codec.digest.DigestUtils
 class AdditionalParametersInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request: Request = chain.request()
-        var url = request.url()
+        var url = request.url
 
         /*
         Adding call signature:
@@ -18,10 +18,10 @@ class AdditionalParametersInterceptor : Interceptor {
         passwordxxxxxxxusernamexxxxxxxxmysecret")
         Query parameters must be in alphabetical order
         */
-        if (request.method().equals("POST", true)){
+        if (request.method.equals("POST", true)){
             val string = StringBuilder()
 
-            val names = url.queryParameterNames().sorted()
+            val names = url.queryParameterNames.sorted()
 
             for (name in names){
                 string.append(name).append(url.queryParameterValues(name)[0])

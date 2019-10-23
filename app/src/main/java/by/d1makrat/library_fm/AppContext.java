@@ -35,6 +35,7 @@ import by.d1makrat.library_fm.retrofit.AdditionalParametersInterceptor;
 import by.d1makrat.library_fm.retrofit.LastFmRestApiService;
 import io.fabric.sdk.android.Fabric;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -82,9 +83,17 @@ public class AppContext extends MultiDexApplication {
 
         Malevich.INSTANCE.setConfig(new Malevich.Config(this.getCacheDir()));
 
+        OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient().newBuilder().addInterceptor(new AdditionalParametersInterceptor());
+
+        if (BuildConfig.DEBUG) {
+            HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+            httpLoggingInterceptor.level(HttpLoggingInterceptor.Level.BODY);
+            okHttpClientBuilder.addInterceptor(httpLoggingInterceptor);
+        }
+
         mRetrofitWebService = new Retrofit.Builder()
                 .baseUrl(API_BASE_URL)
-                .client(new OkHttpClient().newBuilder().addInterceptor(new AdditionalParametersInterceptor()).build())
+                .client(okHttpClientBuilder.build())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
                         .registerTypeAdapter(User.class, new UserAdapter())
