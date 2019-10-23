@@ -9,7 +9,10 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+
+import java.util.List;
 
 import by.d1makrat.library_fm.database.DatabaseHelper;
 import by.d1makrat.library_fm.image_loader.Malevich;
@@ -20,6 +23,7 @@ import by.d1makrat.library_fm.json.SessionKeyAdapter;
 import by.d1makrat.library_fm.json.TopAlbumsAdapter;
 import by.d1makrat.library_fm.json.TopArtistsAdapter;
 import by.d1makrat.library_fm.json.TopTracksAdapter;
+import by.d1makrat.library_fm.json.TracksAdapter;
 import by.d1makrat.library_fm.json.UserAdapter;
 import by.d1makrat.library_fm.json.UserSharedPreferencesAdapter;
 import by.d1makrat.library_fm.json.model.ArtistsJsonModel;
@@ -29,6 +33,7 @@ import by.d1makrat.library_fm.model.SessionKey;
 import by.d1makrat.library_fm.model.TopAlbums;
 import by.d1makrat.library_fm.model.TopArtists;
 import by.d1makrat.library_fm.model.TopTracks;
+import by.d1makrat.library_fm.model.Track;
 import by.d1makrat.library_fm.model.User;
 import by.d1makrat.library_fm.repository.Repository;
 import by.d1makrat.library_fm.retrofit.AdditionalParametersInterceptor;
@@ -104,6 +109,7 @@ public class AppContext extends MultiDexApplication {
                         .registerTypeAdapter(ScrobblesJsonModel.class, new ScrobblesAdapter())
                         .registerTypeAdapter(SessionKey.class, new SessionKeyAdapter())
                         .registerTypeAdapter(SendScrobbleResult.class, new SendScrobbleResultAdapter())
+                        .registerTypeAdapter(new TypeToken<List<Track>>() {}.getType(), new TracksAdapter())
                         .create()))
                 .build()
                 .create(LastFmRestApiService.class);

@@ -10,11 +10,11 @@ import by.d1makrat.library_fm.AppContext
 import by.d1makrat.library_fm.R
 import by.d1makrat.library_fm.adapter.list.ItemsAdapter
 import by.d1makrat.library_fm.adapter.list.TopTracksAdapter
-import by.d1makrat.library_fm.model.Track
+import by.d1makrat.library_fm.model.TopTrack
 import by.d1makrat.library_fm.presenter.fragment.top.TopTracksPresenter
 import by.d1makrat.library_fm.ui.activity.MainActivity
 
-class TopTracksFragment: TopItemsFragment<Track>() {
+class TopTracksFragment: TopItemsFragment<TopTrack>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +52,7 @@ class TopTracksFragment: TopItemsFragment<Track>() {
         }
     }
 
-    override fun createAdapter(layoutInflater: LayoutInflater): ItemsAdapter<Track> {
+    override fun createAdapter(layoutInflater: LayoutInflater): ItemsAdapter<TopTrack> {
         return TopTracksAdapter(layoutInflater, ContextCompat.getDrawable(AppContext.getInstance(), R.drawable.img_vinyl))
     }
 }

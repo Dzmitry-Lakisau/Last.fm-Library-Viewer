@@ -4,10 +4,7 @@ package by.d1makrat.library_fm.repository
 import by.d1makrat.library_fm.AppContext
 import by.d1makrat.library_fm.Constants.MAX_FOR_SCROBBLES_BY_ARTIST
 import by.d1makrat.library_fm.database.DatabaseHelper
-import by.d1makrat.library_fm.model.Scrobble
-import by.d1makrat.library_fm.model.TopAlbums
-import by.d1makrat.library_fm.model.TopArtists
-import by.d1makrat.library_fm.model.TopTracks
+import by.d1makrat.library_fm.model.*
 import by.d1makrat.library_fm.retrofit.LastFmRestApiService
 import by.d1makrat.library_fm.utils.ConnectionChecker
 import io.reactivex.Completable
@@ -64,22 +61,24 @@ class Repository(private val restApiWorker: LastFmRestApiService, private val da
     fun getScrobblesOfArtist(artist: String, page: Int, from: Long?, to: Long?): Single<List<Scrobble>> {
         return Single.create { singleEmitter ->
             try {
-                val limit = if (AppContext.getInstance().limit>MAX_FOR_SCROBBLES_BY_ARTIST) MAX_FOR_SCROBBLES_BY_ARTIST else AppContext.getInstance().limit
+                val limit = AppContext.getInstance().limit
 
                 if (ConnectionChecker.isNetworkAvailable()) {
-                    val response = restApiWorker.getScrobblesOfArtist(AppContext.getInstance().user.username, artist, page, limit, from, to)
-                            .execute()
+                    val tracksOfArtist = getTracksOfArtist(artist)
 
-                    if (response.isSuccessful) {
-                        val artistScrobbles = response.body()!!.getAll()
-                        databaseHelper.insertScrobbles(artistScrobbles)
+                    tracksOfArtist.forEach {
+                        val response = restApiWorker.getScrobblesOfTrack(AppContext.getInstance().user.username, it.artist, it.title, page, limit, from, to)
+                                .execute()
+
+                        if (response.isSuccessful) {
+                            val scrobblesOfTrack = response.body()!!.getAll()
+                            databaseHelper.insertScrobbles(scrobblesOfTrack)
+                        } else throw ConnectException("Server responded with ${response.raw().code} code")
                     }
-                    else throw ConnectException("Server responded with ${response.raw().code} code")
                 }
 
-                singleEmitter.onSuccess(databaseHelper.getScrobblesOfArtist(artist, page, limit, from, to))
-            }
-            catch (e: Exception){
+                singleEmitter.onSuccess(databaseHelper.getScrobblesOfArtist(artist, from, to))
+            } catch (e: Exception) {
                 if (!singleEmitter.isDisposed) {
                     singleEmitter.onError(e)
                 }
@@ -92,22 +91,22 @@ class Repository(private val restApiWorker: LastFmRestApiService, private val da
             try {
                 if (ConnectionChecker.isNetworkAvailable()) {
                     var page = 1
-                    do {
-                        val response = restApiWorker.getScrobblesOfArtist(AppContext.getInstance().user.username, artist, page,
-                                if (AppContext.getInstance().limit>MAX_FOR_SCROBBLES_BY_ARTIST) MAX_FOR_SCROBBLES_BY_ARTIST else AppContext.getInstance().limit,
-                                from, to)
-                                .execute()
-
-                        lateinit var artistScrobbles: List<Scrobble>
-                        if (response.isSuccessful) {
-                            artistScrobbles = response.body()!!.getAll()
-                            databaseHelper.insertScrobbles(artistScrobbles)
-                        }
-                        else throw ConnectException("Server responded with ${response.raw().code} code")
-
-                        page++
-                    }
-                    while (artistScrobbles.isNotEmpty())
+//                    do {
+//                        val response = restApiWorker.getScrobblesOfArtist(AppContext.getInstance().user.username, artist, page,
+//                                if (AppContext.getInstance().limit>MAX_FOR_SCROBBLES_BY_ARTIST) MAX_FOR_SCROBBLES_BY_ARTIST else AppContext.getInstance().limit,
+//                                from, to)
+//                                .execute()
+//
+//                        lateinit var artistScrobbles: List<Scrobble>
+//                        if (response.isSuccessful) {
+//                            artistScrobbles = response.body()!!.getAll()
+//                            databaseHelper.insertScrobbles(artistScrobbles)
+//                        }
+//                        else throw ConnectException("Server responded with ${response.raw().code} code")
+//
+//                        page++
+//                    }
+//                    while (artistScrobbles.isNotEmpty())
                 }
 
                 singleEmitter.onSuccess(databaseHelper.getScrobblesOfAlbum(artist, album, from, to))
@@ -242,5 +241,25 @@ class Repository(private val restApiWorker: LastFmRestApiService, private val da
                 }
             }
         }
+    }
+
+    private fun getTracksOfArtist(artist: String): List<Track> {
+
+        val tracks = ArrayList<Track>()
+
+        var page = 1
+        do {
+            val response = restApiWorker.getTracksOfArtist(artist, page, 1000).execute()
+
+            lateinit var pageOfTracks: List<Track>
+            if (response.isSuccessful) {
+                pageOfTracks = response.body()!!
+            } else throw ConnectException("Server responded with ${response.raw().code} code")
+
+            tracks.addAll(pageOfTracks)
+            page++
+        } while (pageOfTracks.isNotEmpty())
+
+        return tracks.sortedBy { it.playcount }
     }
 }

@@ -4,7 +4,7 @@ import by.d1makrat.library_fm.APIException
 import by.d1makrat.library_fm.Constants.*
 import by.d1makrat.library_fm.Constants.JsonConstants.*
 import by.d1makrat.library_fm.model.TopTracks
-import by.d1makrat.library_fm.model.Track
+import by.d1makrat.library_fm.model.TopTrack
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.TypeAdapter
@@ -29,7 +29,7 @@ class TopTracksAdapter : TypeAdapter<TopTracks>() {
     @Throws(JSONException::class)
     override fun read(jsonReader: JsonReader): TopTracks {
 
-        val tracks = ArrayList<Track>()
+        val tracks = ArrayList<TopTrack>()
 
         val rootObject = mGson.getAdapter(JsonElement::class.java).read(jsonReader).asJsonObject
 
@@ -53,7 +53,7 @@ class TopTracksAdapter : TypeAdapter<TopTracks>() {
 
             val rank = trackJsonObject.get(ATTRIBUTE_KEY).asJsonObject.get(RANK_KEY).asString
 
-            tracks.add(Track(title, artistName, playCount, imageUrl, rank))
+            tracks.add(TopTrack(title, artistName, playCount, imageUrl, rank))
         }
 
         return TopTracks(tracks, totalTracks)

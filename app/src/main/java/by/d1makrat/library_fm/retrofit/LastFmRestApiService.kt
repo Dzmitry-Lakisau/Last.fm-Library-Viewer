@@ -48,19 +48,13 @@ interface LastFmRestApiService {
                            @Nullable
                            @Query("to") endOfPeriod: Long?): Call<ScrobblesJsonModel>
 
-    @GET("?api_key=$API_KEY&method=user.getArtistTracks")
-    fun getScrobblesOfArtist(@NonNull
-                             @Query("user") username: String,
-                             @NonNull
-                             @Query("artist") artist: String,
-                             @NonNull
-                             @Query("page") page: Int,
-                             @NonNull
-                             @Query("limit") scrobblesPerRequest: Int,
-                             @Nullable
-                             @Query("startTimestamp") startOfPeriod: Long?,
-                             @Nullable
-                             @Query("endTimestamp") endOfPeriod: Long?): Call<ScrobblesJsonModel>
+    @GET("?api_key=$API_KEY&method=artist.getTopTracks")
+    fun getTracksOfArtist(@NonNull
+                          @Query("artist") artist: String,
+                          @NonNull
+                          @Query("page") page: Int,
+                          @NonNull//max=10000
+                          @Query("limit") tracksPerRequest: Int): Call<List<Track>>
 
     @GET("?api_key=$API_KEY&method=user.getTrackScrobbles")
     fun getScrobblesOfTrack(@NonNull

@@ -13,11 +13,11 @@ import java.text.DecimalFormat;
 import by.d1makrat.library_fm.BuildConfig;
 import by.d1makrat.library_fm.R;
 import by.d1makrat.library_fm.image_loader.Malevich;
-import by.d1makrat.library_fm.model.Track;
+import by.d1makrat.library_fm.model.TopTrack;
 
 import static by.d1makrat.library_fm.Constants.NUMBER_FORMATTING_PATTERN;
 
-public class TopTracksAdapter extends ItemsAdapter<Track> {
+public class TopTracksAdapter extends ItemsAdapter<TopTrack> {
 
     public TopTracksAdapter(LayoutInflater pLayoutInflater, Drawable pPlaceholderDrawable) {
         mLayoutInflater = pLayoutInflater;
@@ -64,7 +64,7 @@ public class TopTracksAdapter extends ItemsAdapter<Track> {
             coverImgView = pView.findViewById(R.id.cover_ImgView);
         }
 
-        private void bind(Track topTrack, Drawable pPlaceholderDrawable){
+        private void bind(TopTrack topTrack, Drawable pPlaceholderDrawable){
 
             trackTextView.setText(topTrack.getTitle());
             artistTextView.setText(topTrack.getArtistName());

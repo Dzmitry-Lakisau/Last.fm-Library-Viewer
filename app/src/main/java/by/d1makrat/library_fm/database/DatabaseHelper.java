@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
 
-import java.sql.SQLWarning;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +18,7 @@ import by.d1makrat.library_fm.model.Scrobble;
 import by.d1makrat.library_fm.model.TopAlbums;
 import by.d1makrat.library_fm.model.TopArtists;
 import by.d1makrat.library_fm.model.TopTracks;
-import by.d1makrat.library_fm.model.Track;
+import by.d1makrat.library_fm.model.TopTrack;
 
 import static by.d1makrat.library_fm.Constants.DatabaseConstants.COLUMN_ALBUM;
 import static by.d1makrat.library_fm.Constants.DatabaseConstants.COLUMN_ARTIST;
@@ -252,7 +251,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return scrobbles;
     }
 
-    public List<Scrobble> getScrobblesOfArtist(String pArtist, int pPage, int limit, Long pFrom, Long pTo) throws SQLException {
+    public List<Scrobble> getScrobblesOfArtist(String pArtist, Long pFrom, Long pTo) throws SQLException {
         final SQLiteDatabase database = getReadableDatabase();
         List<Scrobble> scrobbles = new ArrayList<>();
         Cursor cursor = null;
@@ -265,7 +264,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
             if (cursor != null) {
-                if (cursor.moveToPosition((pPage - 1) * limit)){
+                if (cursor.moveToFirst()){
                     int trackTitleColumn = cursor.getColumnIndexOrThrow(COLUMN_TRACK);
                     int artistColumn = cursor.getColumnIndexOrThrow(COLUMN_ARTIST);
                     int albumColumn = cursor.getColumnIndexOrThrow(COLUMN_ALBUM);
@@ -280,7 +279,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
                         scrobbles.add(new Scrobble(artist, trackTitle, album, imageUri, unixDate));
                     }
-                    while (cursor.moveToNext() && scrobbles.size() < AppContext.getInstance().getLimit());
+                    while (cursor.moveToNext());
                 }
             }
         } finally {
@@ -508,13 +507,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         deleteRecordsFromTable(DATABASE_TOP_ARTISTS_TABLE, pPeriod);
     }
 
-    public void insertTopTracks(final List<Track> items, final String pPeriod) throws SQLException {
+    public void insertTopTracks(final List<TopTrack> items, final String pPeriod) throws SQLException {
         final SQLiteDatabase database = getWritableDatabase();
 
         database.beginTransaction();
 
         try {
-            for (Track item : items) {
+            for (TopTrack item : items) {
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(COLUMN_RANK, item.getRank());
                 contentValues.put(COLUMN_TRACK, item.getTitle());
@@ -534,7 +533,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public TopTracks getTopTracks(String pPeriod, int pPage) throws SQLException {
         final SQLiteDatabase database = getReadableDatabase();
-        List<Track> result = new ArrayList<>();
+        List<TopTrack> result = new ArrayList<>();
         int tracksCount;
         Cursor cursor = null;
 
@@ -556,7 +555,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         int playCount = cursor.getInt(playCountColumn);
                         String imageUri = cursor.getString(imageUriColumn);
 
-                        Track topTrack = new Track(trackTitle, artist, playCount, imageUri, rank);
+                        TopTrack topTrack = new TopTrack(trackTitle, artist, playCount, imageUri, rank);
                         result.add(topTrack);
                     }
                     while (cursor.moveToNext() && result.size() < AppContext.getInstance().getLimit());
