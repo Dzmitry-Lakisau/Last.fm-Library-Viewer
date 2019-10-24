@@ -113,4 +113,8 @@ interface LastFmRestApiService {
                      @Query("page") page: Int,
                      @NonNull
                      @Query("limit") artistsPerRequest: Int): Single<ArtistsJsonModel>
+
+    @GET("?api_key=$API_KEY&method=artist.getInfo")
+    fun getArtistInfo(@Query("user") username: String,
+                      @Query("artist") artist: String): Call<ArtistInfo>
 }

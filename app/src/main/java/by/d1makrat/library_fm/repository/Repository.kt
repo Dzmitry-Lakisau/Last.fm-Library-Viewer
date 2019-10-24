@@ -1,6 +1,8 @@
 package by.d1makrat.library_fm.repository
 
 
+import android.icu.text.SymbolTable
+import android.util.Log
 import by.d1makrat.library_fm.AppContext
 import by.d1makrat.library_fm.Constants.MAX_FOR_SCROBBLES_BY_ARTIST
 import by.d1makrat.library_fm.database.DatabaseHelper
@@ -64,19 +66,26 @@ class Repository(private val restApiWorker: LastFmRestApiService, private val da
                 val limit = AppContext.getInstance().limit
 
                 if (ConnectionChecker.isNetworkAvailable()) {
+
+                    val scrobbles = ArrayList<Scrobble>()
+
+                    val scrobblesCount = getScrobblesCountOfArtist(artist)
+
                     val tracksOfArtist = getTracksOfArtist(artist)
 
-                    tracksOfArtist.forEach {
-                        val response = restApiWorker.getScrobblesOfTrack(AppContext.getInstance().user.username, it.artist, it.title, page, limit, from, to)
+                    for (track in tracksOfArtist) {
+                        val response = restApiWorker.getScrobblesOfTrack(AppContext.getInstance().user.username, track.artist, track.title, page, limit, from, to)
                                 .execute()
 
                         if (response.isSuccessful) {
                             val scrobblesOfTrack = response.body()!!.getAll()
                             databaseHelper.insertScrobbles(scrobblesOfTrack)
+
+                            scrobbles.addAll(scrobblesOfTrack)
+                            if (scrobbles.size == scrobblesCount) break
                         } else throw ConnectException("Server responded with ${response.raw().code} code")
                     }
                 }
-
                 singleEmitter.onSuccess(databaseHelper.getScrobblesOfArtist(artist, from, to))
             } catch (e: Exception) {
                 if (!singleEmitter.isDisposed) {
@@ -245,11 +254,13 @@ class Repository(private val restApiWorker: LastFmRestApiService, private val da
 
     private fun getTracksOfArtist(artist: String): List<Track> {
 
+        val limit = 1000
+
         val tracks = ArrayList<Track>()
 
         var page = 1
         do {
-            val response = restApiWorker.getTracksOfArtist(artist, page, 1000).execute()
+            val response = restApiWorker.getTracksOfArtist(artist, page, limit).execute()
 
             lateinit var pageOfTracks: List<Track>
             if (response.isSuccessful) {
@@ -258,8 +269,15 @@ class Repository(private val restApiWorker: LastFmRestApiService, private val da
 
             tracks.addAll(pageOfTracks)
             page++
-        } while (pageOfTracks.isNotEmpty())
+        } while (pageOfTracks.size == limit)
 
-        return tracks.sortedBy { it.playcount }
+        return tracks.distinctBy { it.title }.sortedByDescending { it.playcount }
+    }
+
+    private fun getScrobblesCountOfArtist(artist: String): Int {
+        val response = restApiWorker.getArtistInfo(AppContext.getInstance().user.username, artist).execute()
+        if (response.isSuccessful) {
+            return response.body()!!.artist.stats?.scrobblesCount!!
+        } else throw ConnectException("Server responded with ${response.raw().code} code")
     }
 }

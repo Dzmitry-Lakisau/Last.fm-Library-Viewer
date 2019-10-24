@@ -1,5 +1,6 @@
 package by.d1makrat.library_fm.presenter.fragment.scrobble
 
+import android.util.Log
 import by.d1makrat.library_fm.AppContext
 import by.d1makrat.library_fm.Constants.MAX_FOR_SCROBBLES_BY_ARTIST
 import by.d1makrat.library_fm.model.FilterRange
@@ -15,6 +16,8 @@ class ScrobblesOfArtistPresenter(val artist: String, filterRange: FilterRange): 
     override fun startLoading() {
         isLoading = true
 
+        val start = System.currentTimeMillis()
+
         compositeDisposable.add(
                 repository.getScrobblesOfArtist(artist, mPage, filterRange.startOfPeriod, filterRange.endOfPeriod)
                         .subscribeOn(Schedulers.io())
@@ -22,9 +25,13 @@ class ScrobblesOfArtistPresenter(val artist: String, filterRange: FilterRange): 
                         .subscribe(
                                 {
                                     onLoadingSuccessful(it)
+
+                                    Log.e(this.toString(), (System.currentTimeMillis() - start).toString())
                                 },
                                 {
                                     onException(it)
+
+                                    Log.e(this.toString(), (System.currentTimeMillis() - start).toString())
                                 }
                         )
         )
