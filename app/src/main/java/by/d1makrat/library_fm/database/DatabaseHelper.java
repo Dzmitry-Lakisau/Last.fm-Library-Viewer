@@ -328,6 +328,41 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return scrobbles;
     }
 
+    public List<Scrobble> getScrobblesOfTrack(String pArtist, String pTrack) throws SQLException {
+        final SQLiteDatabase database = getReadableDatabase();
+        List<Scrobble> scrobbles = new ArrayList<>();
+        Cursor cursor = null;
+
+        try {
+            cursor = database.query(DATABASE_SCROBBLES_TABLE, null, ARTIST_AND_TRACK_EQUALS_CONDITION, new String[]{pArtist, pTrack}, null, null, SORTING_DATE_DESCENDING);
+
+            if (cursor != null) {
+                if (cursor.moveToFirst()){
+                    int trackTitleColumn = cursor.getColumnIndexOrThrow(COLUMN_TRACK);
+                    int artistColumn = cursor.getColumnIndexOrThrow(COLUMN_ARTIST);
+                    int albumColumn = cursor.getColumnIndexOrThrow(COLUMN_ALBUM);
+                    int unixDateColumn = cursor.getColumnIndexOrThrow(COLUMN_DATE);
+                    int imageUriColumn = cursor.getColumnIndexOrThrow(COLUMN_IMAGEURI);
+                    do {
+                        String trackTitle = cursor.getString(trackTitleColumn);
+                        String artist = cursor.getString(artistColumn);
+                        String album = cursor.getString(albumColumn);
+                        long unixDate = cursor.getLong(unixDateColumn);
+                        String imageUri = cursor.getString(imageUriColumn);
+
+                        scrobbles.add(new Scrobble(artist, trackTitle, album, imageUri, unixDate));
+                    }
+                    while (cursor.moveToNext());
+                }
+            }
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+
+        return scrobbles;
+    }
+
     public List<Scrobble> getScrobblesOfAlbum(String pArtist, String pAlbum, Long pFrom, Long pTo) throws SQLException {
         final SQLiteDatabase database = getReadableDatabase();
         List<Scrobble> scrobbles = new ArrayList<>();

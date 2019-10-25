@@ -19,7 +19,7 @@ class ScrobblesOfArtistPresenter(val artist: String, filterRange: FilterRange): 
         val start = System.currentTimeMillis()
 
         compositeDisposable.add(
-                repository.getScrobblesOfArtist(artist, mPage, filterRange.startOfPeriod, filterRange.endOfPeriod)
+                repository.getScrobblesOfArtist(artist, filterRange.startOfPeriod, filterRange.endOfPeriod)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
